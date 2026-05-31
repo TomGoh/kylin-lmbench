@@ -64,6 +64,42 @@ or sleeping between iterations is unnecessary.
 For every environment we run `bench.sh` with the same CONFIG so the benchmark
 set is identical — only the surrounding environment changes.
 
+## Software stack (held constant across environments)
+
+To make the host-vs-guest delta attributable purely to the hypervisor, every
+layer above the hardware is held identical across `baremetal`, `kvm-guest`,
+`pkvm-guest-np`, and `pkvm-guest`:
+
+* **Kernel**: a single self-built Linux **6.6.30+** image is used as host
+  kernel and as guest kernel. The kernel source lives in an internal repo.
+  TODO: capture a snapshot of the build's `.config` (`zcat /proc/config.gz`
+  on the target host) and commit it to `docs/kernel.config` so reviewers
+  can reproduce the exact build.
+* This kernel is built from the Android pKVM tree — it has both host-side
+  pKVM support (`CONFIG_KVM`, `CONFIG_PROTECTED_NVHE_*`, `CONFIG_PKVM_*`)
+  and the guest-side pieces needed to boot as a protected guest
+  (`CONFIG_EXTRA_FIRMWARE="pvmfw.bin"`, `CONFIG_SERIAL_PKVM_PL011`,
+  `CONFIG_VIRTIO_*` built-in). The same `vmlinuz` is therefore a valid
+  host kernel **and** a valid (protected or non-protected) guest kernel.
+  Only the boot cmdline and initramfs / rootfs differ.
+* **VMM**: `crosvm` for all guest environments. Using QEMU for the KVM
+  guest and crosvm for the pKVM guest would inject a VMM-implementation
+  difference into every measurement — using crosvm uniformly removes it.
+  pKVM protected guests require crosvm with `--protected-vm`; the other
+  two guest environments use the same crosvm binary without that flag.
+* **Rootfs**: one base image (read-only squashfs + tmpfs overlay) shared
+  by all guests. The pKVM protected guest wraps it with a signature, but
+  the file-system bytes inside are identical.
+* **lmbench binaries**: built once on the host (committed in
+  `bin/aarch64-Linux/`-equivalent path inside the rootfs); guests do not
+  rebuild.
+* **glibc / userspace**: comes from the same base image — same glibc
+  version, same shell, same `coreutils`.
+* **Clocksource**: every environment must report
+  `arch_sys_counter` in `/sys/devices/system/clocksource/.../current_clocksource`.
+  All lmbench timings flow through `clock_gettime()`; a different clocksource
+  (e.g. `kvm-clock`) would change the very ruler used to measure latency.
+
 ## Benchmark selection rationale
 
 The full `make results` of upstream lmbench runs a lot of things irrelevant to
