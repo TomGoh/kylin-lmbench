@@ -1,0 +1,76 @@
+# lmbench config: KVM guest (QEMU/KVM with kvm-arm.mode=nvhe or vhe on host).
+#
+# Expected guest shape:
+#   - 2 vCPUs, each pinned (via taskset on host) to a fixed physical core
+#   - 4 GB RAM
+#   - Same lmbench binaries as the host build (scp the bin/ tree across)
+#
+# Run from inside the guest:
+#   ENV_TAG=kvm-guest CORES=0,1 ITERS=10 CONFIG=configs/CONFIG.kvm-guest \
+#     ./bench.sh --no-prep
+#
+# --no-prep is mandatory in guests: cpufreq is virtual, THP/ASLR controls
+# usually missing or read-only. Set those on the *host* before booting the guest.
+#
+# See CONFIG.template for field-by-field explanation.
+
+OS="aarch64-Linux"
+PROCESSORS="2"
+MHZ="1900 MHz, 0.5263 nanosec clock"   # virtual; matches host's locked freq
+TOTAL_MEM=4096
+LINE_SIZE=64                            # guest sees host's cache line size
+MOTHERBOARD="QEMU virt"
+NETWORKS=""
+INFO=INFO.kvm-guest
+
+OUTPUT=/dev/null
+ENOUGH=10000
+TIMING_O=0
+LOOP_O=0
+
+# SYNC_MAX=1: we want single-process latency numbers; lat_ctx exercises
+# multiple processes regardless. If you want parallel-syscall numbers,
+# raise to 2 but then lat_syscall etc become throughput metrics.
+SYNC_MAX=1
+LMBENCH_SCHED="DEFAULT"
+
+FILE=/tmp/lmb_file
+FSDIR=/tmp/lmb_fs
+MB=64
+
+REMOTE=""
+RSH=rsh
+RCP=rcp
+
+DISKS=""
+DISK_DESC=""
+SLOWFS="NO"
+FASTMEM="NO"
+MAIL=no
+
+BENCHMARK_HARDWARE=NO
+BENCHMARK_OS=
+
+BENCHMARK_SYSCALL=YES
+BENCHMARK_SELECT=YES
+BENCHMARK_SIG=YES
+BENCHMARK_PROC=YES
+BENCHMARK_CTX=YES
+BENCHMARK_PAGEFAULT=YES
+BENCHMARK_MMAP=YES
+BENCHMARK_PIPE=YES
+BENCHMARK_UNIX=YES
+
+BENCHMARK_UDP=YES
+BENCHMARK_TCP=YES
+BENCHMARK_CONNECT=YES
+BENCHMARK_RPC=YES
+
+BENCHMARK_MEM=YES
+
+BENCHMARK_HTTP=
+BENCHMARK_FILE=
+BENCHMARK_BCOPY=
+BENCHMARK_OPS=
+
+VERSION=3.0-a9

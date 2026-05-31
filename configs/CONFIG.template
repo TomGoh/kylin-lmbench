@@ -1,0 +1,84 @@
+# lmbench CONFIG template for KVM/pKVM overhead study.
+# Copy this file, rename to CONFIG.<env>, edit per-environment fields.
+# Sourced by scripts/lmbench as shell variables.
+
+# --- system info (hand-filled to avoid config-run auto-detect errors) ---
+OS="aarch64-Linux"
+PROCESSORS="8"              # physical CPUs visible to this environment
+MHZ="1900 MHz, 0.5263 nanosec clock"   # locked frequency; nanosec = 1000/MHz
+TOTAL_MEM=28000             # MB; used by lmbench for sanity caps only
+LINE_SIZE=64                # cache line bytes (cpu0/index0/coherency_line_size)
+MOTHERBOARD=""
+NETWORKS=""
+INFO=INFO.template          # overwritten per-env
+
+# --- output ---
+# OUTPUT is where lmbench's progress log goes (NOT benchmark data).
+# Benchmark data lines all go to stderr; we capture them externally.
+OUTPUT=/dev/null
+
+# --- benchmark calibration ---
+ENOUGH=10000                # microsec per measurement (default 5000; bigger = stabler)
+TIMING_O=0                  # timing overhead; 0 = no correction (we use medians)
+LOOP_O=0                    # loop overhead; same as above
+
+# --- parallelism / pinning ---
+# SYNC_MAX = parallel processes per benchmark.
+#   1 → all benchmarks run single-process (good for pinning to 1 vCPU)
+#   2 → for 2-vCPU guest experiments
+# The outer driver wraps the whole invocation with `taskset -c <cores>`.
+SYNC_MAX=1
+LMBENCH_SCHED="DEFAULT"     # we handle affinity via taskset, not lmbench
+
+# --- file paths (tmpfs preferred to reduce disk-noise) ---
+FILE=/tmp/lmb_file          # used by lat_pagefault, lat_mmap, bw_file_rd
+FSDIR=/tmp/lmb_fs           # used by lat_fs (we disable lat_fs)
+MB=64                       # max memory size for size-sweeps; must be >= largest test
+
+# --- networking ---
+# Loopback only; no NIC variability. REMOTE empty → no cross-host tests.
+REMOTE=""
+RSH=rsh
+RCP=rcp
+
+# --- disk / fs ---
+# DISKS empty → skip raw-disk and disk-bandwidth tests.
+DISKS=""
+DISK_DESC=""
+SLOWFS="NO"
+FASTMEM="NO"
+MAIL=no
+
+# --- benchmark category toggles ---
+# We deliberately DO NOT set BENCHMARK_OS=YES (it turns everything on).
+# Instead, enable categories explicitly so we know what runs.
+BENCHMARK_HARDWARE=NO       # tlb / par_mem / stream / bw_mem-full → tested via BENCHMARK_MEM
+BENCHMARK_OS=               # leave blank; per-category flags drive what runs
+
+# --- KEEP (hypervisor-sensitive OS workloads) ---
+BENCHMARK_SYSCALL=YES       # lat_syscall null/read/write/stat/fstat/open
+BENCHMARK_SELECT=YES        # lat_select -n {10,100,250,500} file (tcp skipped via no NETWORK)
+BENCHMARK_SIG=YES           # lat_sig install/catch/prot
+BENCHMARK_PROC=YES          # lat_proc fork/exec/shell
+BENCHMARK_CTX=YES           # lat_ctx full grid: -s {0,4,8,16,32,64} {2..96}
+BENCHMARK_PAGEFAULT=YES     # lat_pagefault $FILE
+BENCHMARK_MMAP=YES          # lat_mmap full size sweep
+BENCHMARK_PIPE=YES          # lat_pipe + bw_pipe
+BENCHMARK_UNIX=YES          # lat_unix + bw_unix
+
+# --- KEEP (network-loopback; show pKVM bounce-buffer cost) ---
+BENCHMARK_UDP=YES           # lat_udp localhost
+BENCHMARK_TCP=YES           # lat_tcp localhost + bw_tcp size sweep
+BENCHMARK_CONNECT=YES       # lat_connect localhost (TCP handshake)
+BENCHMARK_RPC=YES           # lat_rpc -p udp/tcp localhost (needs rpcbind)
+
+# --- KEEP (hardware/memory; lat_mem_rd full stride curve + tlb) ---
+BENCHMARK_MEM=YES           # lat_mem_rd 16 32 64 128 256 512 1024 + tlb + par_mem + stream
+
+# --- SKIP ---
+BENCHMARK_HTTP=             # needs webpage-lm tarball + port 8008; guest setup overhead
+BENCHMARK_FILE=             # disk-bandwidth (bw_file_rd/lmdd); not running these in pilot
+BENCHMARK_BCOPY=            # bw_mem bcopy/fcp/cp many flavors; redundant with MEM
+BENCHMARK_OPS=              # lat_ops; arithmetic micro-ops, not hypervisor-sensitive
+
+VERSION=3.0-a9

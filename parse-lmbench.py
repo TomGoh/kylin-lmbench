@@ -1,0 +1,246 @@
+#!/usr/bin/env python3
+"""Parse lmbench scripts/lmbench stderr output into a long-format CSV.
+
+Input: one or more lmbench report files (the stderr captured from `scripts/lmbench`).
+Output: CSV on stdout with columns:
+    env, core, iter, bench, variant, value, unit
+
+Each input file is one (env, core, iter) triple — these are derived from the
+filename pattern <env>-cpu<N>-iter<I>.txt unless overridden via --env/--core/--iter.
+
+The parser is a small state machine: most metrics emit on a single line; ctx,
+lat_mem_rd, and par_mem produce multi-line tables that need a "current section"
+flag set by a header line.
+"""
+
+import argparse
+import csv
+import re
+import sys
+from pathlib import Path
+
+# --- single-line patterns: (regex, bench, variant, unit) ---
+# `_M` captures the numeric value.
+SINGLE_LINE = [
+    # syscalls
+    (r'^Simple syscall:\s+([\d.]+) microseconds$',      'lat_syscall', 'null',  'us'),
+    (r'^Simple read:\s+([\d.]+) microseconds$',         'lat_syscall', 'read',  'us'),
+    (r'^Simple write:\s+([\d.]+) microseconds$',        'lat_syscall', 'write', 'us'),
+    (r'^Simple stat:\s+([\d.]+) microseconds$',         'lat_syscall', 'stat',  'us'),
+    (r'^Simple fstat:\s+([\d.]+) microseconds$',        'lat_syscall', 'fstat', 'us'),
+    (r'^Simple open/close:\s+([\d.]+) microseconds$',   'lat_syscall', 'open',  'us'),
+    # signals
+    (r'^Signal handler installation:\s+([\d.]+) microseconds$', 'lat_sig', 'install', 'us'),
+    (r'^Signal handler overhead:\s+([\d.]+) microseconds$',     'lat_sig', 'catch',   'us'),
+    (r'^Protection fault:\s+([\d.]+) microseconds$',            'lat_sig', 'prot',    'us'),
+    # IPC latency
+    (r'^Pipe latency:\s+([\d.]+) microseconds$',        'lat_pipe', 'rt',  'us'),
+    (r'^AF_UNIX sock stream latency:\s+([\d.]+) microseconds$', 'lat_unix', 'rt', 'us'),
+    # IPC bandwidth
+    (r'^Pipe bandwidth:\s+([\d.]+) MB/sec',             'bw_pipe', 'bw', 'MB/s'),
+    (r'^AF_UNIX sock stream bandwidth:\s+([\d.]+) MB/sec', 'bw_unix', 'bw', 'MB/s'),
+    # process
+    (r'^Simple procedure call:\s+([\d.]+) microseconds$',  'lat_proc', 'procedure', 'us'),
+    (r'^Process fork\+exit:\s+([\d.]+) microseconds$',     'lat_proc', 'fork',  'us'),
+    (r'^Process fork\+execve:\s+([\d.]+) microseconds$',   'lat_proc', 'exec',  'us'),
+    (r'^Process fork\+/bin/sh -c:\s+([\d.]+) microseconds$', 'lat_proc', 'shell', 'us'),
+    # pagefault, mmap (single mmap line: "<size_MB> <us>")
+    (r'^Pagefaults on \S+:\s+([\d.]+) microseconds$',   'lat_pagefault', 'minor', 'us'),
+    # network localhost
+    (r'^UDP latency using localhost:\s+([\d.]+) microseconds$',  'lat_udp',     'lhost', 'us'),
+    (r'^TCP latency using localhost:\s+([\d.]+) microseconds$',  'lat_tcp',     'lhost', 'us'),
+    (r'^TCP/IP connection cost to localhost:\s+([\d.]+) microseconds$', 'lat_connect', 'lhost', 'us'),
+    (r'^RPC/udp latency using localhost:\s+([\d.]+) microseconds$', 'lat_rpc', 'udp_lhost', 'us'),
+    (r'^RPC/tcp latency using localhost:\s+([\d.]+) microseconds$', 'lat_rpc', 'tcp_lhost', 'us'),
+    # tlb (uses pages, not microseconds)
+    (r'^tlb:\s+(\d+)\s+pages$',                         'tlb', 'effective', 'pages'),
+]
+
+# STREAM: "STREAM <op> latency: <ns> nanoseconds" / "STREAM <op> bandwidth: <MB/s> MB/sec"
+STREAM_LAT = re.compile(r'^(STREAM2?) (\w+) latency:\s+([\d.]+) nanoseconds$')
+STREAM_BW  = re.compile(r'^(STREAM2?) (\w+) bandwidth:\s+([\d.]+) MB/sec$')
+
+# Select: "Select on <N> fd's: <us>" — both file and tcp variants present
+SELECT = re.compile(r"^Select on (\d+) (\w+)'s?:\s+([\d.]+) microseconds$")
+
+# Section headers (set parser state)
+CTX_HEADER = re.compile(r'^"size=(\w+) ovr=([\d.]+)$')                       # lat_ctx
+STRIDE_HEADER = re.compile(r'^"stride=(\d+)$')                                # lat_mem_rd
+SIZE_LAT_ROW = re.compile(r'^([\d.]+)\s+([\d.]+)$')                          # generic "size value"
+
+# Mode flags set by these literal section banners (next "stride=" / table belongs to them)
+MODE_BANNERS = {
+    'Memory load latency':       'lat_mem_rd_load',
+    'Random load latency':       'lat_mem_rd_rand',
+    'Memory load parallelism':   'par_mem',
+    '"mappings':                 'lat_mmap',
+    '"Mmap read bandwidth':      'bw_mmap_rd',
+    '"Mmap read open2close bandwidth': 'bw_mmap_rd_o2c',
+    '"read bandwidth':           'bw_file_rd',
+    '"read open2close bandwidth':'bw_file_rd_o2c',
+    'Socket bandwidth using localhost': 'bw_tcp_lhost',
+}
+
+# Lines we explicitly skip (RPC errors when rpcbind isn't running, etc.)
+SKIP_PATTERNS = [
+    re.compile(r'^Cannot register service'),
+    re.compile(r'^unable to register'),
+    re.compile(r'^\(null\): RPC:'),
+    re.compile(r': RPC: '),
+    re.compile(r'^x: No such'),
+    re.compile(r'^\['),         # metadata blocks
+    re.compile(r'^\s*$'),       # blank lines (state-machine resets handled separately)
+]
+
+
+def parse_file(path, env, core, iter_id, writer):
+    mode = None                 # current section: ctx | lat_mem_rd_* | par_mem | lat_mmap | bw_tcp_lhost ...
+    ctx_size = None             # set when ctx header seen, applies to subsequent "<n> <us>" rows
+    stride = None               # set when "stride=<N>" header seen
+
+    with open(path) as f:
+        for raw in f:
+            line = raw.rstrip('\n')
+
+            # State resets
+            if not line.strip():
+                # Blank line closes any table-mode (ctx tables and stride tables are
+                # blank-line delimited).
+                mode = None
+                ctx_size = None
+                stride = None
+                continue
+
+            # Section banner?
+            if line in MODE_BANNERS:
+                mode = MODE_BANNERS[line]
+                stride = None
+                continue
+
+            # Ctx header sets sub-state
+            m = CTX_HEADER.match(line)
+            if m:
+                mode = 'lat_ctx'
+                ctx_size = m.group(1)        # "0k", "4k", ...
+                continue
+
+            # Stride header (only meaningful with a preceding mode)
+            m = STRIDE_HEADER.match(line)
+            if m:
+                stride = m.group(1)
+                continue
+
+            # Now process by state
+            if mode == 'lat_ctx':
+                m = SIZE_LAT_ROW.match(line)
+                if m:
+                    nproc, us = m.group(1), m.group(2)
+                    variant = f'sz{ctx_size}_p{nproc}'
+                    writer.writerow([env, core, iter_id, 'lat_ctx', variant, us, 'us'])
+                    continue
+
+            if mode and mode.startswith('lat_mem_rd_'):
+                m = SIZE_LAT_ROW.match(line)
+                if m:
+                    sz_mb, ns = m.group(1), m.group(2)
+                    bench = mode             # lat_mem_rd_load or lat_mem_rd_rand
+                    variant = f'stride{stride}_sz{sz_mb}MB'
+                    writer.writerow([env, core, iter_id, bench, variant, ns, 'ns'])
+                    continue
+
+            if mode == 'par_mem':
+                m = SIZE_LAT_ROW.match(line)
+                if m:
+                    sz_mb, par = m.group(1), m.group(2)
+                    writer.writerow([env, core, iter_id, 'par_mem', f'sz{sz_mb}MB', par, 'parallel'])
+                    continue
+
+            if mode == 'lat_mmap':
+                m = SIZE_LAT_ROW.match(line)
+                if m:
+                    sz_mb, us = m.group(1), m.group(2)
+                    writer.writerow([env, core, iter_id, 'lat_mmap', f'sz{sz_mb}MB', us, 'us'])
+                    continue
+
+            if mode and mode.startswith('bw_tcp_lhost'):
+                # bw_tcp emits "<msg_size_KB> <bw_MBps>" rows
+                m = SIZE_LAT_ROW.match(line)
+                if m:
+                    msz, bw = m.group(1), m.group(2)
+                    writer.writerow([env, core, iter_id, 'bw_tcp', f'msg{msz}', bw, 'MB/s'])
+                    continue
+
+            if mode and (mode.startswith('bw_file_rd') or mode.startswith('bw_mmap_rd')):
+                m = SIZE_LAT_ROW.match(line)
+                if m:
+                    sz, bw = m.group(1), m.group(2)
+                    writer.writerow([env, core, iter_id, mode, f'sz{sz}', bw, 'MB/s'])
+                    continue
+
+            # Single-line patterns (run AFTER state-machine to give state priority)
+            matched = False
+            for pat, bench, variant, unit in SINGLE_LINE:
+                m = re.match(pat, line)
+                if m:
+                    writer.writerow([env, core, iter_id, bench, variant, m.group(1), unit])
+                    matched = True
+                    break
+            if matched:
+                continue
+
+            m = STREAM_LAT.match(line)
+            if m:
+                fam, op, v = m.groups()
+                writer.writerow([env, core, iter_id, fam.lower(), f'{op}_lat', v, 'ns'])
+                continue
+            m = STREAM_BW.match(line)
+            if m:
+                fam, op, v = m.groups()
+                writer.writerow([env, core, iter_id, fam.lower(), f'{op}_bw', v, 'MB/s'])
+                continue
+
+            m = SELECT.match(line)
+            if m:
+                n, kind, us = m.groups()
+                writer.writerow([env, core, iter_id, 'lat_select', f'{kind}_n{n}', us, 'us'])
+                continue
+
+            # Skip known-noisy lines
+            if any(p.search(line) for p in SKIP_PATTERNS):
+                continue
+
+            # Anything else: report on stderr so we can iterate the parser
+            print(f'UNPARSED [{path.name}]: {line!r}', file=sys.stderr)
+
+
+FNAME_RE = re.compile(r'^(?P<env>[^/]+)-cpu(?P<core>\d+)-iter(?P<iter>\d+)\.txt$')
+
+
+def derive_meta(path, override):
+    if override.get('env') and override.get('core') and override.get('iter') is not None:
+        return override['env'], override['core'], override['iter']
+    m = FNAME_RE.match(path.name)
+    if not m:
+        print(f'cannot derive env/core/iter from {path.name}; use --env/--core/--iter', file=sys.stderr)
+        sys.exit(2)
+    return m.group('env'), m.group('core'), m.group('iter')
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('files', nargs='+', type=Path)
+    ap.add_argument('--env')
+    ap.add_argument('--core')
+    ap.add_argument('--iter', type=int)
+    args = ap.parse_args()
+
+    writer = csv.writer(sys.stdout)
+    writer.writerow(['env', 'core', 'iter', 'bench', 'variant', 'value', 'unit'])
+    override = {'env': args.env, 'core': args.core, 'iter': args.iter}
+    for p in args.files:
+        env, core, it = derive_meta(p, override)
+        parse_file(p, env, core, it, writer)
+
+
+if __name__ == '__main__':
+    main()

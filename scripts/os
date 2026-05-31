@@ -10,11 +10,15 @@ then	OS=bloat-os
     MACHINE=`uname -m | sed -e 's/ //g' | sed -e 's?/?-?g'`
     SYSTEM=`uname -s | sed -e 's/ //g' | sed -e 's?/?-?g'`
     OS="${MACHINE}-${SYSTEM}"
+    FALLBACK_OS="$OS"
     if [ -f ../scripts/gnu-os ]
-    then	OS=`../scripts/gnu-os | sed s/unknown-//`
+    then	OS=`../scripts/gnu-os 2>/dev/null | sed s/unknown-//`
     fi
     if [ -f ../../scripts/gnu-os ]
-    then	OS=`../../scripts/gnu-os | sed s/unknown-//`
+    then	OS=`../../scripts/gnu-os 2>/dev/null | sed s/unknown-//`
     fi
+    # gnu-os (2004 config.guess) doesn't recognize newer arches like
+    # aarch64 and returns empty; fall back to uname-derived name.
+    if [ "X$OS" = "X" ]; then OS="$FALLBACK_OS"; fi
 fi
 echo $OS
