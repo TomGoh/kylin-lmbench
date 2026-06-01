@@ -1,0 +1,4 @@
+env=orbstack-host  cores=0  iters=1  config=configs/CONFIG.host  started=2026-06-01T10:39:56+08:00
+kernel=7.0.5-orbstack-00330-ge3df4e19b0a0-dirty
+cmdline=init=/opt/orb/vinit workqueue.power_efficient=1 cgroup.memory=nokmem,nosocket swiotlb=noforce slab_min_order=2 cgroup_v1_proc=1 nbd.nbds_max=4 can.stats_timer=0 id_aa64mmfr0.ecv=1 root=/dev/vda rootfstype=erofs ro console=hvc0 quiet ORB_S=nDEHAAAAAAAAMIXZSgAAAABwAKMSAAAAGgAFAAAAAAAAADI1RjcxDQAAAAAAAAAvZGV2L3Zwb3J0MnAyAQA earlycon=pl011,mmio32,0x40001000 
+cpu_max_freqs: 2000000 2000000 2000000 2000000 2000000 2000000 2000000 2000000 2000000 2000000 2000000 

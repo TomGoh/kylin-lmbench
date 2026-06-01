@@ -146,9 +146,12 @@ def parse_file(path, env, core, iter_id, writer):
 
             # State resets
             if not line.strip():
-                # Blank line closes any table-mode (ctx tables and stride tables are
-                # blank-line delimited).
-                mode = None
+                # Blank line resets *sub-state* (stride, ctx_size) but NOT mode.
+                # Critical for lat_mem_rd multi-stride output: lmbench emits
+                #   "stride=16\n<rows>\n\n"stride=32\n<rows>\n\n...
+                # under one "Memory load latency" banner. Resetting mode on the
+                # blank line between strides would orphan all but the first
+                # block. mode is overridden only by the next explicit banner.
                 ctx_size = None
                 stride = None
                 continue
