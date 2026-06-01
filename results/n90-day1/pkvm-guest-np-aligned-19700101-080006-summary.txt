@@ -1,0 +1,4 @@
+env=pkvm-guest-np-aligned  cores=0  iters=1  config=configs/CONFIG.test  started=1970-01-01T08:00:06+08:00
+kernel=6.6.0-52-generic
+cmdline=panic=-1 console=ttyS0 earlycon=uart8250,mmio,0x3f8 console=ttyAMA0 root=/dev/vda rw transparent_hugepage=never randomize_va_space=0 no_console_suspend security=box lsm=ksaf audit=1 psi=1 systemd.unified_cgroup_hierarchy=1 quiet loglevel=0 root=/dev/vda rw
+cpu_max_freqs: 

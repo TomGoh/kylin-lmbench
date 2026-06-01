@@ -1,0 +1,81 @@
+[    0.000000][ 0] [    T0] Booting Linux on physical CPU 0x0000000000 [0x700f8620]
+[    0.000000][ 0] [    T0] Linux version 6.6.0-52-generic (KYLINSOFT@f93db8ed604a) (aarch64-linux-gnu-gcc (openKylin 12.3.0-1ok3k0.1) 12.3.0, GNU ld (GNU Binutils for Openkylin) 2.41) #43pkvm10-KYLINOS SMP Mon Apr 13 09:11:30 UTC 2026
+[    0.000000][ 0] [    T0] random: crng init done
+[    0.000000][ 0] [    T0] Machine model: linux,dummy-virt
+[    0.000000][ 0] [    T0] earlycon: uart8250 at MMIO 0x00000000000003f8 (options '')
+[    0.000000][ 0] [    T0] printk: legacy bootconsole [uart8250] enabled
+[[0;1;31mFAILED[0m] Failed to start [0;1;39mauditd.service[0m - Security Auditing Service.
+[[0;1;31mFAILED[0m] Failed to start [0;1;39mcups.path[0m - CUPS Scheduler.
+[[0;1;31mFAILED[0m] Failed to listen on [0;1;39mavahi-daemon.s…[0mDNS/DNS-SD Stack Activation Socket.
+[[0;1;31mFAILED[0m] Failed to listen on [0;1;39mcups.socket[0m - CUPS Scheduler.
+[[0;1;38;5;185mDEPEND[0m] Dependency failed for [0;1;39mkylin-printe…[0min-printer-applet Dbus Application.
+[[0;1;31mFAILED[0m] Failed to start [0;1;39msmartmontools.serv…[0meporting Technology (SMART) Daemon.
+[[0;1;31mFAILED[0m] Failed to start [0;1;39mauditd.service[0m - Security Auditing Service.
+[[0;1;31mFAILED[0m] Failed to start [0;1;39mauditd.service[0m - Security Auditing Service.
+[[0;1;31mFAILED[0m] Failed to start [0;1;39mauditd.service[0m - Security Auditing Service.
+[[0;1;31mFAILED[0m] Failed to start [0;1;39mdnsmasq.service[0m - …weight DHCP and caching DNS server.
+[[0;1;31mFAILED[0m] Failed to start [0;1;39mauditd.service[0m - Security Auditing Service.
+[[0;1;31mFAILED[0m] Failed to start [0;1;39mkylin-core-dump-mo….service[0m - kylin-core-dump-monitor.
+[[0;1;31mFAILED[0m] Failed to start [0;1;39mauditd.service[0m - Security Auditing Service.
+
+Kylin V11 pvm-guest ttyS0
+
+pvm-guest login: root (automatic login)
+
+Welcome to Kylin V11 (GNU/Linux 6.6.0-52-generic aarch64)
+
+ * Management:     http://www.kylinos.cn/
+ * Support:        http://www.kylinos.cn/service.aspx
+
+[guest] /opt/lmbench/autorun present — starting benchmark
+tee: /opt/lmbench/results/last-run.log: No such file or directory
+[bench-in-guest] guest state:
+  THP=always madvise [never]
+  ASLR=0
+  LSM=capability,kycp,ksaf
+  /proc/cmdline=panic=-1 console=ttyS0 earlycon=uart8250,mmio,0x3f8 console=ttyAMA0 root=/dev/vda rw transparent_hugepage=never randomize_va_space=0 no_console_suspend security=box lsm=ksaf audit=1 psi=1 systemd.unified_cgroup_hierarchy=1 quiet loglevel=0 root=/dev/vda rw
+  KYSEC userspace:
+    ksaf-devctl-sync-daemon        active
+    ksaf-label-manager             active
+    ksaf-policy-init               inactive
+    kyseclogd                      active
+    kysec-scene-init               active
+    auditd                         failed
+    kysec2-kbox-load               inactive
+  /sys/fs/box=ls: cannot access '/sys/fs/box': No such file or directory
+  /sys/kernel/security listing=evm ima integrity kycp lsm 
+  auditctl -s:
+    enabled 1
+    failure 1
+    pid 0
+    rate_limit 0
+    backlog_limit 64
+    lost 211
+    backlog 0
+    backlog_wait_time 15000
+    backlog_wait_time_actual 0
+    loginuid_immutable 0 unlocked
+  auditctl -l (rules count):
+    1
+    No rules
+  BPF programs loaded:
+    count=0
+  kprobes attached: 0
+  uprobes attached: 0
+  ftrace current: nop
+  tracepoints enabled: 0
+[bench-in-guest] ENV_TAG=pkvm-guest-np-N5 CORES=0 ITERS=5 CONFIG=configs/CONFIG.test
+[bench-in-guest] starting at 1970-01-01T08:00:08+08:00
+cat: '/sys/devices/system/cpu/cpu[0-9]*/cpufreq/scaling_max_freq': No such file or directory
+[bench] === cpu0 (env=pkvm-guest-np-N5) — 5 iters ===
+  [iter 1/5 cpu0] 219s
+  [iter 2/5 cpu0] 215s
+  [iter 3/5 cpu0] 216s
+  [iter 4/5 cpu0] 212s
+  [iter 5/5 cpu0] 215s
+[bench] parsing 0 -> results/pkvm-guest-np-N5-cpu0.csv
+  2135 data rows, 5 unparsed lines (see *-parse.err)
+[bench] done. summary: results/pkvm-guest-np-N5-19700101-080008-summary.txt
+[bench-in-guest] finished at 1970-01-01T08:18:05+08:00 (exit=0)
+[guest] benchmark done — type 'reboot -f' or 'halt -f' to exit
+[?2004hroot@pvm-guest:~# 
