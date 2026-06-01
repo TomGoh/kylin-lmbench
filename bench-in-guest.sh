@@ -39,30 +39,17 @@ echo 0     > /proc/sys/kernel/randomize_va_space 2>/dev/null || true
 echo 0     > /proc/sys/kernel/numa_balancing 2>/dev/null || true
 # (cpufreq sysfs absent in guest — vCPU follows host frequency.)
 
-echo "[bench-in-guest] guest state:"
+echo "[bench-in-guest] guest prep state:"
 echo "  THP=$(cat /sys/kernel/mm/transparent_hugepage/enabled 2>/dev/null)"
 echo "  ASLR=$(cat /proc/sys/kernel/randomize_va_space 2>/dev/null)"
-echo "  LSM=$(cat /sys/kernel/security/lsm 2>/dev/null)"
-echo "  /proc/cmdline=$(cat /proc/cmdline)"
-echo "  KYSEC userspace:"
-for s in ksaf-devctl-sync-daemon ksaf-label-manager ksaf-policy-init \
-         kyseclogd kysec-scene-init auditd kysec2-kbox-load; do
-  printf "    %-30s %s\n" "$s" "$(systemctl is-active "$s" 2>&1)"
-done
-echo "  /sys/fs/box=$(ls /sys/fs/box 2>&1 | head -1)"
-echo "  /sys/kernel/security listing=$(ls /sys/kernel/security 2>&1 | tr "\n" " ")"
-echo "  auditctl -s:"
-auditctl -s 2>&1 | sed 's/^/    /'
-echo "  auditctl -l (rules count):"
-echo "    $(auditctl -l 2>&1 | wc -l)"
-auditctl -l 2>&1 | head -3 | sed 's/^/    /'
-echo "  BPF programs loaded:"
-echo "    count=$(bpftool prog show 2>/dev/null | grep -c '^[0-9]')"
-bpftool prog show 2>/dev/null | grep -E '^[0-9]' | awk '{print $2, $4}' | sort | uniq -c | sed 's/^/      /'
-echo "  kprobes attached: $(cat /sys/kernel/tracing/kprobe_events 2>/dev/null | wc -l)"
-echo "  uprobes attached: $(cat /sys/kernel/tracing/uprobe_events 2>/dev/null | wc -l)"
-echo "  ftrace current: $(cat /sys/kernel/tracing/current_tracer 2>/dev/null)"
-echo "  tracepoints enabled: $(find /sys/kernel/tracing/events -name enable -exec grep -l '^1$' {} \; 2>/dev/null | wc -l)"
+
+# KYSEC fingerprint via the shared probe — identical code path to the host's
+# bench.sh, so the two fingerprints are directly comparable. Compare the
+# `class=` token on both sides: they MUST match (target: class=off) or the
+# host-vs-guest delta is a KYSEC artifact, not a hypervisor cost. See
+# docs/KYSEC-OFF.md.
+GUEST_KYSEC_FP="$(bash /opt/lmbench/kysec-probe.sh)"
+echo "[bench-in-guest] $GUEST_KYSEC_FP"
 
 echo "[bench-in-guest] ENV_TAG=$ENV_TAG CORES=$CORES ITERS=$ITERS CONFIG=$CONFIG"
 echo "[bench-in-guest] starting at $(date -Iseconds)"
@@ -79,4 +66,5 @@ echo "[bench-in-guest] finished at $(date -Iseconds) (exit=$EXIT)"
   echo "cores=$CORES"
   echo "iters=$ITERS"
   echo "config=$CONFIG"
+  echo "$GUEST_KYSEC_FP"
 } > /opt/lmbench/results/last-run.meta

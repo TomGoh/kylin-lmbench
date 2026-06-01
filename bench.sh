@@ -54,6 +54,23 @@ SUMMARY="results/${ENV_TAG}-${STAMP}-summary.txt"
   echo "cpu_max_freqs: $(for c in /sys/devices/system/cpu/cpu[0-9]*/cpufreq/scaling_max_freq; do cat "$c"; done | tr '\n' ' ')"
 } > "$SUMMARY"
 
+# KYSEC state fingerprint — the #1 confound for host-vs-guest deltas. A stock
+# guest boots into class=partial (LSM loaded but policy/audit inactive) and so
+# looks faster than a class=full host on syscalls. Record it on every run and
+# warn if it doesn't match the expectation, so the asymmetry can't sneak back.
+# Set EXPECT_KYSEC=off (default), full, partial, or any (silence). See
+# docs/KYSEC-OFF.md.
+KYSEC_FP="$(bash "$HERE/kysec-probe.sh" 2>>"$SUMMARY")"
+echo "$KYSEC_FP" >> "$SUMMARY"
+KCLASS="${KYSEC_FP##*class=}"
+echo "[bench] KYSEC class=$KCLASS  ($KYSEC_FP)"
+EXPECT_KYSEC="${EXPECT_KYSEC:-off}"
+if [ "$EXPECT_KYSEC" != any ] && [ "$KCLASS" != "$EXPECT_KYSEC" ]; then
+  echo "[bench] WARNING: KYSEC class=$KCLASS but EXPECT_KYSEC=$EXPECT_KYSEC." >&2
+  echo "[bench]          host-vs-guest deltas are confounded unless BOTH sides report the same class." >&2
+  echo "[bench]          To reach class=off see docs/KYSEC-OFF.md; set EXPECT_KYSEC=any to silence." >&2
+fi
+
 IFS=, read -ra CORE_LIST <<< "$CORES"
 for core in "${CORE_LIST[@]}"; do
   CSV="results/${ENV_TAG}-cpu${core}.csv"

@@ -85,6 +85,8 @@ docs/
   EXPERIMENT.md          why we measure what we measure
   PIPELINE.md            how the scripts work end-to-end
   PATCHES.md             what we changed in upstream lmbench
+  KYSEC-OFF.md           why the guest looks faster than the host & how to fix it
+kysec-probe.sh         normalized KYSEC state fingerprint (run on host & guest)
 run-pilot.sh           legacy pilot (custom subset, not lmbench-driven); kept as smoke test
 run-mem.sh             companion to run-pilot.sh: multi-stride memory latency
 bench-host.sh          older orchestrator from the pilot era (superseded by bench.sh)
