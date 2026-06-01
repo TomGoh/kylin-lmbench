@@ -60,26 +60,63 @@ SINGLE_LINE = [
 STREAM_LAT = re.compile(r'^(STREAM2?) (\w+) latency:\s+([\d.]+) nanoseconds$')
 STREAM_BW  = re.compile(r'^(STREAM2?) (\w+) bandwidth:\s+([\d.]+) MB/sec$')
 
-# Select: "Select on <N> fd's: <us>" — both file and tcp variants present
-SELECT = re.compile(r"^Select on (\d+) (\w+)'s?:\s+([\d.]+) microseconds$")
+# Select: "Select on <N> fd's: <us>"   (file variant)
+#         "Select on <N> tcp fd's: <us>" (tcp variant)
+SELECT = re.compile(r"^Select on (\d+)(?: (\w+))? fd'?s?:\s+([\d.]+) microseconds$")
 
 # Section headers (set parser state)
 CTX_HEADER = re.compile(r'^"size=(\w+) ovr=([\d.]+)$')                       # lat_ctx
 STRIDE_HEADER = re.compile(r'^"stride=(\d+)$')                                # lat_mem_rd
 SIZE_LAT_ROW = re.compile(r'^([\d.]+)\s+([\d.]+)$')                          # generic "size value"
+# Three-field bandwidth row: "<size_MB> <bw_MBps> MB/sec" (used by bw_tcp via
+# lib_timing mb() helper). The trailing "MB/sec" disambiguates from the two-
+# field form used by bw_mem and bw_file_rd.
+SIZE_BW_MBSEC = re.compile(r'^([\d.]+)\s+([\d.]+)\s+MB/sec$')
+# lat_fs row format: "<sizeK>\t<n>\t<rate1>\t<rate2>[\t<rate3>]" (tab-separated;
+# rates may be "-1" when measurement failed). Captures size and first rate.
+LAT_FS_ROW = re.compile(r'^(\d+)k\t(\S+)(?:\t(\S+))?(?:\t(\S+))?(?:\t(\S+))?$')
+# lmdd "label=File <path> write bandwidth: " produces:
+#   "File <path> write bandwidth: <X> KB/sec"
+LMDD_WRITE = re.compile(r'^File \S+ write bandwidth:\s+([\d.]+) KB/sec$')
+# lat_http summary line:
+#   "Avg xfer: 3.2KB, 41.8KB in 0.2660 millisecs, 157.03 MB/sec"
+LAT_HTTP = re.compile(r'^Avg xfer:.*?,\s+([\d.]+) MB/sec$')
 
 # Mode flags set by these literal section banners (next "stride=" / table belongs to them)
 MODE_BANNERS = {
+    # memory / mmap
     'Memory load latency':       'lat_mem_rd_load',
     'Random load latency':       'lat_mem_rd_rand',
     'Memory load parallelism':   'par_mem',
     '"mappings':                 'lat_mmap',
     '"Mmap read bandwidth':      'bw_mmap_rd',
     '"Mmap read open2close bandwidth': 'bw_mmap_rd_o2c',
+    # file I/O
     '"read bandwidth':           'bw_file_rd',
     '"read open2close bandwidth':'bw_file_rd_o2c',
+    # network bandwidth
     'Socket bandwidth using localhost': 'bw_tcp_lhost',
+    # bw_mem flavors (each emits "<size_MB> <bw_MBps>" rows after this banner)
+    '"libc bcopy unaligned':            'bw_mem_bcopy_unaligned',
+    '"libc bcopy aligned':              'bw_mem_bcopy_aligned',
+    'Memory bzero bandwidth':           'bw_mem_bzero',
+    '"unrolled bcopy unaligned':        'bw_mem_fcp',
+    '"unrolled partial bcopy unaligned':'bw_mem_cp',
+    'Memory read bandwidth':            'bw_mem_frd',
+    'Memory partial read bandwidth':    'bw_mem_rd',
+    'Memory write bandwidth':           'bw_mem_fwr',
+    'Memory partial write bandwidth':   'bw_mem_wr',
+    'Memory partial read/write bandwidth': 'bw_mem_rdwr',
+    # lat_fs (set before fs create/delete table)
+    '"File system latency':                'lat_fs',
 }
+
+# Generic "<label>: <X.YY> <unit>" pattern used by lib_timing.c helpers
+# (nano/micro/milli). lat_ops emits ~20 lines through nano(), e.g.
+# "integer add: 1.23 nanoseconds". par_ops emits "integer add parallelism: 4.50"
+# (no unit). We catch these AFTER specific patterns so the named ones win.
+GENERIC_TIMED = re.compile(r'^([A-Za-z][A-Za-z0-9_+/ ]+?):\s+([\d.]+)\s+(nanoseconds|microseconds|milliseconds|MB/sec)$')
+PAR_OPS = re.compile(r'^([a-zA-Z][a-zA-Z0-9 ]+?) parallelism:\s+([\d.]+)$')
 
 # Lines we explicitly skip (RPC errors when rpcbind isn't running, etc.)
 SKIP_PATTERNS = [
@@ -88,8 +125,10 @@ SKIP_PATTERNS = [
     re.compile(r'^\(null\): RPC:'),
     re.compile(r': RPC: '),
     re.compile(r'^x: No such'),
-    re.compile(r'^\['),         # metadata blocks
-    re.compile(r'^\s*$'),       # blank lines (state-machine resets handled separately)
+    re.compile(r'^\['),                  # metadata blocks
+    re.compile(r'^\s*$'),                # blank lines (state-machine resets handled separately)
+    re.compile(r'.+: \d+: .+ not found'),# script-internal "msleep not found" etc.
+    re.compile(r'^[�\?\s]+$'),      # lone Unicode replacement char(s) from non-UTF8 metadata
 ]
 
 
@@ -98,7 +137,10 @@ def parse_file(path, env, core, iter_id, writer):
     ctx_size = None             # set when ctx header seen, applies to subsequent "<n> <us>" rows
     stride = None               # set when "stride=<N>" header seen
 
-    with open(path) as f:
+    # lmbench reports embed system metadata (mount tables, ifconfig output)
+    # that may contain non-UTF-8 bytes on Chinese-locale hosts. We don't care
+    # about those bytes — replace undecodable bytes rather than crash.
+    with open(path, encoding='utf-8', errors='replace') as f:
         for raw in f:
             line = raw.rstrip('\n')
 
@@ -163,14 +205,28 @@ def parse_file(path, env, core, iter_id, writer):
                     continue
 
             if mode and mode.startswith('bw_tcp_lhost'):
-                # bw_tcp emits "<msg_size_KB> <bw_MBps>" rows
-                m = SIZE_LAT_ROW.match(line)
+                # bw_tcp rows are "<msg_size_MB> <bw> MB/sec" — 3 fields with unit.
+                m = SIZE_BW_MBSEC.match(line)
                 if m:
                     msz, bw = m.group(1), m.group(2)
-                    writer.writerow([env, core, iter_id, 'bw_tcp', f'msg{msz}', bw, 'MB/s'])
+                    writer.writerow([env, core, iter_id, 'bw_tcp', f'msg{msz}MB', bw, 'MB/s'])
                     continue
 
-            if mode and (mode.startswith('bw_file_rd') or mode.startswith('bw_mmap_rd')):
+            if mode == 'lat_fs':
+                m = LAT_FS_ROW.match(line)
+                if m:
+                    sz, *rates = m.groups()
+                    # column meanings (from lmbench docs): n_iters, create_rate,
+                    # unlink_rate, possibly directory_rate. Emit each non-null rate.
+                    col_names = ['niters', 'create', 'unlink', 'dir']
+                    for name, v in zip(col_names, rates):
+                        if v is not None and v != '-1':
+                            writer.writerow([env, core, iter_id, 'lat_fs',
+                                             f'sz{sz}K_{name}', v, 'ops/s' if name != 'niters' else 'count'])
+                    continue
+
+            if mode and (mode.startswith('bw_file_rd') or mode.startswith('bw_mmap_rd')
+                         or mode.startswith('bw_mem_')):
                 m = SIZE_LAT_ROW.match(line)
                 if m:
                     sz, bw = m.group(1), m.group(2)
@@ -202,7 +258,40 @@ def parse_file(path, env, core, iter_id, writer):
             m = SELECT.match(line)
             if m:
                 n, kind, us = m.groups()
+                kind = kind or 'file'   # absent group means file variant
                 writer.writerow([env, core, iter_id, 'lat_select', f'{kind}_n{n}', us, 'us'])
+                continue
+
+            m = LMDD_WRITE.match(line)
+            if m:
+                writer.writerow([env, core, iter_id, 'lmdd', 'file_write_bw', m.group(1), 'KB/s'])
+                continue
+
+            m = LAT_HTTP.match(line)
+            if m:
+                writer.writerow([env, core, iter_id, 'lat_http', 'bw_lhost', m.group(1), 'MB/s'])
+                continue
+
+            # par_ops: "<op> parallelism: <value>" (no unit)
+            m = PAR_OPS.match(line)
+            if m:
+                op, par = m.group(1), m.group(2)
+                writer.writerow([env, core, iter_id, 'par_ops',
+                                 op.replace(' ', '_'), par, 'parallel'])
+                continue
+
+            # Generic "<label>: <value> <unit>" fallback — catches lat_ops
+            # (`integer add: 1.23 nanoseconds`), and anything else routed
+            # through lib_timing.c's nano/micro/milli helpers. Runs LAST so
+            # specific patterns above (lat_syscall, lat_proc, etc.) win.
+            m = GENERIC_TIMED.match(line)
+            if m:
+                label, value, unit = m.groups()
+                unit_short = {'nanoseconds': 'ns', 'microseconds': 'us',
+                              'milliseconds': 'ms', 'MB/sec': 'MB/s'}[unit]
+                writer.writerow([env, core, iter_id, 'lat_ops',
+                                 label.replace(' ', '_').replace('/', '_'),
+                                 value, unit_short])
                 continue
 
             # Skip known-noisy lines

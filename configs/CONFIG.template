@@ -50,14 +50,22 @@ FASTMEM="NO"
 MAIL=no
 
 # --- benchmark category toggles ---
-# We deliberately DO NOT set BENCHMARK_OS=YES (it turns everything on).
-# Instead, enable categories explicitly so we know what runs.
-BENCHMARK_HARDWARE=NO       # tlb / par_mem / stream / bw_mem-full → tested via BENCHMARK_MEM
-BENCHMARK_OS=               # leave blank; per-category flags drive what runs
+# Default policy: run the FULL lmbench suite (equivalent to upstream `make rerun`
+# with BENCHMARK_OS=YES + BENCHMARK_HARDWARE=YES). Per-category flags are kept
+# here as override knobs — flipping a single one to blank disables that block.
+#
+# OS=YES enables: syscall, select, sig, pipe, unix, proc, file, pagefault,
+#   mmap, udp, tcp, rpc, connect, http, ctx, bw_mem flavors.
+# HARDWARE=YES enables: lat_ops/par_ops, tlb/par_mem/stream, lat_mem_rd full
+#   stride curve. Also enables the `disk` raw-device benchmark IF DISKS is set
+#   (we leave DISKS empty — raw disk is destructive, run separately on demand).
+BENCHMARK_OS=YES
+BENCHMARK_HARDWARE=YES
 
-# --- KEEP (hypervisor-sensitive OS workloads) ---
+# Explicit per-category mirrors (left as YES; setting any to blank lets you
+# disable just that category without flipping BENCHMARK_OS off).
 BENCHMARK_SYSCALL=YES       # lat_syscall null/read/write/stat/fstat/open
-BENCHMARK_SELECT=YES        # lat_select -n {10,100,250,500} file (tcp skipped via no NETWORK)
+BENCHMARK_SELECT=YES        # lat_select -n {10,100,250,500} file (+ tcp if NETWORKS set)
 BENCHMARK_SIG=YES           # lat_sig install/catch/prot
 BENCHMARK_PROC=YES          # lat_proc fork/exec/shell
 BENCHMARK_CTX=YES           # lat_ctx full grid: -s {0,4,8,16,32,64} {2..96}
@@ -65,20 +73,21 @@ BENCHMARK_PAGEFAULT=YES     # lat_pagefault $FILE
 BENCHMARK_MMAP=YES          # lat_mmap full size sweep
 BENCHMARK_PIPE=YES          # lat_pipe + bw_pipe
 BENCHMARK_UNIX=YES          # lat_unix + bw_unix
-
-# --- KEEP (network-loopback; show pKVM bounce-buffer cost) ---
 BENCHMARK_UDP=YES           # lat_udp localhost
 BENCHMARK_TCP=YES           # lat_tcp localhost + bw_tcp size sweep
 BENCHMARK_CONNECT=YES       # lat_connect localhost (TCP handshake)
-BENCHMARK_RPC=YES           # lat_rpc -p udp/tcp localhost (needs rpcbind)
-
-# --- KEEP (hardware/memory; lat_mem_rd full stride curve + tlb) ---
-BENCHMARK_MEM=YES           # lat_mem_rd 16 32 64 128 256 512 1024 + tlb + par_mem + stream
-
-# --- SKIP ---
-BENCHMARK_HTTP=             # needs webpage-lm tarball + port 8008; guest setup overhead
-BENCHMARK_FILE=             # disk-bandwidth (bw_file_rd/lmdd); not running these in pilot
-BENCHMARK_BCOPY=            # bw_mem bcopy/fcp/cp many flavors; redundant with MEM
-BENCHMARK_OPS=              # lat_ops; arithmetic micro-ops, not hypervisor-sensitive
+BENCHMARK_RPC=YES           # lat_rpc -p udp/tcp localhost (needs rpcbind running)
+BENCHMARK_HTTP=YES          # lat_http localhost 8008 (auto-unpacks src/webpage-lm.tar)
+BENCHMARK_FILE=YES          # lat_fs + bw_file_rd + bw_mmap_rd + lmdd (writes to $FILE
+                            # and $FSDIR; for the pKVM I/O-tax story these MUST land
+                            # on a real block-backed FS, NOT tmpfs — see FILE/FSDIR
+                            # above).
+BENCHMARK_BCOPY=YES         # bw_mem 8 flavors (bcopy/bzero/fcp/cp/frd/rd/fwr/wr/rdwr)
+                            # across HALF/ALL size lists; large output volume.
+BENCHMARK_OPS=YES           # lat_ops + par_ops: arithmetic op latency/parallelism.
+                            # Sanity check: should be ~identical across environments;
+                            # divergence indicates pinning or freq-lock failure.
+BENCHMARK_MEM=YES           # lat_mem_rd 16 32 64 128 256 512 1024 + tlb + par_mem
+                            # + stream + STREAM2
 
 VERSION=3.0-a9

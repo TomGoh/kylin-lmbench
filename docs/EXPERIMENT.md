@@ -100,13 +100,21 @@ layer above the hardware is held identical across `baremetal`, `kvm-guest`,
   All lmbench timings flow through `clock_gettime()`; a different clocksource
   (e.g. `kvm-clock`) would change the very ruler used to measure latency.
 
-## Benchmark selection rationale
+## Benchmark coverage
 
-The full `make results` of upstream lmbench runs a lot of things irrelevant to
-the hypervisor question (e.g. NIC bandwidth, raw disk seek, FS create/delete).
-`configs/CONFIG.host` enables a curated subset:
+`configs/CONFIG.host` enables **the full upstream lmbench suite** (equivalent
+to `make rerun` with both `BENCHMARK_OS=YES` and `BENCHMARK_HARDWARE=YES`):
+every category is on. The only deliberate exclusions are:
 
-### Kept (hypervisor-sensitive)
+* **`DISKS=""`** — raw-block-device benchmarks (`disk`) are destructive
+  (write directly to the device). Run separately on demand, never in the
+  routine sweep.
+* **`REMOTE=""`** — remote-networking variants would introduce physical NIC
+  and link variables; we compare hypervisors, not network hardware.
+* **`NETWORKS=""`** — disables `lat_select` `tcp` variant which depends on
+  a usable network configuration; the `file` variant still runs.
+
+Rationale by category (why each is in the suite and what to look at):
 
 * **`lat_syscall` null/read/write/stat/fstat/open** — direct EL0↔EL1 trap; the
   cleanest measurement of "the cost of asking the kernel anything".
@@ -132,22 +140,25 @@ the hypervisor question (e.g. NIC bandwidth, raw disk seek, FS create/delete).
 * **`tlb`** — effective TLB capacity. **Critical for pKVM**: stage-2 walks
   consume TLB resource shared with the guest's stage-1.
 * **`par_mem` / `stream` / STREAM2** — memory parallelism and sustained
-  bandwidth. Largely insensitive to hypervisor; included as sanity check (these
-  should be roughly identical across environments — if they're not, something
-  is wrong with our pinning or memory allocation).
-
-### Deliberately skipped
-
-* **`lat_http`** — needs `webpage-lm` tarball unpacked + port 8008 listener in
-  every guest; setup variance dominates.
-* **`bw_file_rd` / `bw_mmap_rd` / `lmdd` / `lat_fs`** — raw disk / FS-specific.
-  Adds disk subsystem and filesystem implementation as confounds.
-* **`bw_mem` flavors (bcopy/fcp/cp/frd/fwr/wr/rdwr)** — captured indirectly via
-  STREAM / lat_mem_rd; the individual flavors mainly probe libc memcpy variants,
-  not hypervisor behavior.
-* **`lat_ops`** — pure arithmetic micro-ops; hypervisor has no path involved.
-* **All remote networking** — out of scope; we want to compare hypervisors, not
-  NIC drivers.
+  bandwidth. Largely insensitive to hypervisor; **included as sanity check**
+  (these should be roughly identical across environments — divergence flags a
+  bug in pinning or memory allocation).
+* **`bw_file_rd` / `bw_mmap_rd` / `lmdd` / `lat_fs`** — disk-FS bandwidth and
+  metadata operations. **For pKVM specifically these go through virtio-blk
+  with bounce buffers** — likely a major source of pKVM-specific overhead, so
+  must be measured. **Constraint**: `FILE` and `FSDIR` must land on a real
+  disk-backed FS in the guest (not tmpfs) — otherwise virtio-blk is bypassed.
+* **`bw_mem` flavors (bcopy/bzero/fcp/cp/frd/rd/fwr/wr/rdwr)** — eight
+  bandwidth variants across the full size sweep. Mostly probes libc memcpy
+  variants; included for completeness with `make rerun` and because pKVM
+  stage-2 effects on large strided writes are worth checking even if subtle.
+* **`lat_ops` / `par_ops`** — arithmetic op latency and parallelism. Pure
+  user-mode ALU work; **sanity check** that hypervisor doesn't affect cycle
+  cost of integer/float ops (it shouldn't — anything but ~0 difference here
+  flags a frequency-lock or pinning bug).
+* **`lat_http`** — HTTP throughput over loopback. The lmbench wrapper auto-
+  unpacks `src/webpage-lm.tar` and starts `lmhttp` on port 8008, so guest
+  setup overhead is minimal once port 8008 is free.
 
 ## Pilot vs full suite (historical note)
 
