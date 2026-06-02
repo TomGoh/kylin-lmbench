@@ -1,0 +1,180 @@
+[lmbench3.0 results for Linux kylin-pc 6.6.0-52-generic #43pkvm10-KYLINOS SMP Mon Apr 13 09:11:30 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux]
+/data/lmbench-3.0-a9/scripts/lmbench: 行 66: version: 没有那个文件或目录
+[BENCHMARK_HARDWARE: YES]
+[BENCHMARK_OS: YES]
+[ALL: 512 1k 2k 4k 8k 16k 32k 64k 128k 256k 512k 1m 2m 4m 8m]
+[DISKS: ]
+[DISK_DESC: ]
+[ENOUGH: 5000]
+[FAST: ]
+[FASTMEM: YES]
+[FILE: /tmp/lmb_file]
+[FSDIR: /tmp/lmb_fs]
+[HALF: 512 1k 2k 4k 8k 16k 32k 64k 128k 256k 512k 1m 2m 4m]
+[INFO: INFO.test]
+[LINE_SIZE: 64]
+[LOOP_O: 0]
+[MB: 8]
+[MHZ: 1900 MHz, 0.5263 nanosec clock]
+[MOTHERBOARD: Phytium D3000M]
+[NETWORKS: ]
+[PROCESSORS: 8]
+[REMOTE: ]
+[SLOWFS: NO]
+[OS: aarch64-Linux]
+[SYNC_MAX: 1]
+[LMBENCH_SCHED: DEFAULT]
+[TIMING_O: 0]
+[LMBENCH VERSION: 3.0-a9]
+[USER: kylin]
+[HOSTNAME: kylin-pc]
+[NODENAME: kylin-pc]
+[SYSNAME: Linux]
+[PROCESSOR: aarch64]
+[MACHINE: aarch64]
+[RELEASE: 6.6.0-52-generic]
+[VERSION: #43pkvm10-KYLINOS SMP Mon Apr 13 09:11:30 UTC 2026]
+[Tue Jun 2 09:04:02 AM CST 2026]
+[ 09:04:02 up 12:00, 2 users, load average: 2.09, 1.66, 1.07]
+[net: Kernel Interface table]
+[net: Iface             MTU    RX-OK RX-ERR RX-DRP RX-OVR    TX-OK TX-ERR TX-DRP TX-OVR Flg]
+[net: lo              65536  6165408      0      0 0       6165408      0      0      0 LRU]
+[if: lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536]
+[if: inet 127.0.0.1  netmask 255.0.0.0]
+[if: inet6 ::1  prefixlen 128  scopeid 0x10<host>]
+[if: loop  txqueuelen 1000  (本地环回)]
+[if: RX packets 6165408  bytes 111027355717 (111.0 GB)]
+[if: RX errors 0  dropped 0  overruns 0  frame 0]
+[if: TX packets 6165408  bytes 111027355717 (111.0 GB)]
+[if: TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0]
+[if: ]
+[net: wlp2s0           1500     6548      0      0 0          1520      0      0      0 BMRU]
+[if: wlp2s0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500]
+[if: inet 10.78.8.243  netmask 255.255.255.0  broadcast 10.78.8.255]
+[if: inet6 240e:47f:30d8:2fe:dd93:2cde:2e66:2323  prefixlen 64  scopeid 0x0<global>]
+[if: inet6 240e:47f:30d8:2fe:b760:c5ec:dc57:be1a  prefixlen 64  scopeid 0x0<global>]
+[if: inet6 fe80::120a:aa4d:1642:3723  prefixlen 64  scopeid 0x20<link>]
+[if: ether 9c:c7:d3:4e:0f:60  txqueuelen 1000  (以太网)]
+[if: RX packets 6548  bytes 4013375 (4.0 MB)]
+[if: RX errors 0  dropped 0  overruns 0  frame 0]
+[if: TX packets 1520  bytes 450183 (450.1 KB)]
+[if: TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0]
+[if: ]
+[mount: sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime)]
+[mount: proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)]
+[mount: udev on /dev type devtmpfs (rw,nosuid,relatime,size=14141964k,nr_inodes=3535491,mode=755)]
+[mount: devpts on /dev/pts type devpts (rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000)]
+[mount: tmpfs on /run type tmpfs (rw,nosuid,nodev,noexec,relatime,size=2846968k,mode=755)]
+[mount: /dev/nvme0n1p3 on / type ext4 (rw,relatime,stripe=64)]
+[mount: /dev/nvme0n1p3 on /usr type ext4 (ro,relatime,stripe=64)]
+[mount: /dev/nvme0n1p3 on /sysroot type ext4 (rw,relatime,stripe=64)]
+[mount: /dev/nvme0n1p3 on /var type ext4 (rw,relatime,stripe=64)]
+[mount: /dev/nvme0n1p3 on /sysroot/ostree/deploy/kylin/var type ext4 (rw,relatime,stripe=64)]
+[mount: overlay on /etc type overlay (rw,relatime,lowerdir=/root/sysroot/ostree/pkgs/ovl-3fcab022d9bba85f62d1a4905ccd48adaa7a8e2bc8d103d0c7792742be45d50c.1/etc-ovl/etc-upper:/root/sysroot/ostree/pkgs/ovl-3fcab022d9bba85f62d1a4905ccd48adaa7a8e2bc8d103d0c7792742be45d50c.1/etc-ovl/etc-lower:/root/etc,upperdir=/root/sysroot/ostree/pkgs/ovl-3fcab022d9bba85f62d1a4905ccd48adaa7a8e2bc8d103d0c7792742be45d50c.1/etc-ovl/etc-tmpupper,workdir=/root/sysroot/ostree/pkgs/ovl-3fcab022d9bba85f62d1a4905ccd48adaa7a8e2bc8d103d0c7792742be45d50c.1/etc-ovl/etc-work)]
+[mount: overlay on /usr type overlay (rw,relatime,lowerdir=/root/sysroot/ostree/pkgs/ovl-3fcab022d9bba85f62d1a4905ccd48adaa7a8e2bc8d103d0c7792742be45d50c.1/usr-ovl/usr-upper:/root/sysroot/ostree/pkgs/ovl-3fcab022d9bba85f62d1a4905ccd48adaa7a8e2bc8d103d0c7792742be45d50c.1/usr-ovl/usr-lower:/root/usr,upperdir=/root/sysroot/ostree/pkgs/ovl-3fcab022d9bba85f62d1a4905ccd48adaa7a8e2bc8d103d0c7792742be45d50c.1/usr-ovl/usr-tmpupper,workdir=/root/sysroot/ostree/pkgs/ovl-3fcab022d9bba85f62d1a4905ccd48adaa7a8e2bc8d103d0c7792742be45d50c.1/usr-ovl/usr-work)]
+[mount: overlay on /var/lib type overlay (rw,relatime,lowerdir=/root/sysroot/ostree/pkgs/ovl-3fcab022d9bba85f62d1a4905ccd48adaa7a8e2bc8d103d0c7792742be45d50c.1/var-ovl/var-upper/lib:/root/sysroot/ostree/pkgs/ovl-3fcab022d9bba85f62d1a4905ccd48adaa7a8e2bc8d103d0c7792742be45d50c.1/var-ovl/var-lower/lib:/root/var/lib,upperdir=/root/sysroot/ostree/pkgs/ovl-3fcab022d9bba85f62d1a4905ccd48adaa7a8e2bc8d103d0c7792742be45d50c.1/var-ovl/var-tmpupper/lib,workdir=/root/sysroot/ostree/pkgs/ovl-3fcab022d9bba85f62d1a4905ccd48adaa7a8e2bc8d103d0c7792742be45d50c.1/var-ovl/var-work/lib)]
+[mount: none on /sys/kernel/security type securityfs (rw,relatime)]
+[mount: /root/dev/nvme0n1p5 on /data type ext4 (rw,relatime,stripe=64)]
+[mount: /root/dev/nvme0n1p4 on /backup type ext4 (rw,relatime,stripe=64)]
+[mount: tmpfs on /dev/shm type tmpfs (rw,nosuid,nodev)]
+[mount: tmpfs on /run/lock type tmpfs (rw,nosuid,nodev,noexec,relatime,size=5120k)]
+[mount: cgroup2 on /sys/fs/cgroup type cgroup2 (rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot)]
+[mount: pstore on /sys/fs/pstore type pstore (rw,nosuid,nodev,noexec,relatime)]
+[mount: efivarfs on /sys/firmware/efi/efivars type efivarfs (rw,nosuid,nodev,noexec,relatime)]
+[mount: bpf on /sys/fs/bpf type bpf (rw,nosuid,nodev,noexec,relatime,mode=700)]
+[mount: systemd-1 on /proc/sys/fs/binfmt_misc type autofs (rw,relatime,fd=32,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=9810)]
+[mount: mqueue on /dev/mqueue type mqueue (rw,nosuid,nodev,noexec,relatime)]
+[mount: debugfs on /sys/kernel/debug type debugfs (rw,nosuid,nodev,noexec,relatime)]
+[mount: hugetlbfs on /dev/hugepages type hugetlbfs (rw,nosuid,nodev,relatime,pagesize=2M)]
+[mount: tracefs on /sys/kernel/tracing type tracefs (rw,nosuid,nodev,noexec,relatime)]
+[mount: fusectl on /sys/fs/fuse/connections type fusectl (rw,nosuid,nodev,noexec,relatime)]
+[mount: configfs on /sys/kernel/config type configfs (rw,nosuid,nodev,noexec,relatime)]
+[mount: /root/dev/nvme0n1p5 on /home type ext4 (rw,relatime,stripe=64)]
+[mount: /root/dev/nvme0n1p5 on /root type ext4 (rw,relatime,stripe=64)]
+[mount: /dev/nvme0n1p2 on /boot type ext4 (rw,relatime,stripe=64)]
+[mount: /dev/nvme0n1p1 on /boot/efi type vfat (rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro)]
+[mount: binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,nosuid,nodev,noexec,relatime)]
+[mount: tmpfs on /run/user/1000 type tmpfs (rw,nosuid,nodev,relatime,size=2846964k,nr_inodes=711741,mode=700,uid=1000,gid=1000)]
+[mount: portal on /run/user/1000/doc type fuse.portal (rw,nosuid,nodev,relatime,user_id=1000,group_id=1000)]
+[mount: gvfsd-fuse on /run/user/1000/gvfs type fuse.gvfsd-fuse (rw,nosuid,nodev,relatime,user_id=1000,group_id=1000)]
+Simple syscall: 0.3715 microseconds
+Simple read: 0.4974 microseconds
+Simple write: 0.4378 microseconds
+Simple stat: 2.7546 microseconds
+Simple fstat: 0.4304 microseconds
+Simple open/close: 1.7755 microseconds
+Select on 10 fd's: 0.3966 microseconds
+Select on 100 fd's: 1.3127 microseconds
+Select on 250 fd's: 2.8129 microseconds
+Select on 500 fd's: 5.4035 microseconds
+Select on 10 tcp fd's: 0.4350 microseconds
+Select on 100 tcp fd's: 2.9445 microseconds
+Select on 250 tcp fd's: 7.0962 microseconds
+Select on 500 tcp fd's: 14.2624 microseconds
+Signal handler installation: 0.1875 microseconds
+Signal handler overhead: 0.9115 microseconds
+Protection fault: 0.1027 microseconds
+Pipe latency: 5.6639 microseconds
+AF_UNIX sock stream latency: 9.9279 microseconds
+Process fork+exit: 122.0870 microseconds
+Process fork+execve: 347.6250 microseconds
+Process fork+/bin/sh -c: 725.0000 microseconds
+integer bit: 0.34 nanoseconds
+integer add: 0.24 nanoseconds
+integer mul: 0.98 nanoseconds
+integer div: 3.82 nanoseconds
+integer mod: 3.95 nanoseconds
+int64 bit: 0.34 nanoseconds
+uint64 add: 0.24 nanoseconds
+int64 mul: 1.94 nanoseconds
+int64 div: 3.10 nanoseconds
+int64 mod: 4.92 nanoseconds
+float add: 0.96 nanoseconds
+float mul: 1.43 nanoseconds
+float div: 3.81 nanoseconds
+double add: 0.95 nanoseconds
+double mul: 1.43 nanoseconds
+double div: 5.73 nanoseconds
+float bogomflops: 1.24 nanoseconds
+double bogomflops: 2.40 nanoseconds
+integer bit parallelism: 2.78
+integer add parallelism: 1.68
+integer mul parallelism: 2.10
+integer div parallelism: 1.00
+integer mod parallelism: 1.28
+int64 bit parallelism: 1.88
+int64 add parallelism: 1.59
+int64 mul parallelism: 1.38
+int64 div parallelism: 1.00
+int64 mod parallelism: 1.67
+float add parallelism: 4.00
+float mul parallelism: 5.82
+float div parallelism: 5.33
+double add parallelism: 4.00
+double mul parallelism: 5.83
+double div parallelism: 2.40
+File /tmp/lmb_file write bandwidth: 714532 KB/sec
+Pagefaults on /tmp/lmb_file: 0.2141 microseconds
+
+"mappings
+0.524288 6.957
+1.048576 10
+2.097152 19
+4.194304 31
+8.388608 56
+
+"File system latency
+0k	536	93169	151399
+1k	388	68990	114041
+4k	407	68692	116571
+10k	294	55577	93898
+
+UDP latency using localhost: 17.9693 microseconds
+TCP latency using localhost: 24.4971 microseconds
+RPC/udp latency using localhost: 26.8468 microseconds
+RPC/tcp latency using localhost: 33.0053 microseconds
+TCP/IP connection cost to localhost: 8098.7984 microseconds
+
+Socket bandwidth using localhost
+0.000001 0.86 MB/sec
+0.000064 66.71 MB/sec

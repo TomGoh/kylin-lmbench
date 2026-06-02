@@ -31,10 +31,12 @@ MEM_MIB="${MEM_MIB:-4096}"
 EXTRA_PARAMS="${EXTRA_PARAMS:-}"
 
 PROT_MODE="none"
+NO_LSM=0
 for arg in "$@"; do
   case "$arg" in
     --protected)        PROT_MODE="pvmfw" ;;
     --protected-no-fw)  PROT_MODE="nofw"  ;;
+    --no-lsm)           NO_LSM=1 ;;
     *) echo "unknown flag: $arg" >&2; exit 2 ;;
   esac
 done
@@ -54,8 +56,15 @@ fi
 PARAMS="console=ttyAMA0 root=/dev/vda rw"
 PARAMS="$PARAMS transparent_hugepage=never randomize_va_space=0"
 PARAMS="$PARAMS no_console_suspend"
-# --- LSM / audit stack identical to host ---
-PARAMS="$PARAMS security=box lsm=ksaf audit=1"
+# --- LSM / audit stack identical to host (skip with --no-lsm for diagnostic) ---
+if [ "$NO_LSM" = "0" ]; then
+  PARAMS="$PARAMS security=box lsm=ksaf audit=1"
+else
+  # Empty lsm= disables the LSM stack except 'capability' built-in; audit=0
+  # short-circuits the audit framework. Diagnostic only — use this to measure
+  # how much per-syscall cost the LSM/audit hooks impose.
+  PARAMS="$PARAMS lsm= audit=0"
+fi
 # --- scheduler / cgroup hooks (host has psi=1 and v2 unified hierarchy) ---
 PARAMS="$PARAMS psi=1 systemd.unified_cgroup_hierarchy=1"
 # --- quieter boot to match host's quiet loglevel=0 ---
