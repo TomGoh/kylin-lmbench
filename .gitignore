@@ -5,6 +5,13 @@ bin/
 results/*
 !results/.gitkeep
 !results/Makefile
+# Whitelist paper-grade datasets (raw evidence for findings-2026-06-03/)
+!results/precise-mmap/
+!results/standalone-mem-bench/
+!results/n90-day3/
+# Within n90-day3, exclude the stochastic-outlier try1 dataset
+# (rejected by try2 reproduction; pkvm-memory-access-speedup.md DEPRECATED)
+results/n90-day3/n90-pkvm-noLSM-try1-*
 
 # Extracted at runtime by scripts/lmbench
 src/webpage-lm/

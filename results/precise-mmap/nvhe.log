@@ -1,0 +1,79 @@
+=== mode=nvhe start: 2026-06-04T17:52:17+08:00 ===
+--- nvhe size=0.5 MB iters=10000 × 10 runs file=/tmp/lmb_precise_0.5MB.dat ---
+  run 1: size_mb=0.5 iters=10000 total_ns=77810127 per_iter_ns=7781.013 per_iter_us=7.781013
+  run 2: size_mb=0.5 iters=10000 total_ns=77643292 per_iter_ns=7764.329 per_iter_us=7.764329
+  run 3: size_mb=0.5 iters=10000 total_ns=77427997 per_iter_ns=7742.800 per_iter_us=7.742800
+  run 4: size_mb=0.5 iters=10000 total_ns=78277036 per_iter_ns=7827.704 per_iter_us=7.827704
+  run 5: size_mb=0.5 iters=10000 total_ns=77365759 per_iter_ns=7736.576 per_iter_us=7.736576
+  run 6: size_mb=0.5 iters=10000 total_ns=77589492 per_iter_ns=7758.949 per_iter_us=7.758949
+  run 7: size_mb=0.5 iters=10000 total_ns=78508700 per_iter_ns=7850.870 per_iter_us=7.850870
+  run 8: size_mb=0.5 iters=10000 total_ns=78120203 per_iter_ns=7812.020 per_iter_us=7.812020
+  run 9: size_mb=0.5 iters=10000 total_ns=77712113 per_iter_ns=7771.211 per_iter_us=7.771211
+  run 10: size_mb=0.5 iters=10000 total_ns=77744112 per_iter_ns=7774.411 per_iter_us=7.774411
+--- nvhe size=1 MB iters=8000 × 10 runs file=/tmp/lmb_precise_1MB.dat ---
+  run 1: size_mb=1 iters=8000 total_ns=94812306 per_iter_ns=11851.538 per_iter_us=11.851538
+  run 2: size_mb=1 iters=8000 total_ns=93991186 per_iter_ns=11748.898 per_iter_us=11.748898
+  run 3: size_mb=1 iters=8000 total_ns=94037045 per_iter_ns=11754.631 per_iter_us=11.754631
+  run 4: size_mb=1 iters=8000 total_ns=94732648 per_iter_ns=11841.581 per_iter_us=11.841581
+  run 5: size_mb=1 iters=8000 total_ns=94918825 per_iter_ns=11864.853 per_iter_us=11.864853
+  run 6: size_mb=1 iters=8000 total_ns=94234140 per_iter_ns=11779.267 per_iter_us=11.779267
+  run 7: size_mb=1 iters=8000 total_ns=94316018 per_iter_ns=11789.502 per_iter_us=11.789502
+  run 8: size_mb=1 iters=8000 total_ns=94121962 per_iter_ns=11765.245 per_iter_us=11.765245
+  run 9: size_mb=1 iters=8000 total_ns=94159121 per_iter_ns=11769.890 per_iter_us=11.769890
+  run 10: size_mb=1 iters=8000 total_ns=95223458 per_iter_ns=11902.932 per_iter_us=11.902932
+--- nvhe size=2 MB iters=5000 × 10 runs file=/tmp/lmb_precise_2MB.dat ---
+  run 1: size_mb=2 iters=5000 total_ns=104839184 per_iter_ns=20967.837 per_iter_us=20.967837
+  run 2: size_mb=2 iters=5000 total_ns=107083478 per_iter_ns=21416.696 per_iter_us=21.416696
+  run 3: size_mb=2 iters=5000 total_ns=107139202 per_iter_ns=21427.840 per_iter_us=21.427840
+  run 4: size_mb=2 iters=5000 total_ns=107671191 per_iter_ns=21534.238 per_iter_us=21.534238
+  run 5: size_mb=2 iters=5000 total_ns=105006847 per_iter_ns=21001.369 per_iter_us=21.001369
+  run 6: size_mb=2 iters=5000 total_ns=104851490 per_iter_ns=20970.298 per_iter_us=20.970298
+  run 7: size_mb=2 iters=5000 total_ns=104944228 per_iter_ns=20988.846 per_iter_us=20.988846
+  run 8: size_mb=2 iters=5000 total_ns=105210402 per_iter_ns=21042.080 per_iter_us=21.042080
+  run 9: size_mb=2 iters=5000 total_ns=104932194 per_iter_ns=20986.439 per_iter_us=20.986439
+  run 10: size_mb=2 iters=5000 total_ns=107316838 per_iter_ns=21463.368 per_iter_us=21.463368
+--- nvhe size=4 MB iters=3000 × 10 runs file=/tmp/lmb_precise_4MB.dat ---
+  run 1: size_mb=4 iters=3000 total_ns=108130303 per_iter_ns=36043.434 per_iter_us=36.043434
+  run 2: size_mb=4 iters=3000 total_ns=107932066 per_iter_ns=35977.355 per_iter_us=35.977355
+  run 3: size_mb=4 iters=3000 total_ns=107976666 per_iter_ns=35992.222 per_iter_us=35.992222
+  run 4: size_mb=4 iters=3000 total_ns=109734431 per_iter_ns=36578.144 per_iter_us=36.578144
+  run 5: size_mb=4 iters=3000 total_ns=109613734 per_iter_ns=36537.911 per_iter_us=36.537911
+  run 6: size_mb=4 iters=3000 total_ns=109411868 per_iter_ns=36470.623 per_iter_us=36.470623
+  run 7: size_mb=4 iters=3000 total_ns=109910702 per_iter_ns=36636.901 per_iter_us=36.636901
+  run 8: size_mb=4 iters=3000 total_ns=109278894 per_iter_ns=36426.298 per_iter_us=36.426298
+  run 9: size_mb=4 iters=3000 total_ns=109591668 per_iter_ns=36530.556 per_iter_us=36.530556
+  run 10: size_mb=4 iters=3000 total_ns=109136796 per_iter_ns=36378.932 per_iter_us=36.378932
+--- nvhe size=8 MB iters=2000 × 10 runs file=/tmp/lmb_precise_8MB.dat ---
+  run 1: size_mb=8 iters=2000 total_ns=131516585 per_iter_ns=65758.292 per_iter_us=65.758292
+  run 2: size_mb=8 iters=2000 total_ns=131505046 per_iter_ns=65752.523 per_iter_us=65.752523
+  run 3: size_mb=8 iters=2000 total_ns=131018664 per_iter_ns=65509.332 per_iter_us=65.509332
+  run 4: size_mb=8 iters=2000 total_ns=131272761 per_iter_ns=65636.380 per_iter_us=65.636381
+  run 5: size_mb=8 iters=2000 total_ns=131215422 per_iter_ns=65607.711 per_iter_us=65.607711
+  run 6: size_mb=8 iters=2000 total_ns=131383879 per_iter_ns=65691.939 per_iter_us=65.691939
+  run 7: size_mb=8 iters=2000 total_ns=131387658 per_iter_ns=65693.829 per_iter_us=65.693829
+  run 8: size_mb=8 iters=2000 total_ns=132934658 per_iter_ns=66467.329 per_iter_us=66.467329
+  run 9: size_mb=8 iters=2000 total_ns=132579920 per_iter_ns=66289.960 per_iter_us=66.289960
+  run 10: size_mb=8 iters=2000 total_ns=132545201 per_iter_ns=66272.601 per_iter_us=66.272600
+--- nvhe size=16 MB iters=1000 × 10 runs file=/tmp/lmb_precise_16MB.dat ---
+  run 1: size_mb=16 iters=1000 total_ns=123998119 per_iter_ns=123998.119 per_iter_us=123.998119
+  run 2: size_mb=16 iters=1000 total_ns=123727364 per_iter_ns=123727.364 per_iter_us=123.727364
+  run 3: size_mb=16 iters=1000 total_ns=123560046 per_iter_ns=123560.046 per_iter_us=123.560046
+  run 4: size_mb=16 iters=1000 total_ns=123609490 per_iter_ns=123609.490 per_iter_us=123.609490
+  run 5: size_mb=16 iters=1000 total_ns=124043984 per_iter_ns=124043.984 per_iter_us=124.043984
+  run 6: size_mb=16 iters=1000 total_ns=123667209 per_iter_ns=123667.209 per_iter_us=123.667209
+  run 7: size_mb=16 iters=1000 total_ns=123608590 per_iter_ns=123608.590 per_iter_us=123.608590
+  run 8: size_mb=16 iters=1000 total_ns=123787707 per_iter_ns=123787.707 per_iter_us=123.787707
+  run 9: size_mb=16 iters=1000 total_ns=123645669 per_iter_ns=123645.669 per_iter_us=123.645669
+  run 10: size_mb=16 iters=1000 total_ns=123986284 per_iter_ns=123986.284 per_iter_us=123.986284
+--- nvhe size=64 MB iters=300 × 10 runs file=/tmp/lmb_precise_64MB.dat ---
+  run 1: size_mb=64 iters=300 total_ns=149836714 per_iter_ns=499455.713 per_iter_us=499.455713
+  run 2: size_mb=64 iters=300 total_ns=149407421 per_iter_ns=498024.737 per_iter_us=498.024737
+  run 3: size_mb=64 iters=300 total_ns=149585519 per_iter_ns=498618.397 per_iter_us=498.618397
+  run 4: size_mb=64 iters=300 total_ns=149541159 per_iter_ns=498470.530 per_iter_us=498.470530
+  run 5: size_mb=64 iters=300 total_ns=149762410 per_iter_ns=499208.033 per_iter_us=499.208033
+  run 6: size_mb=64 iters=300 total_ns=149849207 per_iter_ns=499497.357 per_iter_us=499.497357
+  run 7: size_mb=64 iters=300 total_ns=149453373 per_iter_ns=498177.910 per_iter_us=498.177910
+  run 8: size_mb=64 iters=300 total_ns=149610611 per_iter_ns=498702.037 per_iter_us=498.702037
+  run 9: size_mb=64 iters=300 total_ns=149513972 per_iter_ns=498379.907 per_iter_us=498.379907
+  run 10: size_mb=64 iters=300 total_ns=149461012 per_iter_ns=498203.373 per_iter_us=498.203373
+=== mode=nvhe end: 2026-06-04T17:52:27+08:00 ===

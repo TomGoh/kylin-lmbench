@@ -1,0 +1,50 @@
+--- kvmoff run 1 ---
+  lat_sig prot: 0.1631 microseconds
+  lat_pagefault: 0.1054 microseconds
+  lat_mem_rd seq stride256: 0.06250=2.224 0.50000=4.009 1.00000=4.480 8.00000=10.087 64.00000=10.305 
+  lat_mem_rd rand stride16: 4.00000=47.580 8.00000=112.912 16.00000=169.493 32.00000=181.298 64.00000=185.755 
+--- kvmoff run 2 ---
+  lat_sig prot: 0.1659 microseconds
+  lat_pagefault: 0.1056 microseconds
+  lat_mem_rd seq stride256: 0.06250=2.224 0.50000=3.986 1.00000=4.478 8.00000=10.197 64.00000=10.399 
+  lat_mem_rd rand stride16: 4.00000=47.520 8.00000=113.956 16.00000=169.868 32.00000=181.805 64.00000=186.475 
+--- kvmoff run 3 ---
+  lat_sig prot: 0.1590 microseconds
+  lat_pagefault: 0.1053 microseconds
+  lat_mem_rd seq stride256: 0.06250=2.223 0.50000=4.005 1.00000=4.473 8.00000=12.383 64.00000=10.396 
+  lat_mem_rd rand stride16: 4.00000=47.881 8.00000=113.165 16.00000=167.891 32.00000=181.902 64.00000=186.157 
+--- kvmoff run 4 ---
+  lat_sig prot: 0.1619 microseconds
+  lat_pagefault: 0.1051 microseconds
+  lat_mem_rd seq stride256: 0.06250=2.223 0.50000=3.946 1.00000=4.484 8.00000=10.158 64.00000=10.504 
+  lat_mem_rd rand stride16: 4.00000=47.735 8.00000=113.200 16.00000=169.728 32.00000=182.135 64.00000=185.989 
+--- kvmoff run 5 ---
+  lat_sig prot: 0.1631 microseconds
+  lat_pagefault: 0.1054 microseconds
+  lat_mem_rd seq stride256: 0.06250=2.224 0.50000=4.152 1.00000=4.481 8.00000=10.092 64.00000=10.461 
+  lat_mem_rd rand stride16: 4.00000=47.666 8.00000=112.577 16.00000=169.491 32.00000=180.634 64.00000=184.781 
+--- kvmoff run 6 ---
+  lat_sig prot: 0.1640 microseconds
+  lat_pagefault: 0.1050 microseconds
+  lat_mem_rd seq stride256: 0.06250=2.224 0.50000=3.992 1.00000=4.478 8.00000=12.529 64.00000=10.379 
+  lat_mem_rd rand stride16: 4.00000=47.364 8.00000=112.545 16.00000=169.693 32.00000=151.342 64.00000=184.807 
+--- kvmoff run 7 ---
+  lat_sig prot: 0.1562 microseconds
+  lat_pagefault: 0.1054 microseconds
+  lat_mem_rd seq stride256: 0.06250=2.224 0.50000=4.038 1.00000=4.484 8.00000=11.719 64.00000=10.724 
+  lat_mem_rd rand stride16: 4.00000=47.929 8.00000=112.178 16.00000=169.897 32.00000=181.823 64.00000=185.648 
+--- kvmoff run 8 ---
+  lat_sig prot: 0.1630 microseconds
+  lat_pagefault: 0.1053 microseconds
+  lat_mem_rd seq stride256: 0.06250=2.224 0.50000=4.043 1.00000=4.463 8.00000=12.441 64.00000=10.543 
+  lat_mem_rd rand stride16: 4.00000=47.779 8.00000=112.884 16.00000=170.352 32.00000=181.148 64.00000=184.992 
+--- kvmoff run 9 ---
+  lat_sig prot: 0.1583 microseconds
+  lat_pagefault: 0.1049 microseconds
+  lat_mem_rd seq stride256: 0.06250=2.224 0.50000=4.026 1.00000=4.481 8.00000=12.469 64.00000=10.356 
+  lat_mem_rd rand stride16: 4.00000=47.261 8.00000=113.129 16.00000=170.124 32.00000=181.808 64.00000=169.476 
+--- kvmoff run 10 ---
+  lat_sig prot: 0.1616 microseconds
+  lat_pagefault: 0.1053 microseconds
+  lat_mem_rd seq stride256: 0.06250=2.224 0.50000=4.024 1.00000=4.484 8.00000=12.389 64.00000=10.641 
+  lat_mem_rd rand stride16: 4.00000=48.226 8.00000=112.604 16.00000=170.090 32.00000=180.580 64.00000=184.721 
