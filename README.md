@@ -69,6 +69,12 @@ cores), see [`docs/EXPERIMENT.md`](docs/EXPERIMENT.md).
 For pipeline internals (how the scripts flow, how to add a new environment), see
 [`docs/PIPELINE.md`](docs/PIPELINE.md).
 
+**Final paper-grade findings**（实际跑出来的 4-config × N=10 干净对照数据 +
+分析）见 [`docs/findings-2026-06-03/`](docs/findings-2026-06-03/)：
+- [`SUMMARY.md`](docs/findings-2026-06-03/SUMMARY.md) ── 6 个 finding 综合
+- [`lmbench-N10-4config.xlsx`](docs/findings-2026-06-03/lmbench-N10-4config.xlsx) ── 全部指标对照表
+- 4 个 per-config 报告 + pkvm mmap +42% / 访问 +3-7% 专题
+
 ## Repository layout
 
 ```

@@ -1,5 +1,18 @@
 # KVM / pKVM 性能开销实验设计（简要）
 
+> 📌 **状态（2026-06-04）**：本文是 day-1 的实验设计简要版，描述最初 5-env 对照设计。
+> Day-3 实际**pivot 到 4-config 主机对照**（`kvm-arm.mode` = none/nvhe/vhe/protected
+> × noLSM），跳过了 guest 维度。
+>
+> **最终成果在 [`findings-2026-06-03/`](findings-2026-06-03/)**：
+> - [`README.md`](findings-2026-06-03/README.md)、[`SUMMARY.md`](findings-2026-06-03/SUMMARY.md)
+> - [`lmbench-N10-4config.xlsx`](findings-2026-06-03/lmbench-N10-4config.xlsx)（pkvm 用 try2 数据）
+>
+> 关键 pkvm finding（v4 终版）：
+> - **lat_mmap 大段 +42%**（stage-2 表建立成本，try1 + try2 一致 ✓）
+> - **lat_mem_rd_rand +3-7%**（每次 TLB miss 多一层 stage-2 walk，try2 + standalone 一致 ✓）
+> - try1 曾观察到的"快 17-33%"已识别为**一次性 stochastic outlier**，同配置 try2 完全没复现
+
 ## 目标
 
 在 aarch64（Phytium D3000M）上量化 **KVM** 和 **pKVM**（特别是 protected guest）相对裸机的运行时开销，并尽量把差异归因到具体机制（stage-2 walk、EL2 trap、bounce buffer 等）。
@@ -93,17 +106,25 @@ ENV_TAG=pkvm-guest CONFIG=configs/CONFIG.pkvm-guest CORES=0,1 ITERS=10 ./bench.s
 - `results/<env>-cpu<N>.csv`：解析后长表
 - `results/<env>-<timestamp>-summary.txt`：kernel / cmdline / 频率快照
 
-## 当前进展
+## 当前进展（2026-06-04 终版）
 
-- ✅ 实验框架代码完整，git repo 三个 commit 干净分层（upstream / 基础设施 / 软件栈决策）
-- ✅ Pilot 在 cpu0（小核 1.9GHz）和 cpu3（大核锁定 1.9GHz）上 10 iter 跑完，方法学验证通过（MAD < 1.4%）
-- ✅ lmbench 真实 DRAM 延迟（stride 4096 + thrash）和 prefetcher 友好（stride 128）两组数据都拿到
-- ⏳ 待：在 Kaitian 上跑一次完整 `CONFIG.host` 单 iter 验证全套（含网络/RPC）跑通
-- ⏳ 待：编 guest rootfs + crosvm 启动脚本，guest 端 `prepare-guest.sh`
-- ⏳ 待：过夜大餐 — 五环境 × 10 iter
+- ✅ 实验框架代码完整
+- ✅ Pilot 验证 + day-1 / day-2 中间 finding
+- ✅ Day-3 完成 4-config（kvmoff / nvhe / vhe / pkvm）× N=10 干净对照采集
+- ✅ standalone 单测验证 pkvm "快 17-33%" 是 sequence-dependent 假象
+- ✅ pkvm try2 重跑确认 try1 是 stochastic outlier
+- ✅ 全套报告 + 综合 xlsx 在 [`findings-2026-06-03/`](findings-2026-06-03/)
+- ⏸ 后续工作（pVM 测试、PMU counter 验证、Apple Silicon 对比）见
+  [`SUMMARY.md` 第 8 节](findings-2026-06-03/SUMMARY.md)
 
 ## 详细文档
 
-- 实验设计完整版（英文）：`docs/EXPERIMENT.md`
-- 管线内部细节：`docs/PIPELINE.md`
-- upstream 改动说明：`docs/PATCHES.md`
+- **最终 findings**：[`findings-2026-06-03/`](findings-2026-06-03/)
+  - 总体方法论：[`README.md`](findings-2026-06-03/README.md)
+  - 跨配置综合：[`SUMMARY.md`](findings-2026-06-03/SUMMARY.md)
+  - pkvm mmap +42% 专题：[`pkvm-mmap-overhead-analysis.md`](findings-2026-06-03/pkvm-mmap-overhead-analysis.md)
+  - standalone 验证：[`standalone-memory-bench-validation.md`](findings-2026-06-03/standalone-memory-bench-validation.md)
+- 实验设计完整版（英文）：[`EXPERIMENT.md`](EXPERIMENT.md)
+- 管线内部细节：[`PIPELINE.md`](PIPELINE.md)
+- upstream 改动说明：[`PATCHES.md`](PATCHES.md)
+- 中间过程 findings：[`findings-2026-06-01.md`](findings-2026-06-01.md)、[`findings-2026-06-02.md`](findings-2026-06-02.md)
