@@ -22,7 +22,10 @@ LDLIBS=-lm
 
 # Modern Linux (glibc >= 2.26) ships Sun RPC headers in libtirpc,
 # under /usr/include/tirpc instead of /usr/include. Detect and adapt.
-if [ -f /usr/include/tirpc/rpc/rpc.h ]; then
+# Skip when cross-compiling against a sysroot that lacks libtirpc
+# (e.g. aarch64-linux-musl). NO_TIRPC=1 forces the skip.
+if [ -z "${NO_TIRPC:-}" ] && [ -f /usr/include/tirpc/rpc/rpc.h ] \
+   && ! echo "${CC}" | grep -q -- '-musl\|aarch64-linux-musl'; then
 	CFLAGS="${CFLAGS} -I/usr/include/tirpc"
 	LDLIBS="${LDLIBS} -ltirpc"
 fi

@@ -18,6 +18,15 @@
 char	*id = "$Id$\n";
 #include "bench.h"
 
+#ifdef NO_RPC
+/* Stubbed for cross-builds without libtirpc/sunrpc (e.g. musl). */
+int main(int ac, char **av) {
+	(void)ac; (void)av;
+	fprintf(stderr, "lat_rpc: built with NO_RPC (musl); skipping\n");
+	return 0;
+}
+#else
+
 void	client_main(int ac, char **av);
 void	server_main();
 void	benchmark(iter_t iterations, void* _state);
@@ -279,3 +288,5 @@ xact_prog_1(rqstp, transp)
 	}
 	return;
 }
+
+#endif /* NO_RPC */

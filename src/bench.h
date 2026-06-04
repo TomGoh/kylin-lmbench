@@ -36,12 +36,31 @@ typedef unsigned char bool_t;
 #include        <sys/un.h>
 #include        <sys/resource.h>
 #define PORTMAP
+#ifndef NO_RPC
 #include	<rpc/rpc.h>
 #endif
-#ifdef HAVE_pmap_clnt_h
+#endif
+#if !defined(NO_RPC) && defined(HAVE_pmap_clnt_h)
 #include	<rpc/pmap_clnt.h>
 #endif
+#ifndef NO_RPC
 #include	<rpc/types.h>
+#else
+/* Stub out the few RPC portmapper symbols lib_tcp.c references when
+ * NO_RPC is set (musl, no libtirpc). prog>0 paths are unused by
+ * lmbench's default config-run, so returning failure is harmless. */
+#include <sys/types.h>
+typedef unsigned long u_long;
+static inline int  pmap_set(u_long a, u_long b, u_long c, unsigned short d) { (void)a;(void)b;(void)c;(void)d; return 0; }
+static inline int  pmap_unset(u_long a, u_long b) { (void)a;(void)b; return 0; }
+static inline unsigned short pmap_getport(void *s, u_long p, u_long v, u_long pr) { (void)s;(void)p;(void)v;(void)pr; return 0; }
+#ifndef TRUE
+#define TRUE 1
+#endif
+#ifndef FALSE
+#define FALSE 0
+#endif
+#endif
 #ifdef HAVE_pmap_clnt_h
 #include	<rpc/pmap_clnt.h>
 #endif
