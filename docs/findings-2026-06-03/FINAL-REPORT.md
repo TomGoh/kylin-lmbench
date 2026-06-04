@@ -587,8 +587,10 @@ size 多付 ~12 ns（lmbench 16 KB stride）。详见
 3. 调 `host_stage2_idmap` → `host_stage2_adjust_range` 找最大可用 block 粒度 →
    `kvm_pgtable_stage2_map` 建表 → DSB + TLBI 同步 → 返回 EL1
 4. 每次 abort 几百到数千 cycle = 几百 ns - 几 µs
-5. 64 MB mmap 触发 ~16384 个 4 KB 页 fault，乘起来 ~200 µs 额外开销，吻合实测的
-   +211 µs（709.24 − 498.37）
+5. 64 MB mmap 中 lmbench 只触摸前 `size/N = 6.4 MB`、stride=PSIZE=16 KB，
+   折合 **~410 次 stage-2 abort**（每 abort 摊销 ~500 ns），合计 ~205 µs，吻合
+   实测 +211 µs（709.24 − 498.37）。详细每页摊销表见
+   [`pkvm-mmap-overhead-analysis.md` §6.1](pkvm-mmap-overhead-analysis.md)
 
 非 pkvm 配置（kvmoff/nvhe/vhe）**不维护 host stage-2 表**：
 

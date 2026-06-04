@@ -45,17 +45,22 @@ ns 精度复测数据（`lat_mmap_precise.c`，语义与 `src/lat_mmap.c` 完全
 > size 上都比其它三个慢，**从 +18.8% 渐进到 +42.3%**，机制（stage-2 表建立 ∝
 > pages touched）完全一致。
 
-### 1.2 `lat_mem_rd_load`（4 配置完全相等，pkvm 甚至略快）
+### 1.2 `lat_mem_rd_load`（4 配置基本相等，pkvm 略慢 1-6%）
 
-stride 256 B：
+stride 256 B，pkvm 列 = try2 数据：
 
 | 工作集 | kvmoff | nvhe | vhe | **pkvm** |
 |--------|-------:|-----:|----:|---------:|
 | 64 KB (L1d) | 2.22 ns | 2.22 | 2.22 | 2.22 |
-| 0.5 MB (L2) | 3.97 | 3.96 | 3.94 | 3.97 |
-| 1 MB (LLC) | 4.44 | 4.44 | 4.43 | 4.45 |
-| 8 MB (LLC 边界) | 10.82 | 11.41 | 12.45 | **10.01** |
-| 64 MB (DRAM) | 10.36 | 10.24 | 10.78 | 10.11 |
+| 0.5 MB (L2) | 3.97 | 3.96 | 3.94 | 3.93 |
+| 1 MB (LLC) | 4.44 | 4.44 | 4.43 | 4.44 |
+| 8 MB (LLC 边界) | 10.82 | 11.41 | 12.45 | 12.12 |
+| 64 MB (DRAM) | 10.36 | 10.24 | 10.78 | 10.34 |
+
+> **注**：早期 try1 数据集在 8 MB 行报 pkvm = 10.01（看起来比 non-pkvm 还快 10-20%），
+> 是一次性 stochastic outlier。同配置 try2 复测得 12.12（跟 non-pkvm vhe 12.45
+> 接近），跟 lat_mem_rd_rand 的 +3-7% 趋势一致。详见
+> [`standalone-memory-bench-validation.md`](standalone-memory-bench-validation.md)。
 
 ### 1.3 `bw_mem` peak（4 配置等价，差距 < 0.5%）
 
@@ -67,8 +72,10 @@ stride 256 B：
 
 （pkvm 列 = try2；单位 MB/s）
 
-**核心问题**：mmap 大段慢 +42%，但访问已分配内存（latency + bandwidth）跨 4 模式
-完全相等——这只能用"开销集中在内存映射的建立瞬间"来解释。
+**核心问题**：mmap 大段慢 **+42%**（建表瞬间），但访问已分配内存的开销 ≤ +6%
+（lat_mem_rd_load 在 LLC 边界 / DRAM 段 pkvm 比 vhe 慢 1-6%，远小于 mmap 的
+量级差距）——这只能用"开销集中在内存映射的建立瞬间"来解释：建表 ~500 ns/abort，
+而访问后只是每次 TLB miss 多一层 stage-2 walk ~5-10 ns，量级差 50–100×。
 
 ---
 
@@ -313,11 +320,17 @@ fn __host_stage2_idmap(start: u64, end: u64, prot: u64) -> i32 {
 
 实测一次完整 abort + 建表大致 **几百到数千 cycle ≈ 几百 ns - 几 µs**。
 
-`mmap(64 MB)` 时假如每个 4 KB 页都 fault 一次，**16384 次 fault × 几百 ns ≈
-几 ms**——这正好对得上我们测得的 `lat_mmap 64 MB` 在 pkvm 下额外的 +211 µs
-（498.37 → 709.24，ns 精度复测）。
-（注：实际上不是每页都进 hyp，因为 boot 时 prepopulate 用了 block mapping，但
-mmap 的 anonymous 页 + COW 第一次写出来的页都会落到 stage-2 hole 里）
+`mmap(64 MB)` 时 lmbench `domapping` 只触摸前 `size/N = 6.4 MB`、stride
+= PSIZE = 16 KB → **~410 次 4 KB 页 fault**，每次 ~500 ns 摊销，合计 ~205 µs，
+正好对应我们测的 `lat_mmap 64 MB` 在 pkvm 下额外的 +211 µs（498.37 → 709.24，
+ns 精度复测）。
+
+具体每 size 的 fault 数和每 fault ns 摊销见 §6.1 表（505 ± 10 ns/fault，1 MB
+以上极稳定）。
+
+（注：实际并不是 mmap 区域的所有 4 KB 页都进 hyp——boot 时 `prepopulate_host_stage2`
+用 1 GB / 2 MB block mapping 预置，所以只有 lmbench 实际 touch 的新页才走
+stage-2 abort 路径。）
 
 ### 3.4 访问 vs 建立的不对称
 
