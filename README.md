@@ -86,9 +86,6 @@ docs/
   EXPERIMENT.md          why we measure what we measure
   PIPELINE.md            how the scripts work end-to-end
   PATCHES.md             what we changed in upstream lmbench
-run-pilot.sh           legacy pilot (custom subset, not lmbench-driven); kept as smoke test
-run-mem.sh             companion to run-pilot.sh: multi-stride memory latency
-bench-host.sh          older orchestrator from the pilot era (superseded by bench.sh)
 results/               generated; gitignored except for .gitkeep
 bin/                   build output; gitignored
 scripts/, src/, …      upstream lmbench (modified: scripts/build, scripts/os; see docs/PATCHES.md)

@@ -98,16 +98,21 @@ The two `BENCHMARK_*` patterns to understand:
   targeted `BENCHMARK_MEM=YES` which gives lat_mem_rd + tlb + par_mem + stream
   without the full bw_mem flavor explosion.
 
-### `run-pilot.sh` / `run-mem.sh` / `bench-host.sh` — legacy
-Earlier iteration that ran a hand-picked subset directly without going through
-`scripts/lmbench`. Smaller surface area, faster (~10 minutes), no CONFIG file.
-Kept as a smoke test:
+### Smoke test
+For a 90-second pipeline + parser validation (no full bench), use the
+minimal `CONFIG.test` subset with `bench.sh`:
 
 ```bash
-ENV_TAG=smoke ITERS=2 CORE=0 ./run-pilot.sh > smoke.csv
+CORES=0 ITERS=1 CONFIG=configs/CONFIG.test ENV_TAG=smoke ./bench.sh
 ```
 
-Not used for paper-grade data; `bench.sh` is the real driver.
+Output ends up in `results/smoke-cpu0.csv` like any other run, so the
+parser path gets exercised end-to-end.
+
+> An older pilot-era trio (`run-pilot.sh` / `run-mem.sh` / `bench-host.sh`)
+> bypassed `scripts/lmbench` and ran a hand-picked subset directly. Those
+> scripts were removed during the post-paper cleanup — `bench.sh` is the
+> only driver now.
 
 ## Adding a new environment
 

@@ -66,9 +66,9 @@ leave alone:
   `lat_unix_connect.c`. These are benign — silencing them would touch every
   benchmark file with no semantic change. Easier to ignore the warnings.
 - **`lat_proc` hardcoding `/tmp/hello`**. Adjusting paths would diverge our
-  fork further from upstream. `bench.sh` instead handles the requirement
-  externally (copies the binary to `/tmp/hello` in the setup phase of
-  `run-pilot.sh`; the lmbench wrapper script does the same for full runs).
+  fork further from upstream. The upstream `scripts/lmbench` wrapper copies
+  the binary into `/tmp/hello` during setup, so `bench.sh` (which invokes
+  `scripts/lmbench`) inherits that fix for free.
 - **`stream` getting shadowed by ImageMagick's `stream`** in `$PATH`. lmbench
   works around this by putting `.` first in `PATH`. Our `bench.sh` correctly
   `cd`s to `bin/aarch64-Linux/` before invocation so this isn't an issue. If

@@ -178,10 +178,11 @@ Rationale by category (why each is in the suite and what to look at):
 
 ## Pilot vs full suite (historical note)
 
-Before settling on driving `scripts/lmbench` directly, an earlier iteration used
-a custom benchmark wrapper (`run-pilot.sh` + `run-mem.sh`). That code is kept
-in the repo as a fast (~10 min) smoke test, useful for verifying that the
-environment is healthy before kicking off a multi-hour `bench.sh` run.
+Before settling on driving `scripts/lmbench` directly, an earlier iteration
+used a custom benchmark wrapper (`run-pilot.sh` + `run-mem.sh` +
+`bench-host.sh`). Those scripts were removed during the post-paper cleanup;
+their fast-smoke role is now filled by running `bench.sh` with the small
+`configs/CONFIG.test` subset (~90 seconds, exercises the same pipeline).
 
 The full `bench.sh` run with `CONFIG.host` is expected to take roughly
 25–35 minutes per iteration. 10 iterations × 2 cores ≈ 9–12 hours, intended to
