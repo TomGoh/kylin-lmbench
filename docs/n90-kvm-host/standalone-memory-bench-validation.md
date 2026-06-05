@@ -322,7 +322,7 @@ bash scripts/standalone-mem-bench.sh <mode_name> > /tmp/standalone-<mode>.log
 ## 8. 文件清单
 
 ```
-docs/findings-2026-06-03/
+docs/n90-kvm-host/
 ├── pkvm-memory-access-speedup.md     # 作废，原 Finding 5 解释
 └── standalone-memory-bench-validation.md   # 本文，修正 Finding 5
 

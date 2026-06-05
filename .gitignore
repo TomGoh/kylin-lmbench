@@ -5,7 +5,7 @@ bin/
 results/*
 !results/.gitkeep
 !results/Makefile
-# Whitelist paper-grade datasets (raw evidence for findings-2026-06-03/)
+# Whitelist paper-grade datasets (raw evidence for n90-kvm-host/)
 !results/precise-mmap/
 !results/standalone-mem-bench/
 !results/n90-day3/

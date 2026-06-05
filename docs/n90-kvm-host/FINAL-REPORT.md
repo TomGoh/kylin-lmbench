@@ -791,9 +791,9 @@ results/standalone-mem-bench/
 ### 10.2 综合表
 
 ```
-docs/findings-2026-06-03/lmbench-N10-4config.xlsx       # median + MAD% + Δ%
-docs/findings-2026-06-03/lmbench-N10-4config-mean.xlsx  # mean + RSD% + Δ%
-docs/findings-2026-06-03/lmbench-N10-4config-all-metrics.csv
+docs/n90-kvm-host/lmbench-N10-4config.xlsx       # median + MAD% + Δ%
+docs/n90-kvm-host/lmbench-N10-4config-mean.xlsx  # mean + RSD% + Δ%
+docs/n90-kvm-host/lmbench-N10-4config-all-metrics.csv
 ```
 
 xlsx 4 个 sheet：
@@ -810,7 +810,7 @@ xlsx 4 个 sheet：
 ### 10.3 报告文档
 
 ```
-docs/findings-2026-06-03/
+docs/n90-kvm-host/
 ├── README.md                                # 总体方法论详版
 ├── SUMMARY.md                               # 跨配置综合 + 6 finding
 ├── kvmoff.md / nvhe.md / vhe.md / pkvm.md   # 4 个 per-config 子报告

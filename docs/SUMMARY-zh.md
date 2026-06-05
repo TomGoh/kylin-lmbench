@@ -9,9 +9,9 @@
 > 下面 §"五个对照环境" / §"vCPU 拓扑" 等 guest 段落作为 day-1 设计存档保留，
 > 但相关脚本/配置不再随仓库分发。真正的 guest 测试逻辑在另一个仓库。
 >
-> **最终成果在 [`findings-2026-06-03/`](findings-2026-06-03/)**：
-> - [`README.md`](findings-2026-06-03/README.md)、[`SUMMARY.md`](findings-2026-06-03/SUMMARY.md)
-> - [`lmbench-N10-4config.xlsx`](findings-2026-06-03/lmbench-N10-4config.xlsx)（pkvm 用 try2 数据）
+> **最终成果在 [`n90-kvm-host/`](n90-kvm-host/)**：
+> - [`README.md`](n90-kvm-host/README.md)、[`SUMMARY.md`](n90-kvm-host/SUMMARY.md)
+> - [`lmbench-N10-4config.xlsx`](n90-kvm-host/lmbench-N10-4config.xlsx)（pkvm 用 try2 数据）
 >
 > 关键 pkvm finding（v4 终版）：
 > - **lat_mmap 大段 +42%**（stage-2 表建立成本，try1 + try2 一致 ✓）
@@ -117,17 +117,17 @@ ENV_TAG=pkvm-host CORES=0,3 ITERS=10 ./bench.sh
 - ✅ Day-3 完成 4-config（kvmoff / nvhe / vhe / pkvm）× N=10 干净对照采集
 - ✅ standalone 单测验证 pkvm "快 17-33%" 是 sequence-dependent 假象
 - ✅ pkvm try2 重跑确认 try1 是 stochastic outlier
-- ✅ 全套报告 + 综合 xlsx 在 [`findings-2026-06-03/`](findings-2026-06-03/)
+- ✅ 全套报告 + 综合 xlsx 在 [`n90-kvm-host/`](n90-kvm-host/)
 - ⏸ 后续工作（pVM 测试、PMU counter 验证、Apple Silicon 对比）见
-  [`SUMMARY.md` 第 8 节](findings-2026-06-03/SUMMARY.md)
+  [`SUMMARY.md` 第 8 节](n90-kvm-host/SUMMARY.md)
 
 ## 详细文档
 
-- **最终 findings**：[`findings-2026-06-03/`](findings-2026-06-03/)
-  - 总体方法论：[`README.md`](findings-2026-06-03/README.md)
-  - 跨配置综合：[`SUMMARY.md`](findings-2026-06-03/SUMMARY.md)
-  - pkvm mmap +42% 专题：[`pkvm-mmap-overhead-analysis.md`](findings-2026-06-03/pkvm-mmap-overhead-analysis.md)
-  - standalone 验证：[`standalone-memory-bench-validation.md`](findings-2026-06-03/standalone-memory-bench-validation.md)
+- **最终 findings**：[`n90-kvm-host/`](n90-kvm-host/)
+  - 总体方法论：[`README.md`](n90-kvm-host/README.md)
+  - 跨配置综合：[`SUMMARY.md`](n90-kvm-host/SUMMARY.md)
+  - pkvm mmap +42% 专题：[`pkvm-mmap-overhead-analysis.md`](n90-kvm-host/pkvm-mmap-overhead-analysis.md)
+  - standalone 验证：[`standalone-memory-bench-validation.md`](n90-kvm-host/standalone-memory-bench-validation.md)
 - 实验设计完整版（英文）：[`EXPERIMENT.md`](EXPERIMENT.md)
 - 管线内部细节：[`PIPELINE.md`](PIPELINE.md)
 - upstream 改动说明：[`PATCHES.md`](PATCHES.md)

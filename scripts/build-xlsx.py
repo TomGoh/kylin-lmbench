@@ -377,9 +377,9 @@ build_highlights(wb)
 build_all_metrics(wb)
 build_per_iter(wb)
 
-out = (f'docs/findings-2026-06-03/lmbench-N10-4config-{STAT_MODE}.xlsx'
+out = (f'docs/n90-kvm-host/lmbench-N10-4config-{STAT_MODE}.xlsx'
        if STAT_MODE == 'mean'
-       else 'docs/findings-2026-06-03/lmbench-N10-4config.xlsx')
+       else 'docs/n90-kvm-host/lmbench-N10-4config.xlsx')
 wb.save(out)
 print(f'wrote {out}')
 print(f'sheets: {wb.sheetnames}')

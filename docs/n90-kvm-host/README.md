@@ -4,7 +4,7 @@
 **Target**: N90 (Phytium FTC862, 8 cores, KylinOS V11)
 **Kernel**: `6.6.0-73-generic` (KylinOS 自构建，内置 pKVM)
 
-> **🚀 想直接动手复现？** 去 [`QUICK-START.md`](QUICK-START.md) ——
+> **🚀 想直接动手复现？** 去 [`../../QUICK-START.md`](../../QUICK-START.md) ——
 > N90 上端到端 cookbook，从编译到拿到 xlsx 全程 ~7.5 小时。
 > 本文是 reference（为什么这么做），quick-start 是 recipe（怎么做）。
 
@@ -292,7 +292,7 @@ sudo reboot
 ## 9. 文件清单
 
 ```
-docs/findings-2026-06-03/
+docs/n90-kvm-host/
 ├── README.md                   # 本文件
 ├── kvmoff.md                   # 配置 1
 ├── vhe.md                      # 配置 2

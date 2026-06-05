@@ -310,7 +310,7 @@ stage-2 walk）。
 ## 5. 文件清单
 
 ```
-docs/findings-2026-06-03/
+docs/n90-kvm-host/
 ├── README.md                                    # 总体背景 + 方法论
 ├── kvmoff.md  nvhe.md  vhe.md  pkvm.md           # 4 个 per-config 子报告
 ├── pkvm-mmap-overhead-analysis.md               # pkvm mmap +42% 代码级专题

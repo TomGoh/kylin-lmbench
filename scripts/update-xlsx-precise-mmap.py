@@ -148,8 +148,8 @@ def main():
             n = len(data[mode].get(sz, []))
             assert n == 10, f"{mode} {sz}MB has {n} iters, expected 10"
 
-    update(REPO / "docs" / "findings-2026-06-03" / "lmbench-N10-4config.xlsx", "median", data)
-    update(REPO / "docs" / "findings-2026-06-03" / "lmbench-N10-4config-mean.xlsx", "mean", data)
+    update(REPO / "docs" / "n90-kvm-host" / "lmbench-N10-4config.xlsx", "median", data)
+    update(REPO / "docs" / "n90-kvm-host" / "lmbench-N10-4config-mean.xlsx", "mean", data)
 
 
 if __name__ == "__main__":

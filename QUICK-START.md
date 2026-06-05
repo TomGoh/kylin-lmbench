@@ -177,11 +177,11 @@ rsync -av ${N90}:/root/lmbench-3.0-a9/results/ ./results/
 ```bash
 # Median + MAD% 版（默认）
 python3 scripts/build-xlsx-median.py
-# → docs/findings-2026-06-03/lmbench-N10-4config.xlsx
+# → docs/n90-kvm-host/lmbench-N10-4config.xlsx
 
 # Mean + RSD% 版
 python3 scripts/build-xlsx-mean.py
-# → docs/findings-2026-06-03/lmbench-N10-4config-mean.xlsx
+# → docs/n90-kvm-host/lmbench-N10-4config-mean.xlsx
 ```
 
 两个脚本都会**自动 chain** `update-xlsx-precise-mmap.py`，把 `results/precise-mmap/*.log` 的 ns 精度 lat_mmap 数据覆盖到 xlsx 的对应行（不是手动一步）。
@@ -290,8 +290,8 @@ for mode in ['kvmoff','nvhe','vhe','pkvm']:
 
 ## 相关文档
 
-- **机制深读**：[`FINAL-REPORT.md`](FINAL-REPORT.md)（独立可读，11 章，~33 KB）
-- **6 finding 综合**：[`SUMMARY.md`](SUMMARY.md)
-- **方法论 + 噪声控制**：[`README.md`](README.md)
-- **pkvm mmap +42% 代码级机制**：[`pkvm-mmap-overhead-analysis.md`](pkvm-mmap-overhead-analysis.md)
-- **stochastic outlier 反例**：[`standalone-memory-bench-validation.md`](standalone-memory-bench-validation.md)
+- **机制深读**：[`docs/n90-kvm-host/FINAL-REPORT.md`](docs/n90-kvm-host/FINAL-REPORT.md)（独立可读，11 章，~33 KB）
+- **6 finding 综合**：[`docs/n90-kvm-host/SUMMARY.md`](docs/n90-kvm-host/SUMMARY.md)
+- **方法论 + 噪声控制**：[`docs/n90-kvm-host/README.md`](docs/n90-kvm-host/README.md)
+- **pkvm mmap +42% 代码级机制**：[`docs/n90-kvm-host/pkvm-mmap-overhead-analysis.md`](docs/n90-kvm-host/pkvm-mmap-overhead-analysis.md)
+- **stochastic outlier 反例**：[`docs/n90-kvm-host/standalone-memory-bench-validation.md`](docs/n90-kvm-host/standalone-memory-bench-validation.md)

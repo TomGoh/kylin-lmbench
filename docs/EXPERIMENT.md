@@ -6,11 +6,11 @@
 > （`kvm-arm.mode` = none / nvhe / vhe / protected，全 noLSM），跳过 guest 维度
 > （pvmfw 在 N90 上不可用 + protected guest 启动失败）。
 >
-> **最终 paper-grade findings 和方法论详见 [`findings-2026-06-03/`](findings-2026-06-03/)**：
-> - [`README.md`](findings-2026-06-03/README.md) ── 总体方法论、噪声控制、复现要点
-> - [`SUMMARY.md`](findings-2026-06-03/SUMMARY.md) ── 6 个 paper-level findings
+> **最终 paper-grade findings 和方法论详见 [`n90-kvm-host/`](n90-kvm-host/)**：
+> - [`README.md`](n90-kvm-host/README.md) ── 总体方法论、噪声控制、复现要点
+> - [`SUMMARY.md`](n90-kvm-host/SUMMARY.md) ── 6 个 paper-level findings
 > - 4 个 per-config 报告 + 2 个 pkvm 专题 + standalone 验证
-> - [`lmbench-N10-4config.xlsx`](findings-2026-06-03/lmbench-N10-4config.xlsx)
+> - [`lmbench-N10-4config.xlsx`](n90-kvm-host/lmbench-N10-4config.xlsx)
 >   ── 全部指标的对照表（pkvm 用 try2 数据）
 >
 > Day-1 / day-2 的中间发现见 [`findings-2026-06-01.md`](findings-2026-06-01.md)、
