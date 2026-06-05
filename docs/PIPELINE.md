@@ -124,11 +124,12 @@ CONFIG=configs/CONFIG.my-new-env \
   ./bench.sh
 ```
 
-In a guest where you can't (or don't want to) write to `cpufreq`, pass
+In a restricted environment where you can't (or don't want to) write to
+`cpufreq` — for example a remote box you don't own, or a container — pass
 `--no-prep`:
 
 ```bash
-ENV_TAG=kvm-guest CONFIG=configs/CONFIG.kvm-guest \
+ENV_TAG=my-restricted-env CONFIG=configs/CONFIG.my-restricted-env \
   ./bench.sh --no-prep
 ```
 

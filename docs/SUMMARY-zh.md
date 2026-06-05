@@ -4,6 +4,11 @@
 > Day-3 实际**pivot 到 4-config 主机对照**（`kvm-arm.mode` = none/nvhe/vhe/protected
 > × noLSM），跳过了 guest 维度。
 >
+> **本仓库中 guest 相关工件已清理**（`configs/CONFIG.{kvm,pkvm}-guest`、
+> `bench-in-guest.sh`、`guest/launch-guest.sh`、`guest/mkrootfs.sh`）——
+> 下面 §"五个对照环境" / §"vCPU 拓扑" 等 guest 段落作为 day-1 设计存档保留，
+> 但相关脚本/配置不再随仓库分发。真正的 guest 测试逻辑在另一个仓库。
+>
 > **最终成果在 [`findings-2026-06-03/`](findings-2026-06-03/)**：
 > - [`README.md`](findings-2026-06-03/README.md)、[`SUMMARY.md`](findings-2026-06-03/SUMMARY.md)
 > - [`lmbench-N10-4config.xlsx`](findings-2026-06-03/lmbench-N10-4config.xlsx)（pkvm 用 try2 数据）
@@ -56,7 +61,7 @@
 
 ## Benchmark 选择
 
-直接调 lmbench 自己的 `scripts/lmbench` + 我们写的 CONFIG，不走 `make results`（后者要交互式 config-run 而且每项只跑一次没方差）。配置文件 `configs/CONFIG.host` / `CONFIG.kvm-guest` / `CONFIG.pkvm-guest`。
+直接调 lmbench 自己的 `scripts/lmbench` + 我们写的 CONFIG，不走 `make results`（后者要交互式 config-run 而且每项只跑一次没方差）。当前活跃配置只有 `configs/CONFIG.host`（day-1 原计划还有 `CONFIG.kvm-guest` / `CONFIG.pkvm-guest`，pivot 后已删）。
 
 **策略：跑完整 lmbench**（等价 `make rerun` 开 `BENCHMARK_OS=YES + BENCHMARK_HARDWARE=YES`）。每类都开，只刻意排除三项：
 
@@ -95,11 +100,10 @@
 ```bash
 # host
 ENV_TAG=pkvm-host CORES=0,3 ITERS=10 ./bench.sh
-
-# guest（cpufreq 在 guest 里不可写，跳过 prep）
-ENV_TAG=kvm-guest  CONFIG=configs/CONFIG.kvm-guest  CORES=0,1 ITERS=10 ./bench.sh --no-prep
-ENV_TAG=pkvm-guest CONFIG=configs/CONFIG.pkvm-guest CORES=0,1 ITERS=10 ./bench.sh --no-prep
 ```
+
+> guest 命令行原本是 `ENV_TAG=…-guest CONFIG=configs/CONFIG.…-guest ./bench.sh --no-prep`，
+> 配置文件 + bench-in-guest 已随 day-3 pivot 一起从本仓库移除。
 
 每次跑完产物：
 - `results/<env>-cpu<N>-iter{1..10}.txt`：lmbench 原始报告

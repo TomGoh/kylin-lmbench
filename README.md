@@ -46,16 +46,8 @@ with `fatal error: rpc/rpc.h: No such file or directory` while compiling
 # 1. build upstream lmbench (one-time)
 make build
 
-# 2a. host run: full suite, locked to 1.9 GHz, with prep
+# 2. host run: full suite, locked to 1.9 GHz, with prep
 ENV_TAG=pkvm-host CORES=0,3 ITERS=10 ./bench.sh
-
-# 2b. inside a KVM guest (no prep — cpufreq isn't writable from guest)
-ENV_TAG=kvm-guest CORES=0,1 ITERS=10 CONFIG=configs/CONFIG.kvm-guest \
-  ./bench.sh --no-prep
-
-# 2c. inside a pKVM protected guest
-ENV_TAG=pkvm-guest CORES=0,1 ITERS=10 CONFIG=configs/CONFIG.pkvm-guest \
-  ./bench.sh --no-prep
 
 # 3. results
 ls results/
@@ -84,8 +76,6 @@ parse-lmbench.py       state-machine parser: lmbench text report → long-format
 configs/
   CONFIG.template          annotated template explaining every field
   CONFIG.host              Phytium D3000M @ 1.9 GHz, full suite (incl. RPC/loopback)
-  CONFIG.kvm-guest         2-vCPU 4 GB guest under QEMU/KVM (run inside guest)
-  CONFIG.pkvm-guest        2-vCPU 4 GB guest under crosvm/pKVM (run inside guest)
   CONFIG.test              minimal subset for pipeline / parser validation (~90s)
 docs/
   EXPERIMENT.md          why we measure what we measure

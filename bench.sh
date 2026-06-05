@@ -9,7 +9,6 @@
 #   ./bench.sh                              # ENV_TAG=pkvm-host CORES=0,3 ITERS=10
 #   CORES=0 ITERS=2 ./bench.sh              # quick smoke
 #   ENV_TAG=baremetal ./bench.sh --no-prep  # already-prepared host
-#   CONFIG=configs/CONFIG.kvm-guest CORES=0,1 ENV_TAG=kvm-guest ./bench.sh
 #
 # Layout:
 #   results/<env>-cpu<N>-iter<I>.txt    raw lmbench report (stderr capture)
