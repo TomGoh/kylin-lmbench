@@ -4,6 +4,10 @@
 **Target**: N90 (Phytium FTC862, 8 cores, KylinOS V11)
 **Kernel**: `6.6.0-73-generic` (KylinOS 自构建，内置 pKVM)
 
+> **🚀 想直接动手复现？** 去 [`QUICK-START.md`](QUICK-START.md) ——
+> N90 上端到端 cookbook，从编译到拿到 xlsx 全程 ~7.5 小时。
+> 本文是 reference（为什么这么做），quick-start 是 recipe（怎么做）。
+
 ## 1. 实验目标
 
 本报告系统刻画 **ARM64 虚拟化主机自身**（不跑客户机）在以下 4 种 KVM 模式下的 lmbench 微基准表现：
