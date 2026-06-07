@@ -335,7 +335,7 @@ results/standalone-mem-bench/
 ├── standalone-vhe.log
 └── standalone-pkvm.log
 
-results/n90-day3/
+results/n90-day3-host/
 ├── n90-pkvm-noLSM-try1-*    # 第一次 N=10（出现 transition，"-17 to -33%"）
 └── n90-pkvm-noLSM-try2-*    # 第二次 N=10（同配置同流程，未复现 transition）
 ```

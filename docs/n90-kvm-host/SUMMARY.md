@@ -293,7 +293,7 @@ stage-2 walk）。
 
 ### 4.3 反例数据保留
 
-`results/n90-day3/n90-nvhe-noisy-full-*` 保留了 day-3 中段 nvhe 的污染数据
+`results/n90-day3-host/n90-nvhe-noisy-full-*` 保留了 day-3 中段 nvhe 的污染数据
 （当时 mask 不全，pvm-manage + Kylin AI 服务在跑）作为"如果没钳死噪声会怎样"
 的反例。对比可见：
 
@@ -320,11 +320,12 @@ docs/n90-kvm-host/
 ├── lmbench-N10-4config.xlsx                     # 684 项 × 4 配置完整表格
 └── lmbench-N10-4config-all-metrics.csv         # 同上 CSV 版本
 
-results/n90-day3/                                # 原始数据（每配置 CSV + 10 iter txt）
+results/n90-day3-host/                           # 原始数据（每配置 CSV + 10 iter txt）
 ├── n90-kvmoff-noLSM-full-*                      # N=10 clean
 ├── n90-nvhe-noLSM-full-*                        # N=10 clean
 ├── n90-vhe-noLSM-full-*                         # N=10 clean
-├── n90-pkvm-noLSM-full-*                        # N=10 clean
+├── n90-pkvm-noLSM-try2-*                        # N=10 clean，最终 pkvm 列
+├── n90-pkvm-noLSM-try1-*                        # N=10，含 stochastic transition，保留不用作最终列
 └── n90-nvhe-noisy-full-*                        # 反例污染数据保留
 
 scripts/

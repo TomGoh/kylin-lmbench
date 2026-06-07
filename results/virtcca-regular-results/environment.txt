@@ -1,0 +1,42 @@
+=== /dev contents (block devices probe) ===
+crw-rw-rw-    1 root     root        5,   1 Jan  1  1970 console
+crw-rw-rw-    1 root     root       10, 1024 Jan  1  1970 cpu_dma_latency
+crw-rw-rw-    1 root     root       30,   2 Jan  1  1970 firmware-dtb
+crw-rw-rw-    1 root     root        1,   7 Jan  1  1970 full
+brw-rw-rw-    1 root     root        7,   0 Jan  1  1970 loop0
+brw-rw-rw-    1 root     root        7,   1 Jan  1  1970 loop1
+brw-rw-rw-    1 root     root        7,  10 Jan  1  1970 loop10
+brw-rw-rw-    1 root     root        7,  11 Jan  1  1970 loop11
+brw-rw-rw-    1 root     root        7,  12 Jan  1  1970 loop12
+brw-rw-rw-    1 root     root        7,  13 Jan  1  1970 loop13
+brw-rw-rw-    1 root     root        7,  14 Jan  1  1970 loop14
+brw-rw-rw-    1 root     root        7,  15 Jan  1  1970 loop15
+brw-rw-rw-    1 root     root        7,   2 Jan  1  1970 loop2
+brw-rw-rw-    1 root     root        7,   3 Jan  1  1970 loop3
+brw-rw-rw-    1 root     root        7,   4 Jan  1  1970 loop4
+brw-rw-rw-    1 root     root        7,   5 Jan  1  1970 loop5
+brw-rw-rw-    1 root     root        7,   6 Jan  1  1970 loop6
+brw-rw-rw-    1 root     root        7,   7 Jan  1  1970 loop7
+brw-rw-rw-    1 root     root        7,   8 Jan  1  1970 loop8
+brw-rw-rw-    1 root     root        7,   9 Jan  1  1970 loop9
+crw-rw-rw-    1 root     root        1,   3 Jan  1  1970 null
+crw-rw-rw-    1 root     root        5,   2 Jan  1  1970 ptmx
+crw-rw-rw-    1 root     root        1,   8 Jan  1  1970 random
+crw-rw-rw-    1 root     root      250,   0 Jan  1  1970 rtc0
+crw-rw-rw-    1 root     root        5,   0 Jan  1  1970 tty
+crw-rw-rw-    1 root     root        1,   9 Jan  1  1970 urandom
+crw-rw-rw-    1 root     root        1,   5 Jan  1  1970 zero
+=== mount table ===
+rootfs on / type ext4 (rw)
+devfs on /dev type devfs (rw)
+tmpfs on /dev/shm type tmpfs (rw)
+proc on /proc type proc (rw)
+sysfs on /sys type sysfs (rw)
+tmpfs on /tmp type tmpfs (rw)
+=== meminfo (top 6 lines) ===
+MemTotal:        2084584 kB
+MemFree:         2059500 kB
+MemAvailable:    2060024 kB
+Buffers:               0 kB
+Cached:              524 kB
+SwapCached:            0 kB

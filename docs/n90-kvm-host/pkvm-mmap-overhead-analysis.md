@@ -20,7 +20,7 @@
 
 ## 1. 现象：一组反差极强的数字
 
-`results/n90-day3` 下 4 配置 × N=10 中位数：
+`results/n90-day3-host` 下 4 配置 × N=10 中位数：
 
 ### 1.1 `lat_mmap`（pkvm 显著慢）
 
@@ -553,4 +553,6 @@ cache-resident 内容。我们的数据：
 的"老"基准**精确隔离出了 pKVM 在主机上的唯一显著开销点**：建立 stage-2 mapping
 的瞬间成本，量化为 **每页约 12 ns 的额外延迟**。
 
-数据全集见 `lmbench-N10-4config.xlsx`，原始数据见 `results/n90-day3/n90-*-noLSM-full-cpu0.csv`。
+数据全集见 `lmbench-N10-4config.xlsx`，原始数据见
+`results/n90-day3-host/n90-*-noLSM-*-cpu0.csv`；其中最终 pkvm 列使用
+`n90-pkvm-noLSM-try2-cpu0.csv`。

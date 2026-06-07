@@ -86,10 +86,10 @@ CORES=0 ITERS=10 \
 ### 2.3 输出文件
 
 ```
-results/n90-day3/n90-kvmoff-noLSM-full-cpu0.csv             # 6840 行
-results/n90-day3/n90-kvmoff-noLSM-full-cpu0-iter{1..10}.txt # raw
-results/n90-day3/n90-kvmoff-noLSM-full-20260604-001149-summary.txt
-results/n90-day3/n90-kvmoff-noLSM-full-cpu0-parse.err       # 无害 'version' 工具告警
+results/n90-day3-host/n90-kvmoff-noLSM-full-cpu0.csv             # 6840 行
+results/n90-day3-host/n90-kvmoff-noLSM-full-cpu0-iter{1..10}.txt # raw
+results/n90-day3-host/n90-kvmoff-noLSM-full-20260604-001149-summary.txt
+results/n90-day3-host/n90-kvmoff-noLSM-full-cpu0-parse.err       # 无害 'version' 工具告警
 ```
 
 ---

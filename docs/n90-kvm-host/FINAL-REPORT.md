@@ -774,12 +774,12 @@ python3 scripts/build-xlsx-mean.py      # → lmbench-N10-4config-mean.xlsx (mea
 ### 10.1 原始数据
 
 ```
-results/n90-day3/
+results/n90-day3-host/
 ├── n90-kvmoff-noLSM-full-cpu0.csv       # kvmoff N=10 解析后 CSV
 ├── n90-kvmoff-noLSM-full-cpu0-iter*.txt  # 10 个 raw lmbench 报告
 ├── n90-kvmoff-noLSM-full-*-summary.txt    # run metadata
 ├── n90-kvmoff-noLSM-full-cpu0-parse.err  # 解析告警
-└── ...（同结构 nvhe / vhe / pkvm）
+└── ...（同结构 nvhe / vhe / pkvm try2）
 
 results/standalone-mem-bench/
 ├── standalone-kvmoff.log

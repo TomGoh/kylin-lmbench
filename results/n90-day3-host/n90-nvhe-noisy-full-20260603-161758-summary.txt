@@ -1,0 +1,4 @@
+env=n90-nvhe-noLSM-full  cores=0  iters=10  config=configs/CONFIG.host  started=2026-06-03T16:17:58+08:00
+kernel=6.6.0-73-generic
+cmdline=BOOT_IMAGE=/ostree/kylin-e57d6efccc9a6906bc300d744be608ac809c146c11df06ab3bd55449f752e0b6/vmlinuz-6.6.0-73-generic root=UUID=3548464a-4e11-4db0-88e0-3a64a09c07de rw ostree=/ostree/boot.1/kylin/e57d6efccc9a6906bc300d744be608ac809c146c11df06ab3bd55449f752e0b6/0 quiet splash loglevel=0 systemd.unified_cgroup_hierarchy=1 psi=1 resume=UUID=c1882da6-0a1b-44fe-8166-beaa6e85e5c7 security=box lsm= audit=0 kvm-arm.mode=nvhe quiet splash loglevel=0 systemd.unified_cgroup_hierarchy=1 psi=1 resume=UUID=c1882da6-0a1b-44fe-8166-beaa6e85e5c7 quiet splash loglevel=0 systemd.unified_cgroup_hierarchy=1 psi=1 resume=UUID=c1882da6-0a1b-44fe-8166-beaa6e85e5c7 quiet splash loglevel=0 systemd.unified_cgroup_hierarchy=1 psi=1 resume=UUID=c1882da6-0a1b-44fe-8166-beaa6e85e5c7
+cpu_max_freqs: 1900000 1900000 1900000 1900000 1900000 1900000 1900000 1900000 

@@ -95,7 +95,11 @@ manager，**自动开一个客户机跑 biometric-auth TA**。这个守护进程
 
 ## 2. 实验配置
 
-同 kvmoff.md §2。`ENV_TAG=n90-pkvm-noLSM-full`。
+同 kvmoff.md §2。最终综合表使用第二次干净重跑数据：
+`ENV_TAG=n90-pkvm-noLSM-try2`。
+
+第一次数据保留为 `n90-pkvm-noLSM-try1-*`，只用于说明随机访问 transition 这个
+stochastic outlier，不进入 `SUMMARY.md` 和 xlsx 的最终 pkvm 列。
 
 ---
 

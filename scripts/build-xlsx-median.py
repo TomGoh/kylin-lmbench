@@ -23,7 +23,7 @@ assert STAT_MODE in ('median', 'mean'), f'STAT_MODE 必须是 median 或 mean，
 STAT_LABEL = '中位' if STAT_MODE == 'median' else '均值'
 DISP_LABEL = 'MAD%' if STAT_MODE == 'median' else 'RSD%'  # MAD% = median abs deviation %; RSD% = relative std dev %
 
-DAY3 = 'results/n90-day3'
+DAY3 = 'results/n90-day3-host'
 CONFIGS = ['kvmoff', 'nvhe', 'vhe', 'pkvm']
 CSVS = {
     'kvmoff': f'{DAY3}/n90-kvmoff-noLSM-full-cpu0.csv',
@@ -298,9 +298,8 @@ def build_per_iter(wb):
             data = raw[cfg].get((b, v, u), [])
             vals = [iter_value(data, i) for i in range(1, 11)]
             present = [x for x in vals if x is not None]
-            m = statistics.median(present) if present else None
-            mad = (100*statistics.median([abs(x-m) for x in present])/m) if (present and m) else None
-            row = [label if cfg=='kvmoff' else '', u if cfg=='kvmoff' else '', cfg] + vals + [m, mad]
+            agg, spread = stat(list(enumerate(present, 1)))
+            row = [label if cfg=='kvmoff' else '', u if cfg=='kvmoff' else '', cfg] + vals + [agg, spread]
             for ci, val in enumerate(row, 1):
                 c = ws.cell(row=ri, column=ci, value=val)
                 c.border = THIN
@@ -323,7 +322,8 @@ def build_readme(wb):
         ('lmbench 4-mode N=10 干净对照数据 — Phytium FTC862 + KylinOS 6.6.0-73-generic', None),
         ('', None),
         ('生成时间', '2026-06-04'),
-        ('数据来源', 'results/n90-day3/n90-{kvmoff,nvhe,vhe,pkvm}-noLSM-full-cpu0.csv'),
+        ('数据来源', 'results/n90-day3-host/n90-{kvmoff,nvhe,vhe,pkvm}-noLSM-full-cpu0.csv'),
+        ('lat_mmap 高精度覆盖', 'results/precise-mmap/*.log 覆盖 0.5/1/2/4/8/16/64 MB 行'),
         ('每个配置 iter 数', 'N=10'),
         ('CPU 频率', '锁 1900 MHz, governor=performance'),
         ('LSM 栈', 'capability,kycp（无 ksaf/bpf/audit）'),
@@ -335,8 +335,8 @@ def build_readme(wb):
         ('', None),
         ('Sheet 说明：', None),
         ('  Highlights', '论文表 (Sci China Inf Sci) 30+ 项 + lat_mmap/mem hierarchy/bw 重点'),
-        ('  All metrics', '全部 684 项 (bench, variant) 中位 + MAD% + 5 个跨配置 Δ%'),
-        ('  Per-iter raw', '论文重点项的 10 个 iter 单值（用于自己重新算 stat）'),
+        ('  All metrics', f'全部 684 项 (bench, variant) {STAT_LABEL} + {DISP_LABEL} + 5 个跨配置 Δ%'),
+        ('  Per-iter raw', f'论文重点项的 10 个 iter 单值 + {STAT_LABEL}/{DISP_LABEL}'),
         ('', None),
         ('Δ% 颜色编码（方向 × 强度）：', None),
         ('', None),

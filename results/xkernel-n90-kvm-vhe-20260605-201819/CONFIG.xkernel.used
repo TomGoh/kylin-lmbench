@@ -1,0 +1,120 @@
+# lmbench config: x-kernel guest under crosvm (aarch64, pKVM or stock KVM).
+#
+# Sibling of ~/lmbench-3.0-a9/configs/CONFIG.{kvm-guest,pkvm-guest}.
+# Structurally identical to those so the same suite produces directly
+# comparable numbers; only OS, TOTAL_MEM, MOTHERBOARD, INFO, FILE/FSDIR,
+# and BENCHMARK_RPC differ from CONFIG.pkvm-guest. The differences:
+#
+#   - OS="aarch64-linux-musl"  — x-kernel uses the musl-static prebuild
+#     tree (bin/aarch64-linux-musl/) instead of the glibc one because
+#     the alpine-busybox rootfs has no dynamic loader for glibc ELFs.
+#
+#   - TOTAL_MEM=2048           — matches CPU_NUM=2 + 2 GiB RAM in
+#     platforms/aarch64-crosvm-virt/defconfig and the `-m 2048` in
+#     scripts/boot/run-crosvm-n80.sh. For QEMU local runs with
+#     `make justrun MEM=4g` the same config still applies — TOTAL_MEM
+#     is only a label that ends up in the report header.
+#
+#   - MOTHERBOARD="x-kernel/crosvm-aarch64"
+#
+#   - FILE=/root/lmb_file, FSDIR=/root/lmb_fs
+#     The alpine rootfs mounts `/tmp` as tmpfs (RAM), so writes there
+#     never hit virtio-blk. Targeting `/root` (which is on the ext4
+#     rootfs backed by virtio-blk) is what makes the file benches
+#     actually exercise the DMA path. This is the single biggest
+#     diff vs CONFIG.host/kvm-guest/pkvm-guest, which all assume
+#     `/tmp` is on a real filesystem.
+#
+#   - BENCHMARK_RPC=NO         — the bin/aarch64-linux-musl/lat_rpc
+#     binary in our prebuild is the NO_RPC stub (musl has no
+#     libtirpc). Enabling it produces nothing useful; cleaner to skip.
+#
+# Run from inside the guest (auto-invoked by /root/.profile via
+# /opt/lmbench/autorun.sh):
+#   ENV_TAG=pkvm-without-fw CORES=0 ITERS=1
+#
+# Pair with CONFIG.kvm-guest / CONFIG.pkvm-guest result files from
+# the host-side bare-metal lmbench tree to triangulate where x-kernel
+# diverges from a glibc Linux guest under the same hypervisor mode.
+#
+# Expected pKVM-vs-non-protected signature on the guest's own results
+# (mirrors CONFIG.pkvm-guest's prediction block — confirm in our data):
+#
+#   - lat_syscall: same or marginally higher under pKVM
+#     (no extra trap on null syscall; vendor-hyp HVCs only on MMIO/DMA)
+#   - lat_pagefault / lat_mmap: HIGHER under pKVM
+#     (stage-2 PTE allocation on first touch)
+#   - lat_proc fork: HIGHER under pKVM
+#     (stage-2 page table population for the child)
+#   - bw_tcp / bw_file_rd sequential: per-byte slope HIGHER under pKVM
+#     (MEM_SHARE-per-page through the DMA buffer)
+#   - lat_mem_rd DRAM segment: marginally higher under pKVM if stage-2
+#     TLB walks contend with the guest's own walks
+#   - tlb effective pages: LOWER under pKVM
+#     (stage-2 walk consumes TLB capacity)
+
+OS="aarch64-linux-musl"
+PROCESSORS="2"
+MHZ=""
+TOTAL_MEM=2048
+LINE_SIZE=64
+MOTHERBOARD="x-kernel/crosvm-aarch64"
+NETWORKS=""
+INFO=INFO.xkernel
+
+OUTPUT=/dev/null
+ENOUGH=10000
+TIMING_O=0
+LOOP_O=0
+
+# SYNC_MAX=1: we want single-process latency numbers; lat_ctx still
+# exercises multiple processes regardless. Raising to 2 turns
+# lat_syscall etc. into throughput metrics, which is not what we want
+# when comparing against the host's CONFIG.{kvm,pkvm}-guest runs.
+SYNC_MAX=1
+LMBENCH_SCHED="DEFAULT"
+
+FILE=/root/lmb_file
+FSDIR=/root/lmb_fs
+MB=64
+
+REMOTE=""
+RSH=rsh
+RCP=rcp
+
+# x-kernel does not expose virtio-blk devices to /dev/ (no /dev/vda etc.),
+# so the lmbench `disk` zone-bw test cannot run. The dd-based DMA probes
+# in autorun.sh fill that gap by writing large files to /root + sync.
+DISKS=""
+DISK_DESC=""
+
+SLOWFS="NO"
+FASTMEM="NO"
+MAIL=no
+
+BENCHMARK_HARDWARE=YES
+BENCHMARK_OS=YES
+
+BENCHMARK_SYSCALL=YES
+BENCHMARK_SELECT=YES
+BENCHMARK_SIG=YES
+BENCHMARK_PROC=YES
+BENCHMARK_CTX=YES
+BENCHMARK_PAGEFAULT=YES
+BENCHMARK_MMAP=YES
+BENCHMARK_PIPE=YES
+BENCHMARK_UNIX=YES
+
+BENCHMARK_UDP=YES
+BENCHMARK_TCP=YES
+BENCHMARK_CONNECT=YES
+BENCHMARK_RPC=NO
+
+BENCHMARK_MEM=YES
+
+BENCHMARK_HTTP=YES
+BENCHMARK_FILE=YES
+BENCHMARK_BCOPY=YES
+BENCHMARK_OPS=YES
+
+VERSION=3.0-a9

@@ -26,8 +26,9 @@
 > [`pkvm-mmap-overhead-analysis.md`](pkvm-mmap-overhead-analysis.md)。
 
 **Date**: 2026-06-04
-**数据来源**：`results/n90-day3/n90-{kvmoff,nvhe,vhe,pkvm}-noLSM-full-cpu0.csv`
-（N=10 干净对照）
+**数据来源**：早期 `results/n90-day3-host/n90-{kvmoff,nvhe,vhe,pkvm}-noLSM-*-cpu0.csv`
+（N=10 对照）。其中本文讨论的 pkvm “加速”来自第一次 `try1` 数据，已经被
+`try2` 和 standalone 验证推翻。
 
 ---
 

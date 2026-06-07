@@ -5,13 +5,47 @@ bin/
 results/*
 !results/.gitkeep
 !results/Makefile
-# Whitelist paper-grade datasets (raw evidence for n90-kvm-host/)
-!results/precise-mmap/
-!results/standalone-mem-bench/
+# Keep collected lmbench result logs used by the docs and generated tables.
+!results/n90-day1/
+!results/n90-day1/**
+!results/n90-day2/
+!results/n90-day2/**
 !results/n90-day3/
-# Within n90-day3, exclude the stochastic-outlier try1 dataset
-# (rejected by try2 reproduction; pkvm-memory-access-speedup.md DEPRECATED)
-results/n90-day3/n90-pkvm-noLSM-try1-*
+!results/n90-day3/**
+!results/n90-day3-host/
+!results/n90-day3-host/**
+!results/precise-mmap/
+!results/precise-mmap/**
+!results/standalone-mem-bench/
+!results/standalone-mem-bench/**
+!results/xkernel-n90-kvm-vhe-20260605-201819/
+!results/xkernel-n90-kvm-vhe-20260605-201819/**
+!results/xkernel-n90-kvm-nvhe-20260606-133103/
+!results/xkernel-n90-kvm-nvhe-20260606-133103/**
+!results/xkernel-n90-pkvm-np-clean-20260606-164648/
+!results/xkernel-n90-pkvm-np-clean-20260606-164648/**
+!results/xkernel-n90-pkvm-pvm-20260605-163040/
+!results/xkernel-n90-pkvm-pvm-20260605-163040/**
+!results/virtcca-regular-results/
+!results/virtcca-regular-results/**
+!results/virtcca-cvm-results/
+!results/virtcca-cvm-results/**
+!results/hygon_csv_results/
+!results/hygon_csv_results/**
+
+# Local benchmark/test logs and transient command output.
+*.log
+*.err
+*.out
+*.tmp
+*.pid
+
+# Result logs under results/ are source data for this repo.
+!results/**/*.log
+!results/**/*.err
+!results/**/*.out
+!results/**/*.txt
+!results/**/*.csv
 
 # Extracted at runtime by scripts/lmbench
 src/webpage-lm/
