@@ -3,7 +3,7 @@
 
 The main sheet is intentionally a wide table:
   bench, variant, unit, direction,
-  <absolute median columns for each environment>,
+  <absolute mean columns for each environment>,
   <same-machine protected/confidential VM over regular VM ratios>.
 
 Input can be either:
@@ -50,7 +50,6 @@ DATASETS = [
         REPO / "results" / "xkernel-n90-kvm-vhe-20260605-201819",
         "N90",
         "regular",
-        {1},
     ),
     Dataset(
         "n90_nvhe_vm",
@@ -58,7 +57,6 @@ DATASETS = [
         REPO / "results" / "xkernel-n90-kvm-nvhe-20260606-133103",
         "N90",
         "regular",
-        {1},
     ),
     Dataset(
         "n90_pkvm_np_vm",
@@ -66,7 +64,6 @@ DATASETS = [
         REPO / "results" / "xkernel-n90-pkvm-np-clean-20260606-164648",
         "N90",
         "pKVM non-protected",
-        {1},
     ),
     Dataset(
         "n90_pkvm_pvm",
@@ -74,7 +71,6 @@ DATASETS = [
         REPO / "results" / "xkernel-n90-pkvm-pvm-20260605-163040",
         "N90",
         "pKVM protected",
-        {1},
     ),
     Dataset(
         "kunpeng_regular_vm",
@@ -89,6 +85,13 @@ DATASETS = [
         REPO / "results" / "virtcca-cvm-results",
         "Kunpeng",
         "confidential",
+    ),
+    Dataset(
+        "hygon_regular_vm",
+        "Hygon regular VM",
+        REPO / "results" / "hygon_regular_results",
+        "Hygon",
+        "regular",
     ),
     Dataset(
         "hygon_csv_cvm",
@@ -109,6 +112,12 @@ RATIOS = [
         "Kunpeng VirtCCA CVM / regular VM",
         "kunpeng_virtcca_cvm",
         "kunpeng_regular_vm",
+    ),
+    (
+        "hygon_csv_over_regular_vm",
+        "Hygon CSV CVM / regular VM",
+        "hygon_csv_cvm",
+        "hygon_regular_vm",
     ),
 ]
 
@@ -276,17 +285,17 @@ def load_dataset(ds: Dataset) -> dict[tuple[str, str, str], list[float]]:
     return grouped
 
 
-def median(values: list[float]) -> float | None:
-    return st.median(values) if values else None
+def mean(values: list[float]) -> float | None:
+    return st.mean(values) if values else None
 
 
-def mad_pct(values: list[float]) -> float | None:
-    if not values:
+def stdev_pct(values: list[float]) -> float | None:
+    if len(values) < 2:
         return None
-    m = st.median(values)
-    if m == 0:
+    avg = st.mean(values)
+    if avg == 0:
         return None
-    return 100.0 * st.median(abs(x - m) for x in values) / m
+    return 100.0 * st.stdev(values) / abs(avg)
 
 
 def pct(num: float | None, den: float | None) -> float | None:
@@ -305,14 +314,14 @@ def fmt(value: float | None) -> str:
     return "" if value is None else f"{value:.6f}"
 
 
-def build_medians(all_data: dict[str, dict[tuple[str, str, str], list[float]]]):
+def build_means(all_data: dict[str, dict[tuple[str, str, str], list[float]]]):
     return {
-        ds.key: {key: median(vals) for key, vals in all_data[ds.key].items()}
+        ds.key: {key: mean(vals) for key, vals in all_data[ds.key].items()}
         for ds in DATASETS
     }
 
 
-def build_row(key, medians, label: str | None = None, category: str | None = None):
+def build_row(key, means, label: str | None = None, category: str | None = None):
     bench, variant, unit = key
     category = category or category_for(bench, variant)
     row: dict[str, str] = {
@@ -330,28 +339,28 @@ def build_row(key, medians, label: str | None = None, category: str | None = Non
         }
     )
     for ds in DATASETS:
-        row[f"{ds.key}_median"] = fmt(medians[ds.key].get(key))
+        row[f"{ds.key}_mean"] = fmt(means[ds.key].get(key))
     for ratio_key, _title, num_key, den_key in RATIOS:
-        r = ratio(medians[num_key].get(key), medians[den_key].get(key))
-        d = pct(medians[num_key].get(key), medians[den_key].get(key))
+        r = ratio(means[num_key].get(key), means[den_key].get(key))
+        d = pct(means[num_key].get(key), means[den_key].get(key))
         row[f"{ratio_key}_ratio"] = fmt(r)
         row[f"{ratio_key}_delta_pct"] = fmt(d)
     return row
 
 
-def build_all_rows(all_data: dict[str, dict[tuple[str, str, str], list[float]]], medians):
+def build_all_rows(all_data: dict[str, dict[tuple[str, str, str], list[float]]], means):
     all_keys = sorted(
         set().union(*(set(data) for data in all_data.values())),
         key=lambda k: (summary_order(k[0], k[1]), k[0], k[1], k[2]),
     )
-    return [build_row(key, medians) for key in all_keys]
+    return [build_row(key, means) for key in all_keys]
 
 
-def build_highlight_rows(medians):
+def build_highlight_rows(means):
     rows = []
     for category, items in PAPER_TABLE:
         for label, bench, variant, unit in items:
-            rows.append(build_row((bench, variant, unit), medians, label=label, category=category))
+            rows.append(build_row((bench, variant, unit), means, label=label, category=category))
     return rows
 
 
@@ -377,8 +386,8 @@ def build_stats_rows(all_data: dict[str, dict[tuple[str, str, str], list[float]]
                     "variant": variant,
                     "unit": unit,
                     "n": len(vals),
-                    "median": median(vals),
-                    "MAD_pct": mad_pct(vals),
+                    "mean": mean(vals),
+                    "stdev_pct": stdev_pct(vals),
                 }
             )
     return rows
@@ -524,7 +533,7 @@ def write_highlights_sheet(ws, rows):
         section_start = excel_row
         for row in row_by_section.get(section, []):
             values = ["", row["item"], row["unit"], row["direction"]]
-            values.extend(cell_number(row[f"{ds.key}_median"]) for ds in DATASETS)
+            values.extend(cell_number(row[f"{ds.key}_mean"]) for ds in DATASETS)
             for ratio_key, _title, _num_key, _den_key in RATIOS:
                 values.append(cell_number(row[f"{ratio_key}_ratio"]))
                 values.append(cell_number(row[f"{ratio_key}_delta_pct"]))
@@ -554,7 +563,7 @@ def write_highlights_sheet(ws, rows):
 def write_all_metrics_sheet(ws, rows):
     headers = (
         ["bench", "variant", "unit", "direction"]
-        + [f"{ds.title} median" for ds in DATASETS]
+        + [f"{ds.title} mean" for ds in DATASETS]
         + [col for _key, title, _num, _den in RATIOS for col in (f"{title} ratio", f"Δ% {title}")]
     )
     ws.append(headers)
@@ -567,7 +576,7 @@ def write_all_metrics_sheet(ws, rows):
 
     for row in rows:
         values = [row["bench"], row["variant"], row["unit"], row["direction"]]
-        values.extend(cell_number(row[f"{ds.key}_median"]) for ds in DATASETS)
+        values.extend(cell_number(row[f"{ds.key}_mean"]) for ds in DATASETS)
         for ratio_key, _title, _num_key, _den_key in RATIOS:
             values.append(cell_number(row[f"{ratio_key}_ratio"]))
             values.append(cell_number(row[f"{ratio_key}_delta_pct"]))
@@ -614,8 +623,8 @@ def write_xlsx(highlight_rows, all_rows, stats_rows, dataset_rows, path: Path) -
         "variant",
         "unit",
         "n",
-        "median",
-        "MAD_pct",
+        "mean",
+        "stdev_pct",
     ]
     append_grouped_table(ws, headers, stats_rows)
 
@@ -628,12 +637,12 @@ def write_xlsx(highlight_rows, all_rows, stats_rows, dataset_rows, path: Path) -
         ("输出文件", str(path.relative_to(REPO))),
         ("全量 CSV", str(OUT_CSV.relative_to(REPO))),
         ("重点项 CSV", str(OUT_HIGHLIGHTS_CSV.relative_to(REPO))),
-        ("统计口径", "median；Raw stats sheet 同时给出 MAD%"),
-        ("N90 口径", "x-kernel guest 数据丢弃 iter 1，用 iter 2-10 计算稳定态中位数"),
+        ("统计口径", "mean；Raw stats sheet 同时给出 stdev_pct"),
+        ("N90 口径", "x-kernel guest 使用 iter 1-10"),
         ("Kunpeng 口径", "regular VM 与 VirtCCA CVM 都使用 iter 1-10"),
-        ("Hygon 口径", "当前只有 CSV CVM 绝对值；普通 VM 基线未纳入，因此没有 Hygon ratio"),
-        ("ratio 含义", "受保护或机密 VM median / 同机普通 VM median"),
-        ("delta_pct 含义", "(受保护或机密 VM median - 同机普通 VM median) / 同机普通 VM median * 100"),
+        ("Hygon 口径", "regular VM 与 CSV CVM 都使用 iter 1-10"),
+        ("ratio 含义", "受保护或机密 VM mean / 同机普通 VM mean"),
+        ("delta_pct 含义", "(受保护或机密 VM mean - 同机普通 VM mean) / 同机普通 VM mean * 100"),
         ("Highlights", "按 lmbench-N10-4config.xlsx 的重点项规模组织，当前 45 个指标"),
         ("All metrics", "保留全部可解析指标，按 lmbench scripts/getsummary 的大类顺序排列"),
     ]
@@ -653,9 +662,9 @@ def write_xlsx(highlight_rows, all_rows, stats_rows, dataset_rows, path: Path) -
 
 def main() -> None:
     all_data = {ds.key: load_dataset(ds) for ds in DATASETS}
-    medians = build_medians(all_data)
-    all_rows = build_all_rows(all_data, medians)
-    highlight_rows = build_highlight_rows(medians)
+    means = build_means(all_data)
+    all_rows = build_all_rows(all_data, means)
+    highlight_rows = build_highlight_rows(means)
     stats_rows = build_stats_rows(all_data)
     dataset_rows = build_dataset_rows()
     write_csv(all_rows, OUT_CSV)
