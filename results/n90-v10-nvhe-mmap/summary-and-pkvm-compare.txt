@@ -1,0 +1,72 @@
+N90 V10 nvhe mmap-only host run
+raw_csv=results/n90-v10-nvhe-mmap/n90-v10-nvhe-mmap-cpu0.csv
+precise_log=results/n90-v10-nvhe-mmap/precise-mmap/n90-v10-nvhe-mmap.log
+
+[lat_mmap nvhe]
+sz0.524288MB     median=    9.088000 us   MAD%=0.660 n=10
+sz1.048576MB     median=   13.000000 us   MAD%=0.000 n=10
+sz2.097152MB     median=   19.000000 us   MAD%=0.000 n=10
+sz4.194304MB     median=   32.000000 us   MAD%=0.000 n=10
+sz8.388608MB     median=   59.000000 us   MAD%=0.000 n=10
+sz16.777216MB    median=  110.000000 us   MAD%=0.000 n=10
+sz33.554432MB    median=  216.000000 us   MAD%=0.000 n=10
+sz67.108864MB    median=  429.000000 us   MAD%=0.000 n=10
+
+[bw_mmap_rd nvhe]
+sz0.000512       median=24993.000000 MB/s MAD%=2.259 n=10
+sz0.001024       median=20411.925000 MB/s MAD%=0.005 n=10
+sz0.002048       median=21126.760000 MB/s MAD%=0.013 n=10
+sz0.004096       median=21517.865000 MB/s MAD%=0.000 n=10
+sz0.008192       median=21720.780000 MB/s MAD%=0.003 n=10
+sz0.016384       median=21822.985000 MB/s MAD%=0.004 n=10
+sz0.032768       median=21874.105000 MB/s MAD%=0.014 n=10
+sz0.065536       median=21793.560000 MB/s MAD%=0.000 n=10
+sz0.131072       median=21287.640000 MB/s MAD%=0.039 n=10
+sz0.262144       median=21285.810000 MB/s MAD%=0.060 n=10
+sz0.524288       median=21279.310000 MB/s MAD%=0.036 n=10
+sz1.05           median=21272.970000 MB/s MAD%=0.012 n=10
+sz2.10           median=21263.900000 MB/s MAD%=0.009 n=10
+sz4.19           median=21003.915000 MB/s MAD%=0.951 n=10
+sz8.39           median=16120.665000 MB/s MAD%=0.221 n=10
+sz16.78          median=15082.000000 MB/s MAD%=0.180 n=10
+sz33.55          median=14941.860000 MB/s MAD%=0.082 n=10
+sz67.11          median=14910.615000 MB/s MAD%=0.244 n=10
+
+[bw_mmap_rd_o2c nvhe]
+sz0.000512       median=   83.480000 MB/s MAD%=0.383 n=10
+sz0.001024       median=  167.375000 MB/s MAD%=0.424 n=10
+sz0.002048       median=  331.380000 MB/s MAD%=0.708 n=10
+sz0.004096       median=  656.290000 MB/s MAD%=0.212 n=10
+sz0.008192       median= 1149.590000 MB/s MAD%=0.491 n=10
+sz0.016384       median= 2041.620000 MB/s MAD%=0.121 n=10
+sz0.032768       median= 3191.470000 MB/s MAD%=0.253 n=10
+sz0.065536       median= 4647.610000 MB/s MAD%=0.145 n=10
+sz0.131072       median= 5727.980000 MB/s MAD%=0.289 n=10
+sz0.262144       median= 6523.705000 MB/s MAD%=0.461 n=10
+sz0.524288       median= 7313.875000 MB/s MAD%=0.154 n=10
+sz1.05           median= 7798.615000 MB/s MAD%=0.186 n=10
+sz2.10           median= 8348.850000 MB/s MAD%=0.123 n=10
+sz4.19           median= 8161.745000 MB/s MAD%=0.469 n=10
+sz8.39           median= 6982.945000 MB/s MAD%=0.275 n=10
+sz16.78          median= 6514.805000 MB/s MAD%=0.351 n=10
+sz33.55          median= 6625.480000 MB/s MAD%=0.595 n=10
+sz67.11          median= 6276.255000 MB/s MAD%=0.253 n=10
+
+[lat_mmap_precise nvhe]
+  0.5 MB median=   10.362521 us   MAD%=1.601 n=10
+    1 MB median=   13.761465 us   MAD%=0.574 n=10
+    2 MB median=   20.554292 us   MAD%=1.676 n=10
+    4 MB median=   32.924943 us   MAD%=2.513 n=10
+    8 MB median=   59.851396 us   MAD%=0.770 n=10
+   16 MB median=  110.545133 us   MAD%=0.545 n=10
+   64 MB median=  441.186916 us   MAD%=0.049 n=10
+
+[lat_mmap_precise pkvm vs nvhe]
+size_MB,nvhe_us,pkvm_us,delta_us,delta_pct,nvhe_MAD_pct,pkvm_MAD_pct
+0.5,10.362521,13.438333,3.075813,29.68,1.601,2.523
+1,13.761465,19.649358,5.887892,42.79,0.574,0.480
+2,20.554292,31.348366,10.794074,52.51,1.676,0.973
+4,32.924943,56.237202,23.312259,70.80,2.513,0.683
+8,59.851396,106.872015,47.020619,78.56,0.770,0.412
+16,110.545133,205.056008,94.510875,85.50,0.545,0.434
+64,441.186916,816.317767,375.130850,85.03,0.049,0.082

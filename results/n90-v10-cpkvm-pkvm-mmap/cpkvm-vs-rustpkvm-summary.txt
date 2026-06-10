@@ -1,0 +1,33 @@
+N90 V10 C pKVM kernel vs previous Rust pKVM kernel mmap-only protected-mode comparison
+C kernel: 6.6.30-pkvm-c+ #6, kvm-arm.mode=protected
+Previous kernel: 6.6.30+ #4, kvm-arm.mode=protected
+conditions: core0, N=10, THP=never, ASLR=0, freq=2.1GHz performance, LSM=capability,kysec,box
+
+[precise lat_mmap median us]
+size_MB,kvmoff_us,vhe_us,rust_pkvm_us,c_pkvm_us,c_vs_rust_pct,rust_vs_kvmoff_pct,c_vs_kvmoff_pct,c_MAD_pct,rust_MAD_pct
+0.5,10.356132,10.429703,13.438333,13.015565,-3.15,29.76,25.68,0.514,2.523
+1,13.787149,13.699023,19.649358,19.525877,-0.63,42.52,41.62,0.678,0.480
+2,20.526078,20.295507,31.348366,31.474889,0.40,52.72,53.34,0.819,0.973
+4,33.100203,33.382131,56.237202,56.308970,0.13,69.90,70.12,0.650,0.683
+8,59.622910,59.363406,106.872015,106.316775,-0.52,79.25,78.32,0.524,0.412
+16,110.991690,110.677476,205.056008,204.138823,-0.45,84.75,83.92,0.235,0.434
+64,443.084233,441.221122,816.317767,814.995820,-0.16,84.24,83.94,0.121,0.082
+
+[raw lat_mmap median us]
+variant,rust_pkvm,c_pkvm,c_vs_rust_pct
+sz0.524288MB,12.000000,12.000000,0.00
+sz1.048576MB,18.000000,18.000000,0.00
+sz2.097152MB,30.000000,30.000000,0.00
+sz4.194304MB,56.000000,56.000000,0.00
+sz8.388608MB,106.000000,106.000000,0.00
+sz16.777216MB,205.000000,204.500000,-0.24
+sz33.554432MB,405.000000,403.000000,-0.49
+sz67.108864MB,807.000000,805.000000,-0.25
+
+[67MB bandwidth sanity]
+bw_mmap_rd
+rust_pkvm,14957.955,MB/s,MAD%=0.345,n=10
+c_pkvm,14934.660,MB/s,MAD%=0.251,n=10
+bw_mmap_rd_o2c
+rust_pkvm,6161.600,MB/s,MAD%=0.521,n=10
+c_pkvm,6184.295,MB/s,MAD%=0.212,n=10

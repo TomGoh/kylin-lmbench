@@ -1,0 +1,5 @@
+env=n90-v10-nvhe-mmap  core=0  iters=10  mb=64  file=/tmp/lmb_mmap_file  run_precise=1  started=2026-06-09T15:27:14+08:00
+kernel=6.6.30+
+cmdline=BOOT_IMAGE=/vmlinuz-6.6.30+ root=UUID=09270b12-1c16-4ed5-a434-9ca52867a001 ro kvm-arm.mode=nvhe quiet splash loglevel=0 zswap.enabled=0 cpuidle.off=1 usbcore.autosuspend=-1 resume=UUID=ec675d72-c45d-4ef4-b565-e01a579b82e5 security=kysec
+cpu0_cur_freq=2100000
+cpu0_governor=performance
