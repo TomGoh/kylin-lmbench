@@ -1,0 +1,20 @@
+mode=pkvm
+date=2026-06-10T17:11:47+08:00
+root=/home/test/kylin-lmbench
+dbdir=/tmp/lmdb-pkvm-bench-db-pkvm
+records=1000000
+value_size=256
+map_mb=4096
+batch=1000
+read_ops=5000000
+txn_batch=1000
+write_records=200000
+openclose_iters=1000
+runs=5
+nosync=1
+seed=12345
+uname=Linux ryuu 6.6.30+ #637 SMP Wed May 13 17:04:48 CST 2026 aarch64 aarch64 aarch64 GNU/Linux
+cmdline=BOOT_IMAGE=/boot/vmlinuz-6.6.30+ root=UUID=467fea64-4de9-4c08-8333-c7c04d7423cd ro console=ttyAMA0,115200 loglevel=8 initcall_debug sysrq_always_enabled splash loglevel=7 resume=UUID=e70c138a-8ad9-4744-9e30-215eb6893b22 security=kysec kvm-arm.mode=protected hyp_trace_printk=1
+lsm=capability,kysec,box
+thp=[always] madvise never
+aslr=2
