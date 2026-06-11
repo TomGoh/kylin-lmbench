@@ -1,0 +1,19 @@
+# started on Thu Jun 11 20:31:56 2026
+
+
+ Performance counter stats for 'taskset -c 0 /home/kylin/kylin-lmbench/experiments/mmap-split/mmap_split_bench munmap_after_write_touch 64 50 /tmp/c0-protected/backing.bin 10 16 1':
+
+        88,812,432      cycles                                                      
+        81,942,093      instructions              #    0.92  insn per cycle         
+            21,011      page-faults                                                 
+            55,870      l1d_tlb_refill                                              
+            21,614      l2d_tlb_refill                                              
+            21,371      r34                                                         
+        59,061,228      stall_backend                                               
+
+       0.049980340 seconds time elapsed
+
+       0.000000000 seconds user
+       0.049795000 seconds sys
+
+

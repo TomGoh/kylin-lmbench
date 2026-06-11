@@ -1,0 +1,202 @@
+diff --git a/arch/arm64/configs/gwd3000_lenovox1d3000m_defconfig b/arch/arm64/configs/gwd3000_lenovox1d3000m_defconfig
+index 5356b93e0c0b..514420826465 100644
+--- a/arch/arm64/configs/gwd3000_lenovox1d3000m_defconfig
++++ b/arch/arm64/configs/gwd3000_lenovox1d3000m_defconfig
+@@ -114,6 +114,7 @@ CONFIG_KVM=y
+ CONFIG_NVHE_EL2_DEBUG=y
+ CONFIG_PROTECTED_NVHE_STACKTRACE=y
+ CONFIG_PROTECTED_NVHE_FTRACE=y
++CONFIG_XCORE_STATS=y
+ CONFIG_PKVM_MODULE_PATH="/lib/modules/pkvm/"
+ CONFIG_KYLIN_EXTRA_BUTTON=y
+ CONFIG_KYLIN_BT=y
+@@ -1222,7 +1223,12 @@ CONFIG_SCHEDSTATS=y
+ CONFIG_DEBUG_NOTIFIERS=y
+ CONFIG_RCU_CPU_STALL_TIMEOUT=60
+ # CONFIG_RCU_TRACE is not set
++CONFIG_DEBUG_FS=y
+ CONFIG_BOOTTIME_TRACING=y
++CONFIG_FTRACE=y
++CONFIG_FUNCTION_TRACER=y
++CONFIG_FUNCTION_GRAPH_TRACER=y
++CONFIG_DYNAMIC_FTRACE=y
+ CONFIG_FUNCTION_PROFILER=y
+ CONFIG_STACK_TRACER=y
+ CONFIG_SCHED_TRACER=y
+@@ -1238,3 +1244,4 @@ CONFIG_FUNCTION_ERROR_INJECTION=y
+ CONFIG_ATOMIC64_SELFTEST=y
+ CONFIG_MEMTEST=y
+ CONFIG_KYLIN_DIFFERENCES=y
++CONFIG_WERROR=n
+\ No newline at end of file
+diff --git a/arch/arm64/kvm/hyp/nvhe/rust/src/hyp_main.rs b/arch/arm64/kvm/hyp/nvhe/rust/src/hyp_main.rs
+index be4049fac6c3..d5ef1503a684 100644
+--- a/arch/arm64/kvm/hyp/nvhe/rust/src/hyp_main.rs
++++ b/arch/arm64/kvm/hyp/nvhe/rust/src/hyp_main.rs
+@@ -1748,6 +1748,16 @@ fn xcore_stats_entry(host_ctxt: &mut kvm_cpu_context) {
+             host_ctxt.set_cpu_reg(0, SMCCC_RET_SUCCESS as u64);
+         }
+         2 => {
++            // XCORE_STATS_GET_MEM 遍历 pKVM 页表，仅 protected 模式下语义成立；
++            // 非 protected（普通 nvhe）下页表未初始化，直接拒绝，不信任 host 侧过滤
++            // SAFETY: 访问外部kvm_protected_mode_initialized静态变量
++            if !unsafe {
++                static_branch_unlikely!(kvm_protected_mode_initialized, static_key_false, key)
++            } {
++                host_ctxt.set_cpu_reg(0, SMCCC_RET_NOT_SUPPORTED as u64);
++                return;
++            }
++
+             // XCORE_STATS_GET_MEM - 获取内存统计信息
+             let mem_stats = xcore_mem_stats();
+ 
+diff --git a/arch/arm64/kvm/hyp/nvhe/rust/src/stats.rs b/arch/arm64/kvm/hyp/nvhe/rust/src/stats.rs
+index 92f1dfbb696f..f5add17916ed 100644
+--- a/arch/arm64/kvm/hyp/nvhe/rust/src/stats.rs
++++ b/arch/arm64/kvm/hyp/nvhe/rust/src/stats.rs
+@@ -8,7 +8,8 @@
+ 
+ use crate::mem_protect::utils::{kvm_granule_size, kvm_pte_valid, pkvm_getstate};
+ use crate::mm::PKVM_PGTABLE;
+-use crate::{bit, ptr_wrapper_const};
++use crate::percpu::this_cpu_ptr;
++use crate::{bit, define_per_cpu, ptr_wrapper_const, write_sysreg};
+ 
+ use aarch64_cpu::registers::{
+     Readable, Writeable, MDCR_EL2, PMCCFILTR_EL0, PMCNTENSET_EL0, PMCR_EL0,
+@@ -17,8 +18,44 @@
+ const PMCCFILTR_EL2_ONLY: u64 = bit!(31) | bit!(30) | bit!(27) | bit!(26);
+ const PAGE_TO_KB_SHIFT: u32 = PAGE_SHIFT - 10;
+ 
+-// 启用EL2 PMU计数器
++// PMU 现场保存（per-cpu）。
++// enable/disable hcall 由 host 经 smp_call_function_single 在每个 CPU 上发起，
++// 因此保存与恢复天然发生在同一 CPU 的 hcall 上下文中。
++struct PmuSavedState {
++    saved: bool,
++    pmcr: u64,
++    pmccfiltr: u64,
++    mdcr: u64,
++    // PMCNTENSET_EL0.C（bit 31）在保存时是否置位
++    cycle_cnten: bool,
++}
++
++impl PmuSavedState {
++    const fn new() -> Self {
++        Self {
++            saved: false,
++            pmcr: 0,
++            pmccfiltr: 0,
++            mdcr: 0,
++            cycle_cnten: false,
++        }
++    }
++}
++
++define_per_cpu!(PMU_SAVED: PmuSavedState = PmuSavedState::new());
++
++// 启用EL2 PMU计数器（先保存本 CPU 的原 PMU 配置，disable 时恢复）
+ pub fn xcore_enable_pmu_el2() {
++    // SAFETY: per-cpu 数据，仅在本 CPU 的 hcall 上下文访问
++    let st = unsafe { &mut *this_cpu_ptr(&raw mut PMU_SAVED) };
++    if !st.saved {
++        st.pmcr = PMCR_EL0.get();
++        st.pmccfiltr = PMCCFILTR_EL0.get();
++        st.mdcr = MDCR_EL2.get();
++        st.cycle_cnten = PMCNTENSET_EL0.get() & bit!(31) != 0;
++        st.saved = true;
++    }
++
+     // bit 7: HPME (Hyp PMU Enable) - 启用EL2的PMU
+     let mdcr_el2_value = MDCR_EL2.get();
+     if mdcr_el2_value & bit!(7) == 0 {
+@@ -52,25 +89,31 @@ pub fn xcore_enable_pmu_el2() {
+     }
+ }
+ 
+-// 禁用EL2 PMU计数器
++// 禁用EL2 PMU计数器并恢复本 CPU 的原 PMU 配置
+ pub fn xcore_disable_pmu_el2() {
+-    // 禁用EL2的PMU计数器
++    // SAFETY: per-cpu 数据，仅在本 CPU 的 hcall 上下文访问
++    let st = unsafe { &mut *this_cpu_ptr(&raw mut PMU_SAVED) };
++    if st.saved {
++        MDCR_EL2.set(st.mdcr);
++        PMCCFILTR_EL0.set(st.pmccfiltr);
++        // PMCNTENSET_EL0 是 set 型寄存器，清位必须写 PMCNTENCLR_EL0
++        if st.cycle_cnten {
++            PMCNTENSET_EL0.set(bit!(31));
++        } else {
++            write_sysreg!(pmcntenclr_el0, bit!(31));
++        }
++        PMCR_EL0.set(st.pmcr);
++        st.saved = false;
++        return;
++    }
++
++    // 未经 enable 直接 disable：保守清理 EL2 相关位。
++    // 不动 PMCR.E —— 它是全局使能，host perf 可能正在使用其他计数器。
+     let mdcr_el2_value = MDCR_EL2.get();
+     if mdcr_el2_value & bit!(7) != 0 {
+         MDCR_EL2.set(mdcr_el2_value & !bit!(7));
+     }
+-
+-    // 禁用pmccntr_el0计数器
+-    let pmcntenset_el0_value = PMCNTENSET_EL0.get();
+-    if pmcntenset_el0_value & bit!(31) != 0 {
+-        PMCNTENSET_EL0.set(pmcntenset_el0_value & !bit!(31));
+-    }
+-
+-    // 关闭PMU计数器
+-    let pmcr_el0_value = PMCR_EL0.get();
+-    if pmcr_el0_value & bit!(0) != 0 {
+-        PMCR_EL0.set(pmcr_el0_value & !bit!(0));
+-    }
++    write_sysreg!(pmcntenclr_el0, bit!(31));
+ }
+ 
+ // 内存统计结构
+diff --git a/arch/arm64/kvm/xcore_stats.c b/arch/arm64/kvm/xcore_stats.c
+index acff3fe4837a..0787326cce25 100644
+--- a/arch/arm64/kvm/xcore_stats.c
++++ b/arch/arm64/kvm/xcore_stats.c
+@@ -141,8 +141,10 @@ static int xcore_get_mem_stats(void)
+     arm_smccc_1_1_hvc(KVM_HOST_SMCCC_FUNC(__pkvm_xcore_stats),
+                       XCORE_STATS_GET_MEM, 0, 0, 0, &res);
+ 
+-    if (res.a0 == 0) {
+-        pr_err("Failed to get memory stats: SMCCC returned %ld\n", res.a0);
++    // hyp 侧失败时返回 SMCCC 负值错误码（如 SMCCC_RET_NOT_SUPPORTED），
++    // 必须按符号判断；total_size 合法值可以为 0
++    if ((long)res.a0 < 0) {
++        pr_err("Failed to get memory stats: SMCCC returned %ld\n", (long)res.a0);
+         return -ENOTSUPP;
+     }
+ 
+@@ -245,6 +247,12 @@ static ssize_t xcore_stats_write(struct file *file, const char __user *buffer,
+         break;
+ 
+     case 2:
++        // mem stats 遍历 pKVM 页表，仅 protected 模式下语义成立
++        if (!is_protected_kvm_enabled()) {
++            pr_err("Memory statistics require protected KVM (pKVM) mode\n");
++            return -EOPNOTSUPP;
++        }
++
+         // 获取内存统计信息
+         ret = xcore_get_mem_stats();
+         if (ret != 0) {
+@@ -284,8 +292,11 @@ static struct proc_dir_entry *xcore_stats_proc_entry;
+ // 模块初始化
+ int xcore_stats_init(void)
+ {
+-    // 检查是否开启了pkvm，未开启则不需要初始化xcore_stats
+-    if (!is_protected_kvm_enabled()) {
++    // PMU op（0/1）在 protected 与普通 nvhe 模式下都可用（用于两种模式的
++    // EL2 cycle 对照测量）；仅在没有 nvhe hyp 可达时不创建接口：
++    // VHE（host 自己在 EL2）、kvm-arm.mode=none、或根本没从 EL2 启动
++    if (!is_hyp_mode_available() || is_kernel_in_hyp_mode() ||
++        kvm_get_mode() == KVM_MODE_NONE) {
+         return 0;
+     }
+ 

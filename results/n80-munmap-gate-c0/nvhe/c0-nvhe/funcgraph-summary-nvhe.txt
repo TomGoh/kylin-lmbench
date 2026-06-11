@@ -1,0 +1,6 @@
+== funcgraph summary: mode=nvhe munmap_after_write_touch 64MB x50 (depth<=12) ==
+__vm_munmap                  calls=12       total=25679.4 us  avg=2139.95 us  max=7805.6 us
+unmap_vmas                   calls=12       total=25015.5 us  avg=2084.62 us  max=7746.1 us
+free_pgtables                calls=12       total=179.6 us  avg=14.97 us  max=25.7 us
+tlb_finish_mmu               calls=12       total=109.0 us  avg=9.09 us  max=32.1 us
+tlb_flush_mmu                calls=425      total=4204.9 us  avg=9.89 us  max=88.6 us

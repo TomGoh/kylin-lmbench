@@ -1,0 +1,4 @@
+mode,bench,size_mb,iters,el2_cycles_delta,el2_cycles_empty,el2_cycles_net,wall_s,cpu_khz
+protected,munmap_after_write_touch,8,100,0,0,0,0.015,1800000
+protected,munmap_after_write_touch,16,100,0,0,0,0.026,1800000
+protected,munmap_after_write_touch,64,100,0,0,0,0.097,1800000

@@ -1,0 +1,2 @@
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,16,100,1,munmap_after_write_touch,10,16,1677721,103,13854420,138544.200,138.544200,0.000,0
