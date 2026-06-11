@@ -7,7 +7,7 @@
 > 实现三个角度交叉解释这个非对称。
 >
 > 数据细节参考 `lmbench-N10-4config.xlsx`、`SUMMARY.md`；总体方法论参考
-> [`README.md`](README.md)。
+> [`README.md`](../n90-kvm-host/README.md)。
 
 **Date**: 2026-06-04
 **Code refs**：
@@ -60,7 +60,7 @@ stride 256 B，pkvm 列 = try2 数据：
 > **注**：早期 try1 数据集在 8 MB 行报 pkvm = 10.01（看起来比 non-pkvm 还快 10-20%），
 > 是一次性 stochastic outlier。同配置 try2 复测得 12.12（跟 non-pkvm vhe 12.45
 > 接近），跟 lat_mem_rd_rand 的 +3-7% 趋势一致。详见
-> [`standalone-memory-bench-validation.md`](standalone-memory-bench-validation.md)。
+> [`standalone-memory-bench-validation.md`](../n90-kvm-host/standalone-memory-bench-validation.md)。
 
 ### 1.3 `bw_mem` peak（4 配置等价，差距 < 0.5%）
 

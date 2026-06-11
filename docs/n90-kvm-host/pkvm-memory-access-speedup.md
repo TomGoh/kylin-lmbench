@@ -23,7 +23,7 @@
 > 处理这个反直觉发现。
 >
 > 主分析见 [`SUMMARY.md`](SUMMARY.md)；mmap 开销机制见
-> [`pkvm-mmap-overhead-analysis.md`](pkvm-mmap-overhead-analysis.md)。
+> [`pkvm-mmap-overhead-analysis.md`](../mmap/pkvm-mmap-overhead-analysis.md)。
 
 **Date**: 2026-06-04
 **数据来源**：早期 `results/n90-day3-host/n90-{kvmoff,nvhe,vhe,pkvm}-noLSM-*-cpu0.csv`

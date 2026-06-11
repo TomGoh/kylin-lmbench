@@ -293,5 +293,5 @@ for mode in ['kvmoff','nvhe','vhe','pkvm']:
 - **机制深读**：[`docs/n90-kvm-host/FINAL-REPORT.md`](docs/n90-kvm-host/FINAL-REPORT.md)（独立可读，11 章，~33 KB）
 - **6 finding 综合**：[`docs/n90-kvm-host/SUMMARY.md`](docs/n90-kvm-host/SUMMARY.md)
 - **方法论 + 噪声控制**：[`docs/n90-kvm-host/README.md`](docs/n90-kvm-host/README.md)
-- **pkvm mmap +42% 代码级机制**：[`docs/n90-kvm-host/pkvm-mmap-overhead-analysis.md`](docs/n90-kvm-host/pkvm-mmap-overhead-analysis.md)
+- **pkvm mmap +42% 代码级机制**：[`docs/mmap/pkvm-mmap-overhead-analysis.md`](docs/mmap/pkvm-mmap-overhead-analysis.md)
 - **stochastic outlier 反例**：[`docs/n90-kvm-host/standalone-memory-bench-validation.md`](docs/n90-kvm-host/standalone-memory-bench-validation.md)

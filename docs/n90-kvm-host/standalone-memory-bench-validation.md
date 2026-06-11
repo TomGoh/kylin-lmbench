@@ -6,7 +6,7 @@
 > （符合架构理论预期：每次 TLB miss 多一层 stage-2 walk）。
 >
 > 全套参考：[`README.md`](README.md)、[`SUMMARY.md`](SUMMARY.md)、
-> [`pkvm-mmap-overhead-analysis.md`](pkvm-mmap-overhead-analysis.md)、
+> [`pkvm-mmap-overhead-analysis.md`](../mmap/pkvm-mmap-overhead-analysis.md)、
 > [`pkvm-memory-access-speedup.md`](pkvm-memory-access-speedup.md)（**已作废**，本文取代）。
 
 **Date**: 2026-06-04

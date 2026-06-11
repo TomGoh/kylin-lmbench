@@ -192,7 +192,7 @@ MAD 0%。
    ARM 文档/早期文献说的"VHE 比 NVHE 快"在本台机器上**没复现**。
 3. **lat_mmap 64 MB = 498.40 µs**（ns 精度）：与 kvmoff 498.15 / nvhe 498.54 一致到 ±0.08%。
    VHE 没有 host stage-2 表（`arch/arm64/kvm/hyp/vhe/` 整目录 0 个 `host_stage2` 引用），
-   mmap 走纯 Linux 路径。详见 [`pkvm-mmap-overhead-analysis.md`](pkvm-mmap-overhead-analysis.md)。
+   mmap 走纯 Linux 路径。详见 [`pkvm-mmap-overhead-analysis.md`](../mmap/pkvm-mmap-overhead-analysis.md)。
 4. **lat_mem_rd 8 MB = 12.45 ns**：在 LLC 边界 vhe 单点比其它配置高 1-2 ns，
    MAD% 1.44% 在噪声范围，可能是单 iter 抖动。
 

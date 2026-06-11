@@ -11,7 +11,7 @@
 + `prepare-host.sh` + `verify-clean-env.sh ✓ ALL CLEAN` 的标准流程。
 
 跨配置综合分析见 [`SUMMARY.md`](SUMMARY.md)；pKVM mmap 开销专题见
-[`pkvm-mmap-overhead-analysis.md`](pkvm-mmap-overhead-analysis.md)；
+[`pkvm-mmap-overhead-analysis.md`](../mmap/pkvm-mmap-overhead-analysis.md)；
 全部 684 项指标的 4 配置对照见 [`lmbench-N10-4config.xlsx`](lmbench-N10-4config.xlsx)。
 
 ---
@@ -217,6 +217,6 @@ minor = 0.2545 µs（MAD 0.29%）。
    栈下、主机纯 EL1 模式的最便宜 syscall 价钱。
 3. **lat_ops 与其它 3 配置完全相等**：CPU pipeline 不经过 EL2，与 KVM 模式无关。
 4. **lat_mmap 64 MB = 498.15 µs**（ns 精度）：作为对照，pkvm 同 size = 709.24 µs（**+42.3%**）。
-   差异机制详见 [`pkvm-mmap-overhead-analysis.md`](pkvm-mmap-overhead-analysis.md)。
+   差异机制详见 [`pkvm-mmap-overhead-analysis.md`](../mmap/pkvm-mmap-overhead-analysis.md)。
 
 跨 4 配置对比见 [`SUMMARY.md`](SUMMARY.md)。

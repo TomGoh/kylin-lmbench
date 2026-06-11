@@ -126,7 +126,7 @@ ENV_TAG=pkvm-host CORES=0,3 ITERS=10 ./bench.sh
 - **最终 findings**：[`n90-kvm-host/`](n90-kvm-host/)
   - 总体方法论：[`README.md`](n90-kvm-host/README.md)
   - 跨配置综合：[`SUMMARY.md`](n90-kvm-host/SUMMARY.md)
-  - pkvm mmap +42% 专题：[`pkvm-mmap-overhead-analysis.md`](n90-kvm-host/pkvm-mmap-overhead-analysis.md)
+  - pkvm mmap +42% 专题：[`pkvm-mmap-overhead-analysis.md`](mmap/pkvm-mmap-overhead-analysis.md)
   - standalone 验证：[`standalone-memory-bench-validation.md`](n90-kvm-host/standalone-memory-bench-validation.md)
 - 实验设计完整版（英文）：[`EXPERIMENT.md`](EXPERIMENT.md)
 - 管线内部细节：[`PIPELINE.md`](PIPELINE.md)

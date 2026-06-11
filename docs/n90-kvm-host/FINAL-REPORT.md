@@ -575,7 +575,7 @@ ns 精度复测 N=10，MAD% < 1%：
 
 **每次 stage-2 abort 摊销 ≈ 500 ns ≈ 950 cycle（1.9 GHz），等价于每 4 KB mmap
 size 多付 ~12 ns（lmbench 16 KB stride）。详见
-[`pkvm-mmap-overhead-analysis.md` §6.1](pkvm-mmap-overhead-analysis.md)。**
+[`pkvm-mmap-overhead-analysis.md` §6.1](../mmap/pkvm-mmap-overhead-analysis.md)。**
 
 机制（已通过 pKVM Rust 源码 + lmbench 测试源码交叉验证）：
 
@@ -590,7 +590,7 @@ size 多付 ~12 ns（lmbench 16 KB stride）。详见
 5. 64 MB mmap 中 lmbench 只触摸前 `size/N = 6.4 MB`、stride=PSIZE=16 KB，
    折合 **~410 次 stage-2 abort**（每 abort 摊销 ~500 ns），合计 ~205 µs，吻合
    实测 +211 µs（709.24 − 498.37）。详细每页摊销表见
-   [`pkvm-mmap-overhead-analysis.md` §6.1](pkvm-mmap-overhead-analysis.md)
+   [`pkvm-mmap-overhead-analysis.md` §6.1](../mmap/pkvm-mmap-overhead-analysis.md)
 
 非 pkvm 配置（kvmoff/nvhe/vhe）**不维护 host stage-2 表**：
 
@@ -814,8 +814,10 @@ docs/n90-kvm-host/
 ├── README.md                                # 总体方法论详版
 ├── SUMMARY.md                               # 跨配置综合 + 6 finding
 ├── kvmoff.md / nvhe.md / vhe.md / pkvm.md   # 4 个 per-config 子报告
-├── pkvm-mmap-overhead-analysis.md           # lat_mmap +42% 代码级专题（Rust + C 源码交叉解释）
 └── FINAL-REPORT.md                          # 本文件
+
+docs/mmap/
+└── pkvm-mmap-overhead-analysis.md           # lat_mmap +42% 代码级专题（Rust + C 源码交叉解释）
 ```
 
 ### 10.4 脚本
