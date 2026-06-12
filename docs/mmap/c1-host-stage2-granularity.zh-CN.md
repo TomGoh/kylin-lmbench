@@ -8,6 +8,18 @@
 **本报告回答**：这笔"每次 walk 更贵"是否来自 **host 内存被拆成 4K**（嵌套 walk 更深）——即 H1，
 还是来自"host 内存已是大块、但嵌套翻译本身就贵"——即 H2。
 
+> ## ⚠️ 结论更正（2026-06-12）
+>
+> **本文档的 op=3 自省数据与方法是对的**（host RAM 99.5% 是 1G block，确凿无误），
+> **但据此得出的"机制 = H2 嵌套 walk 固有税(a-2)"的结论是错的。** 真正的机制是
+> **a-1：逐页 `TLBI` 的 stage-2 硬件税**，由后续阈值扫描实验证实 →
+> **[c1-tlbi-threshold.zh-CN.md](c1-tlbi-threshold.zh-CN.md)**。
+>
+> **错在哪**：op=3 只能排除"host 内存被拆成 4K"(H1)，**并不能**在"walk 贵(a-2)"与
+> "TLBI 贵(a-1)"之间判别。而且"host RAM 是大块"恰恰意味着 **stage-2 walk 便宜**，
+> 本应是**反对 a-2** 的证据，当时却被读成"a-2 固有税"——逻辑接反了。下面 §6.4 与 §7 的
+> 机制判断/优化方向已被 a-1 取代；正文其余部分（背景、op=3 设计与数据）仍有效，原文保留留痕。
+
 ---
 
 ## 0. 摘要（结论先行）
@@ -24,9 +36,9 @@
 - **host 内存 99.5% 是 1G block**，只有 31MB 是 4K → **不是碎片化问题，host 内存已最大化块映射**。
 - 直接反证：全系统 4K 页仅 **8046 个**，而 benchmark 工作集 64MB = **16384 页**；`8046 < 16384`，
   故 benchmark 区域**不可能是 4K 映射**，必落在 2M/1G block 内。
-- 因此 +40.9M backend 停顿是 **stage-2 嵌套翻译的固有税**（即便 1G block，每次 stage-1 TLB-miss
-  的 walk 仍需对各级描述符地址做 stage-2 翻译），**不是"把碎页合并回大块"能修的问题**。
-- 优化方向因此收窄到更窄、更接近"pKVM 隔离内在代价"的杠杆（见 §7）。
+- 这条数据**排除了"碎片化导致深 walk"**（H1）。**但它不能判别 a-1/a-2**；
+  且"大块 → walk 便宜"实为**反对 a-2** 的证据。**[已更正]** 机制实为 **a-1 逐页 TLBI 税**，
+  见 [c1-tlbi-threshold.zh-CN.md](c1-tlbi-threshold.zh-CN.md)。下方 §6.4 / §7 的旧机制结论作废。
 
 ---
 
@@ -184,23 +196,30 @@ benchmark 的 file-cache 页、其页表页、struct page 都是普通 host RAM 
 是**静态的**。而 `munmap` 是 host **stage-1** 活动，不 share/donate host 页，**不会拆 host stage-2**——
 所以跑不跑 benchmark，host stage-2 这张图都一样。
 
-### 6.4 含义：嵌套翻译的固有税，不是碎片化
-+40.9M backend 停顿来自 **stage-2 嵌套翻译本身**：即便 host RAM 是 1G block，每次 stage-1 TLB-miss 的 walk
-仍要对各级 stage-1 描述符地址做 stage-2 翻译，teardown 期大量冷 walk 把这笔成本放大。
-**"提高 stage-2 粒度"这条优化路被堵死了——块已经是最大的。**
+### 6.4 含义 【❌ 已更正：当初判成 a-2 嵌套 walk，实为 a-1 逐页 TLBI】
+
+> 下面这段灰字是**当初的错误结论**，保留留痕。正确机制见
+> [c1-tlbi-threshold.zh-CN.md](c1-tlbi-threshold.zh-CN.md)。
+
+> ~~+40.9M backend 停顿来自 stage-2 嵌套翻译本身：即便 host RAM 是 1G block，每次 stage-1 TLB-miss
+> 的 walk 仍要对各级描述符地址做 stage-2 翻译……"提高 stage-2 粒度"这条优化路被堵死了。~~
+
+**为什么这段错了**：把成本归给"嵌套 walk"是逻辑接反了——host RAM 是大块**恰恰说明 walk 便宜**。
+随后两个对照直接推翻了它：① **密集 munmap**（触满 64MB、16384 个 PTE）gap≈0——若是 walk 机制，
+页越多 walk 越多、gap 该越大，实际却没有；② **阈值扫描**显示 gap 在 **2MB 整表-flush 阈值处断崖消失**，
+且 <2MB 时 **gap ∝ TLBI 条数**。两者都只能由 **逐页 TLBI（a-1）** 解释。详见新文档。
 
 ---
 
-## 7. 优化方向收窄 + 下一步（C1 的 H2 分支）
+## 7. 优化方向 【❌ 已更正：旧表基于 a-2，作废】
 
-| 杠杆 | 说明 | 性质 |
-|---|---|---|
-| 减少 teardown 期 stage-1 walk 数 | 若 benchmark 区域用 host 大页(THP/hugepage) backing，要 zap/walk 的 PTE 页更少 → walk 更少 | host mm / 应用层，非纯 pKVM |
-| combined-TLB / walk-cache | stage-2 contiguous bit、FEAT_TTL 提示等降低嵌套 walk 有效成本 | 偏微架构，软件杠杆有限 |
-| 诚实评估 | 很可能是 host stage-2 使能的**内在开销**，可压缩空间不大 | — |
-
-**建议的下一快查**：既然 stage-2 粒度已排除，决定 walk 数的是 **host stage-1** 的页大小——
-查 benchmark 区域在 host stage-1 是不是大页、能否减少要 walk/zap 的条目数（对应杠杆 1）。
+> 本节原表基于错误的 a-2（嵌套 walk）机制，已作废。**正确的优化方向（基于 a-1 逐页 TLBI 税）见
+> [c1-tlbi-threshold.zh-CN.md](c1-tlbi-threshold.zh-CN.md) §4。** 要点：
+>
+> - **核心杠杆 = FEAT_TLBIRANGE**：range TLBI 把"逐页一条"合并成"一段几条"，TLBI 条数骤降 →
+>   退化大幅缩小。N80 无此特性，故退化明显（退化是**平台相关**的）。
+> - 大 munmap（范围 ≥2MB）内核已自动 coalesce 成单条整表 flush，**本就无税**；退化只发生在中小 munmap。
+> - **"提高 host stage-2 粒度"对本退化无效**：粒度已最大化，且瓶颈不在 walk 而在 TLBI。
 
 ---
 

@@ -42,7 +42,11 @@
 
 10. [c1-host-stage2-granularity.zh-CN.md](c1-host-stage2-granularity.zh-CN.md)
 
-    C1 第一步：用新增的 xcore_stats op=3（只读自省，遍历 host stage-2 直方图）判别 H1/H2。结论是 **H2**——host 内存 99.5% 是 1G block（仅 31MB 是 4K），benchmark 区域必在大块内，故退化是 stage-2 嵌套翻译的**固有税**，不是碎片化，"提高粒度"这条优化路被堵死。
+    C1 第一步：用新增的 xcore_stats op=3（只读自省，遍历 host stage-2 直方图）排除"碎片化"——host 内存 99.5% 是 1G block，benchmark 区域必在大块内。⚠️ **本篇当初据此把机制判成 a-2（嵌套 walk），已更正**：op=3 数据正确，但机制实为 a-1（逐页 TLBI），见第 11 篇。
+
+11. [c1-tlbi-threshold.zh-CN.md](c1-tlbi-threshold.zh-CN.md)
+
+    C1 机制判定（**最终结论**）：完整推理链——密集 munmap 对照证伪 a-2、源码定位 2MB 阈值、阈值扫描证实 a-1。退化 = **逐页 `TLBI` 的 stage-2 硬件税**（每条 host TLBI 在 pKVM 下多 ~0.27µs，gap∝TLBI 条数，在 2MB 整表-flush 阈值处断崖消失）。核心杠杆 = **FEAT_TLBIRANGE**（N80 没有）。
 
 ## 相关代码与数据
 
@@ -79,13 +83,15 @@ backend(访存)停顿——即 host stage-2 嵌套翻译放大了 munmap teardow
 
 → 路线定为 **C1（host 侧）**。
 
-**C1 第一步（N80 实测，2026-06-12，见 [c1-host-stage2-granularity.zh-CN.md](c1-host-stage2-granularity.zh-CN.md)）已查清**：
+**C1 机制判定（N80 实测，2026-06-12，最终结论见 [c1-tlbi-threshold.zh-CN.md](c1-tlbi-threshold.zh-CN.md)）**：
 
 ```text
-新增 xcore_stats op=3 遍历 host stage-2 粒度直方图：host 内存 99.5% 是 1G block、
-0.47% 2M，只有 0.003%(31MB) 是 4K。全系统 4K 页仅 8046 个 < benchmark 的 16384 页，
-故 benchmark 区域必在大块内 → H2：粒度不是杠杆，host 内存已最大化块映射。
-+40.9M backend 停顿是 stage-2 嵌套翻译的固有税，不是碎片化——"提高粒度"路被堵死。
+退化 = 逐页 TLBI 的 stage-2 硬件税（假设 a-1），不是嵌套 walk（a-2）。
+证据链：op=3 自省排除碎片化(host RAM 99.5% 1G block) → 密集 munmap 对照 gap≈0
+(页多反而无税)证伪 a-2 → 源码定位内核在范围≥2MB(MAX_DVM_OPS=512)时由"逐页TLBI"
+切"单条整表flush" → 阈值扫描：gap 在 2MB 处断崖消失、<2MB 时 gap∝TLBI 条数，
+每条 host TLBI 在 pKVM 下多 ~0.27µs。原 benchmark 稀疏 munmap gap +438µs 与之闭环。
 ```
 
-→ 优化方向收窄：减少 teardown 期 host **stage-1** walk 数（大页 backing）/ combined-TLB 行为；或评估为 pKVM 隔离的内在开销。
+→ 核心杠杆 = **FEAT_TLBIRANGE**（range TLBI 合并逐页 TLBI；N80 无此特性故退化明显，平台相关）；大 munmap 已自动 coalesce 成整表 flush、无税。
+**注**：早先的 H2/"嵌套 walk 固有税"机制结论是误判，已在第 10、11 篇更正（op=3 数据正确，机制解释下早了）。
