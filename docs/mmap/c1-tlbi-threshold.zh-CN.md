@@ -138,11 +138,68 @@ if ((!system_supports_tlb_range() && (end - start) >= (MAX_DVM_OPS * stride)) ||
 
 ---
 
-## 2. 为什么每条 host TLBI 在 pKVM 下更贵（体系结构）
+## 2. 为什么每条 host TLBI 在 pKVM 下更贵（结合实际刷新代码）
 
-nvhe（非 protected）下 host 没有 stage-2，TLB 里是**纯 stage-1**条目；host 的 `TLBI VAE1IS` 作废 stage-1 条目并广播(DVM)，`DSB ISH` 等广播完成。
+### 2.1 先看内核实际发的是什么——逐页 vs 整表，落到指令
 
-protected（pKVM）下 host 受 **host stage-2** 保护，TLB 里是 **combined（stage1×stage2）**条目、带 **VMID** 标记。host 同一条 `TLBI VAE1IS` 要作废这些 combined 条目，广播/完成路径更重，`DSB` 等更久 → 流水线 backend 停顿更多。实测**每条多 ~0.27µs**。这是硬件层面的代价，且 host TLBI **不被 trap**（gate 已证，无 `HCR_EL2.TTLB`），所以与 EL2 软件无关。
+munmap 的 TLB 作废链：`__flush_tlb_range()` → `__flush_tlb_range_nosync()` →（按范围二选一）。
+关键代码（`arch/arm64/include/asm/tlbflush.h`）：
+
+**① 阈值判断**（`__flush_tlb_range_nosync`，:422）——决定走逐页还是整表：
+```c
+if ((!system_supports_tlb_range() && (end - start) >= (MAX_DVM_OPS * stride)) ||
+    pages >= MAX_TLBI_RANGE_PAGES) {
+    flush_tlb_mm(vma->vm_mm);           // ② 整表：1 条按 ASID 的 TLBI
+    return;
+}
+dsb(ishst);                              // 等前面的 store 落盘
+__flush_tlb_range_op(vae1is, start, pages, stride, asid, tlb_level, true);  // ③ 逐页/范围
+```
+
+**② 整表路径**（`flush_tlb_mm`，:253）——**只有一条 TLBI**，与页数无关：
+```c
+dsb(ishst);
+asid = __TLBI_VADDR(0, ASID(mm));
+__tlbi(aside1is, asid);                  // tlbi aside1is, <asid>  ← 整个 ASID 一条搞定
+__tlbi_user(aside1is, asid);             // KPTI 下再补一条（user ASID）
+dsb(ish);                                // 等广播完成
+```
+
+**③ 逐页路径**（`__flush_tlb_range_op` 宏，:369）——N80 无 FEAT_TLBIRANGE，走"逐页"分支：
+```c
+while (pages > 0) {
+    if (!system_supports_tlb_range() || pages == 1) {   // ← N80 恒真，逐页
+        addr = __TLBI_VADDR(start, asid);
+        __tlbi_level(op, addr, tlb_level);              // tlbi vae1is, <addr> ← 一页一条
+        if (tlbi_user) __tlbi_user_level(op, addr, ...);// KPTI 下每页再补一条
+        start += stride;  pages -= 1;  continue;
+    }
+    ... // 有 FEAT_TLBIRANGE 时这里走 __tlbi(r##op,...)：一条覆盖一段，N 条→几条
+}
+```
+而 `__tlbi(op, arg)` 最终就是一条 `tlbi` 汇编（`__TLBI_1`，:40）：`asm("tlbi vae1is, %0")`。
+最后由 `__flush_tlb_range()`（:443）补一条 **`dsb(ish)`** 等所有 TLBI 广播完成。
+
+**所以落到指令层面的对比**（这就是"断崖"的根因）：
+
+| munmap 范围 | 走哪条 | 实际发的 TLBI |
+|---|---|---|
+| **< 2MB** | `__flush_tlb_range_op` 逐页 | **N 条** `tlbi vae1is`（KPTI 下 2N）+ 末尾 1 条 `dsb ish` |
+| **≥ 2MB** | `flush_tlb_mm` 整表 | **1 条** `tlbi aside1is` + 1 条 `dsb ish` |
+
+> 逐页区间成本 = **N × 每条 TLBI 成本**；整表区间 = **1 × 每条 TLBI 成本**（与 N 无关）。
+> 所以只要"每条 TLBI"在 pKVM 下更贵，逐页区间的 gap 就 **∝ N（∝范围）**，整表区间就**只剩一条的量、≈0**——和 §1 步骤 5 的扫描曲线一一对应。
+
+### 2.2 为什么"同一条 `tlbi vae1is`"在 pKVM 下更贵
+
+指令完全一样（`tlbi vae1is, <VA|ASID>`），变贵的是**它要作废的 TLB 内容**和**广播/完成的代价**：
+
+- **nvhe（无 host stage-2）**：host EL1 是单级翻译，TLB 里是**纯 stage-1**条目。`tlbi vae1is` 作废该 VA/ASID 的 stage-1 条目，`dsb ish` 等内部共享域广播完成。
+- **protected（host stage-2 开）**：host EL1 是**嵌套**翻译（VA→IPA→PA），TLB 里是 **combined(stage1×stage2)** 条目、带 **VMID**(host 的 stage-2 上下文)标记。同一条 `tlbi vae1is` 要作废这些 combined 条目——涉及 stage-2 维度/VMID 的作废与 DVM 广播路径更重，末尾那条 `dsb ish` 等**所有**这些更重的作废完成 → 排到 `dsb` 时**流水线 backend 停顿更久**（与 perf 看到的"`dtlb_walk` 不变、`stall_backend` 增加"完全吻合：卡在 TLBI/DSB 完成，不是多走 walk）。
+
+实测每条逐页 TLBI 在 pKVM 下多 **~0.27µs（~490 cycles@1.8GHz）**。这是**硬件层面**的代价；且 host TLBI **不被 trap**（gate 已证，host HCR 无 `TTLB`），所以与 EL2 软件路径无关——hyp 既挡不住也加速不了，唯一能少花的办法是**少发几条 TLBI**（见 §4：FEAT_TLBIRANGE 用 `__tlbi(r##op)` 把"逐页 N 条"压成"一段几条"）。
+
+> 旁注：`__tlbi_user`（上面代码里每页/整表都跟着的第二条）是 **KPTI**（kernel-unmap-at-EL0）下对 user ASID 的补刀——开了 KPTI 时逐页 TLBI 数**翻倍**，pKVM 税也随之翻倍。
 
 ---
 
