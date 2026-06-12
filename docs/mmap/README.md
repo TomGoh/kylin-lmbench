@@ -2,6 +2,12 @@
 
 本目录集中存放 pKVM host 侧 `mmap` 性能问题的分析、复测、拆解实验、应用级验证和优化方案文档。
 
+> ## 📖 先读这篇：[pkvm-mmap-overview.zh-CN.md](pkvm-mmap-overview.zh-CN.md)
+>
+> **贯穿全程的总览**：从最早的 4-config Host 数据(症状) → mmap-split 拆分(定位到 munmap teardown)
+> → gate(不在 EL2) → C0(backend 停顿) → C1(逐页 TLBI 根因) → 杠杆(FEAT_TLBIRANGE)，
+> 每步带"背景→设计→代码→结果→与下一步的关系"，并如实保留两次机制修正。**想快速了解整件事的来龙去脉，看这一篇即可**；下面各篇是对应步骤的详细一手材料。
+
 ## 建议阅读顺序
 
 1. [lat-mmap-test-walkthrough.zh-CN.md](lat-mmap-test-walkthrough.zh-CN.md)
