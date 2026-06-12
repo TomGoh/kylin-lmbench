@@ -40,6 +40,10 @@
 
    N80 上 gate + host 对照（C0）的完整实测报告：测试设计（结合脚本/代码/体系结构）、全部结果与分析。结论是退化不在 EL2、不在 TLBI 数量，而是 host stage-2 嵌套翻译使 teardown 访存的 backend 停顿放大（假设 a-2）→ 走 C1。
 
+10. [c1-host-stage2-granularity.zh-CN.md](c1-host-stage2-granularity.zh-CN.md)
+
+    C1 第一步：用新增的 xcore_stats op=3（只读自省，遍历 host stage-2 直方图）判别 H1/H2。结论是 **H2**——host 内存 99.5% 是 1G block（仅 31MB 是 4K），benchmark 区域必在大块内，故退化是 stage-2 嵌套翻译的**固有税**，不是碎片化，"提高粒度"这条优化路被堵死。
+
 ## 相关代码与数据
 
 - `lat_mmap` 原始代码：[src/lat_mmap.c](../../src/lat_mmap.c)
@@ -73,4 +77,15 @@ backend(访存)停顿——即 host stage-2 嵌套翻译放大了 munmap teardow
 页表 walk/页结构访存开销（假设 a-2）。
 ```
 
-→ 路线定为 **C1（host 侧）**，下一步查 host stage-2 映射粒度（block vs page）以降低 teardown 访存的 stage-2 翻译开销。
+→ 路线定为 **C1（host 侧）**。
+
+**C1 第一步（N80 实测，2026-06-12，见 [c1-host-stage2-granularity.zh-CN.md](c1-host-stage2-granularity.zh-CN.md)）已查清**：
+
+```text
+新增 xcore_stats op=3 遍历 host stage-2 粒度直方图：host 内存 99.5% 是 1G block、
+0.47% 2M，只有 0.003%(31MB) 是 4K。全系统 4K 页仅 8046 个 < benchmark 的 16384 页，
+故 benchmark 区域必在大块内 → H2：粒度不是杠杆，host 内存已最大化块映射。
++40.9M backend 停顿是 stage-2 嵌套翻译的固有税，不是碎片化——"提高粒度"路被堵死。
+```
+
+→ 优化方向收窄：减少 teardown 期 host **stage-1** walk 数（大页 backing）/ combined-TLB 行为；或评估为 pKVM 隔离的内在开销。
