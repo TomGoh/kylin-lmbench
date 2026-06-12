@@ -253,7 +253,9 @@ while (pages > 0) {
 
 ## 5. 复现与数据
 
-- 微基准：`munmap_only.c`（`<mode> <mb> <iters> <path> [touch_mb] [stride_kb]`，只给 munmap 计时，可控触摸范围/stride）。
+- 微基准与脚本：`experiments/munmap-tlbi/`（`munmap_only.c` 只给 munmap 计时、可控触摸范围/stride；
+  `run-sweep.sh` 一键跑阈值扫描；另有 `s1pagesize.c` 验 host stage-1 页大小、`munmap_bench.c` 页大小对照）。
+  用法 `munmap_only <mode> <mb> <iters> <path> [touch_mb] [stride_kb]`。
 - 阈值扫描：连续密集触摸 0.25→64MB（stride 4K）+ 稀疏参考（6.4MB/16K），protected 与 nvhe 各一轮，取 munmap-only mean（min 贴近 mean，稳）。
 - 关键常数：`MAX_DVM_OPS=512` → 阈值 2MB；N80 无 FEAT_TLBIRANGE（`ID_AA64ISAR0_EL1.TLB=0`）。
 - 数据见本文 §1 表；原 benchmark 自报来自 C0 日志 `results/n80-munmap-gate-c0/{protected,nvhe}/c0-*/bench-perf-*.log`。
