@@ -156,9 +156,10 @@ for size in $SIZES; do
   empty=$((e1-e0)); net=$((delta-empty))                     # 扣背景 EL2 噪声
 done
 ```
-- **baseline/delta**：接口语义是"累计值"，脚本自己取同一 CPU 前后差。
-- **空窗扣噪声**：跑等时长 `sleep` 测背景 EL2 活动并扣除。
-- **判读口径**（64MB）：额外 µs × CPU GHz ≈ 额外 cycle 预算（N80：若 +447µs × 1.8GHz ≈ **80 万 cycle/iter**）。`net/iter` 远小于它（<5%）→ 非 EL2(假设 a)；量级可比 → 隐藏 EL2 路径(假设 b)。
+- **目的**：gate 是个**判别闸门**——它的价值正在于"可能返回 0"。返回 0 = 决定性阴性结果（"别在 EL2 里挖了"），能直接砍掉 C2 那套几百行的 hyp 细粒度插桩。所以这一步是"先花半天证明该不该继续"，而非可有可无。
+- **baseline/delta（为什么自己算差）**：接口语义是"累计值"（计数器一直累加、不在两次读之间清零），没有显式 start/stop 快照，所以脚本自己取同一 CPU 的前后差。
+- **空窗扣噪声（为什么要扣）**：计数器数的是该 CPU **所有** EL2 周期，含 IRQ/timer 等背景活动。跑一段**等时长**的 `sleep` 测出这段背景量并扣掉，剩下的 `net` 才是 benchmark 自己引入的 EL2 周期。
+- **判读口径，以及为什么这是把对的尺子**（64MB）：把"protected 比 nvhe 多花的 µs × CPU GHz"= 这笔时间**若全花在 EL2** 所对应的 cycle 数——这是 **EL2 周期的上限**。所以"实测 net ≪ 这个上限"就足以判定 EL2 解释不了这笔退化（N80：+447µs × 1.8GHz ≈ **80 万 cycle/iter** 的上限）。`net/iter` <5% → 非 EL2(假设 a)；量级可比 → 隐藏 EL2 路径(假设 b)。
 
 ### 4.2 计数器活性验证（关键的方法学一步）
 
@@ -185,6 +186,16 @@ tlb = (isar0 >> 56) & 0xf;   // 2 = 支持 FEAT_TLBIRANGE(range TLBI)
 perf stat -e cycles,instructions,page-faults,l1d_tlb_refill,l2d_tlb_refill,r34,stall_backend \
   -- taskset -c $CORE $BENCH munmap_after_write_touch 64 50 ...
 ```
+
+**为什么是这一组事件**（每个事件都对应一个要确认/排除的猜想，不是随手列的）：
+- `cycles` + `instructions` → 算 IPC，并核对**两模式是不是同样的指令量**。若指令量不同，差异就是"软件多做事"，根本不用谈硬件；相同则把"软件"这一类排除。
+- `page-faults` → **"同一负载"的锚点**：两模式必须缺页数相同，否则比的不是同一个量。
+- `r34`(DTLB_WALK) → stage-1 页表 **walk 次数**：**直接检验 a-2**——只有当 protected 走了更多次 walk，"walk 更贵"才说得通。
+- `l1d_tlb_refill` / `l2d_tlb_refill` → **TLB 重填量**：TLBI 作废得越多、随后重填越多，是 TLBI 活动的旁证。
+- `stall_backend` → **后端(访存)停顿周期**：把"慢"定位到"卡在访存/等待"，而不是前端取指/计算——是区分"软件 vs 硬件成本"的关键量。
+
+> 这组事件合起来能回答："多花的是 cycle 还是 instruction？是更多次 walk 还是每次更贵？是访存停顿还是别的？"——把候选机制逐一钉死或排除。
+
 - `dtlb_walk` 在本机 sysfs 未暴露命名事件，用裸码 **`r34`**（=DTLB_WALK，0x34）；`l1d/l2d_tlb_refill`、`stall_backend` 由 PMU 驱动经 sysfs 暴露，按名可用。
 - **与 xcore EL2 PMU 独占**：`do_perf` 先 `echo 0 > /proc/xcore_stats` 释放 cycle counter，二者不同窗。
 

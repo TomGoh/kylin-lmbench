@@ -102,7 +102,12 @@ pub extern "C" fn host_stage2_force_pte(addr,end,prot) -> bool {
 ## 3. 插桩设计：xcore_stats op=3（只读 host stage-2 粒度直方图）
 
 复用既有 hcall 通道（`__pkvm_xcore_stats`，id 64）与 op=2 的 protected 门控范式，新增 **op=3**。
-**关键正确性**：遍历 **`host_mmu.pgt`（host stage-2）**，而**不是** `xcore_mem_stats` 用的 `PKVM_PGTABLE`（那是 hyp 自己的表）。
+
+**为什么是"只读直方图"这个设计**（每个选择都有原因）：
+- **为什么要 hyp 自省**：判别 H1/H2 需要知道 host 内存在 host stage-2 是 4K 还是大块；而 host stage-2 是 **hyp 私有**的，**host 侧根本读不到** → 只能在 hyp 里读。perf/ftrace 都看不到 stage-2 粒度，所以非加这个 hcall 不可。
+- **为什么用直方图、而不是查单个地址**：一张"按 level 分桶的页数直方图"(#1G/2M/4K) **一眼就能判 H1/H2**（碎成 4K 还是大块），且**不需要事先知道 benchmark 的物理地址**（省去从 `/proc/self/pagemap` 取 PA 再逐段查的麻烦）。
+- **为什么复用 xcore_stats 通道 + op=2 范式**：最小改动、最低风险——沿用现成的 hcall 分发、protected 双侧门控、遍历器回调范式，而不是另起一套基础设施。
+- **关键正确性**：遍历 **`host_mmu.pgt`（host stage-2）**，而**不是** `xcore_mem_stats` 用的 `PKVM_PGTABLE`（那是 **hyp 自己的**页表，粒度与 host 内存无关）。走错表就会得出与问题无关的直方图。
 
 ### 3.1 hyp 侧遍历器（`mem_protect/host.rs`）
 新增 `host_stage2_level_histogram()` + 叶子回调 `host_s2_level_walker()`，复用 `host_stage2_get_leaf` 的锁范式
