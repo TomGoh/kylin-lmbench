@@ -54,7 +54,7 @@ ID 寄存器 sysfs 未暴露 → FEAT_TLBIRANGE 用 MRS 仿真在用户态读（
 # 1) 安装插桩内核（Rust 变体，CONFIG_XCORE_STATS=y），分别以
 #    kvm-arm.mode=protected 和 kvm-arm.mode=nvhe 启动各跑一轮
 
-# 2) 板上执行（脚本在 scripts/）
+# 2) 板上执行（脚本在 pkvm_mmap_opt_docs/scripts/）
 CORE=0 SIZES="8 16 64" ITERS=100 ./el2-gate-bench.sh /tmp/gate-out
 
 # 3) 输出 /tmp/gate-out/el2-gate-<mode>.csv：

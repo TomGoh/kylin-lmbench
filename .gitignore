@@ -63,3 +63,7 @@ src/webpage-lm/
 guest/crosvm
 guest/rootfs.img
 /crosvm
+
+# pKVM mmap/TLBI follow-up result snapshots.
+!results/op-sweep-n80/
+!results/op-sweep-n80/**

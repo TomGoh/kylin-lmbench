@@ -2,3 +2,11 @@ munmap_only
 munmap_bench
 s1pagesize
 *.bin
+op_sweep
+tlbi_ab/*.o
+tlbi_ab/*.ko
+tlbi_ab/*.mod
+tlbi_ab/*.mod.c
+tlbi_ab/.*.cmd
+tlbi_ab/Module.symvers
+tlbi_ab/modules.order

@@ -1,0 +1,35 @@
+== op-sweep  mode=nvhe  size=64MB iters=200 core=0  (dense 4K touch) ==
+--- op=munmap ---
+munmap   file mb=64 touch=0.250MB stride=4K : mean=16.6 us  min=16.1 us
+munmap   file mb=64 touch=0.500MB stride=4K : mean=30.6 us  min=27.8 us
+munmap   file mb=64 touch=1.000MB stride=4K : mean=51.9 us  min=50.8 us
+munmap   file mb=64 touch=1.900MB stride=4K : mean=96.7 us  min=95.0 us
+munmap   file mb=64 touch=2.000MB stride=4K : mean=91.7 us  min=89.2 us
+munmap   file mb=64 touch=4.000MB stride=4K : mean=178.2 us  min=175.2 us
+munmap   file mb=64 touch=8.000MB stride=4K : mean=352.7 us  min=347.6 us
+munmap   file mb=64 touch=32.000MB stride=4K : mean=1401.9 us  min=1378.1 us
+munmap   file mb=64 touch=64.000MB stride=4K : mean=2806.6 us  min=2730.7 us
+--- op=dontneed ---
+dontneed file mb=64 touch=0.250MB stride=4K : mean=13.5 us  min=13.1 us
+dontneed file mb=64 touch=0.500MB stride=4K : mean=27.7 us  min=24.8 us
+dontneed file mb=64 touch=1.000MB stride=4K : mean=50.0 us  min=48.1 us
+dontneed file mb=64 touch=1.900MB stride=4K : mean=94.4 us  min=92.0 us
+dontneed file mb=64 touch=2.000MB stride=4K : mean=90.7 us  min=87.4 us
+dontneed file mb=64 touch=4.000MB stride=4K : mean=176.8 us  min=173.1 us
+dontneed file mb=64 touch=8.000MB stride=4K : mean=350.2 us  min=345.8 us
+dontneed file mb=64 touch=32.000MB stride=4K : mean=1408.6 us  min=1379.1 us
+dontneed file mb=64 touch=64.000MB stride=4K : mean=2766.4 us  min=2738.8 us
+--- op=mprotect ---
+mprotect file mb=64 touch=0.250MB stride=4K : mean=5.1 us  min=4.8 us
+mprotect file mb=64 touch=0.500MB stride=4K : mean=7.8 us  min=7.5 us
+mprotect file mb=64 touch=1.000MB stride=4K : mean=13.3 us  min=12.6 us
+mprotect file mb=64 touch=1.900MB stride=4K : mean=22.6 us  min=21.1 us
+mprotect file mb=64 touch=2.000MB stride=4K : mean=13.1 us  min=12.7 us
+mprotect file mb=64 touch=4.000MB stride=4K : mean=23.5 us  min=22.9 us
+mprotect file mb=64 touch=8.000MB stride=4K : mean=44.7 us  min=43.6 us
+mprotect file mb=64 touch=32.000MB stride=4K : mean=170.2 us  min=168.0 us
+mprotect file mb=64 touch=64.000MB stride=4K : mean=335.6 us  min=331.3 us
+--- sparse reference (lat_mmap mode: touch 6.4MB, stride 16K) ---
+munmap   file mb=64 touch=6.400MB stride=16K : mean=110.2 us  min=107.7 us
+dontneed file mb=64 touch=6.400MB stride=16K : mean=107.7 us  min=104.1 us
+mprotect file mb=64 touch=6.400MB stride=16K : mean=11.9 us  min=11.5 us
