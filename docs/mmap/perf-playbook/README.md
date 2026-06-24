@@ -1,5 +1,7 @@
 # Perf-only pKVM mmap re-investigation
 
+Chinese version: [README.zh-CN.md](README.zh-CN.md).
+
 A **zero-kernel-patch, perf-only** redo of the pKVM `lat_mmap` investigation, runnable on any
 installed pKVM board. Replaces the original's two custom hypervisor hypercalls with stock `perf`
 (`:h` EL2 modifier; TLB-walk/stall counters). First target: **Kaitian** (Phytium FTC862).
