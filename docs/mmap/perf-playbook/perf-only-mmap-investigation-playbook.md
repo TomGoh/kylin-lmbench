@@ -151,11 +151,12 @@ evidence (FEAT_TLBIRANGE), why Kaitian behaves differently, with the methodology
 
 - [x] Design approved (full perf-only chain, "Approach A").
 - [x] **perf built & validated** on Kaitian — see [build-perf-on-kaitian.md](build-perf-on-kaitian.md).
-      `:h` accepted (0 during sleep); `r0024` works; named TLB events present except `dtlb_walk`
-      (→ `r0034`).
-- [ ] Stage 0 remaining: FEAT_TLBIRANGE detection; `:h` positive control.
-- [ ] Stages 1–6 execution (benches built on board; nvhe/protected reboots).
-- [ ] `kylin-lmbench/experiments/perf-reinvestigation/` scripts + dataset.
+- [x] **Stage 0 complete** — see [../../../experiments/perf-reinvestigation/stage0/](../../../experiments/perf-reinvestigation/stage0/):
+  - **FEAT_TLBIRANGE ABSENT** (`ID_AA64ISAR0_EL1=0x0000111110212120`, TLB[59:56]=0) → **GO** (same as N80).
+  - **`:h` EL2 counting VALIDATED** — `cycles:h` 0 at rest → **392M** under 100k `KVM_RUN`s. Stage 3 is perf-only, no hypercall.
+  - Events: `r0024`/`stall_backend`/`l1d_tlb`/`l2d_tlb_refill`/`mem_access` OK; `dtlb_walk` not named → use `r0034`.
+- [ ] Stages 1–6 execution (build benches on board; protected-side suite; one reboot to nvhe baseline; reboot back).
+- [ ] `kylin-lmbench/experiments/perf-reinvestigation/` run scripts + dataset.
 
 ## 10. Index
 
