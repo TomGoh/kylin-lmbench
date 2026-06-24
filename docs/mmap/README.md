@@ -8,6 +8,12 @@
 > → gate(不在 EL2) → C0(backend 停顿) → C1(逐页 TLBI 根因) → 杠杆(FEAT_TLBIRANGE)，
 > 每步带"背景→设计→代码→结果→与下一步的关系"，并如实保留两次机制修正。**想快速了解整件事的来龙去脉，看这一篇即可**；下面各篇是对应步骤的详细一手材料。
 
+> ## 🔁 perf-only 复查（2026-06）：[perf-playbook/](perf-playbook/)
+>
+> 仅用 `perf`（不打补丁、不改 `common`）在 Kaitian 上从头复查同一问题的**可复用流程**，
+> 用 perf 原生的 `:h`（EL2 周期）与 TLB-walk/stall 计数器替代原调查的两个自定义 hypercall。
+> 含一份**可复现的 perf 编译手册**（[perf-playbook/build-perf-on-kaitian.md](perf-playbook/build-perf-on-kaitian.md)）。
+
 ## 建议阅读顺序
 
 1. [lat-mmap-test-walkthrough.zh-CN.md](lat-mmap-test-walkthrough.zh-CN.md)
