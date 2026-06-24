@@ -1,0 +1,16 @@
+### Stage 3: cycles:h during sparse munmap (expect ~0) ###
+file       mb=64 touch=6.400MB stride=16K : munmap mean=293.0 us  min=291.6 us
+
+ Performance counter stats for '/home/test/perf-reinvestigation/benches/munmap_only file 64 300 /tmp/mb.bin 6.4 16':
+
+       359,635,575      cycles                                                                
+       339,429,943      cycles:k                                                              
+                 0      cycles:h                                                              
+                 0      instructions:h                                                        
+
+       0.186191337 seconds time elapsed
+
+       0.004032000 seconds user
+       0.185309000 seconds sys
+
+
