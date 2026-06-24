@@ -155,8 +155,17 @@ evidence (FEAT_TLBIRANGE), why Kaitian behaves differently, with the methodology
   - **FEAT_TLBIRANGE ABSENT** (`ID_AA64ISAR0_EL1=0x0000111110212120`, TLB[59:56]=0) → **GO** (same as N80).
   - **`:h` EL2 counting VALIDATED** — `cycles:h` 0 at rest → **392M** under 100k `KVM_RUN`s. Stage 3 is perf-only, no hypercall.
   - Events: `r0024`/`stall_backend`/`l1d_tlb`/`l2d_tlb_refill`/`mem_access` OK; `dtlb_walk` not named → use `r0034`.
-- [ ] Stages 1–6 execution (build benches on board; protected-side suite; one reboot to nvhe baseline; reboot back).
-- [ ] `kylin-lmbench/experiments/perf-reinvestigation/` run scripts + dataset.
+- [x] **Stages 1–6 executed (protected vs nvhe) + core-scaling — root cause reproduced perf-only.**
+      See [../../../experiments/perf-reinvestigation/results/README.md](../../../experiments/perf-reinvestigation/results/README.md):
+      2 MB cliff in the gap, operation-independent, ~+0.13 µs/slot; `cycles:h=0`; equal walks + backend
+      stall (a-1); mprotect escapes; core-scaling flat ⇒ local-not-broadcast.
+- [x] Dataset + scripts committed under `experiments/perf-reinvestigation/`.
+- [ ] Optional only: nvhe `mmap_split` leg — protected leg done; nvhe blocked by a GRUB one-shot
+      (`grub-reboot`) reliability quirk on this board (worked once, then refused to consume
+      `next_entry`; see results §7). Not required — teardown localization already established by op_sweep.
+
+> **Reboot caveat:** the `grub-reboot` one-shot proved unreliable on Kaitian — always re-verify the
+> booted mode (`grep kvm-arm.mode /proc/cmdline`) after a switch rather than assuming it took.
 
 ## 10. Index
 

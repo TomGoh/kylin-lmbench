@@ -129,10 +129,36 @@ offlined via CPU hotplug; frequency re-locked after each change):
   "+81 µs going 1→8 cores"; the **mean** shows flat. (Original lesson: never compare `min` across
   configs whose variance differs.)
 
+## 7. `mmap_split` phase breakdown (protected) — the cost is the touched-page teardown (`protected/mmap_split.csv`)
+
+`lat_mmap` decomposed into separately-timed phases (lat_mmap geometry: 64 MB, touch size/10 =
+6.4 MB at 16 K stride, 300 iters), protected:
+
+| phase | protected µs/iter |
+|---|---:|
+| `mmap_unmap` (VMA create+delete, no touch) | 3.54 |
+| `write_touch_cold` (first-touch faults only) | 330.35 |
+| `munmap_after_no_touch` (teardown, nothing mapped) | **1.66** |
+| `munmap_after_write_touch` (teardown after touch) | **292.84** |
+| `mmap_write_touch_unmap` (full path) | 625.01 |
+
+- The full path (625) ≈ touch (330) + teardown (293) + setup (3) — additive.
+- **Untouched munmap is ~free (1.66 µs); touched munmap is 293 µs.** The munmap cost is entirely
+  the teardown of touched PTEs (clear + per-page TLBI), not the syscall/VMA machinery — exactly
+  where §1's protected−nvhe gap lives. This is the original Stage-2 localization.
+
+**nvhe leg not collected (operational caveat):** the GRUB one-shot (`grub-reboot`) switched to
+nvhe on its first use this session, then refused to consume `next_entry` on three later attempts
+(board booted protected with the one-shot still armed, even after `sync` and a settle delay) — a
+board-level grubenv reliability quirk. The teardown localization does **not** depend on this leg:
+op_sweep + cost-layering (§1, §3, §4) already isolate the gap to touched-page teardown **in both
+modes**, and the within-protected breakdown above (untouched ~0 vs touched 293 µs) independently
+confirms the cost is the touched-PTE teardown.
+
 ## Files
-`protected/` and `nvhe/`: `op_sweep.txt`, `el2_h.txt`, `cost_layering.txt`, `kernel.txt`;
-`corescaling/corescaling.txt`. Scripts: `../setup-controls.sh`, `../run-suite.sh`, `../core-scaling.sh`.
+`protected/` and `nvhe/`: `op_sweep.txt`, `el2_h.txt`, `cost_layering.txt`, `kernel.txt`
+(+ `protected/mmap_split.csv`); `corescaling/corescaling.txt`. Scripts:
+`../setup-controls.sh`, `../run-suite.sh`, `../core-scaling.sh`, `../run-mmapsplit.sh`.
 Open item: large dense ≥2 MB gaps grow with pages-freed (e.g. munmap 64 MB +532 µs mean) but are
 inflated by single-core variance (min gap only +83 µs) — a noisier secondary effect outside the
-lat_mmap-relevant small/sparse regime. The `mmap_split` phase breakdown (Stage 1/2) is the one
-remaining optional extension.
+lat_mmap-relevant small/sparse regime.
