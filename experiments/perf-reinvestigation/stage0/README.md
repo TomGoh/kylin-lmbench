@@ -8,15 +8,20 @@ Run on the board (gcc/as/objcopy present): `make` then the commands below.
 
 ## Results (2026-06-24, Kaitian, FTC862, kernel 6.6.30-pkvm-clean, `kvm-arm.mode=protected`)
 
-### 1. FEAT_TLBIRANGE — ABSENT → **GO**
-```
-$ ./isar0
-ID_AA64ISAR0_EL1 = 0x0000111110212120
-  TLB[59:56] = 0 => ABSENT (no TLBIOS/TLBIRANGE)
-```
-`dmesg` corroborates (no TLB-range capability in "CPU features: detected:"; "Protected KVM" present).
-Same as N80 (identical FTC862 core). Without range TLBI the kernel issues per-page TLBI for
-sub-2 MB teardown → the penalty mechanism can manifest. The investigation is worth running.
+### 1. FEAT_TLBIRANGE — ABSENT on Kaitian → **GO**
+
+**Evidence (corrected — the reliable signal is *behavioral*):** Kaitian's `munmap` shows the sharp
+**2 MB cliff** (results §1: 1.9 MB 148.7 µs → 2.0 MB **88.2** µs). That drop is the kernel falling
+back to a whole-ASID flush at `MAX_DVM_OPS` *because it has no range TLBI* — i.e. FEAT_TLBIRANGE is
+absent. Same FTC862 core as N80. Without range TLBI the kernel issues per-page TLBI for sub-2 MB
+teardown → the penalty can manifest. The investigation is worth running.
+
+> ⚠ **The `isar0` EL0 register read is NOT valid evidence.** `ID_AA64ISAR0_EL1=0x0000111110212120`
+> (TLB=0) looks like "absent", but the TLB field is `FTR_HIDDEN` — masked to 0 for userspace on
+> *every* core. It agreed with reality here only because Kaitian genuinely lacks the feature; on
+> Qualcomm Oryon (SM8850), which *has* FEAT_TLBIRANGE, the same read also returns 0 — a false
+> negative (see [../android-sm8850/](../android-sm8850/)). Detect FEAT_TLBIRANGE behaviorally
+> (the 2 MB cliff) or via the kernel cpucap (`dmesg | grep -i "TLB range maintenance instructions"`).
 
 ### 2. `:h` EL2 counting — VALIDATED
 The PMU `:h` (EL2/hyp) modifier is accepted and reads **0 at rest**. Under a known-EL2 workload
@@ -40,6 +45,7 @@ expected perf guest/host-exclusion nuance; the conclusion rests only on `cycles:
 `l2d_tlb_refill`, `mem_access` all work. **`dtlb_walk` is not exposed by name → use raw `r0034`.**
 
 ## Files
-- `isar0.c` — FEAT_TLBIRANGE detector (EL0 MRS of ID_AA64ISAR0_EL1).
+- `isar0.c` — reads ID_AA64ISAR0_EL1 (⚠ TLB field is `FTR_HIDDEN`/masked — NOT a valid
+  FEAT_TLBIRANGE detector; use the behavioral 2 MB-cliff test, see §1).
 - `guest.S` + `kvm_el2_probe.c` — minimal KVM guest + driver for the `:h` positive control.
 - `Makefile` — builds all three.

@@ -83,10 +83,11 @@ This is what makes the playbook portable: it tells you what a given board can an
 |---|---|---|
 | perf events exist | `perf list`; `perf stat -e r0024,r0034,stall_backend,l2d_tlb_refill -- true` | FTC862 ≠ other cores; confirm the events the playbook needs. **Known: `dtlb_walk` not named → use `r0034`.** |
 | `:h` EL2 counting | `perf stat -e cycles:h` under a known-EL2 workload (fault fresh `MAP_ANON` pages → `host_mem_abort`) | Distinguishes "EL2 counting works" from "pKVM silently zeroes it". **Known: `:h` accepted, 0 during sleep; positive control still TODO.** |
-| **FEAT_TLBIRANGE** | tiny EL0 `mrs ID_AA64ISAR0_EL1` reader, decode TLB field [59:56] (`0b0010` ⇒ present) | **The one ISA bit that decides whether the regression appears at all.** If present, the kernel uses range-TLBI and the per-page penalty likely vanishes — a valid finding, not a failure. |
+| **FEAT_TLBIRANGE** | **kernel cpucap** (`dmesg` grep "TLB range maintenance instructions" — the *unmasked* EL1 read; needs a fresh boot if `log_buf` wrapped) and/or **behavioral** (the 2 MB `munmap` cliff: no cliff ⇒ present, sharp drop at 2.0 MB ⇒ absent). **NOT** the EL0 `mrs ID_AA64ISAR0_EL1` read — its TLB field is `FTR_HIDDEN`/masked-to-0 (false-negative trap). | **The one ISA bit that decides whether the regression appears at all.** Present ⇒ kernel uses range-TLBI, per-page penalty vanishes (confirmed on Oryon SM8850, [../../../experiments/perf-reinvestigation/results/android-sm8850/](../../../experiments/perf-reinvestigation/results/android-sm8850/)). |
 
-`ID_AA64ISAR0_EL1` is readable from EL0 via the kernel's MRS emulation (sanitised value). This
-~10-line probe is itself part of the deliverable.
+⚠ The EL0 `mrs ID_AA64ISAR0_EL1` reads a sanitised value whose TLB field is `FTR_HIDDEN` (masked
+to 0), so it **cannot** confirm FEAT_TLBIRANGE — it returns 0 even on cores that implement it
+(false-negative confirmed on Oryon SM8850). Use the kernel cpucap or the behavioral cliff instead.
 
 ---
 

@@ -1,12 +1,22 @@
-/* Stage-0 probe: detect FEAT_TLBIRANGE from EL0.
+/* Stage-0 probe: read ID_AA64ISAR0_EL1 from EL0.
  *
- * Reads ID_AA64ISAR0_EL1 via the kernel's MRS emulation (arm64 traps and emulates
- * EL0 reads of the sanitized ID registers) and decodes the TLB field [59:56]:
- *   0b0000 = no TLBIOS/TLBIRANGE   0b0001 = FEAT_TLBIOS only   0b0010 = +FEAT_TLBIRANGE
+ * !!! This does NOT reliably detect FEAT_TLBIRANGE. !!!
+ * The TLB field [59:56] is FTR_HIDDEN in the kernel
+ * (arch/arm64/kernel/cpufeature.c: ftr_id_aa64isar0[]), so the userspace-visible
+ * MRS-emulated value masks it to 0 on EVERY core, whether or not the hardware
+ * implements range TLBI. Confirmed false-negative on Qualcomm Oryon (SM8850),
+ * which HAS FEAT_TLBIRANGE yet reads TLB=0 here (see results/android-sm8850/).
  *
- * Why it matters: with FEAT_TLBIRANGE the kernel coalesces teardown into a few range
- * TLBIs and the per-page-TLBI pKVM penalty largely vanishes. Absent -> the regression
- * can appear. Kaitian (FTC862): 0x0000111110212120, TLB=0 -> ABSENT (go).
+ * Reliable alternatives:
+ *   - behavioral (preferred, root-free): the 2 MB munmap "cliff" (op_sweep /
+ *     munmap_only). NO cliff => range TLBI in use => FEAT_TLBIRANGE present;
+ *     a sharp DROP at 2.0 MB => absent (kernel falls back to a whole-ASID flush
+ *     at MAX_DVM_OPS because it has no range TLBI).
+ *   - kernel cpucap (unmasked, reads at EL1): dmesg | grep -i
+ *     "TLB range maintenance instructions"  (may be gone if log_buf wrapped).
+ *
+ * The other ID_AA64ISAR0 fields (RNDR, ATOMICS, crypto) ARE userspace-visible,
+ * so the raw value is still informative for those.
  *
  * Build: gcc -O2 -o isar0 isar0.c ; run: ./isar0
  */
@@ -20,9 +30,8 @@ int main(void)
     unsigned tlb = (isar0 >> 56) & 0xf;
 
     printf("ID_AA64ISAR0_EL1 = 0x%016lx\n", (unsigned long)isar0);
-    printf("  TLB[59:56] = %u => ", tlb);
-    if (tlb >= 2)      printf("FEAT_TLBIRANGE PRESENT (range TLBI available)\n");
-    else if (tlb == 1) printf("FEAT_TLBIOS only (no range TLBI)\n");
-    else               printf("ABSENT (no TLBIOS/TLBIRANGE)\n");
+    printf("  TLB[59:56] = %u  <-- FTR_HIDDEN: masked to 0 for EL0; this is NOT a\n", tlb);
+    printf("                    valid FEAT_TLBIRANGE check. Use the 2 MB munmap-cliff\n");
+    printf("                    test (op_sweep) or the kernel cpucap (dmesg) instead.\n");
     return 0;
 }
