@@ -107,9 +107,32 @@ The three independent measurements agree numerically:
 Host-stage-2 introspection (original `op=3`) was **not needed** — the nested-walk hypothesis is
 refuted behaviorally by the identical `r0034` walk counts plus the per-slot/2 MB-cliff structure.
 
+## 6. Core-scaling — the penalty is LOCAL, not cross-core broadcast (`corescaling/corescaling.txt`)
+
+Sparse munmap pinned to cpu0, 1000 iters, protected, varying the online-core set (the rest
+offlined via CPU hotplug; frequency re-locked after each change):
+
+| online set | mean µs | min µs | cycles | **stall_backend** (`r0024`) | instructions |
+|---|---:|---:|---:|---:|---:|
+| n8 all | 294.2 | 290.5 | 1,187.6 M | **680.8 M** | 1,442.6 M |
+| n2 intra {0,1} | 294.7 | 290.4 | 1,187.9 M | **680.0 M** | 1,442.3 M |
+| n2 cross {0,4} | 295.3 | 290.6 | 1,188.8 M | **681.9 M** | 1,442.6 M |
+| n1 solo {0} | 303.3 | 209.3 | 1,208.1 M | **676.4 M** | 1,451.2 M |
+
+- **Mean, cycles, and `stall_backend` are flat across online-core count and cluster placement**
+  (intra {0,1} ≈ cross {0,4}). A cross-core DVM broadcast / `dsb ish` completion wait would grow
+  with participating cores; it does not. → the +118.7 M backend stall (§3) is the **local** cost
+  of invalidating the combined, VMID-tagged TLB entry, **not** a broadcast wait. This reproduces
+  the original follow-up's correction — with perf only, no IRQ-off kernel module.
+- **The `min` trap reproduces exactly:** n1 solo `min`=209 µs sits far below its `mean`=303 µs
+  (single-core variance), while n8's `min`≈`mean`. A min-based reading would manufacture a fake
+  "+81 µs going 1→8 cores"; the **mean** shows flat. (Original lesson: never compare `min` across
+  configs whose variance differs.)
+
 ## Files
-`protected/` and `nvhe/`: `op_sweep.txt`, `el2_h.txt`, `cost_layering.txt`, `kernel.txt`.
-Open items: large dense ≥2 MB gaps grow with pages-freed (e.g. munmap 64 MB +532 µs) but are
-mean-inflated by single-core variance (min gap only +83 µs) — a noisier secondary effect outside
-the lat_mmap-relevant small/sparse regime. Core-scaling (local-vs-broadcast) and `mmap_split` phase
-breakdown are the remaining optional extensions.
+`protected/` and `nvhe/`: `op_sweep.txt`, `el2_h.txt`, `cost_layering.txt`, `kernel.txt`;
+`corescaling/corescaling.txt`. Scripts: `../setup-controls.sh`, `../run-suite.sh`, `../core-scaling.sh`.
+Open item: large dense ≥2 MB gaps grow with pages-freed (e.g. munmap 64 MB +532 µs mean) but are
+inflated by single-core variance (min gap only +83 µs) — a noisier secondary effect outside the
+lat_mmap-relevant small/sparse regime. The `mmap_split` phase breakdown (Stage 1/2) is the one
+remaining optional extension.

@@ -1,0 +1,26 @@
+## Core-scaling (protected): LOCAL vs cross-core broadcast?  metric=MEAN (min lies, corescaling-followup §9)
+### n8_all : online=0-7 freq=1900000 ###
+file       mb=64 touch=6.400MB stride=16K : munmap mean=294.2 us  min=290.5 us
+     1,187,585,317      cycles                                                                
+       680,847,452      r0024                                                                 
+     1,442,573,940      instructions                     #    1.21  insn per cycle            
+       0.623161001 seconds time elapsed
+### n2_intra_0_1 : online=0-1 freq=1900000 ###
+file       mb=64 touch=6.400MB stride=16K : munmap mean=294.7 us  min=290.4 us
+     1,187,910,684      cycles                                                                
+       680,040,170      r0024                                                                 
+     1,442,308,721      instructions                     #    1.21  insn per cycle            
+       0.623574988 seconds time elapsed
+### n2_cross_0_4 : online=0,4 freq=1900000 ###
+file       mb=64 touch=6.400MB stride=16K : munmap mean=295.3 us  min=290.6 us
+     1,188,806,600      cycles                                                                
+       681,920,420      r0024                                                                 
+     1,442,625,184      instructions                     #    1.21  insn per cycle            
+       0.624576800 seconds time elapsed
+### n1_solo_0 : online=0 freq=1900000 ###
+file       mb=64 touch=6.400MB stride=16K : munmap mean=303.3 us  min=209.3 us
+     1,208,140,002      cycles                                                                
+       676,418,412      r0024                                                                 
+     1,451,215,471      instructions                     #    1.20  insn per cycle            
+       0.650375555 seconds time elapsed
+restored online=0-7
