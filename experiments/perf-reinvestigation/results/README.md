@@ -9,6 +9,11 @@
 | Controls | `taskset -c 0`, governor performance @1.9 GHz, THP=never, ASLR=0, paranoid=-1, **mean of 300 iters** |
 | Bench | `op_sweep`/`munmap_only` (flush range ≈ touched extent; sweep `touch_mb` across the 2 MB gate) |
 
+> **Cross-platform confirmation (the penalty is FEAT_TLBIRANGE-gated, not pKVM-inherent):**
+> [`android-sm8850/`](android-sm8850/) — Qualcomm Oryon (Gunyah, **has** TLBIRANGE) → no 2 MB cliff;
+> [`pixel-tensor-g4/`](pixel-tensor-g4/) — Pixel 9 Pro XL, a **real pKVM host that has TLBIRANGE** →
+> protected−nvhe munmap gap **below the noise floor**, vs this board's clean **+61 µs** (no TLBIRANGE).
+
 **Result: the entire original root cause reproduces with perf only.** The pKVM `lat_mmap`
 penalty is a per-slot surcharge on sub-2 MB teardown TLB invalidation, operation-independent,
 gone at the 2 MB integer-flush threshold, costing **≈ +0.13 µs per 4 K flush slot on this board**,
