@@ -1,7 +1,7 @@
 #!/bin/bash
 set -u
 B=~/perf-reinvestigation/benches; OUT=~/perf-reinvestigation/results/corescaling
-PERF=/usr/local/bin/perf; F=/tmp/mb.bin; ITERS=1000
+PERF=/usr/local/bin/perf; F=~/perf-reinvestigation/mb.bin; ITERS=1000   # user-owned dir, not world-writable /tmp (symlink/TOCTOU)
 mkdir -p "$OUT"; truncate -s 160M "$F"
 maxf=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq)
 set_online() {  # keep cpu0 + listed cpus online; offline rest; re-lock freq (onlined cores reset governor!)

@@ -4,7 +4,7 @@ MODE="${1:?need mode tag}"
 B=~/perf-reinvestigation/benches
 OUT=~/perf-reinvestigation/results/$MODE
 PERF=/usr/local/bin/perf
-F=/tmp/mb.bin
+F=~/perf-reinvestigation/mb.bin   # user-owned dir, NOT world-writable /tmp (avoids symlink/TOCTOU on a predictable path)
 ITERS=300
 mkdir -p "$OUT"; truncate -s 160M "$F"
 { uname -r; cat /proc/cmdline; } > "$OUT/kernel.txt"
