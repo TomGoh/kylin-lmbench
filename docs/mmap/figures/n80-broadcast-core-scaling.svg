@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="560" viewBox="0 0 1020 560" role="img" aria-labelledby="title desc">
+  <title id="title">Core-scaling mean check</title>
+  <desc id="desc">N80 sparse munmap mean latency does not grow with online core count or cross-cluster topology.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <text x="58.0" y="42.0" font-size="22" fill="#1F2933" font-weight="700" text-anchor="start">Core-scaling mean check</text>
+  <text x="58.0" y="66.0" font-size="13" fill="#64707D" font-weight="400" text-anchor="start">64MB mapping, 6.4MB/16K sparse touch, munmap-only mean</text>
+  <line x1="92.0" y1="435.0" x2="927.0" y2="435.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="92.0" y1="115.0" x2="92.0" y2="435.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="92.0" y1="435.0" x2="927.0" y2="435.0" stroke="#E8EDF3" stroke-width="1"/>
+  <line x1="87.0" y1="435.0" x2="92.0" y2="435.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="82.0" y="439.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">0</text>
+  <line x1="92.0" y1="385.8" x2="927.0" y2="385.8" stroke="#E8EDF3" stroke-width="1"/>
+  <line x1="87.0" y1="385.8" x2="92.0" y2="385.8" stroke="#5C6670" stroke-width="1"/>
+  <text x="82.0" y="389.8" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">100</text>
+  <line x1="92.0" y1="336.5" x2="927.0" y2="336.5" stroke="#E8EDF3" stroke-width="1"/>
+  <line x1="87.0" y1="336.5" x2="92.0" y2="336.5" stroke="#5C6670" stroke-width="1"/>
+  <text x="82.0" y="340.5" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">200</text>
+  <line x1="92.0" y1="287.3" x2="927.0" y2="287.3" stroke="#E8EDF3" stroke-width="1"/>
+  <line x1="87.0" y1="287.3" x2="92.0" y2="287.3" stroke="#5C6670" stroke-width="1"/>
+  <text x="82.0" y="291.3" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">300</text>
+  <line x1="92.0" y1="238.1" x2="927.0" y2="238.1" stroke="#E8EDF3" stroke-width="1"/>
+  <line x1="87.0" y1="238.1" x2="92.0" y2="238.1" stroke="#5C6670" stroke-width="1"/>
+  <text x="82.0" y="242.1" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">400</text>
+  <line x1="92.0" y1="188.8" x2="927.0" y2="188.8" stroke="#E8EDF3" stroke-width="1"/>
+  <line x1="87.0" y1="188.8" x2="92.0" y2="188.8" stroke="#5C6670" stroke-width="1"/>
+  <text x="82.0" y="192.8" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">500</text>
+  <line x1="92.0" y1="139.6" x2="927.0" y2="139.6" stroke="#E8EDF3" stroke-width="1"/>
+  <line x1="87.0" y1="139.6" x2="92.0" y2="139.6" stroke="#5C6670" stroke-width="1"/>
+  <text x="82.0" y="143.6" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">600</text>
+  <text x="34.0" y="103.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="start">us/iter</text>
+  <polyline points="162.0,158.9 393.7,166.6 625.3,165.4 857.0,165.2" fill="none" stroke="#C23B2A" stroke-width="2.4" stroke-linejoin="round"/>
+  <circle cx="162.0" cy="158.9" r="5.5" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2.2"/>
+  <text x="162.0" y="146.9" font-size="11" fill="#C23B2A" font-weight="700" text-anchor="middle">560.8</text>
+  <circle cx="393.7" cy="166.6" r="5.5" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2.2"/>
+  <text x="393.7" y="154.6" font-size="11" fill="#C23B2A" font-weight="700" text-anchor="middle">545.1</text>
+  <circle cx="625.3" cy="165.4" r="5.5" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2.2"/>
+  <text x="625.3" y="153.4" font-size="11" fill="#C23B2A" font-weight="700" text-anchor="middle">547.6</text>
+  <circle cx="857.0" cy="165.2" r="5.5" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2.2"/>
+  <text x="857.0" y="153.2" font-size="11" fill="#C23B2A" font-weight="700" text-anchor="middle">548.0</text>
+  <polyline points="162.0,379.5 393.7,382.0 625.3,380.1 857.0,378.7" fill="none" stroke="#4D7C59" stroke-width="2.4" stroke-linejoin="round"/>
+  <circle cx="162.0" cy="379.5" r="5.5" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2.2"/>
+  <text x="162.0" y="401.5" font-size="11" fill="#4D7C59" font-weight="700" text-anchor="middle">112.8</text>
+  <circle cx="393.7" cy="382.0" r="5.5" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2.2"/>
+  <text x="393.7" y="404.0" font-size="11" fill="#4D7C59" font-weight="700" text-anchor="middle">107.7</text>
+  <circle cx="625.3" cy="380.1" r="5.5" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2.2"/>
+  <text x="625.3" y="402.1" font-size="11" fill="#4D7C59" font-weight="700" text-anchor="middle">111.6</text>
+  <circle cx="857.0" cy="378.7" r="5.5" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2.2"/>
+  <text x="857.0" y="400.7" font-size="11" fill="#4D7C59" font-weight="700" text-anchor="middle">114.4</text>
+  <line x1="162.0" y1="435.0" x2="162.0" y2="441.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="162.0" y="463.0" font-size="12" fill="#1F2933" font-weight="700" text-anchor="middle">{0}</text>
+  <text x="162.0" y="481.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">single</text>
+  <line x1="393.7" y1="435.0" x2="393.7" y2="441.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="393.7" y="463.0" font-size="12" fill="#1F2933" font-weight="700" text-anchor="middle">{0,1}</text>
+  <text x="393.7" y="481.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">same cluster</text>
+  <line x1="625.3" y1="435.0" x2="625.3" y2="441.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="625.3" y="463.0" font-size="12" fill="#1F2933" font-weight="700" text-anchor="middle">{0,4}</text>
+  <text x="625.3" y="481.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">cross cluster</text>
+  <line x1="857.0" y1="435.0" x2="857.0" y2="441.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="857.0" y="463.0" font-size="12" fill="#1F2933" font-weight="700" text-anchor="middle">{0..7}</text>
+  <text x="857.0" y="481.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">all cores</text>
+  <line x1="705.0" y1="105.0" x2="733.0" y2="105.0" stroke="#C23B2A" stroke-width="2.5"/>
+  <circle cx="719.0" cy="105.0" r="4.5" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <text x="743.0" y="109.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="start">protected</text>
+  <line x1="705.0" y1="129.0" x2="733.0" y2="129.0" stroke="#4D7C59" stroke-width="2.5"/>
+  <circle cx="719.0" cy="129.0" r="4.5" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <text x="743.0" y="133.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="start">NVHE</text>
+  <text x="510.0" y="532.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="middle">Source: experiments/munmap-tlbi/results/corescaling-n80/{nvhe,protected}-main-sweep.csv</text>
+</svg>

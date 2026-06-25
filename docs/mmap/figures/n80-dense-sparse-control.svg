@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="560" viewBox="0 0 1020 560" role="img" aria-labelledby="title desc">
+  <title id="title">Sparse-vs-dense munmap control</title>
+  <desc id="desc">Dense touch greatly increases PTE work but removes the protected minus NVHE gap.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <text x="58.0" y="42.0" font-size="22" fill="#1F2933" font-weight="700" text-anchor="start">Sparse-vs-dense munmap control</text>
+  <text x="58.0" y="66.0" font-size="13" fill="#64707D" font-weight="400" text-anchor="start">More PTE teardown work does not imply larger protected overhead</text>
+  <text x="90.0" y="98.0" font-size="16" fill="#1F2933" font-weight="700" text-anchor="start">PTEs cleared by munmap</text>
+  <line x1="90.0" y1="418.0" x2="500.0" y2="418.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="90.0" y1="118.0" x2="90.0" y2="418.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="90.0" y1="418.0" x2="500.0" y2="418.0" stroke="#E8EDF3" stroke-width="1"/>
+  <line x1="85.0" y1="418.0" x2="90.0" y2="418.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="80.0" y="422.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">0</text>
+  <line x1="90.0" y1="351.3" x2="500.0" y2="351.3" stroke="#E8EDF3" stroke-width="1"/>
+  <line x1="85.0" y1="351.3" x2="90.0" y2="351.3" stroke="#5C6670" stroke-width="1"/>
+  <text x="80.0" y="355.3" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">4k</text>
+  <line x1="90.0" y1="284.7" x2="500.0" y2="284.7" stroke="#E8EDF3" stroke-width="1"/>
+  <line x1="85.0" y1="284.7" x2="90.0" y2="284.7" stroke="#5C6670" stroke-width="1"/>
+  <text x="80.0" y="288.7" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">8k</text>
+  <line x1="90.0" y1="218.0" x2="500.0" y2="218.0" stroke="#E8EDF3" stroke-width="1"/>
+  <line x1="85.0" y1="218.0" x2="90.0" y2="218.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="80.0" y="222.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">12k</text>
+  <line x1="90.0" y1="151.3" x2="500.0" y2="151.3" stroke="#E8EDF3" stroke-width="1"/>
+  <line x1="85.0" y1="151.3" x2="90.0" y2="151.3" stroke="#5C6670" stroke-width="1"/>
+  <text x="80.0" y="155.3" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">16k</text>
+  <rect x="182.0" y="411.2" width="86.0" height="6.8" rx="5" fill="#C23B2A"/>
+  <text x="225.0" y="402.2" font-size="12" fill="#1F2933" font-weight="700" text-anchor="middle">410</text>
+  <text x="225.0" y="446.0" font-size="12" fill="#1F2933" font-weight="700" text-anchor="middle">sparse</text>
+  <text x="225.0" y="464.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">6.4MB/16K</text>
+  <rect x="329.0" y="144.9" width="86.0" height="273.1" rx="5" fill="#4D7C59"/>
+  <text x="372.0" y="135.9" font-size="12" fill="#1F2933" font-weight="700" text-anchor="middle">16,384</text>
+  <text x="372.0" y="446.0" font-size="12" fill="#1F2933" font-weight="700" text-anchor="middle">dense</text>
+  <text x="372.0" y="464.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">64MB/4K</text>
+  <text x="295.0" y="496.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="middle">dense clears about 40x more PTEs</text>
+  <text x="585.0" y="98.0" font-size="16" fill="#1F2933" font-weight="700" text-anchor="start">protected - NVHE extra time</text>
+  <line x1="585.0" y1="418.0" x2="995.0" y2="418.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="585.0" y1="118.0" x2="585.0" y2="418.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="585.0" y1="376.6" x2="995.0" y2="376.6" stroke="#8A94A3" stroke-width="1.2" stroke-dasharray="4 4"/>
+  <line x1="585.0" y1="402.5" x2="995.0" y2="402.5" stroke="#E8EDF3" stroke-width="1"/>
+  <text x="575.0" y="406.5" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">-50</text>
+  <line x1="585.0" y1="376.6" x2="995.0" y2="376.6" stroke="#E8EDF3" stroke-width="1"/>
+  <text x="575.0" y="380.6" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">0</text>
+  <line x1="585.0" y1="324.9" x2="995.0" y2="324.9" stroke="#E8EDF3" stroke-width="1"/>
+  <text x="575.0" y="328.9" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">100</text>
+  <line x1="585.0" y1="273.2" x2="995.0" y2="273.2" stroke="#E8EDF3" stroke-width="1"/>
+  <text x="575.0" y="277.2" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">200</text>
+  <line x1="585.0" y1="221.4" x2="995.0" y2="221.4" stroke="#E8EDF3" stroke-width="1"/>
+  <text x="575.0" y="225.4" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">300</text>
+  <line x1="585.0" y1="169.7" x2="995.0" y2="169.7" stroke="#E8EDF3" stroke-width="1"/>
+  <text x="575.0" y="173.7" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">400</text>
+  <line x1="585.0" y1="118.0" x2="995.0" y2="118.0" stroke="#E8EDF3" stroke-width="1"/>
+  <text x="575.0" y="122.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">500</text>
+  <rect x="677.0" y="151.7" width="86.0" height="225.0" rx="5" fill="#C23B2A"/>
+  <text x="720.0" y="142.7" font-size="12" fill="#1F2933" font-weight="700" text-anchor="middle">+435 us</text>
+  <text x="720.0" y="446.0" font-size="12" fill="#1F2933" font-weight="700" text-anchor="middle">sparse</text>
+  <text x="720.0" y="464.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">6.4MB/16K</text>
+  <rect x="824.0" y="376.6" width="86.0" height="22.2" rx="5" fill="#4D7C59"/>
+  <text x="867.0" y="416.9" font-size="12" fill="#1F2933" font-weight="700" text-anchor="middle">-43 us (~0)</text>
+  <text x="867.0" y="446.0" font-size="12" fill="#1F2933" font-weight="700" text-anchor="middle">dense</text>
+  <text x="867.0" y="464.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">64MB/4K</text>
+  <text x="790.0" y="496.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="middle">the gap disappears once dense touch selects whole-mm flush</text>
+  <text x="510.0" y="532.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="middle">Source: C0 sparse bench logs plus archived dense-control result in docs/mmap/c1-tlbi-threshold.zh-CN.md</text>
+</svg>

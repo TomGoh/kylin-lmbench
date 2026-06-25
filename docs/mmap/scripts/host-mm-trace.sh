@@ -136,7 +136,7 @@ do_funcgraph() {
     # 汇总关键函数耗时（leaf 形如 "fn();" 同行带时长；非 leaf 时长在 "} /* fn */" 行）
     local summary="$OUT/funcgraph-summary-$KVM_MODE.txt"
     {
-        echo "== funcgraph summary: mode=$KVM_MODE $MODE_ARG ${SIZE}MB x$ITERS (depth<=$MAXDEPTH) =="
+        echo "== funcgraph summary: mode=$KVM_MODE $MODE_ARG ${SIZE}MB x$fg_iters (depth<=$MAXDEPTH) =="
         for fn in "$entry" unmap_region unmap_vmas free_pgtables tlb_finish_mmu \
                   zap_pte_range zap_pmd_range tlb_flush_mmu __flush_tlb_range_nosync; do
             grep -E "(\} /\* ${fn} \*/|[ (]${fn}\(\);)" "$trace" 2>/dev/null | \

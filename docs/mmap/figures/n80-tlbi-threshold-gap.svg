@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="560" viewBox="0 0 1180 560" role="img" aria-labelledby="title desc">
+  <title id="title">N80 munmap TLBI threshold sweep protected minus NVHE gap</title>
+  <desc id="desc">Protected minus NVHE delta for dense 4K munmap threshold sweep, with sparse reference marker.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <text x="590.0" y="34.0" font-size="21" fill="#1F2933" font-weight="700" text-anchor="middle">N80 munmap TLBI Threshold Sweep: protected - NVHE Gap</text>
+  <text x="590.0" y="57.0" font-size="13" fill="#4B5563" font-weight="400" text-anchor="middle">the sub-2MB gap grows linearly, then collapses when each PMD batch reaches the 2MB full-flush path</text>
+  <line x1="390.0" y1="82.0" x2="414.0" y2="82.0" stroke="#C23B2A" stroke-width="2.4"/>
+  <circle cx="402.0" cy="82.0" r="3.9" fill="#C23B2A"/>
+  <text x="422.0" y="86.0" font-size="12" fill="#374151" font-weight="400" text-anchor="start">dense 4K gap</text>
+  <polygon points="575.0,77.0 580.0,82.0 575.0,87.0 570.0,82.0" fill="#FFFFFF" stroke="#6B7280" stroke-width="2"/>
+  <text x="595.0" y="86.0" font-size="12" fill="#374151" font-weight="400" text-anchor="start">sparse 6.4MB/16K ref</text>
+  <text x="84.0" y="102.0" font-size="15" fill="#111827" font-weight="700" text-anchor="start">Full range: 0-64 MB</text>
+  <line x1="84.0" y1="435.0" x2="554.0" y2="435.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="84.0" y1="120.0" x2="84.0" y2="435.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="84.0" y1="120.0" x2="84.0" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="84.0" y1="435.0" x2="84.0" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="84.0" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">0</text>
+  <line x1="201.5" y1="120.0" x2="201.5" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="201.5" y1="435.0" x2="201.5" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="201.5" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">16</text>
+  <line x1="319.0" y1="120.0" x2="319.0" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="319.0" y1="435.0" x2="319.0" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="319.0" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">32</text>
+  <line x1="436.5" y1="120.0" x2="436.5" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="436.5" y1="435.0" x2="436.5" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="436.5" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">48</text>
+  <line x1="554.0" y1="120.0" x2="554.0" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="554.0" y1="435.0" x2="554.0" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="554.0" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">64</text>
+  <line x1="84.0" y1="435.0" x2="554.0" y2="435.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="439.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">0</text>
+  <line x1="84.0" y1="372.0" x2="554.0" y2="372.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="376.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">100</text>
+  <line x1="84.0" y1="309.0" x2="554.0" y2="309.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="313.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">200</text>
+  <line x1="84.0" y1="246.0" x2="554.0" y2="246.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="250.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">300</text>
+  <line x1="84.0" y1="183.0" x2="554.0" y2="183.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="187.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">400</text>
+  <line x1="84.0" y1="120.0" x2="554.0" y2="120.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="124.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">500</text>
+  <text x="319.0" y="481.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle">touch range (MB, linear scale)</text>
+  <text transform="translate(32.0 277.5) rotate(-90)" font-size="12" fill="#4B5563" text-anchor="middle">protected - NVHE (us/iter)</text>
+  <line x1="98.7" y1="120.0" x2="98.7" y2="435.0" stroke="#7C3AED" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <text x="104.7" y="134.0" font-size="11" fill="#6D28D9" font-weight="400" text-anchor="start">2 MB threshold</text>
+  <polyline points="85.8,424.2 87.7,413.3 91.3,391.7 98.0,353.0 98.7,434.7 113.4,431.6 142.8,426.1 319.0,408.7 554.0,388.5" fill="none" stroke="#C23B2A" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="85.8" cy="424.2" r="3.9" fill="#C23B2A" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="87.7" cy="413.3" r="3.9" fill="#C23B2A" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="91.3" cy="391.7" r="3.9" fill="#C23B2A" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="98.0" cy="353.0" r="3.9" fill="#C23B2A" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="98.7" cy="434.7" r="3.9" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="113.4" cy="431.6" r="3.9" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="142.8" cy="426.1" r="3.9" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="319.0" cy="408.7" r="3.9" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="554.0" cy="388.5" r="3.9" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <polygon points="131.0,153.4 137.5,159.9 131.0,166.4 124.5,159.9" fill="#FFFFFF" stroke="#6B7280" stroke-width="2"/>
+  <text x="665.0" y="102.0" font-size="15" fill="#111827" font-weight="700" text-anchor="start">Detail: 0-8 MB</text>
+  <line x1="665.0" y1="435.0" x2="1095.0" y2="435.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="665.0" y1="120.0" x2="665.0" y2="435.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="665.0" y1="120.0" x2="665.0" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="665.0" y1="435.0" x2="665.0" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="665.0" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">0</text>
+  <line x1="772.5" y1="120.0" x2="772.5" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="772.5" y1="435.0" x2="772.5" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="772.5" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">2</text>
+  <line x1="880.0" y1="120.0" x2="880.0" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="880.0" y1="435.0" x2="880.0" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="880.0" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">4</text>
+  <line x1="987.5" y1="120.0" x2="987.5" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="987.5" y1="435.0" x2="987.5" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="987.5" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">6</text>
+  <line x1="1095.0" y1="120.0" x2="1095.0" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="1095.0" y1="435.0" x2="1095.0" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="1095.0" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">8</text>
+  <line x1="665.0" y1="435.0" x2="1095.0" y2="435.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="655.0" y="439.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">0</text>
+  <line x1="665.0" y1="372.0" x2="1095.0" y2="372.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="655.0" y="376.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">100</text>
+  <line x1="665.0" y1="309.0" x2="1095.0" y2="309.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="655.0" y="313.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">200</text>
+  <line x1="665.0" y1="246.0" x2="1095.0" y2="246.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="655.0" y="250.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">300</text>
+  <line x1="665.0" y1="183.0" x2="1095.0" y2="183.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="655.0" y="187.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">400</text>
+  <line x1="665.0" y1="120.0" x2="1095.0" y2="120.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="655.0" y="124.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">500</text>
+  <text x="880.0" y="481.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle">touch range (MB, linear scale)</text>
+  <text transform="translate(613.0 277.5) rotate(-90)" font-size="12" fill="#4B5563" text-anchor="middle">protected - NVHE (us/iter)</text>
+  <line x1="772.5" y1="120.0" x2="772.5" y2="435.0" stroke="#7C3AED" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <text x="778.5" y="134.0" font-size="11" fill="#6D28D9" font-weight="400" text-anchor="start">2 MB threshold</text>
+  <polyline points="678.4,424.2 691.9,413.3 718.8,391.7 767.1,353.0 772.5,434.7 880.0,431.6 1095.0,426.1" fill="none" stroke="#C23B2A" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="678.4" cy="424.2" r="3.9" fill="#C23B2A" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="691.9" cy="413.3" r="3.9" fill="#C23B2A" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="718.8" cy="391.7" r="3.9" fill="#C23B2A" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="767.1" cy="353.0" r="3.9" fill="#C23B2A" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="772.5" cy="434.7" r="3.9" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="880.0" cy="431.6" r="3.9" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="1095.0" cy="426.1" r="3.9" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <polyline points="665.0,434.9 772.5,348.6" fill="none" stroke="#374151" stroke-width="1.6" stroke-dasharray="5 4"/>
+  <text x="783.2" y="366.6" font-size="11" fill="#374151" font-weight="400" text-anchor="start">fit (&lt;2MB): 68.5 us/MB</text>
+  <polygon points="1009.0,153.4 1015.5,159.9 1009.0,166.4 1002.5,159.9" fill="#FFFFFF" stroke="#6B7280" stroke-width="2"/>
+  <text x="1019.0" y="151.9" font-size="11" fill="#4B5563" font-weight="400" text-anchor="start">sparse ref</text>
+  <text x="590.0" y="532.0" font-size="12" fill="#6B7280" font-weight="400" text-anchor="middle">Source: experiments/munmap-tlbi/results/op-sweep-n80/{nvhe,protected}.txt</text>
+</svg>
