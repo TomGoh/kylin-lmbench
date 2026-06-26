@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="520" viewBox="0 0 1180 520" role="img" aria-labelledby="title desc">
+  <title id="title">Stage 2 split result, 64 MB</title>
+  <desc id="desc">64 MB mmap split result on Kaitian, comparing NVHE and pKVM medians.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <style>text{font-family:Inter,Arial,"Noto Sans",sans-serif;}</style>
+  <text x="62.0" y="38.0" font-size="21" fill="#1F2933" font-weight="700" text-anchor="start">Stage 2 split result, 64 MB</text>
+  <text x="62.0" y="61.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="start">Kaitian, median of 10 runs; split tests are isolation probes, not additive components</text>
+  <text x="62.0" y="100.0" font-size="17" fill="#1F2933" font-weight="700" text-anchor="start">NVHE vs pKVM</text>
+  <text x="62.0" y="122.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="start">absolute latency per split test</text>
+  <text x="62.0" y="160.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">mmap_unmap</text>
+  <rect x="252.0" y="144.0" width="1.4" height="13.0" rx="2" fill="#4D7C59"/>
+  <text x="258.4" y="154.0" font-size="10" fill="#374151" font-weight="400" text-anchor="start">3.2</text>
+  <rect x="252.0" y="160.0" width="1.4" height="13.0" rx="2" fill="#C23B2A"/>
+  <text x="258.4" y="170.0" font-size="10" fill="#374151" font-weight="400" text-anchor="start">3.2</text>
+  <text x="62.0" y="218.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">write_touch_cold</text>
+  <rect x="252.0" y="202.0" width="148.0" height="13.0" rx="2" fill="#4D7C59"/>
+  <text x="405.0" y="212.0" font-size="10" fill="#374151" font-weight="400" text-anchor="start">333.5</text>
+  <rect x="252.0" y="218.0" width="153.6" height="13.0" rx="2" fill="#C23B2A"/>
+  <text x="410.6" y="228.0" font-size="10" fill="#374151" font-weight="400" text-anchor="start">346.2</text>
+  <text x="62.0" y="276.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">munmap_after_no_touch</text>
+  <rect x="252.0" y="260.0" width="0.7" height="13.0" rx="2" fill="#4D7C59"/>
+  <text x="257.7" y="270.0" font-size="10" fill="#374151" font-weight="400" text-anchor="start">1.5</text>
+  <rect x="252.0" y="276.0" width="0.7" height="13.0" rx="2" fill="#C23B2A"/>
+  <text x="257.7" y="286.0" font-size="10" fill="#374151" font-weight="400" text-anchor="start">1.5</text>
+  <text x="62.0" y="334.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">munmap_after_write_touch</text>
+  <rect x="252.0" y="318.0" width="40.0" height="13.0" rx="2" fill="#4D7C59"/>
+  <text x="297.0" y="328.0" font-size="10" fill="#374151" font-weight="400" text-anchor="start">90.2</text>
+  <rect x="252.0" y="334.0" width="131.0" height="13.0" rx="2" fill="#C23B2A"/>
+  <text x="388.0" y="344.0" font-size="10" fill="#374151" font-weight="400" text-anchor="start">295.2</text>
+  <text x="62.0" y="392.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">mmap_write_touch_unmap</text>
+  <rect x="252.0" y="376.0" width="190.0" height="13.0" rx="2" fill="#4D7C59"/>
+  <text x="447.0" y="386.0" font-size="10" fill="#374151" font-weight="400" text-anchor="start">428.1</text>
+  <rect x="252.0" y="392.0" width="285.1" height="13.0" rx="2" fill="#C23B2A"/>
+  <text x="542.1" y="402.0" font-size="10" fill="#374151" font-weight="400" text-anchor="start">642.4</text>
+  <rect x="382.0" y="102.0" width="14" height="10" rx="2" fill="#4D7C59"/>
+  <text x="402.0" y="112.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">NVHE</text>
+  <rect x="454.0" y="102.0" width="14" height="10" rx="2" fill="#C23B2A"/>
+  <text x="474.0" y="112.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">pKVM</text>
+  <line x1="252.0" y1="444.0" x2="252.0" y2="449.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="252.0" y="465.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">0</text>
+  <line x1="340.8" y1="444.0" x2="340.8" y2="449.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="340.8" y="465.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">200</text>
+  <line x1="429.5" y1="444.0" x2="429.5" y2="449.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="429.5" y="465.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">400</text>
+  <line x1="518.2" y1="444.0" x2="518.2" y2="449.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="518.2" y="465.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">600</text>
+  <line x1="607.0" y1="444.0" x2="607.0" y2="449.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="607.0" y="465.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">800</text>
+  <line x1="252.0" y1="444.0" x2="607.0" y2="444.0" stroke="#5C6670" stroke-width="1.2"/>
+  <text x="429.5" y="487.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle">us / iteration</text>
+  <text x="625.0" y="100.0" font-size="17" fill="#1F2933" font-weight="700" text-anchor="start">pKVM extra time</text>
+  <text x="625.0" y="122.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="start">delta = pKVM - NVHE</text>
+  <text x="625.0" y="157.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">mmap_unmap</text>
+  <rect x="835.0" y="144.0" width="0.0" height="17.0" rx="3" fill="#7B8794"/>
+  <text x="843.0" y="157.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">+0.037</text>
+  <text x="625.0" y="215.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">write_touch_cold</text>
+  <rect x="835.0" y="202.0" width="16.7" height="17.0" rx="3" fill="#7B8794"/>
+  <text x="857.7" y="215.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">+12.618</text>
+  <text x="625.0" y="273.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">munmap_after_no_touch</text>
+  <rect x="835.0" y="260.0" width="0.0" height="17.0" rx="3" fill="#7B8794"/>
+  <text x="843.0" y="273.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">-0.005</text>
+  <text x="625.0" y="331.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">munmap_after_write_touch</text>
+  <rect x="835.0" y="318.0" width="270.6" height="17.0" rx="3" fill="#C23B2A"/>
+  <text x="1099.6" y="331.0" font-size="11" fill="#FFFFFF" font-weight="700" text-anchor="end">+205.003</text>
+  <text x="1161.0" y="347.0" font-size="11" fill="#9E2F24" font-weight="700" text-anchor="end">95.7% of full-path extra</text>
+  <text x="625.0" y="389.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">mmap_write_touch_unmap</text>
+  <rect x="835.0" y="376.0" width="282.9" height="17.0" rx="3" fill="#4B5563"/>
+  <text x="1111.9" y="389.0" font-size="11" fill="#FFFFFF" font-weight="700" text-anchor="end">+214.325</text>
+  <line x1="835.0" y1="444.0" x2="835.0" y2="449.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="835.0" y="465.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">0</text>
+  <line x1="901.0" y1="444.0" x2="901.0" y2="449.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="901.0" y="465.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">50</text>
+  <line x1="967.0" y1="444.0" x2="967.0" y2="449.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="967.0" y="465.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">100</text>
+  <line x1="1033.0" y1="444.0" x2="1033.0" y2="449.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="1033.0" y="465.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">150</text>
+  <line x1="1099.0" y1="444.0" x2="1099.0" y2="449.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="1099.0" y="465.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">200</text>
+  <line x1="1165.0" y1="444.0" x2="1165.0" y2="449.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="1165.0" y="465.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">250</text>
+  <line x1="835.0" y1="444.0" x2="1165.0" y2="444.0" stroke="#5C6670" stroke-width="1.2"/>
+  <text x="1000.0" y="487.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle">extra us / iteration</text>
+  <text x="590.0" y="498.0" font-size="11" fill="#7A8591" font-weight="400" text-anchor="middle">Source: results/mmap-split-kaitian/{nvhe,pkvm}.csv</text>
+</svg>

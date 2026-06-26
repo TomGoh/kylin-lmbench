@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="940" viewBox="0 0 1180 940" role="img" aria-labelledby="title desc">
+  <title id="title">N80 perf cost layering for munmap_after_write_touch</title>
+  <desc id="desc">Grouped perf counters for NVHE and protected mode, parsed from raw perf stat output.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <text x="56.0" y="48.0" font-size="26" fill="#1F2933" font-weight="700" text-anchor="start">N80 perf cost layering</text>
+  <text x="56.0" y="73.0" font-size="13" fill="#64707D" font-weight="400" text-anchor="start">munmap_after_write_touch, 64 MB x 50 iterations, cpu0</text>
+  <rect x="56.0" y="98.0" width="315" height="82" rx="7" fill="#F8FAFC" stroke="#D8DEE8" stroke-width="1"/>
+  <text x="74.0" y="124.0" font-size="12" fill="#64707D" font-weight="700" text-anchor="start">elapsed</text>
+  <text x="74.0" y="153.0" font-size="21" fill="#1F2933" font-weight="700" text-anchor="start">0.027650s -&gt; 0.049980s</text>
+  <text x="74.0" y="172.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">1.81x, +447 us/iter</text>
+  <rect x="393.0" y="98.0" width="315" height="82" rx="7" fill="#F8FAFC" stroke="#D8DEE8" stroke-width="1"/>
+  <text x="411.0" y="124.0" font-size="12" fill="#64707D" font-weight="700" text-anchor="start">IPC</text>
+  <text x="411.0" y="153.0" font-size="21" fill="#1F2933" font-weight="700" text-anchor="start">1.67 -&gt; 0.92</text>
+  <text x="411.0" y="172.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">same instructions, lower progress per cycle</text>
+  <rect x="730.0" y="98.0" width="315" height="82" rx="7" fill="#F8FAFC" stroke="#D8DEE8" stroke-width="1"/>
+  <text x="748.0" y="124.0" font-size="12" fill="#64707D" font-weight="700" text-anchor="start">extra cycles</text>
+  <text x="748.0" y="153.0" font-size="21" fill="#1F2933" font-weight="700" text-anchor="start">39.8M</text>
+  <text x="748.0" y="172.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">matches backend-stall growth</text>
+  <line x1="236.0" y1="257.0" x2="236.0" y2="467.0" stroke="#EDF1F5" stroke-width="1"/>
+  <line x1="236.0" y1="467.0" x2="236.0" y2="472.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="236.0" y="489.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">0</text>
+  <line x1="392.0" y1="257.0" x2="392.0" y2="467.0" stroke="#EDF1F5" stroke-width="1"/>
+  <line x1="392.0" y1="467.0" x2="392.0" y2="472.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="392.0" y="489.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">20</text>
+  <line x1="548.0" y1="257.0" x2="548.0" y2="467.0" stroke="#EDF1F5" stroke-width="1"/>
+  <line x1="548.0" y1="467.0" x2="548.0" y2="472.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="548.0" y="489.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">40</text>
+  <line x1="704.0" y1="257.0" x2="704.0" y2="467.0" stroke="#EDF1F5" stroke-width="1"/>
+  <line x1="704.0" y1="467.0" x2="704.0" y2="472.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="704.0" y="489.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">60</text>
+  <line x1="860.0" y1="257.0" x2="860.0" y2="467.0" stroke="#EDF1F5" stroke-width="1"/>
+  <line x1="860.0" y1="467.0" x2="860.0" y2="472.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="860.0" y="489.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">80</text>
+  <line x1="1016.0" y1="257.0" x2="1016.0" y2="467.0" stroke="#EDF1F5" stroke-width="1"/>
+  <line x1="1016.0" y1="467.0" x2="1016.0" y2="472.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="1016.0" y="489.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">100</text>
+  <line x1="236.0" y1="467.0" x2="1016.0" y2="467.0" stroke="#5C6670" stroke-width="1.2"/>
+  <text x="626.0" y="513.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle">million events</text>
+  <text x="56.0" y="235.0" font-size="18" fill="#1F2933" font-weight="700" text-anchor="start">large counters</text>
+  <text x="56.0" y="258.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="start">cycles and backend stalls grow; instructions stay flat</text>
+  <rect x="746.0" y="235.0" width="14" height="10" rx="2" fill="#4D7C59"/>
+  <text x="766.0" y="245.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">NVHE</text>
+  <rect x="846.0" y="235.0" width="14" height="10" rx="2" fill="#C23B2A"/>
+  <text x="866.0" y="245.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">protected</text>
+  <text x="56.0" y="301.0" font-size="12" fill="#374151" font-weight="400" text-anchor="start">cycles</text>
+  <rect x="236.0" y="283.0" width="382.5" height="13" rx="2" fill="#4D7C59"/>
+  <text x="624.5" y="293.0" font-size="10" fill="#4B5563" font-weight="400" text-anchor="start">49,032,232</text>
+  <rect x="236.0" y="300.0" width="692.7" height="13" rx="2" fill="#C23B2A"/>
+  <text x="934.7" y="310.0" font-size="10" fill="#4B5563" font-weight="400" text-anchor="start">88,812,432</text>
+  <text x="1034.0" y="303.0" font-size="11" fill="#C23B2A" font-weight="400" text-anchor="start">delta +39,780,200 (+81.1%)</text>
+  <text x="56.0" y="359.0" font-size="12" fill="#374151" font-weight="400" text-anchor="start">instructions</text>
+  <rect x="236.0" y="341.0" width="638.8" height="13" rx="2" fill="#4D7C59"/>
+  <text x="880.8" y="351.0" font-size="10" fill="#4B5563" font-weight="400" text-anchor="start">81,894,221</text>
+  <rect x="236.0" y="358.0" width="639.1" height="13" rx="2" fill="#C23B2A"/>
+  <text x="881.1" y="368.0" font-size="10" fill="#4B5563" font-weight="400" text-anchor="start">81,942,093</text>
+  <text x="1034.0" y="361.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">delta +47,872 (+0.1%)</text>
+  <text x="56.0" y="417.0" font-size="12" fill="#374151" font-weight="400" text-anchor="start">stall_backend</text>
+  <rect x="236.0" y="399.0" width="141.7" height="13" rx="2" fill="#4D7C59"/>
+  <text x="383.7" y="409.0" font-size="10" fill="#4B5563" font-weight="400" text-anchor="start">18,167,855</text>
+  <rect x="236.0" y="416.0" width="460.7" height="13" rx="2" fill="#C23B2A"/>
+  <text x="702.7" y="426.0" font-size="10" fill="#4B5563" font-weight="400" text-anchor="start">59,061,228</text>
+  <text x="1034.0" y="419.0" font-size="11" fill="#C23B2A" font-weight="400" text-anchor="start">delta +40,893,373 (+225.1%)</text>
+  <line x1="236.0" y1="625.0" x2="236.0" y2="835.0" stroke="#EDF1F5" stroke-width="1"/>
+  <line x1="236.0" y1="835.0" x2="236.0" y2="840.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="236.0" y="857.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">0</text>
+  <line x1="496.0" y1="625.0" x2="496.0" y2="835.0" stroke="#EDF1F5" stroke-width="1"/>
+  <line x1="496.0" y1="835.0" x2="496.0" y2="840.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="496.0" y="857.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">20</text>
+  <line x1="756.0" y1="625.0" x2="756.0" y2="835.0" stroke="#EDF1F5" stroke-width="1"/>
+  <line x1="756.0" y1="835.0" x2="756.0" y2="840.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="756.0" y="857.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">40</text>
+  <line x1="1016.0" y1="625.0" x2="1016.0" y2="835.0" stroke="#EDF1F5" stroke-width="1"/>
+  <line x1="1016.0" y1="835.0" x2="1016.0" y2="840.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="1016.0" y="857.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">60</text>
+  <line x1="236.0" y1="835.0" x2="1016.0" y2="835.0" stroke="#5C6670" stroke-width="1.2"/>
+  <text x="626.0" y="881.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle">thousand events</text>
+  <text x="56.0" y="545.0" font-size="18" fill="#1F2933" font-weight="700" text-anchor="start">translation-related counters</text>
+  <text x="56.0" y="568.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="start">page faults and DTLB walk counts do not grow with protected mode</text>
+  <rect x="746.0" y="545.0" width="14" height="10" rx="2" fill="#4D7C59"/>
+  <text x="766.0" y="555.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">NVHE</text>
+  <rect x="846.0" y="545.0" width="14" height="10" rx="2" fill="#C23B2A"/>
+  <text x="866.0" y="555.0" font-size="11" fill="#374151" font-weight="400" text-anchor="start">protected</text>
+  <text x="56.0" y="611.0" font-size="12" fill="#374151" font-weight="400" text-anchor="start">page-faults</text>
+  <rect x="236.0" y="593.0" width="273.2" height="13" rx="2" fill="#4D7C59"/>
+  <text x="515.2" y="603.0" font-size="10" fill="#4B5563" font-weight="400" text-anchor="start">21,013</text>
+  <rect x="236.0" y="610.0" width="273.1" height="13" rx="2" fill="#C23B2A"/>
+  <text x="515.1" y="620.0" font-size="10" fill="#4B5563" font-weight="400" text-anchor="start">21,011</text>
+  <text x="1034.0" y="613.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">delta -2 (-0.0%)</text>
+  <text x="56.0" y="669.0" font-size="12" fill="#374151" font-weight="400" text-anchor="start">l1d_tlb_refill</text>
+  <rect x="236.0" y="651.0" width="620.1" height="13" rx="2" fill="#4D7C59"/>
+  <text x="862.1" y="661.0" font-size="10" fill="#4B5563" font-weight="400" text-anchor="start">47,702</text>
+  <rect x="236.0" y="668.0" width="726.3" height="13" rx="2" fill="#C23B2A"/>
+  <text x="968.3" y="678.0" font-size="10" fill="#4B5563" font-weight="400" text-anchor="start">55,870</text>
+  <text x="1034.0" y="671.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">delta +8,168 (+17.1%)</text>
+  <text x="56.0" y="727.0" font-size="12" fill="#374151" font-weight="400" text-anchor="start">l2d_tlb_refill</text>
+  <rect x="236.0" y="709.0" width="281.6" height="13" rx="2" fill="#4D7C59"/>
+  <text x="523.6" y="719.0" font-size="10" fill="#4B5563" font-weight="400" text-anchor="start">21,658</text>
+  <rect x="236.0" y="726.0" width="281.0" height="13" rx="2" fill="#C23B2A"/>
+  <text x="523.0" y="736.0" font-size="10" fill="#4B5563" font-weight="400" text-anchor="start">21,614</text>
+  <text x="1034.0" y="729.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">delta -44 (-0.2%)</text>
+  <text x="56.0" y="785.0" font-size="12" fill="#374151" font-weight="400" text-anchor="start">dtlb_walk (r34)</text>
+  <rect x="236.0" y="767.0" width="278.9" height="13" rx="2" fill="#4D7C59"/>
+  <text x="520.9" y="777.0" font-size="10" fill="#4B5563" font-weight="400" text-anchor="start">21,453</text>
+  <rect x="236.0" y="784.0" width="277.8" height="13" rx="2" fill="#C23B2A"/>
+  <text x="519.8" y="794.0" font-size="10" fill="#4B5563" font-weight="400" text-anchor="start">21,371</text>
+  <text x="1034.0" y="787.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">delta -82 (-0.4%)</text>
+  <text x="56.0" y="922.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">Source: results/n80-munmap-gate-c0/{nvhe,protected}/c0-*/perf-munmap_after_write_touch-64mb-*.txt</text>
+</svg>

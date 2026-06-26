@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="520" viewBox="0 0 1180 520" role="img" aria-labelledby="title desc">
+  <title id="title">munmap_after_write_touch delta scaling</title>
+  <desc id="desc">Kaitian mmap split pKVM minus NVHE delta for munmap_after_write_touch across mapping sizes.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <style>text{font-family:Inter,Arial,"Noto Sans",sans-serif;}</style>
+  <text x="62.0" y="38.0" font-size="21" fill="#1F2933" font-weight="700" text-anchor="start">munmap_after_write_touch delta scaling</text>
+  <text x="62.0" y="61.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="start">Kaitian, median of 10 runs; delta = pKVM - NVHE</text>
+  <text x="84.0" y="78.0" font-size="17" fill="#1F2933" font-weight="700" text-anchor="start">full range</text>
+  <text x="84.0" y="99.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="start">0-64 MB</text>
+  <line x1="84.0" y1="392.0" x2="514.0" y2="392.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="84.0" y1="112.0" x2="84.0" y2="392.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="84.0" y1="112.0" x2="84.0" y2="392.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="84.0" y1="392.0" x2="84.0" y2="397.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="84.0" y="414.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">0</text>
+  <line x1="191.5" y1="112.0" x2="191.5" y2="392.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="191.5" y1="392.0" x2="191.5" y2="397.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="191.5" y="414.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">16</text>
+  <line x1="299.0" y1="112.0" x2="299.0" y2="392.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="299.0" y1="392.0" x2="299.0" y2="397.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="299.0" y="414.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">32</text>
+  <line x1="406.5" y1="112.0" x2="406.5" y2="392.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="406.5" y1="392.0" x2="406.5" y2="397.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="406.5" y="414.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">48</text>
+  <line x1="514.0" y1="112.0" x2="514.0" y2="392.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="514.0" y1="392.0" x2="514.0" y2="397.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="514.0" y="414.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">64</text>
+  <line x1="84.0" y1="392.0" x2="514.0" y2="392.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="396.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">0</text>
+  <line x1="84.0" y1="336.0" x2="514.0" y2="336.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="340.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">50</text>
+  <line x1="84.0" y1="280.0" x2="514.0" y2="280.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="284.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">100</text>
+  <line x1="84.0" y1="224.0" x2="514.0" y2="224.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="228.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">150</text>
+  <line x1="84.0" y1="168.0" x2="514.0" y2="168.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="172.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">200</text>
+  <line x1="84.0" y1="112.0" x2="514.0" y2="112.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="116.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">250</text>
+  <text x="299.0" y="438.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle">mapping size (MB, linear scale)</text>
+  <text transform="translate(36.0 252.0) rotate(-90)" font-size="12" fill="#4B5563" text-anchor="middle">extra us / iteration</text>
+  <polyline points="87.4,390.4 90.7,388.7 97.4,384.9 110.9,377.3 137.8,362.6 191.5,334.2 514.0,162.4" fill="none" stroke="#C23B2A" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="87.4" cy="390.4" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="90.7" cy="388.7" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="97.4" cy="384.9" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="110.9" cy="377.3" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="137.8" cy="362.6" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="191.5" cy="334.2" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="514.0" cy="162.4" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <polyline points="84.0,391.9 514.0,162.3" fill="none" stroke="#334E68" stroke-width="2" stroke-dasharray="6 5" stroke-linecap="round"/>
+  <rect x="102.0" y="130.0" width="286" height="31" rx="4" fill="#FFFFFF" stroke="#D9DEE7" stroke-width="1"/>
+  <text x="114.0" y="151.0" font-size="12" fill="#334E68" font-weight="700" text-anchor="start">linear fit: 3.20 us/MB, R^2=1.000</text>
+  <text x="680.0" y="78.0" font-size="17" fill="#1F2933" font-weight="700" text-anchor="start">detail: 0-8 MB</text>
+  <text x="680.0" y="99.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="start">same fit, small-size range only</text>
+  <line x1="680.0" y1="392.0" x2="1090.0" y2="392.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="680.0" y1="112.0" x2="680.0" y2="392.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="680.0" y1="112.0" x2="680.0" y2="392.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="680.0" y1="392.0" x2="680.0" y2="397.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="680.0" y="414.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">0</text>
+  <line x1="782.5" y1="112.0" x2="782.5" y2="392.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="782.5" y1="392.0" x2="782.5" y2="397.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="782.5" y="414.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">2</text>
+  <line x1="885.0" y1="112.0" x2="885.0" y2="392.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="885.0" y1="392.0" x2="885.0" y2="397.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="885.0" y="414.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">4</text>
+  <line x1="987.5" y1="112.0" x2="987.5" y2="392.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="987.5" y1="392.0" x2="987.5" y2="397.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="987.5" y="414.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">6</text>
+  <line x1="1090.0" y1="112.0" x2="1090.0" y2="392.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="1090.0" y1="392.0" x2="1090.0" y2="397.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="1090.0" y="414.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">8</text>
+  <line x1="680.0" y1="392.0" x2="1090.0" y2="392.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="670.0" y="396.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">0</text>
+  <line x1="680.0" y1="298.7" x2="1090.0" y2="298.7" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="670.0" y="302.7" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">10</text>
+  <line x1="680.0" y1="205.3" x2="1090.0" y2="205.3" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="670.0" y="209.3" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">20</text>
+  <line x1="680.0" y1="112.0" x2="1090.0" y2="112.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="670.0" y="116.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">30</text>
+  <text x="885.0" y="438.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle">mapping size (MB, linear scale)</text>
+  <text transform="translate(632.0 252.0) rotate(-90)" font-size="12" fill="#4B5563" text-anchor="middle">extra us / iteration</text>
+  <polyline points="705.6,378.6 731.2,364.9 782.5,332.8 885.0,269.4 1090.0,147.3" fill="none" stroke="#C23B2A" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="705.6" cy="378.6" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="731.2" cy="364.9" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="782.5" cy="332.8" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="885.0" cy="269.4" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <circle cx="1090.0" cy="147.3" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="1.8"/>
+  <polyline points="680.0,391.1 1090.0,151.9" fill="none" stroke="#334E68" stroke-width="2" stroke-dasharray="6 5" stroke-linecap="round"/>
+  <text x="590.0" y="498.0" font-size="11" fill="#7A8591" font-weight="400" text-anchor="middle">Source: results/mmap-split-kaitian/{nvhe,pkvm}.csv</text>
+</svg>

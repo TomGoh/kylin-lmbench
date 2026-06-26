@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="560" viewBox="0 0 1180 560" role="img" aria-labelledby="title desc">
+  <title id="title">N80 munmap TLBI threshold sweep absolute latency</title>
+  <desc id="desc">Dense 4K munmap threshold sweep, with sparse 6.4MB/16K reference markers.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <text x="590.0" y="34.0" font-size="21" fill="#1F2933" font-weight="700" text-anchor="middle">N80 munmap TLBI Threshold Sweep: Absolute Time</text>
+  <text x="590.0" y="57.0" font-size="13" fill="#4B5563" font-weight="400" text-anchor="middle">dense 4K sweep is connected; sparse 6.4MB/16K reference is shown as diamonds</text>
+  <line x1="305.0" y1="82.0" x2="329.0" y2="82.0" stroke="#4D7C59" stroke-width="2.4"/>
+  <circle cx="317.0" cy="82.0" r="3.8" fill="#4D7C59"/>
+  <text x="337.0" y="86.0" font-size="12" fill="#374151" font-weight="400" text-anchor="start">NVHE dense 4K</text>
+  <line x1="475.0" y1="82.0" x2="499.0" y2="82.0" stroke="#C23B2A" stroke-width="2.4"/>
+  <circle cx="487.0" cy="82.0" r="3.8" fill="#C23B2A"/>
+  <text x="507.0" y="86.0" font-size="12" fill="#374151" font-weight="400" text-anchor="start">protected dense 4K</text>
+  <polygon points="692.0,77.0 697.0,82.0 692.0,87.0 687.0,82.0" fill="#FFFFFF" stroke="#6B7280" stroke-width="2"/>
+  <text x="712.0" y="86.0" font-size="12" fill="#374151" font-weight="400" text-anchor="start">sparse 6.4MB/16K ref</text>
+  <text x="84.0" y="102.0" font-size="15" fill="#111827" font-weight="700" text-anchor="start">Full range: 0-64 MB</text>
+  <line x1="84.0" y1="435.0" x2="554.0" y2="435.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="84.0" y1="120.0" x2="84.0" y2="435.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="84.0" y1="120.0" x2="84.0" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="84.0" y1="435.0" x2="84.0" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="84.0" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">0</text>
+  <line x1="201.5" y1="120.0" x2="201.5" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="201.5" y1="435.0" x2="201.5" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="201.5" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">16</text>
+  <line x1="319.0" y1="120.0" x2="319.0" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="319.0" y1="435.0" x2="319.0" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="319.0" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">32</text>
+  <line x1="436.5" y1="120.0" x2="436.5" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="436.5" y1="435.0" x2="436.5" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="436.5" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">48</text>
+  <line x1="554.0" y1="120.0" x2="554.0" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="554.0" y1="435.0" x2="554.0" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="554.0" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">64</text>
+  <line x1="84.0" y1="435.0" x2="554.0" y2="435.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="439.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">0</text>
+  <line x1="84.0" y1="356.2" x2="554.0" y2="356.2" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="360.2" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">1000</text>
+  <line x1="84.0" y1="277.5" x2="554.0" y2="277.5" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="281.5" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">2000</text>
+  <line x1="84.0" y1="198.8" x2="554.0" y2="198.8" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="202.8" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">3000</text>
+  <line x1="84.0" y1="120.0" x2="554.0" y2="120.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="74.0" y="124.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">4000</text>
+  <text x="319.0" y="481.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle">touch range (MB, linear scale)</text>
+  <text transform="translate(32.0 277.5) rotate(-90)" font-size="12" fill="#4B5563" text-anchor="middle">munmap mean (us/iter)</text>
+  <line x1="98.7" y1="120.0" x2="98.7" y2="435.0" stroke="#7C3AED" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <text x="104.7" y="134.0" font-size="11" fill="#6D28D9" font-weight="400" text-anchor="start">2 MB threshold</text>
+  <polyline points="85.8,433.7 87.7,432.6 91.3,430.9 98.0,427.4 98.7,427.8 113.4,421.0 142.8,407.2 319.0,324.6 554.0,214.0" fill="none" stroke="#4D7C59" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="85.8" cy="433.7" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="87.7" cy="432.6" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="91.3" cy="430.9" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="98.0" cy="427.4" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="98.7" cy="427.8" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="113.4" cy="421.0" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="142.8" cy="407.2" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="319.0" cy="324.6" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="554.0" cy="214.0" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <polyline points="85.8,432.3 87.7,429.9 91.3,425.5 98.0,417.1 98.7,427.7 113.4,420.5 142.8,406.1 319.0,321.3 554.0,208.2" fill="none" stroke="#C23B2A" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="85.8" cy="432.3" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="87.7" cy="429.9" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="91.3" cy="425.5" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="98.0" cy="417.1" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="98.7" cy="427.7" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="113.4" cy="420.5" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="142.8" cy="406.1" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="319.0" cy="321.3" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="554.0" cy="208.2" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <polygon points="131.0,419.8 137.5,426.3 131.0,432.8 124.5,426.3" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <polygon points="131.0,385.4 137.5,391.9 131.0,398.4 124.5,391.9" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <text x="665.0" y="102.0" font-size="15" fill="#111827" font-weight="700" text-anchor="start">Detail: 0-8 MB</text>
+  <line x1="665.0" y1="435.0" x2="1095.0" y2="435.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="665.0" y1="120.0" x2="665.0" y2="435.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="665.0" y1="120.0" x2="665.0" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="665.0" y1="435.0" x2="665.0" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="665.0" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">0</text>
+  <line x1="772.5" y1="120.0" x2="772.5" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="772.5" y1="435.0" x2="772.5" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="772.5" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">2</text>
+  <line x1="880.0" y1="120.0" x2="880.0" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="880.0" y1="435.0" x2="880.0" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="880.0" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">4</text>
+  <line x1="987.5" y1="120.0" x2="987.5" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="987.5" y1="435.0" x2="987.5" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="987.5" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">6</text>
+  <line x1="1095.0" y1="120.0" x2="1095.0" y2="435.0" stroke="#F0F3F7" stroke-width="1"/>
+  <line x1="1095.0" y1="435.0" x2="1095.0" y2="440.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="1095.0" y="457.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="middle">8</text>
+  <line x1="665.0" y1="435.0" x2="1095.0" y2="435.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="655.0" y="439.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">0</text>
+  <line x1="665.0" y1="330.0" x2="1095.0" y2="330.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="655.0" y="334.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">200</text>
+  <line x1="665.0" y1="225.0" x2="1095.0" y2="225.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="655.0" y="229.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">400</text>
+  <line x1="665.0" y1="120.0" x2="1095.0" y2="120.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="655.0" y="124.0" font-size="11" fill="#5C6670" font-weight="400" text-anchor="end">600</text>
+  <text x="880.0" y="481.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle">touch range (MB, linear scale)</text>
+  <text transform="translate(613.0 277.5) rotate(-90)" font-size="12" fill="#4B5563" text-anchor="middle">munmap mean (us/iter)</text>
+  <line x1="772.5" y1="120.0" x2="772.5" y2="435.0" stroke="#7C3AED" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <text x="778.5" y="134.0" font-size="11" fill="#6D28D9" font-weight="400" text-anchor="start">2 MB threshold</text>
+  <polyline points="678.4,426.3 691.9,418.9 718.8,407.8 767.1,384.2 772.5,386.9 880.0,341.4 1095.0,249.8" fill="none" stroke="#4D7C59" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="678.4" cy="426.3" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="691.9" cy="418.9" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="718.8" cy="407.8" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="767.1" cy="384.2" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="772.5" cy="386.9" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="880.0" cy="341.4" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="1095.0" cy="249.8" r="3.6" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <polyline points="678.4,417.3 691.9,400.9 718.8,371.6 767.1,315.9 772.5,386.6 880.0,338.6 1095.0,242.4" fill="none" stroke="#C23B2A" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="678.4" cy="417.3" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="691.9" cy="400.9" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="718.8" cy="371.6" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="767.1" cy="315.9" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="772.5" cy="386.6" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="880.0" cy="338.6" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="1095.0" cy="242.4" r="3.6" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <polygon points="1009.0,370.6 1015.5,377.1 1009.0,383.6 1002.5,377.1" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <polygon points="1009.0,141.4 1015.5,147.9 1009.0,154.4 1002.5,147.9" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <text x="1019.0" y="144.0" font-size="11" fill="#4B5563" font-weight="400" text-anchor="start">sparse ref</text>
+  <text x="590.0" y="532.0" font-size="12" fill="#6B7280" font-weight="400" text-anchor="middle">Source: experiments/munmap-tlbi/results/op-sweep-n80/{nvhe,protected}.txt</text>
+</svg>

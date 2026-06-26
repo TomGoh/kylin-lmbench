@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="500" viewBox="0 0 900 500" role="img" aria-labelledby="title desc">
+  <title id="title">pKVM overhead vs NVHE</title>
+  <desc id="desc">pKVM relative overhead against NVHE, recomputed from median lat_mmap_precise latency.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <style>text{font-family:Inter,Arial,"Noto Sans",sans-serif;} .source{font-size:11px;fill:#7A8591;}</style>
+  <text x="86.0" y="52.0" font-size="18" fill="#1F2933" font-weight="700" text-anchor="start" >pKVM overhead vs NVHE</text>
+  <text x="86.0" y="74.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="start" >same runs, median(pKVM) / median(NVHE) - 1</text>
+  <rect x="86.0" y="88.0" width="720.0" height="300.0" fill="#FFFFFF"/>
+  <line x1="86.0" y1="388.0" x2="806.0" y2="388.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="76.0" y="392.0" font-size="12" fill="#5C6670" font-weight="400" text-anchor="end" >0%</text>
+  <line x1="86.0" y1="328.0" x2="806.0" y2="328.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="76.0" y="332.0" font-size="12" fill="#5C6670" font-weight="400" text-anchor="end" >20%</text>
+  <line x1="86.0" y1="268.0" x2="806.0" y2="268.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="76.0" y="272.0" font-size="12" fill="#5C6670" font-weight="400" text-anchor="end" >40%</text>
+  <line x1="86.0" y1="208.0" x2="806.0" y2="208.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="76.0" y="212.0" font-size="12" fill="#5C6670" font-weight="400" text-anchor="end" >60%</text>
+  <line x1="86.0" y1="148.0" x2="806.0" y2="148.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="76.0" y="152.0" font-size="12" fill="#5C6670" font-weight="400" text-anchor="end" >80%</text>
+  <line x1="86.0" y1="88.0" x2="806.0" y2="88.0" stroke="#E6EAF0" stroke-width="1"/>
+  <text x="76.0" y="92.0" font-size="12" fill="#5C6670" font-weight="400" text-anchor="end" >100%</text>
+  <line x1="86.0" y1="388.0" x2="806.0" y2="388.0" stroke="#5C6670" stroke-width="1.2"/>
+  <line x1="86.0" y1="88.0" x2="86.0" y2="388.0" stroke="#5C6670" stroke-width="1.2"/>
+  <rect x="93.0" y="299.0" width="34.0" height="89.0" rx="3" fill="#D45745"/>
+  <line x1="110.0" y1="388.0" x2="110.0" y2="393.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="110.0" y="291.0" font-size="12" fill="#9E2F24" font-weight="700" text-anchor="middle" >29.7%</text>
+  <rect x="205.0" y="259.6" width="34.0" height="128.4" rx="3" fill="#D45745"/>
+  <line x1="222.0" y1="388.0" x2="222.0" y2="393.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="222.0" y="251.6" font-size="12" fill="#9E2F24" font-weight="700" text-anchor="middle" >42.8%</text>
+  <rect x="317.0" y="230.5" width="34.0" height="157.5" rx="3" fill="#D45745"/>
+  <line x1="334.0" y1="388.0" x2="334.0" y2="393.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="334.0" y="222.5" font-size="12" fill="#9E2F24" font-weight="700" text-anchor="middle" >52.5%</text>
+  <rect x="429.0" y="175.6" width="34.0" height="212.4" rx="3" fill="#D45745"/>
+  <line x1="446.0" y1="388.0" x2="446.0" y2="393.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="446.0" y="167.6" font-size="12" fill="#9E2F24" font-weight="700" text-anchor="middle" >70.8%</text>
+  <rect x="541.0" y="152.3" width="34.0" height="235.7" rx="3" fill="#D45745"/>
+  <line x1="558.0" y1="388.0" x2="558.0" y2="393.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="558.0" y="144.3" font-size="12" fill="#9E2F24" font-weight="700" text-anchor="middle" >78.6%</text>
+  <rect x="653.0" y="131.5" width="34.0" height="256.5" rx="3" fill="#D45745"/>
+  <line x1="670.0" y1="388.0" x2="670.0" y2="393.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="670.0" y="123.5" font-size="12" fill="#9E2F24" font-weight="700" text-anchor="middle" >85.5%</text>
+  <rect x="765.0" y="132.9" width="34.0" height="255.1" rx="3" fill="#D45745"/>
+  <line x1="782.0" y1="388.0" x2="782.0" y2="393.0" stroke="#5C6670" stroke-width="1"/>
+  <text x="782.0" y="124.9" font-size="12" fill="#9E2F24" font-weight="700" text-anchor="middle" >85.0%</text>
+  <text x="110.0" y="412.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle" >0.5</text>
+  <text x="222.0" y="412.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle" >1</text>
+  <text x="334.0" y="412.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle" >2</text>
+  <text x="446.0" y="412.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle" >4</text>
+  <text x="558.0" y="412.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle" >8</text>
+  <text x="670.0" y="412.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle" >16</text>
+  <text x="782.0" y="412.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle" >64</text>
+  <text transform="translate(30.0 238.0) rotate(-90)" font-size="12" fill="#4B5563" text-anchor="middle">overhead (%)</text>
+  <text x="446.0" y="438.0" font-size="12" fill="#4B5563" font-weight="400" text-anchor="middle" >mapping size (MB)</text>
+  <text x="450.0" y="474.0" font-size="11" fill="#7A8591" font-weight="400" text-anchor="middle" >Source: results/n90-v10-*-mmap/precise-mmap/*.log; median of 10 runs</text>
+</svg>

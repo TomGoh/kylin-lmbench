@@ -1,0 +1,6 @@
+== funcgraph summary: mode=protected munmap_after_write_touch 64MB x50 (depth<=12) ==
+__vm_munmap                  calls=12       total=22532.2 us  avg=1877.69 us  max=3661.5 us
+unmap_vmas                   calls=12       total=21864.7 us  avg=1822.06 us  max=3609.5 us
+free_pgtables                calls=12       total=194.5 us  avg=16.21 us  max=36.1 us
+tlb_finish_mmu               calls=12       total=108.3 us  avg=9.02 us  max=28.4 us
+tlb_flush_mmu                calls=24       total=1609.4 us  avg=67.06 us  max=92.8 us

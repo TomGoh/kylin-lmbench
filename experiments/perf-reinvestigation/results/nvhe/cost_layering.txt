@@ -1,0 +1,37 @@
+### Stage 4: cost layering (sparse munmap, then sub-2MB dense touch=1) ###
+--- touch/stride = 6.4 16 ---
+file       mb=64 touch=6.400MB stride=16K : munmap mean=89.1 us  min=87.5 us
+
+ Performance counter stats for '/home/test/perf-reinvestigation/benches/munmap_only file 64 300 /tmp/mb.bin 6.4 16':
+
+       463,091,498      instructions                     #    1.85  insn per cycle            
+           123,050      page-faults                                                           
+           123,506      r0034                                                                 
+           123,609      l2d_tlb_refill                                                        
+        87,495,279      r0024                                                                 
+       250,264,562      cycles                                                                
+
+       0.130851620 seconds time elapsed
+
+       0.012015000 seconds user
+       0.119878000 seconds sys
+
+
+--- touch/stride = 1 4 ---
+file       mb=64 touch=1.000MB stride=4K : munmap mean=47.2 us  min=45.4 us
+
+ Performance counter stats for '/home/test/perf-reinvestigation/benches/munmap_only file 64 300 /tmp/mb.bin 1 4':
+
+       285,037,462      instructions                     #    1.84  insn per cycle            
+            76,850      page-faults                                                           
+            77,632      r0034                                                                 
+            77,731      l2d_tlb_refill                                                        
+        54,388,735      r0024                                                                 
+       154,959,847      cycles                                                                
+
+       0.077537960 seconds time elapsed
+
+       0.007717000 seconds user
+       0.074015000 seconds sys
+
+

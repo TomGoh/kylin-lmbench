@@ -1,0 +1,19 @@
+cpu=0 nslots=256 reps=2 iters=100 (min over iters)
+IS  total=6460 ns  per_slot=25.234 ns
+NSH total=2600 ns  per_slot=10.156 ns
+broadcast (IS-NSH) per_slot=15.078 ns  (= 0.015 us/slot)
+
+cpu=0 nslots=512 reps=2 iters=100 (min over iters)
+IS  total=12660 ns  per_slot=24.726 ns
+NSH total=5160 ns  per_slot=10.078 ns
+broadcast (IS-NSH) per_slot=14.648 ns  (= 0.014 us/slot)
+
+cpu=0 nslots=1024 reps=2 iters=100 (min over iters)
+IS  total=24100 ns  per_slot=23.535 ns
+NSH total=10280 ns  per_slot=10.039 ns
+broadcast (IS-NSH) per_slot=13.496 ns  (= 0.013 us/slot)
+
+cpu=0 nslots=2048 reps=2 iters=100 (min over iters)
+IS  total=47580 ns  per_slot=23.232 ns
+NSH total=20520 ns  per_slot=10.019 ns
+broadcast (IS-NSH) per_slot=13.213 ns  (= 0.013 us/slot)

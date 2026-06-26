@@ -1,0 +1,447 @@
+diff --git a/arch/arm64/configs/gwd3000_lenovox1d3000m_defconfig b/arch/arm64/configs/gwd3000_lenovox1d3000m_defconfig
+index 5356b93e0c0b..514420826465 100644
+--- a/arch/arm64/configs/gwd3000_lenovox1d3000m_defconfig
++++ b/arch/arm64/configs/gwd3000_lenovox1d3000m_defconfig
+@@ -114,6 +114,7 @@ CONFIG_KVM=y
+ CONFIG_NVHE_EL2_DEBUG=y
+ CONFIG_PROTECTED_NVHE_STACKTRACE=y
+ CONFIG_PROTECTED_NVHE_FTRACE=y
++CONFIG_XCORE_STATS=y
+ CONFIG_PKVM_MODULE_PATH="/lib/modules/pkvm/"
+ CONFIG_KYLIN_EXTRA_BUTTON=y
+ CONFIG_KYLIN_BT=y
+@@ -1222,7 +1223,12 @@ CONFIG_SCHEDSTATS=y
+ CONFIG_DEBUG_NOTIFIERS=y
+ CONFIG_RCU_CPU_STALL_TIMEOUT=60
+ # CONFIG_RCU_TRACE is not set
++CONFIG_DEBUG_FS=y
+ CONFIG_BOOTTIME_TRACING=y
++CONFIG_FTRACE=y
++CONFIG_FUNCTION_TRACER=y
++CONFIG_FUNCTION_GRAPH_TRACER=y
++CONFIG_DYNAMIC_FTRACE=y
+ CONFIG_FUNCTION_PROFILER=y
+ CONFIG_STACK_TRACER=y
+ CONFIG_SCHED_TRACER=y
+@@ -1238,3 +1244,4 @@ CONFIG_FUNCTION_ERROR_INJECTION=y
+ CONFIG_ATOMIC64_SELFTEST=y
+ CONFIG_MEMTEST=y
+ CONFIG_KYLIN_DIFFERENCES=y
++CONFIG_WERROR=n
+\ No newline at end of file
+diff --git a/arch/arm64/kvm/hyp/nvhe/rust/src/hyp_main.rs b/arch/arm64/kvm/hyp/nvhe/rust/src/hyp_main.rs
+index be4049fac6c3..9f5bc6453d3f 100644
+--- a/arch/arm64/kvm/hyp/nvhe/rust/src/hyp_main.rs
++++ b/arch/arm64/kvm/hyp/nvhe/rust/src/hyp_main.rs
+@@ -71,7 +71,9 @@
+ };
+ use crate::cpufeature::has_hvhe;
+ use crate::mem_protect::guest::__pkvm_check_ioguard_page;
+-use crate::mem_protect::host::{__pkvm_host_donate_guest, __pkvm_prot_finalize};
++use crate::mem_protect::host::{
++    __pkvm_host_donate_guest, __pkvm_prot_finalize, host_stage2_level_histogram,
++};
+ use crate::mem_protect::permissions::{
+     __pkvm_dirty_log, __pkvm_host_share_guest, __pkvm_host_share_hyp, __pkvm_host_unshare_guest,
+     __pkvm_host_unshare_hyp, __pkvm_relax_perms, __pkvm_wrprotect,
+@@ -1748,6 +1750,16 @@ fn xcore_stats_entry(host_ctxt: &mut kvm_cpu_context) {
+             host_ctxt.set_cpu_reg(0, SMCCC_RET_SUCCESS as u64);
+         }
+         2 => {
++            // XCORE_STATS_GET_MEM 遍历 pKVM 页表，仅 protected 模式下语义成立；
++            // 非 protected（普通 nvhe）下页表未初始化，直接拒绝，不信任 host 侧过滤
++            // SAFETY: 访问外部kvm_protected_mode_initialized静态变量
++            if !unsafe {
++                static_branch_unlikely!(kvm_protected_mode_initialized, static_key_false, key)
++            } {
++                host_ctxt.set_cpu_reg(0, SMCCC_RET_NOT_SUPPORTED as u64);
++                return;
++            }
++
+             // XCORE_STATS_GET_MEM - 获取内存统计信息
+             let mem_stats = xcore_mem_stats();
+ 
+@@ -1757,6 +1769,23 @@ fn xcore_stats_entry(host_ctxt: &mut kvm_cpu_context) {
+             host_ctxt.set_cpu_reg(2, mem_stats.borrowed_size);
+             host_ctxt.set_cpu_reg(3, mem_stats.shared_size);
+         }
++        3 => {
++            // XCORE_STATS_GET_S2_LEVELS - host stage-2 映射粒度直方图，仅 protected
++            // （遍历 host_mmu 页表，nvhe 下未初始化）。不信任 host 侧过滤。
++            // SAFETY: 访问外部 kvm_protected_mode_initialized 静态变量
++            if !unsafe {
++                static_branch_unlikely!(kvm_protected_mode_initialized, static_key_false, key)
++            } {
++                host_ctxt.set_cpu_reg(0, SMCCC_RET_NOT_SUPPORTED as u64);
++                return;
++            }
++
++            let hist = host_stage2_level_histogram();
++            host_ctxt.set_cpu_reg(0, hist.pages_4k);
++            host_ctxt.set_cpu_reg(1, hist.pages_2m);
++            host_ctxt.set_cpu_reg(2, hist.pages_1g);
++            host_ctxt.set_cpu_reg(3, hist.total);
++        }
+         _ => {
+             // 不支持的操作
+             host_ctxt.set_cpu_reg(0, SMCCC_RET_NOT_SUPPORTED as u64);
+diff --git a/arch/arm64/kvm/hyp/nvhe/rust/src/mem_protect/host.rs b/arch/arm64/kvm/hyp/nvhe/rust/src/mem_protect/host.rs
+index 7440ceecf91d..41901df8538e 100644
+--- a/arch/arm64/kvm/hyp/nvhe/rust/src/mem_protect/host.rs
++++ b/arch/arm64/kvm/hyp/nvhe/rust/src/mem_protect/host.rs
+@@ -8,6 +8,10 @@
+     kvm_pgtable_walk_flags, kvm_pte_t, kvm_s2_mmu, kvm_vcpu_fault_info, memblock_region,
+     pkvm_hyp_vcpu, pkvm_hyp_vm, pkvm_moveable_reg, read_once, write_once, HypSpinlock,
+ };
++use crate::bindings::{
++    kvm_pgtable_visit_ctx, kvm_pgtable_walk, kvm_pgtable_walker,
++    kvm_pgtable_walk_flags_KVM_PGTABLE_WALK_LEAF as KVM_PGTABLE_WALK_LEAF,
++};
+ #[allow(unused_imports)]
+ use crate::bindings::{
+     pkvm_component_id_PKVM_ID_FFA as PKVM_ID_FFA, pkvm_component_id_PKVM_ID_GUEST as PKVM_ID_GUEST,
+@@ -893,6 +897,91 @@ pub extern "C" fn host_stage2_get_leaf(phys: u64, ptep: *mut kvm_pte_t, level: *
+     ret
+ }
+ 
++/// host stage-2 映射粒度直方图（按 1G/2M/4K 分桶统计页数）。
++pub struct HostS2LevelHist {
++    pub pages_4k: u64,
++    pub pages_2m: u64,
++    pub pages_1g: u64,
++    pub total: u64,
++}
++
++/// `kvm_pgtable_walk` 叶子回调：按映射粒度把页数累加到对应桶。
++///
++/// # Safety
++/// 由 `kvm_pgtable_walk` 在遍历 host stage-2 时调用；`ctx.arg` 指向调用者栈上的
++/// `HostS2LevelHist`，`ctx.ptep` 指向有效的页表项。
++unsafe extern "C" fn host_s2_level_walker(
++    ctx: *const kvm_pgtable_visit_ctx,
++    _visit: kvm_pgtable_walk_flags,
++) -> i32 {
++    if ctx.is_null() {
++        return 0;
++    }
++    let ctx_ref = ptr_wrapper_const!(ctx);
++
++    let hist_ptr = ctx_ref.arg as *mut HostS2LevelHist;
++    if hist_ptr.is_null() {
++        return 0;
++    }
++    // SAFETY: arg 指向调用者栈上的 HostS2LevelHist
++    let hist = unsafe { &mut *hist_ptr };
++
++    // SAFETY: 解引用 ptep
++    let pte = unsafe { *(ctx_ref.ptep) };
++    if !kvm_pte_valid(pte) {
++        return 0;
++    }
++
++    let granule = kvm_granule_size(ctx_ref.level);
++    let pages = granule >> PAGE_SHIFT;
++    hist.total += pages;
++    // 假定 4K 基页：4K=1<<PAGE_SHIFT、2M=0x20_0000、1G=0x4000_0000
++    if granule == 1u64 << PAGE_SHIFT {
++        hist.pages_4k += pages;
++    } else if granule == 0x20_0000 {
++        hist.pages_2m += pages;
++    } else if granule == 0x4000_0000 {
++        hist.pages_1g += pages;
++    }
++    0
++}
++
++/// 只读遍历 host stage-2（`host_mmu.pgt`），统计 1G/2M/4K 映射的页数分布。
++///
++/// 用于 C1 判别：munmap teardown 的 backend 停顿是否源于 host 内存被拆成 4K
++/// （4K 粒度下嵌套 stage-2 walk 更深、TLB 压力更大）。遍历期间持 host 组件锁。
++pub fn host_stage2_level_histogram() -> HostS2LevelHist {
++    let mut hist = HostS2LevelHist {
++        pages_4k: 0,
++        pages_2m: 0,
++        pages_1g: 0,
++        total: 0,
++    };
++    let mut walker = kvm_pgtable_walker {
++        cb: Some(host_s2_level_walker),
++        arg: &mut hist as *mut _ as *mut core::ffi::c_void,
++        flags: KVM_PGTABLE_WALK_LEAF,
++    };
++
++    host_lock_component();
++    // SAFETY: 访问可变静态 host_mmu 并调用 C 遍历函数；持 host 锁防遍历期间并发改表
++    let ret = unsafe {
++        let ia_bits = host_mmu.pgt.ia_bits;
++        kvm_pgtable_walk(&raw mut host_mmu.pgt, 0, 1u64 << ia_bits, &mut walker)
++    };
++    host_unlock_component();
++
++    if ret != 0 {
++        return HostS2LevelHist {
++            pages_4k: 0,
++            pages_2m: 0,
++            pages_1g: 0,
++            total: 0,
++        };
++    }
++    hist
++}
++
+ /// 取消映射主机stage-2页表中的指定区域并更新IOMMU
+ ///
+ /// # 功能
+diff --git a/arch/arm64/kvm/hyp/nvhe/rust/src/stats.rs b/arch/arm64/kvm/hyp/nvhe/rust/src/stats.rs
+index 92f1dfbb696f..f5add17916ed 100644
+--- a/arch/arm64/kvm/hyp/nvhe/rust/src/stats.rs
++++ b/arch/arm64/kvm/hyp/nvhe/rust/src/stats.rs
+@@ -8,7 +8,8 @@
+ 
+ use crate::mem_protect::utils::{kvm_granule_size, kvm_pte_valid, pkvm_getstate};
+ use crate::mm::PKVM_PGTABLE;
+-use crate::{bit, ptr_wrapper_const};
++use crate::percpu::this_cpu_ptr;
++use crate::{bit, define_per_cpu, ptr_wrapper_const, write_sysreg};
+ 
+ use aarch64_cpu::registers::{
+     Readable, Writeable, MDCR_EL2, PMCCFILTR_EL0, PMCNTENSET_EL0, PMCR_EL0,
+@@ -17,8 +18,44 @@
+ const PMCCFILTR_EL2_ONLY: u64 = bit!(31) | bit!(30) | bit!(27) | bit!(26);
+ const PAGE_TO_KB_SHIFT: u32 = PAGE_SHIFT - 10;
+ 
+-// 启用EL2 PMU计数器
++// PMU 现场保存（per-cpu）。
++// enable/disable hcall 由 host 经 smp_call_function_single 在每个 CPU 上发起，
++// 因此保存与恢复天然发生在同一 CPU 的 hcall 上下文中。
++struct PmuSavedState {
++    saved: bool,
++    pmcr: u64,
++    pmccfiltr: u64,
++    mdcr: u64,
++    // PMCNTENSET_EL0.C（bit 31）在保存时是否置位
++    cycle_cnten: bool,
++}
++
++impl PmuSavedState {
++    const fn new() -> Self {
++        Self {
++            saved: false,
++            pmcr: 0,
++            pmccfiltr: 0,
++            mdcr: 0,
++            cycle_cnten: false,
++        }
++    }
++}
++
++define_per_cpu!(PMU_SAVED: PmuSavedState = PmuSavedState::new());
++
++// 启用EL2 PMU计数器（先保存本 CPU 的原 PMU 配置，disable 时恢复）
+ pub fn xcore_enable_pmu_el2() {
++    // SAFETY: per-cpu 数据，仅在本 CPU 的 hcall 上下文访问
++    let st = unsafe { &mut *this_cpu_ptr(&raw mut PMU_SAVED) };
++    if !st.saved {
++        st.pmcr = PMCR_EL0.get();
++        st.pmccfiltr = PMCCFILTR_EL0.get();
++        st.mdcr = MDCR_EL2.get();
++        st.cycle_cnten = PMCNTENSET_EL0.get() & bit!(31) != 0;
++        st.saved = true;
++    }
++
+     // bit 7: HPME (Hyp PMU Enable) - 启用EL2的PMU
+     let mdcr_el2_value = MDCR_EL2.get();
+     if mdcr_el2_value & bit!(7) == 0 {
+@@ -52,25 +89,31 @@ pub fn xcore_enable_pmu_el2() {
+     }
+ }
+ 
+-// 禁用EL2 PMU计数器
++// 禁用EL2 PMU计数器并恢复本 CPU 的原 PMU 配置
+ pub fn xcore_disable_pmu_el2() {
+-    // 禁用EL2的PMU计数器
++    // SAFETY: per-cpu 数据，仅在本 CPU 的 hcall 上下文访问
++    let st = unsafe { &mut *this_cpu_ptr(&raw mut PMU_SAVED) };
++    if st.saved {
++        MDCR_EL2.set(st.mdcr);
++        PMCCFILTR_EL0.set(st.pmccfiltr);
++        // PMCNTENSET_EL0 是 set 型寄存器，清位必须写 PMCNTENCLR_EL0
++        if st.cycle_cnten {
++            PMCNTENSET_EL0.set(bit!(31));
++        } else {
++            write_sysreg!(pmcntenclr_el0, bit!(31));
++        }
++        PMCR_EL0.set(st.pmcr);
++        st.saved = false;
++        return;
++    }
++
++    // 未经 enable 直接 disable：保守清理 EL2 相关位。
++    // 不动 PMCR.E —— 它是全局使能，host perf 可能正在使用其他计数器。
+     let mdcr_el2_value = MDCR_EL2.get();
+     if mdcr_el2_value & bit!(7) != 0 {
+         MDCR_EL2.set(mdcr_el2_value & !bit!(7));
+     }
+-
+-    // 禁用pmccntr_el0计数器
+-    let pmcntenset_el0_value = PMCNTENSET_EL0.get();
+-    if pmcntenset_el0_value & bit!(31) != 0 {
+-        PMCNTENSET_EL0.set(pmcntenset_el0_value & !bit!(31));
+-    }
+-
+-    // 关闭PMU计数器
+-    let pmcr_el0_value = PMCR_EL0.get();
+-    if pmcr_el0_value & bit!(0) != 0 {
+-        PMCR_EL0.set(pmcr_el0_value & !bit!(0));
+-    }
++    write_sysreg!(pmcntenclr_el0, bit!(31));
+ }
+ 
+ // 内存统计结构
+diff --git a/arch/arm64/kvm/xcore_stats.c b/arch/arm64/kvm/xcore_stats.c
+index acff3fe4837a..c17c4a5b54fa 100644
+--- a/arch/arm64/kvm/xcore_stats.c
++++ b/arch/arm64/kvm/xcore_stats.c
+@@ -37,16 +37,27 @@ struct xcore_mem_stats {
+     u64 timestamp;
+ };
+ 
++// host stage-2 映射粒度直方图（页数）
++struct xcore_s2_levels {
++    u64 pages_4k;
++    u64 pages_2m;
++    u64 pages_1g;
++    u64 total;
++    u64 timestamp;
++};
++
+ // 全局统计信息
+ static struct xcore_cpu_stats global_cpu_stats[NR_CPUS];
+ static struct xcore_mem_stats global_mem_stats;
+-static int last_operation = -1;  // 记录最后一次操作类型：1=CPU, 2=MEM
++static struct xcore_s2_levels global_s2_levels;
++static int last_operation = -1;  // 记录最后一次操作类型：1=CPU, 2=MEM, 3=S2粒度
+ static bool pmu_enabled = false;  // PMU启用状态跟踪
+ 
+ // Hypercall 操作码
+ #define XCORE_STATS_DISABLE_PMU         0  // 禁用EL2 PMU计数器
+ #define XCORE_STATS_ENABLE_PMU          1  // 启用EL2 PMU计数器
+ #define XCORE_STATS_GET_MEM             2  // 获取内存统计
++#define XCORE_STATS_GET_S2_LEVELS       3  // 获取 host stage-2 映射粒度直方图
+ 
+ // 通过hypercall启用EL2 PMU计数器
+ static void xcore_enable_pmu_hypercall(void * info)
+@@ -141,8 +152,10 @@ static int xcore_get_mem_stats(void)
+     arm_smccc_1_1_hvc(KVM_HOST_SMCCC_FUNC(__pkvm_xcore_stats),
+                       XCORE_STATS_GET_MEM, 0, 0, 0, &res);
+ 
+-    if (res.a0 == 0) {
+-        pr_err("Failed to get memory stats: SMCCC returned %ld\n", res.a0);
++    // hyp 侧失败时返回 SMCCC 负值错误码（如 SMCCC_RET_NOT_SUPPORTED），
++    // 必须按符号判断；total_size 合法值可以为 0
++    if ((long)res.a0 < 0) {
++        pr_err("Failed to get memory stats: SMCCC returned %ld\n", (long)res.a0);
+         return -ENOTSUPP;
+     }
+ 
+@@ -156,6 +169,29 @@ static int xcore_get_mem_stats(void)
+     return 0;
+ }
+ 
++// 通过hypercall获取host stage-2映射粒度直方图（仅protected）
++static int xcore_get_s2_levels(void)
++{
++    struct arm_smccc_res res;
++
++    arm_smccc_1_1_hvc(KVM_HOST_SMCCC_FUNC(__pkvm_xcore_stats),
++                      XCORE_STATS_GET_S2_LEVELS, 0, 0, 0, &res);
++
++    // hyp 侧失败返回 SMCCC 负值错误码（如 NOT_SUPPORTED）；页数合法值不会为负
++    if ((long)res.a0 < 0) {
++        pr_err("Failed to get s2 levels: SMCCC returned %ld\n", (long)res.a0);
++        return -ENOTSUPP;
++    }
++
++    global_s2_levels.pages_4k = res.a0;
++    global_s2_levels.pages_2m = res.a1;
++    global_s2_levels.pages_1g = res.a2;
++    global_s2_levels.total = res.a3;
++    global_s2_levels.timestamp = ktime_get_ns();
++
++    return 0;
++}
++
+ // xcore_stats文件的显示函数
+ static int xcore_stats_show(struct seq_file *m, void *v)
+ {
+@@ -178,6 +214,19 @@ static int xcore_stats_show(struct seq_file *m, void *v)
+         seq_printf(m, "Borrowed Size: %llu\n", global_mem_stats.borrowed_size);
+         seq_printf(m, "Timestamp:   %llu\n", global_mem_stats.timestamp);
+         seq_printf(m, "\n");
++    } else if (last_operation == 3) {
++        u64 t = global_s2_levels.total;
++
++        // 显示 host stage-2 映射粒度直方图（块数 + 覆盖页数）
++        seq_printf(m, "host stage-2 mapping granularity:\n");
++        seq_printf(m, "4K  pages : %llu\n", global_s2_levels.pages_4k);
++        seq_printf(m, "2M  blocks: %llu  (%llu pages)\n",
++                   global_s2_levels.pages_2m >> 9, global_s2_levels.pages_2m);
++        seq_printf(m, "1G  blocks: %llu  (%llu pages)\n",
++                   global_s2_levels.pages_1g >> 18, global_s2_levels.pages_1g);
++        seq_printf(m, "Total     : %llu pages (%llu MB)\n", t, (t << 2) >> 10);
++        seq_printf(m, "Timestamp : %llu\n", global_s2_levels.timestamp);
++        seq_printf(m, "\n");
+     }
+ 
+     return 0;
+@@ -245,6 +294,12 @@ static ssize_t xcore_stats_write(struct file *file, const char __user *buffer,
+         break;
+ 
+     case 2:
++        // mem stats 遍历 pKVM 页表，仅 protected 模式下语义成立
++        if (!is_protected_kvm_enabled()) {
++            pr_err("Memory statistics require protected KVM (pKVM) mode\n");
++            return -EOPNOTSUPP;
++        }
++
+         // 获取内存统计信息
+         ret = xcore_get_mem_stats();
+         if (ret != 0) {
+@@ -254,8 +309,22 @@ static ssize_t xcore_stats_write(struct file *file, const char __user *buffer,
+         last_operation = 2;  // 记录最后操作类型
+         break;
+ 
++    case 3:
++        // host stage-2 映射粒度直方图，仅 protected 模式（遍历 host_mmu 页表）
++        if (!is_protected_kvm_enabled()) {
++            pr_err("S2 level stats require protected KVM (pKVM) mode\n");
++            return -EOPNOTSUPP;
++        }
++        ret = xcore_get_s2_levels();
++        if (ret != 0) {
++            pr_err("Failed to get s2 level statistics\n");
++            return ret;
++        }
++        last_operation = 3;  // 记录最后操作类型
++        break;
++
+     default:
+-        pr_err("Invalid operation: %d. Use 0 to disable PMU, 1 to enable PMU and get CPU stats, 2 for memory stats\n", operation);
++        pr_err("Invalid operation: %d. Use 0/1 (PMU), 2 (memory stats), 3 (s2 granularity)\n", operation);
+         return -EINVAL;
+     }
+ 
+@@ -284,8 +353,11 @@ static struct proc_dir_entry *xcore_stats_proc_entry;
+ // 模块初始化
+ int xcore_stats_init(void)
+ {
+-    // 检查是否开启了pkvm，未开启则不需要初始化xcore_stats
+-    if (!is_protected_kvm_enabled()) {
++    // PMU op（0/1）在 protected 与普通 nvhe 模式下都可用（用于两种模式的
++    // EL2 cycle 对照测量）；仅在没有 nvhe hyp 可达时不创建接口：
++    // VHE（host 自己在 EL2）、kvm-arm.mode=none、或根本没从 EL2 启动
++    if (!is_hyp_mode_available() || is_kernel_in_hyp_mode() ||
++        kvm_get_mode() == KVM_MODE_NONE) {
+         return 0;
+     }
+ 

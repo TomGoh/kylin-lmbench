@@ -1,0 +1,5 @@
+# mode=protected size=64MB iters=200 bench=/tmp/munmap_only freq=1800000kHz
+set,n_online,clusters,touch_mb,stride_kb,munmap_mean_us,munmap_min_us
+0,1,56,6.4,16,564.6,297.2
+0,1,2,56,6.4,16,547.6,541.9
+0,1,2,3,4,5,6,7,8,56/572,6.4,16,549.3,542.3

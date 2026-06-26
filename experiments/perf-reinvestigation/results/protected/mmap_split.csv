@@ -1,0 +1,6 @@
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,64,300,1,mmap_unmap,10,16,6710886,410,1060557,3535.190,3.535190,0.000,0
+write_touch_cold,64,300,1,write_touch_cold,10,16,6710886,410,99105766,330352.553,330.352553,805.738,0
+munmap_after_no_touch,64,300,1,munmap_after_no_touch,10,16,6710886,410,498568,1661.893,1.661893,0.000,0
+munmap_after_write_touch,64,300,1,munmap_after_write_touch,10,16,6710886,410,87853482,292844.940,292.844940,0.000,0
+mmap_write_touch_unmap,64,300,1,mmap_write_touch_unmap,10,16,6710886,410,187502055,625006.850,625.006850,1524.407,0

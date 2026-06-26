@@ -1,0 +1,16 @@
+pKVM 宿主机 mmap 性能退化调查
+
+调研 pKVM 下宿主机内存性能退化现状。
+在 N90 上以同一内核、仅改 kvm-arm.mode（none/vhe/nvhe/protected）四模式复测 host 侧 lmbench：lat_mmap 在 pKVM 下慢 +29%~+85% 且随映射尺寸放大，稳态访问（lat_mem_rd/bw_mem）四模式无差异——退化位于映射生命周期而非每次访存。换装 C 实现 pKVM 内核复测仅差 -0.16%，排除 Rust 实现因素；LMDB 应用级对照（openclose +35%、长期读写持平）确认退化只影响"频繁建立/拆除映射"类负载。
+
+学习 lat_mmap 源码与内核 mmap/缺页/munmap 实现，将单一计时区拆解定位。
+编写 mmap-split 拆分基准（12 个子测试，复刻 lat_mmap 触摸方式），在联想开天笔记本上对照 NVHE/pKVM：write_touch_cold 仅 +3.78%，证伪"first-touch 每页 ~500ns 建表"假设；munmap_after_write_touch +227%，可解释完整写路径额外时间的 95.7%——问题收敛到"写触摸后的 munmap teardown"，并引出疑问：host munmap 是否进入 EL2、是否与 pKVM EL2 内存隔离的相关实现有关。
+
+借助 x-monitor 与 EL2 trace 机制实现 EL2 周期判别手段（gate），先判方向再投入。
+扩展 xcore_stats hypercall，hypervisor 侧将 PMCCFILTR_EL0 配置为仅统计 EL2 周期、host 侧经 /proc/xcore_stats 读取，配合绑核、关 cpuidle、等时长空窗扣噪，并以 200 次页表遍历 HVC（1.68 亿 cycle）做阳性对照验证计数器有效。实测 munmap 及全部触页路径 ΔEL2=0，排除"隐藏 EL2 路径"，确定退化在宿主机侧软硬件——免去在 EL2 hyp 内部细粒度插桩这条注定读零的路线。
+
+用 host perf 对 teardown 做成本分层。
+针对调用链上的函数用 perf 追踪事件，每个事件检验一个具体猜想：指令数和缺页数确认两模式做的工作是否一样多，页表遍历次数检验"遍历是否变多"，后端停顿周期判断是否卡在访存等待。结果两模式指令数、缺页数、遍历次数完全相同，protected 多出的约 3980 万周期几乎全部是访存停顿（IPC 1.67→0.92）——工作量相同而单位操作的硬件代价变大，候选机制收敛为两个：每条 TLBI 变贵（a-1），或每次页表遍历变贵（a-2）。
+
+实现 host stage-2 自省接口并设计判别实验，完成机制定因。
+实现 xcore_stats op=3（hypervisor 持锁遍历 host stage-2 页表，统计映射粒度分布），实测宿主机内存 99.5% 是 1G 大块，排除"页表碎片化"；密集触摸对照将遍历工作量放大 40 倍而 nvhe/pkvm 差距反而趋零，证伪 a-2；从 tlbflush.h 找到内核行为阈值——munmap 范围小于 2MB 逐页发 TLBI、达到 2MB 改为一条整表刷新，munmap_only 微基准跨阈值扫描显示差距恰在 2.0MB 处由 +139% 降至 +5%、2MB 以下与 TLBI 条数成正比（每条约多 0.27µs），反推原始基准差距与实测 +438µs 吻合。判定根因为 a-1：小范围 munmap 逐页发 TLBI，host stage-2 开启后每条 TLBI 作废的是带 ASID+VMID 双标签的合成 TLB 条目，广播与等待完成的代价更重。

@@ -1,0 +1,45 @@
+### MODE=protected effective=kvm-arm.mode=protected cpu7_freq=3105000
+## munmap threshold sweep (anon dense 4K, cpu7, 1000 iters)
+anon_base  mb=64 touch=0.250MB stride=4K : munmap mean=33.4 us  min=6.3 us
+anon_base  mb=64 touch=0.500MB stride=4K : munmap mean=36.9 us  min=10.3 us
+anon_base  mb=64 touch=1.000MB stride=4K : munmap mean=24.6 us  min=16.2 us
+anon_base  mb=64 touch=1.500MB stride=4K : munmap mean=25.5 us  min=23.2 us
+anon_base  mb=64 touch=1.900MB stride=4K : munmap mean=31.2 us  min=29.0 us
+anon_base  mb=64 touch=2.000MB stride=4K : munmap mean=32.5 us  min=30.4 us
+anon_base  mb=64 touch=2.500MB stride=4K : munmap mean=43.2 us  min=38.8 us
+anon_base  mb=64 touch=4.000MB stride=4K : munmap mean=77.4 us  min=68.3 us
+anon_base  mb=64 touch=8.000MB stride=4K : munmap mean=160.8 us  min=153.9 us
+anon_base  mb=64 touch=16.000MB stride=4K : munmap mean=350.0 us  min=312.3 us
+anon_base  mb=64 touch=32.000MB stride=4K : munmap mean=689.6 us  min=658.2 us
+## op_sweep generality (file dense + sparse, 1000 iters)
+munmap   file mb=64 touch=1.000MB stride=4K : mean=62.7 us  min=17.0 us
+munmap   file mb=64 touch=1.900MB stride=4K : mean=74.3 us  min=29.9 us
+munmap   file mb=64 touch=2.000MB stride=4K : mean=52.7 us  min=31.3 us
+munmap   file mb=64 touch=4.000MB stride=4K : mean=108.1 us  min=63.4 us
+munmap   file mb=64 touch=6.400MB stride=16K : mean=54.6 us  min=27.8 us
+dontneed file mb=64 touch=1.000MB stride=4K : mean=17.1 us  min=15.5 us
+dontneed file mb=64 touch=1.900MB stride=4K : mean=39.3 us  min=29.5 us
+dontneed file mb=64 touch=2.000MB stride=4K : mean=84.6 us  min=30.2 us
+dontneed file mb=64 touch=4.000MB stride=4K : mean=106.7 us  min=62.1 us
+dontneed file mb=64 touch=6.400MB stride=16K : mean=56.3 us  min=25.8 us
+mprotect file mb=64 touch=1.000MB stride=4K : mean=16.3 us  min=4.5 us
+mprotect file mb=64 touch=1.900MB stride=4K : mean=34.1 us  min=7.7 us
+mprotect file mb=64 touch=2.000MB stride=4K : mean=29.8 us  min=8.0 us
+mprotect file mb=64 touch=4.000MB stride=4K : mean=29.7 us  min=15.0 us
+mprotect file mb=64 touch=6.400MB stride=16K : mean=8.9 us  min=6.6 us
+## simpleperf cost-layering (munmap_only anon)
+-- touch/stride=6.4 16 --
+anon_base  mb=64 touch=6.400MB stride=16K : munmap mean=31.3 us  min=28.1 us
+    686,535,121  cpu-cycles               # 3.017602 GHz
+  1,509,438,945  instructions             # 6.635 G/sec 
+    375,202,852  stalled-cycles-backend   # 1.649 G/sec 
+      1,261,082  dTLB-load-misses         # 5.543 M/sec 
+        410,025  page-faults              # 1.802 M/sec 
+-- touch/stride=1 4 --
+anon_base  mb=64 touch=1.000MB stride=4K : munmap mean=27.4 us  min=16.4 us
+  461,152,370  cpu-cycles               # 3.104326 GHz
+  889,351,974  instructions             # 5.987 G/sec 
+  265,324,907  stalled-cycles-backend   # 1.786 G/sec 
+      800,344  dTLB-load-misses         # 5.388 M/sec 
+      256,025  page-faults              # 1.723 M/sec 
+### DONE protected
