@@ -23,6 +23,10 @@ class PixelRunnerScriptsTest(unittest.TestCase):
         ]:
             self.assertIn(needle, text)
 
+    def test_remote_probe_does_not_consume_task_list_stdin(self):
+        text = RUNNER.read_text()
+        self.assertIn("$ADB shell \"$@\" < /dev/null", text)
+
 
 if __name__ == "__main__":
     unittest.main()

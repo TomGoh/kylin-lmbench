@@ -28,7 +28,7 @@ die() {
 }
 
 adb_shell() {
-    $ADB shell "$@"
+    $ADB shell "$@" < /dev/null
 }
 
 mode_label() {
