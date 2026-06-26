@@ -1,0 +1,11 @@
+tmpfs r=1 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=3.4 us  min=3.2 us
+tmpfs r=2 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=3.7 us  min=3.2 us
+tmpfs r=3 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=3.4 us  min=3.2 us
+tmpfs r=4 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=3.7 us  min=3.3 us
+tmpfs r=5 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=3.6 us  min=3.3 us
+tmpfs r=6 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=3.4 us  min=3.1 us
+tmpfs r=7 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=3.4 us  min=3.2 us
+tmpfs r=8 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=3.4 us  min=3.2 us
+tmpfs r=1 lat_mmap_precise: size_mb=64 iters=50 total_ns=690984 per_iter_ns=13819.680 per_iter_us=13.819680
+tmpfs r=2 lat_mmap_precise: size_mb=64 iters=50 total_ns=693125 per_iter_ns=13862.500 per_iter_us=13.862500
+tmpfs r=3 lat_mmap_precise: size_mb=64 iters=50 total_ns=711987 per_iter_ns=14239.740 per_iter_us=14.239740

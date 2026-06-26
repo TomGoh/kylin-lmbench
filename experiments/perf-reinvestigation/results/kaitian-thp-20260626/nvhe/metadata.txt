@@ -1,0 +1,9 @@
+mode_label=nvhe
+date=2026-06-26T16:18:51+08:00
+kernel=6.6.30-pkvm-clean
+cmdline=BOOT_IMAGE=/vmlinuz-6.6.30-pkvm-clean root=UUID=8719a228-caca-4218-8e22-0e25d5ce8777 ro kvm-arm.mode=nvhe loglevel=7 console=tty1
+thp=[always] madvise never
+shmem=always within_size advise [never] deny force
+aslr=0
+gov=performance
+freq=1900000

@@ -1,0 +1,17 @@
+# E1 anon_base vs anon_huge | core=0 iters=20 rounds=5
+# kernel=6.6.30-pkvm-clean
+# cmdline=BOOT_IMAGE=/vmlinuz-6.6.30-pkvm-clean root=UUID=8719a228-caca-4218-8e22-0e25d5ce8777 ro kvm-arm.mode=nvhe loglevel=7 console=tty1
+# thp=[always] madvise never
+# freq_start=1900000
+# date=2026-06-26T16:18:56+08:00
+point=64MB/dense round=1 anon_base  mb=64 touch=64.000MB stride=4K : munmap mean=7179.0 us  min=6955.0 us
+point=64MB/dense round=1 anon_huge  mb=64 touch=64.000MB stride=4K : munmap mean=195.7 us  min=185.0 us
+point=64MB/dense round=2 anon_base  mb=64 touch=64.000MB stride=4K : munmap mean=7069.7 us  min=6950.5 us
+point=64MB/dense round=2 anon_huge  mb=64 touch=64.000MB stride=4K : munmap mean=191.8 us  min=180.6 us
+point=64MB/dense round=3 anon_base  mb=64 touch=64.000MB stride=4K : munmap mean=7094.6 us  min=6951.2 us
+point=64MB/dense round=3 anon_huge  mb=64 touch=64.000MB stride=4K : munmap mean=190.8 us  min=179.9 us
+point=64MB/dense round=4 anon_base  mb=64 touch=64.000MB stride=4K : munmap mean=7063.8 us  min=6921.4 us
+point=64MB/dense round=4 anon_huge  mb=64 touch=64.000MB stride=4K : munmap mean=196.3 us  min=186.1 us
+point=64MB/dense round=5 anon_base  mb=64 touch=64.000MB stride=4K : munmap mean=7069.0 us  min=6925.4 us
+point=64MB/dense round=5 anon_huge  mb=64 touch=64.000MB stride=4K : munmap mean=196.6 us  min=185.2 us
+# freq_end=1900000
