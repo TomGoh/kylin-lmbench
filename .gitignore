@@ -41,6 +41,8 @@ results/*
 *.out
 *.tmp
 *.pid
+__pycache__/
+*.pyc
 
 # Result logs under results/ are source data for this repo.
 !results/**/*.log

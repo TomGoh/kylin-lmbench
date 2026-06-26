@@ -45,19 +45,23 @@
 
    针对 pKVM mmap 问题的优化入口和分阶段方案，包含拆分测试、hyp counter、TLBI/stage-2 teardown 插桩和回归验证思路。
 
-8. [agile-popping-anchor.md](agile-popping-anchor.md) / [el2-gate-instrumentation.zh-CN.md](el2-gate-instrumentation.zh-CN.md)
+8. [pixel-pkvm-mmap-experiment-plan.zh-CN.md](pixel-pkvm-mmap-experiment-plan.zh-CN.md)
+
+   面向 Pixel 9 Pro XL / Android AOSP 的 pKVM mmap/teardown 复查方案。该方案不依赖内核改动或 Pixel GKI 源码，主线改为用户态单页 `MADV_DONTNEED` slope、untouched DiD 校正与 batched teardown 对照；同时要求给出解析下限，用黑盒行为判断 protected 下是否存在 per-entry teardown 成本，以及真实多页路径是否把它隐藏。执行入口已固化到 `experiments/munmap-tlbi/pixel_madv_entry_slope.c`、`pixel-run-madv-entry-slope.sh`、`pixel-analyze-madv-entry-slope.py` 和 `pixel-summarize-madv-entry-slope.py`。
+
+9. [agile-popping-anchor.md](agile-popping-anchor.md) / [el2-gate-instrumentation.zh-CN.md](el2-gate-instrumentation.zh-CN.md)
 
    第二步（插桩与判别）的方案与使用说明：先用 EL2-only PMU 计数判别 munmap 退化是否进 EL2（gate），据结果决定走 host 侧分析（C1）还是 hyp 细粒度插桩（C2）。
 
-9. [n80-gate-c0-results.zh-CN.md](n80-gate-c0-results.zh-CN.md)
+10. [n80-gate-c0-results.zh-CN.md](n80-gate-c0-results.zh-CN.md)
 
    N80 上 gate + host 对照（C0）的完整实测报告：测试设计（结合脚本/代码/体系结构）、全部结果与分析。结论是退化不在 EL2、不在 TLBI 数量，而是 host stage-2 嵌套翻译使 teardown 访存的 backend 停顿放大（假设 a-2）→ 走 C1。
 
-10. [c1-host-stage2-granularity.zh-CN.md](c1-host-stage2-granularity.zh-CN.md)
+11. [c1-host-stage2-granularity.zh-CN.md](c1-host-stage2-granularity.zh-CN.md)
 
-    C1 第一步：用新增的 xcore_stats op=3（只读自省，遍历 host stage-2 直方图）排除"碎片化"——host 内存 99.5% 是 1G block，benchmark 区域必在大块内。⚠️ **本篇当初据此把机制判成 a-2（嵌套 walk），已更正**：op=3 数据正确，但机制实为 a-1（逐页 TLBI），见第 11 篇。
+    C1 第一步：用新增的 xcore_stats op=3（只读自省，遍历 host stage-2 直方图）排除"碎片化"——host 内存 99.5% 是 1G block，benchmark 区域必在大块内。⚠️ **本篇当初据此把机制判成 a-2（嵌套 walk），已更正**：op=3 数据正确，但机制实为 a-1（逐页 TLBI），见第 12 篇。
 
-11. [c1-tlbi-threshold.zh-CN.md](c1-tlbi-threshold.zh-CN.md)
+12. [c1-tlbi-threshold.zh-CN.md](c1-tlbi-threshold.zh-CN.md)
 
     C1 机制判定（**最终结论**）：完整推理链——密集 munmap 对照证伪 a-2、源码定位 2MB 阈值、阈值扫描证实 a-1。退化 = **逐页 `TLBI` 的 stage-2 硬件税**（每条 host TLBI 在 pKVM 下多 ~0.27µs，gap∝TLBI 条数，在 2MB 整表-flush 阈值处断崖消失）。核心杠杆 = **FEAT_TLBIRANGE**（N80 没有）。
 
@@ -107,4 +111,4 @@ backend(访存)停顿——即 host stage-2 嵌套翻译放大了 munmap teardow
 ```
 
 → 核心杠杆 = **FEAT_TLBIRANGE**（range TLBI 合并逐页 TLBI；N80 无此特性故退化明显，平台相关）；大 munmap 已自动 coalesce 成整表 flush、无税。
-**注**：早先的 H2/"嵌套 walk 固有税"机制结论是误判，已在第 10、11 篇更正（op=3 数据正确，机制解释下早了）。
+**注**：早先的 H2/"嵌套 walk 固有税"机制结论是误判，已在第 11、12 篇更正（op=3 数据正确，机制解释下早了）。

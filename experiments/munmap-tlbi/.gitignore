@@ -3,6 +3,8 @@ munmap_bench
 s1pagesize
 *.bin
 op_sweep
+pixel_madv_entry_slope
+pixel_madv_entry_slope.android
 tlbi_ab/*.o
 tlbi_ab/*.ko
 tlbi_ab/*.mod
