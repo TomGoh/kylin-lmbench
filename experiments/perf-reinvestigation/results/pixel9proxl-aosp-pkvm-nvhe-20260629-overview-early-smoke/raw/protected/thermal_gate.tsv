@@ -1,0 +1,6 @@
+mode	section	label	rc	thermal_gate_start_mc	thermal_wait_sec	thermal_gate_ready_mc	freq_before_khz	freq_after_khz	thermal_before_mc	thermal_after_mc	command
+protected	lat_mmap_precise	size-0.5MB-run-1	0	36000	0	36000	1795000	1945000	36000	38000	'/data/local/tmp/pixel-overview-early/lat_mmap_precise' '0.5' '10000' '/data/local/tmp/pixel-overview-early/lmb_0.5MB.bin'
+protected	mmap_split_full	mmap_unmap-0.5MB-run-1	0	36000	0	36000	578000	787000	36000	39000	'/data/local/tmp/pixel-overview-early/mmap_split_bench' 'mmap_unmap' '0.5' '10000' '/data/local/tmp/pixel-overview-early/lmb_0.5MB.bin' 10 16 1
+protected	lat_mem_rd	64MB-stride128-run-1	0	37000	0	37000	1795000	1418000	36000	47000	'/data/local/tmp/pixel-overview-early/lat_mem_rd' -P 1 -W 1 -N 3 64 128
+protected	bw_mem	rd-64m-run-1	0	43000	0	43000	578000	1945000	42000	41000	'/data/local/tmp/pixel-overview-early/bw_mem' -P 1 -W 1 -N 3 64m 'rd'
+protected	bw_mmap_rd	mmap_only-64m-run-1	1	40000	0	40000	648000	1418000	41000	41000	'/data/local/tmp/pixel-overview-early/bw_mmap_rd' -P 1 -W 1 -N 3 64m mmap_only '/data/local/tmp/pixel-overview-early/lmb_64MB.bin'

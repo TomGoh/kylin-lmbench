@@ -1,0 +1,50 @@
+date=2026-06-29T13:40:55+08:00
+serial=47091FDAS009VF
+mode=protected
+out=experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260629-ported-smoke
+cpu=4
+cpu_mask=10
+size_mb=64
+iters=2
+backing_iters=2
+bench_iters=2
+split_iters=2
+lat_iters=2
+ranges=0.25
+ops=munmap
+wait_thermal_max_mc=45000
+wait_thermal_poll_sec=5
+--- adb devices ---
+List of devices attached
+47091FDAS009VF         device usb:1-1 product:aosp_komodo model:AOSP_on_komodo device:komodo transport_id:11
+
+--- uid ---
+0
+--- props ---
+komodo
+AOSP on komodo
+_b
+kvm.arm-protected
+0
+--- cmdline ---
+console=ttynull stack_depot_disable=on cgroup_disable=pressure kasan.page_alloc.sample=10 kasan.stacktrace=off kvm-arm.mode=protected bootconfig ioremap_guard root=/dev/ram0 rw clocksource=arch_sys_counter clk_ignore_unused loop.max_part=7 loop.hw_queue_depth=31 coherent_pool=4M firmware_class.path=/vendor/firmware irqaffinity=0 sysrq_always_enabled no_console_suspend softlockup_panic=1 kasan_multi_shot kvm-arm.protected_modules=exynos-pd,pkvm_s2mpu-v9 dyndbg="func alloc_contig_dump_pages +p" printk.devkmsg=on cma_sysfs.experimental=Y cgroup_disable=memory cgroup.memory=nokmem rcupdate.rcu_expedited=1 rcu_nocbs=all rcutree.enable_rcu_lazy swiotlb=noforce disable_dma32=on sysctl.kernel.sched_pelt_multiplier=4 kasan=off kunit.enable=1 at24.write_timeout=100 log_buf_len=1024K bootconfig console=null exynos_drm.panel_name=google-km4.20a8a00a tcpci_max77759.conf_sbu=0 arm64.nomte ufs_pixel_fips140.fips_first_lba=151942 ufs_pixel_fips140.fips_last_lba=152453 ufs_pixel_fips140.fips_lu=0 id_aa64mmfr1.vh=0  bootconfig
+--- uname ---
+Linux localhost 6.1.84-android14-11-g5c500deec3a7-ab12418271 #1 SMP PREEMPT Thu Sep 26 10:25:24 UTC 2024 aarch64 Toybox
+--- cpu freq ---
+cpu0 820000
+cpu1 820000
+cpu2 820000
+cpu3 820000
+cpu4 648000
+cpu5 578000
+cpu6 357000
+cpu7 1885000
+--- thermal ---
+BIG=33000|MID=33000|usb_pwr_therm=28099|btmspkr_therm=28099|disp_therm=27943|north_therm=28723|soc_therm=30770|battery=28400|battery_cycle=5|dc-mains=31500|usbc-therm-adc=315|max77779fg=28400|LITTLE=33000|soc=0|smpl_gm=0|vdroop1=0|batoilo=0|batoilo2=0|batt_vs=28400|mdis_morepower=0|thb_hda=51|cp_on_chip_0=34000|cp_on_chip_1=35000|G3D=32000|cp_on_chip_2=35000|cp_on_chip_3=33000|cp_on_chip_4=33000|rf2_therm=31000|rf1_therm=32000|ISP=31000|TPU=32000|AUR=32000|rfpa_therm=29346|quiet_therm=29680|charging_therm=30882|
+--- local binary sha256 ---
+1620ea29ef482fea7301134c9dd95673c06d4a3374bf1684b639cfe92aff4052  experiments/munmap-tlbi/op_sweep.android
+3bca8922aeca732856949b5d0901d09511d5942d65a11c803d3a658ce58b1d23  experiments/munmap-tlbi/munmap_only.android
+799bcf6ea05e64b9a60f6ab2f72ef7a03f081e070cc9c1341e80258b04b7755e  experiments/munmap-tlbi/munmap_bench.android
+f2acc0512cc8a3f14b5c0de905a6636d0a3b24685c324b2002130960484d060a  experiments/munmap-tlbi/huge_check.android
+bbafb9d1a7ff349132fd6cb09976d615f3d616fccfa3686d7d95d8ca4db1727c  experiments/mmap-split/mmap_split_bench.android
+839c81f8d63bba86189cd728ff51e046a6cc2cebcd54563272bb46d52d26a870  src/lat_mmap_precise.android

@@ -1,0 +1,54 @@
+
+### section=huge_check label=anon-8MB-sparse
+### command='/data/local/tmp/pixel-ported-suite/huge_check' anon '8' - 6.4 16
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=648000 thermal_before_mc=37000
+huge_check anon mb=8 touch=6.400MB stride=16K :
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+FilePmdMapped:         0 kB
+### rc=0 freq_after_khz=578000 thermal_after_mc=37000
+
+### section=huge_check label=anon-16MB-sparse
+### command='/data/local/tmp/pixel-ported-suite/huge_check' anon '16' - 6.4 16
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=37000
+huge_check anon mb=16 touch=6.400MB stride=16K :
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+FilePmdMapped:         0 kB
+### rc=0 freq_after_khz=648000 thermal_after_mc=36000
+
+### section=huge_check label=anon-64MB-sparse
+### command='/data/local/tmp/pixel-ported-suite/huge_check' anon '64' - 6.4 16
+### gate_start_mc=38000 gate_wait_sec=0 gate_ready_mc=38000 freq_before_khz=648000 thermal_before_mc=37000
+huge_check anon mb=64 touch=6.400MB stride=16K :
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+FilePmdMapped:         0 kB
+### rc=0 freq_after_khz=578000 thermal_after_mc=37000
+
+### section=huge_check label=anon-64MB-full
+### command='/data/local/tmp/pixel-ported-suite/huge_check' anon 64 - 64 4
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=1549000 thermal_before_mc=36000
+huge_check anon mb=64 touch=64.000MB stride=4K :
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+FilePmdMapped:         0 kB
+### rc=0 freq_after_khz=1328000 thermal_after_mc=39000
+
+### section=huge_check label=tmpfs-64MB-sparse
+### command='/data/local/tmp/pixel-ported-suite/huge_check' shmem 64 '/dev/pixel-ported-suite-tmpfs.bin' 6.4 16
+### gate_start_mc=36000 gate_wait_sec=0 gate_ready_mc=36000 freq_before_khz=1795000 thermal_before_mc=37000
+huge_check shmem mb=64 touch=6.400MB stride=16K :
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+FilePmdMapped:         0 kB
+### rc=0 freq_after_khz=578000 thermal_after_mc=36000
+
+### section=huge_check label=tmpfs-64MB-full
+### command='/data/local/tmp/pixel-ported-suite/huge_check' shmem 64 '/dev/pixel-ported-suite-tmpfs.bin' 64 4
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=648000 thermal_before_mc=38000
+huge_check shmem mb=64 touch=64.000MB stride=4K :
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+FilePmdMapped:         0 kB
+### rc=0 freq_after_khz=578000 thermal_after_mc=38000

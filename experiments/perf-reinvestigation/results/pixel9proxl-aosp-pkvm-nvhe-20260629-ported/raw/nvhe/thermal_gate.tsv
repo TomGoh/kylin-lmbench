@@ -1,0 +1,78 @@
+mode	section	label	rc	thermal_gate_start_mc	thermal_wait_sec	thermal_gate_ready_mc	freq_before_khz	freq_after_khz	thermal_before_mc	thermal_after_mc	command
+nvhe	lat_mmap_precise	file-64-sparse	0	36000	0	36000	357000	1549000	35000	37000	'/data/local/tmp/pixel-ported-suite/lat_mmap_precise' '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin'
+nvhe	mmap_split	mmap_unmap	0	37000	0	37000	578000	578000	35000	36000	'/data/local/tmp/pixel-ported-suite/mmap_split_bench' 'mmap_unmap' '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' 10 16 1
+nvhe	mmap_split	write_touch_cold	0	36000	0	36000	1328000	1795000	37000	36000	'/data/local/tmp/pixel-ported-suite/mmap_split_bench' 'write_touch_cold' '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' 10 16 1
+nvhe	mmap_split	munmap_after_no_touch	0	36000	0	36000	1795000	578000	36000	36000	'/data/local/tmp/pixel-ported-suite/mmap_split_bench' 'munmap_after_no_touch' '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' 10 16 1
+nvhe	mmap_split	munmap_after_write_touch	0	36000	0	36000	1795000	1549000	36000	36000	'/data/local/tmp/pixel-ported-suite/mmap_split_bench' 'munmap_after_write_touch' '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' 10 16 1
+nvhe	mmap_split	mmap_write_touch_unmap	0	36000	0	36000	1795000	1328000	36000	41000	'/data/local/tmp/pixel-ported-suite/mmap_split_bench' 'mmap_write_touch_unmap' '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' 10 16 1
+nvhe	munmap_threshold	file-0.25MB-dense	0	36000	0	36000	578000	1221000	35000	36000	'/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '0.25' 4
+nvhe	munmap_threshold	file-0.5MB-dense	0	36000	0	36000	578000	578000	37000	37000	'/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '0.5' 4
+nvhe	munmap_threshold	file-1MB-dense	0	36000	0	36000	578000	1549000	36000	36000	'/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '1' 4
+nvhe	munmap_threshold	file-1.5MB-dense	0	36000	0	36000	1795000	578000	37000	37000	'/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '1.5' 4
+nvhe	munmap_threshold	file-1.9MB-dense	0	36000	0	36000	578000	1221000	37000	37000	'/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '1.9' 4
+nvhe	munmap_threshold	file-2MB-dense	0	36000	0	36000	578000	1549000	36000	36000	'/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '2' 4
+nvhe	munmap_threshold	file-2.1MB-dense	0	37000	0	37000	578000	1795000	36000	37000	'/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '2.1' 4
+nvhe	munmap_threshold	file-4MB-dense	0	37000	0	37000	578000	1795000	35000	39000	'/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '4' 4
+nvhe	munmap_threshold	file-8MB-dense	0	37000	0	37000	578000	2600000	37000	39000	'/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '8' 4
+nvhe	munmap_threshold	file-16MB-dense	0	37000	0	37000	578000	1795000	37000	39000	'/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '16' 4
+nvhe	munmap_threshold	file-64MB-dense	0	37000	0	37000	357000	1795000	36000	40000	'/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '64' 4
+nvhe	munmap_threshold	file-6.4MB-sparse	0	40000	5	36000	578000	1328000	36000	37000	'/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' 6.4 16
+nvhe	op_sweep	munmap-file-0.25MB-dense	0	38000	0	38000	578000	578000	36000	37000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'munmap' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '0.25' 4
+nvhe	op_sweep	munmap-file-0.5MB-dense	0	37000	0	37000	578000	1795000	37000	37000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'munmap' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '0.5' 4
+nvhe	op_sweep	munmap-file-1MB-dense	0	37000	0	37000	578000	1795000	38000	37000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'munmap' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '1' 4
+nvhe	op_sweep	munmap-file-1.5MB-dense	0	37000	0	37000	578000	787000	38000	39000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'munmap' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '1.5' 4
+nvhe	op_sweep	munmap-file-1.9MB-dense	0	37000	0	37000	910000	1795000	36000	40000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'munmap' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '1.9' 4
+nvhe	op_sweep	munmap-file-2MB-dense	0	40000	5	37000	578000	578000	37000	37000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'munmap' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '2' 4
+nvhe	op_sweep	munmap-file-2.1MB-dense	0	37000	0	37000	578000	578000	37000	37000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'munmap' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '2.1' 4
+nvhe	op_sweep	munmap-file-4MB-dense	0	36000	0	36000	1795000	1795000	37000	38000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'munmap' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '4' 4
+nvhe	op_sweep	munmap-file-8MB-dense	0	37000	0	37000	578000	1418000	37000	39000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'munmap' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '8' 4
+nvhe	op_sweep	munmap-file-16MB-dense	0	37000	0	37000	578000	578000	37000	41000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'munmap' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '16' 4
+nvhe	op_sweep	munmap-file-64MB-dense	0	38000	0	38000	578000	1945000	37000	41000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'munmap' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '64' 4
+nvhe	op_sweep	munmap-file-6.4MB-sparse	0	39000	5	37000	787000	1549000	37000	38000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'munmap' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' 6.4 16
+nvhe	op_sweep	dontneed-file-0.25MB-dense	0	37000	0	37000	578000	1221000	37000	37000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'dontneed' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '0.25' 4
+nvhe	op_sweep	dontneed-file-0.5MB-dense	0	37000	0	37000	578000	1795000	37000	36000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'dontneed' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '0.5' 4
+nvhe	op_sweep	dontneed-file-1MB-dense	0	39000	5	36000	578000	578000	36000	36000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'dontneed' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '1' 4
+nvhe	op_sweep	dontneed-file-1.5MB-dense	0	36000	0	36000	648000	1328000	36000	38000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'dontneed' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '1.5' 4
+nvhe	op_sweep	dontneed-file-1.9MB-dense	0	36000	0	36000	578000	1795000	36000	37000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'dontneed' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '1.9' 4
+nvhe	op_sweep	dontneed-file-2MB-dense	0	36000	0	36000	578000	1549000	37000	38000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'dontneed' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '2' 4
+nvhe	op_sweep	dontneed-file-2.1MB-dense	0	38000	0	38000	578000	578000	37000	38000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'dontneed' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '2.1' 4
+nvhe	op_sweep	dontneed-file-4MB-dense	0	37000	0	37000	910000	1795000	37000	38000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'dontneed' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '4' 4
+nvhe	op_sweep	dontneed-file-8MB-dense	0	38000	0	38000	1065000	1795000	37000	38000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'dontneed' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '8' 4
+nvhe	op_sweep	dontneed-file-16MB-dense	0	37000	0	37000	1795000	1795000	37000	40000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'dontneed' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '16' 4
+nvhe	op_sweep	dontneed-file-64MB-dense	0	37000	0	37000	578000	1418000	37000	41000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'dontneed' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '64' 4
+nvhe	op_sweep	dontneed-file-6.4MB-sparse	0	40000	5	37000	1065000	1945000	37000	38000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'dontneed' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' 6.4 16
+nvhe	op_sweep	mprotect-file-0.25MB-dense	0	37000	0	37000	578000	578000	38000	37000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'mprotect' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '0.25' 4
+nvhe	op_sweep	mprotect-file-0.5MB-dense	0	39000	5	36000	578000	578000	36000	36000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'mprotect' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '0.5' 4
+nvhe	op_sweep	mprotect-file-1MB-dense	0	36000	0	36000	578000	578000	37000	39000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'mprotect' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '1' 4
+nvhe	op_sweep	mprotect-file-1.5MB-dense	0	37000	0	37000	910000	578000	37000	37000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'mprotect' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '1.5' 4
+nvhe	op_sweep	mprotect-file-1.9MB-dense	0	38000	0	38000	578000	357000	36000	37000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'mprotect' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '1.9' 4
+nvhe	op_sweep	mprotect-file-2MB-dense	0	36000	0	36000	578000	1549000	39000	37000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'mprotect' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '2' 4
+nvhe	op_sweep	mprotect-file-2.1MB-dense	0	37000	0	37000	1795000	1795000	38000	38000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'mprotect' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '2.1' 4
+nvhe	op_sweep	mprotect-file-4MB-dense	0	38000	0	38000	1065000	578000	41000	39000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'mprotect' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '4' 4
+nvhe	op_sweep	mprotect-file-8MB-dense	0	37000	0	37000	910000	1795000	37000	39000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'mprotect' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '8' 4
+nvhe	op_sweep	mprotect-file-16MB-dense	0	38000	0	38000	648000	1549000	37000	40000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'mprotect' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '16' 4
+nvhe	op_sweep	mprotect-file-64MB-dense	0	39000	5	37000	910000	1549000	37000	40000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'mprotect' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '64' 4
+nvhe	op_sweep	mprotect-file-6.4MB-sparse	0	40000	5	37000	578000	2130000	36000	40000	'/data/local/tmp/pixel-ported-suite/op_sweep' 'mprotect' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' 6.4 16
+nvhe	backing	file-8MB-sparse	0	37000	0	37000	910000	1795000	37000	38000	'/data/local/tmp/pixel-ported-suite/munmap_only' 'file' '8' '120' '/data/local/tmp/pixel-ported-suite/mb.bin' 6.4 16
+nvhe	backing	file-16MB-sparse	0	39000	10	37000	578000	1795000	36000	37000	'/data/local/tmp/pixel-ported-suite/munmap_only' 'file' '16' '120' '/data/local/tmp/pixel-ported-suite/mb.bin' 6.4 16
+nvhe	backing	file-64MB-sparse	0	36000	0	36000	578000	578000	36000	37000	'/data/local/tmp/pixel-ported-suite/munmap_only' 'file' '64' '120' '/data/local/tmp/pixel-ported-suite/mb.bin' 6.4 16
+nvhe	backing	file-64MB-full	0	36000	0	36000	578000	1549000	39000	40000	'/data/local/tmp/pixel-ported-suite/munmap_only' 'file' 64 '120' '/data/local/tmp/pixel-ported-suite/mb.bin' 64 4
+nvhe	backing	anon_base-8MB-sparse	0	39000	5	36000	578000	578000	39000	38000	'/data/local/tmp/pixel-ported-suite/munmap_only' 'anon_base' '8' '120' '/data/local/tmp/pixel-ported-suite/mb.bin' 6.4 16
+nvhe	backing	anon_base-16MB-sparse	0	36000	0	36000	910000	1221000	37000	39000	'/data/local/tmp/pixel-ported-suite/munmap_only' 'anon_base' '16' '120' '/data/local/tmp/pixel-ported-suite/mb.bin' 6.4 16
+nvhe	backing	anon_base-64MB-sparse	0	39000	5	35000	578000	357000	36000	36000	'/data/local/tmp/pixel-ported-suite/munmap_only' 'anon_base' '64' '120' '/data/local/tmp/pixel-ported-suite/mb.bin' 6.4 16
+nvhe	backing	anon_base-64MB-full	0	36000	0	36000	648000	1221000	37000	41000	'/data/local/tmp/pixel-ported-suite/munmap_only' 'anon_base' 64 '120' '/data/local/tmp/pixel-ported-suite/mb.bin' 64 4
+nvhe	backing	anon_huge-8MB-sparse	0	40000	5	36000	1221000	1795000	37000	37000	'/data/local/tmp/pixel-ported-suite/munmap_only' 'anon_huge' '8' '120' '/data/local/tmp/pixel-ported-suite/mb.bin' 6.4 16
+nvhe	backing	anon_huge-16MB-sparse	0	40000	5	36000	578000	2130000	36000	37000	'/data/local/tmp/pixel-ported-suite/munmap_only' 'anon_huge' '16' '120' '/data/local/tmp/pixel-ported-suite/mb.bin' 6.4 16
+nvhe	backing	anon_huge-64MB-sparse	0	36000	0	36000	578000	578000	39000	37000	'/data/local/tmp/pixel-ported-suite/munmap_only' 'anon_huge' '64' '120' '/data/local/tmp/pixel-ported-suite/mb.bin' 6.4 16
+nvhe	backing	anon_huge-64MB-full	0	37000	0	37000	578000	578000	37000	40000	'/data/local/tmp/pixel-ported-suite/munmap_only' 'anon_huge' 64 '120' '/data/local/tmp/pixel-ported-suite/mb.bin' 64 4
+nvhe	munmap_bench	file-64MB-full	0	38000	0	38000	578000	1795000	38000	39000	'/data/local/tmp/pixel-ported-suite/munmap_bench' 'file' 64 '60' '/data/local/tmp/pixel-ported-suite/mb.bin'
+nvhe	munmap_bench	anon_base-64MB-full	0	38000	0	38000	2130000	1795000	39000	40000	'/data/local/tmp/pixel-ported-suite/munmap_bench' 'anon_base' 64 '60' '/data/local/tmp/pixel-ported-suite/mb.bin'
+nvhe	munmap_bench	anon_huge-64MB-full	0	40000	5	37000	648000	2600000	37000	39000	'/data/local/tmp/pixel-ported-suite/munmap_bench' 'anon_huge' 64 '60' '/data/local/tmp/pixel-ported-suite/mb.bin'
+nvhe	huge_check	anon-8MB-sparse	0	38000	0	38000	578000	1795000	37000	39000	'/data/local/tmp/pixel-ported-suite/huge_check' anon '8' - 6.4 16
+nvhe	huge_check	anon-16MB-sparse	0	37000	0	37000	578000	1221000	37000	37000	'/data/local/tmp/pixel-ported-suite/huge_check' anon '16' - 6.4 16
+nvhe	huge_check	anon-64MB-sparse	0	37000	0	37000	578000	578000	38000	37000	'/data/local/tmp/pixel-ported-suite/huge_check' anon '64' - 6.4 16
+nvhe	huge_check	anon-64MB-full	0	38000	0	38000	1065000	1221000	37000	40000	'/data/local/tmp/pixel-ported-suite/huge_check' anon 64 - 64 4
+nvhe	huge_check	tmpfs-64MB-sparse	0	38000	0	38000	578000	1328000	37000	37000	'/data/local/tmp/pixel-ported-suite/huge_check' shmem 64 '/dev/pixel-ported-suite-tmpfs.bin' 6.4 16
+nvhe	huge_check	tmpfs-64MB-full	0	37000	0	37000	1795000	578000	37000	38000	'/data/local/tmp/pixel-ported-suite/huge_check' shmem 64 '/dev/pixel-ported-suite-tmpfs.bin' 64 4
+nvhe	tmpfs_op_sweep	munmap-tmpfs-6.4MB-sparse	0	38000	0	38000	578000	578000	38000	37000	'/data/local/tmp/pixel-ported-suite/op_sweep' munmap file 64 '200' '/dev/pixel-ported-suite-tmpfs.bin' 6.4 16
+nvhe	tmpfs_op_sweep	munmap-tmpfs-64MB-full	0	37000	0	37000	910000	1418000	38000	41000	'/data/local/tmp/pixel-ported-suite/op_sweep' munmap file 64 '200' '/dev/pixel-ported-suite-tmpfs.bin' 64 4

@@ -1,0 +1,2 @@
+env,run,bench_mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+protected,1,mmap_unmap,0.5,10000,1,mmap_unmap,10,16,52428,4,31322062,3132.206,3.132206,0.000,0

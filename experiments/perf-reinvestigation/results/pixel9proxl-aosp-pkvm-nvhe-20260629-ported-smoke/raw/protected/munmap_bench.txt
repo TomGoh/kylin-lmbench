@@ -1,0 +1,18 @@
+
+### section=munmap_bench label=file-64MB-full
+### command='/data/local/tmp/pixel-ported-suite/munmap_bench' 'file' 64 '2' '/data/local/tmp/pixel-ported-suite/mb.bin'
+### gate_start_mc=36000 gate_wait_sec=0 gate_ready_mc=36000 freq_before_khz=1795000 thermal_before_mc=36000
+file       64MB x2 : 0.090 s total, 44990.6 us/iter
+### rc=0 freq_after_khz=1795000 thermal_after_mc=36000
+
+### section=munmap_bench label=anon_base-64MB-full
+### command='/data/local/tmp/pixel-ported-suite/munmap_bench' 'anon_base' 64 '2' '/data/local/tmp/pixel-ported-suite/mb.bin'
+### gate_start_mc=35000 gate_wait_sec=0 gate_ready_mc=35000 freq_before_khz=357000 thermal_before_mc=35000
+anon_base  64MB x2 : 0.054 s total, 26773.3 us/iter
+### rc=0 freq_after_khz=1795000 thermal_after_mc=36000
+
+### section=munmap_bench label=anon_huge-64MB-full
+### command='/data/local/tmp/pixel-ported-suite/munmap_bench' 'anon_huge' 64 '2' '/data/local/tmp/pixel-ported-suite/mb.bin'
+### gate_start_mc=36000 gate_wait_sec=0 gate_ready_mc=36000 freq_before_khz=578000 thermal_before_mc=35000
+anon_huge  64MB x2 : 0.053 s total, 26706.0 us/iter
+### rc=0 freq_after_khz=578000 thermal_after_mc=36000

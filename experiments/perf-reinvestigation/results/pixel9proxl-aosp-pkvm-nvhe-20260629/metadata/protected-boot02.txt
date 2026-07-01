@@ -1,0 +1,265 @@
+date=2026-06-29T12:33:13+08:00
+label=protected-boot02
+serial=47091FDAS009VF
+--- adb devices ---
+List of devices attached
+47091FDAS009VF         device usb:1-1 product:aosp_komodo model:AOSP_on_komodo device:komodo transport_id:7
+
+--- uid ---
+0
+--- props ---
+komodo
+AOSP on komodo
+_b
+kvm.arm-protected
+0
+1
+--- cmdline ---
+console=ttynull stack_depot_disable=on cgroup_disable=pressure kasan.page_alloc.sample=10 kasan.stacktrace=off kvm-arm.mode=protected bootconfig ioremap_guard root=/dev/ram0 rw clocksource=arch_sys_counter clk_ignore_unused loop.max_part=7 loop.hw_queue_depth=31 coherent_pool=4M firmware_class.path=/vendor/firmware irqaffinity=0 sysrq_always_enabled no_console_suspend softlockup_panic=1 kasan_multi_shot kvm-arm.protected_modules=exynos-pd,pkvm_s2mpu-v9 dyndbg="func alloc_contig_dump_pages +p" printk.devkmsg=on cma_sysfs.experimental=Y cgroup_disable=memory cgroup.memory=nokmem rcupdate.rcu_expedited=1 rcu_nocbs=all rcutree.enable_rcu_lazy swiotlb=noforce disable_dma32=on sysctl.kernel.sched_pelt_multiplier=4 kasan=off kunit.enable=1 at24.write_timeout=100 log_buf_len=1024K bootconfig console=null exynos_drm.panel_name=google-km4.20a8a00a tcpci_max77759.conf_sbu=0 arm64.nomte ufs_pixel_fips140.fips_first_lba=151942 ufs_pixel_fips140.fips_last_lba=152453 ufs_pixel_fips140.fips_lu=0 id_aa64mmfr1.vh=0  bootconfig
+--- uname ---
+Linux localhost 6.1.84-android14-11-g5c500deec3a7-ab12418271 #1 SMP PREEMPT Thu Sep 26 10:25:24 UTC 2024 aarch64 Toybox
+--- kvm/tlb dmesg ---
+[    0.000000] OF: reserved mem: initialized node pkvm_guest_firmware, compatible id linux,pkvm-guest-firmware-memory
+[    0.000000] OF: reserved mem: 0x000000008b000000..0x000000008b097fff ( 608 KB ) nomap non-reusable pkvm_guest_firmware
+[    0.000000] Kernel command line: console=ttynull stack_depot_disable=on cgroup_disable=pressure kasan.page_alloc.sample=10 kasan.stacktrace=off kvm-arm.mode=protected bootconfig ioremap_guard root=/dev/ram0 rw clocksource=arch_sys_counter clk_ignore_unused loop.max_part=7 loop.hw_queue_depth=31 coherent_pool=4M firmware_class.path=/vendor/firmware irqaffinity=0 sysrq_always_enabled no_console_suspend softlockup_panic=1 kasan_multi_shot kvm-arm.protected_modules=exynos-pd,pkvm_s2mpu-v9 dyndbg="func alloc_contig_dump_pages +p" printk.devkmsg=on cma_sysfs.experimental=Y cgroup_disable=memory cgroup.memory=nokmem rcupdate.rcu_expedited=1 rcu_nocbs=all rcutree.enable_rcu_lazy swiotlb=noforce disable_dma32=on sysctl.kernel.sched_pelt_multiplier=4 kasan=off kunit.enable=1 at24.write_timeout=100 log_buf_len=1024K bootconfig console=null exynos_drm.panel_name=google-km4.20a8a00a tcpci_max77759.conf_sbu=0 arm64.nomte ufs_pixel_fips140.fips_first_lba=151942 ufs_pixel_fips140.fips_l
+[    0.014280] CPU features: detected: TLB range maintenance instructions
+[    0.014284] CPU features: detected: Protected KVM
+[    0.163817] kvm [1]: Protected nVHE mode initialized successfully
+[    0.452512] pkvm-s2mpu-v9 20a80000.s2mpu_s0_aur: registered with hypervisor [0/29]
+[    0.452876] pkvm-s2mpu-v9 1a670000.s2mpu_s0_bw: registered with hypervisor [1/29]
+[    0.453074] pkvm-s2mpu-v9 29c50000.s2mpu_s0_cpucl0: registered with hypervisor [2/29]
+[    0.453310] pkvm-s2mpu-v9 19870000.s2mpu_s0_dpuf0: registered with hypervisor [3/29]
+[    0.453480] pkvm-s2mpu-v9 19c70000.s2mpu_s0_dpuf1: registered with hypervisor [4/29]
+[    0.453633] pkvm-s2mpu-v9 16c70000.s2mpu_s0_eh: registered with hypervisor [5/29]
+[    0.453778] pkvm-s2mpu-v9 1a8a0000.s2mpu_s0_g2d: registered with hypervisor [6/29]
+[    0.453937] pkvm-s2mpu-v9 1ee70000.s2mpu_s0_g3d: registered with hypervisor [7/29]
+[    0.454190] pkvm-s2mpu-v9 1d4f0000.s2mpu_s0_gdc: registered with hypervisor [8/29]
+[    0.454397] pkvm-s2mpu-v9 1d8a0000.s2mpu_s0_gse: registered with hypervisor [9/29]
+[    0.454608] pkvm-s2mpu-v9 11070000.s2mpu_s0_hsi0: registered with hypervisor [10/29]
+[    0.454740] pkvm-s2mpu-v9 12090000.s2mpu_s0_hsi1: registered with hypervisor [11/29]
+[    0.454976] pkvm-s2mpu-v9 131f0000.s2mpu_s0_hsi2: registered with hypervisor [12/29]
+[    0.455311] pkvm-s2mpu-v9 1c140000.s2mpu_s0_ispfe: registered with hypervisor [13/29]
+[    0.455497] pkvm-s2mpu-v9 1c180000.s2mpu_s1_ispfe: registered with hypervisor [14/29]
+[    0.455675] pkvm-s2mpu-v9 1c1c0000.s2mpu_s2_ispfe: registered with hypervisor [15/29]
+[    0.455868] pkvm-s2mpu-v9 1d0d0000.s2mpu_s0_mcsc: registered with hypervisor [16/29]
+[    0.456052] pkvm-s2mpu-v9 1a4a0000.s2mpu_s0_mfc: registered with hypervisor [17/29]
+[    0.456250] pkvm-s2mpu-v9 101f0000.s2mpu_s0_misc: registered with hypervisor [18/29]
+[    0.456576] pkvm-s2mpu-v9 1c4d0000.s2mpu_s0_rgbp: registered with hypervisor [19/29]
+[    0.456755] pkvm-s2mpu-v9 1c510000.s2mpu_s1_rgbp: registered with hypervisor [20/29]
+[    0.456946] pkvm-s2mpu-v9 1ccb0000.s2mpu_s0_tnr: registered with hypervisor [21/29]
+[    0.457160] pkvm-s2mpu-v9 1ccf0000.s2mpu_s1_tnr: registered with hypervisor [22/29]
+[    0.457392] pkvm-s2mpu-v9 1cd30000.s2mpu_s2_tnr: registered with hypervisor [23/29]
+[    0.457581] pkvm-s2mpu-v9 1a370000.s2mpu_s0_tpu: registered with hypervisor [24/29]
+[    0.457725] pkvm-s2mpu-v9 1c8a0000.s2mpu_s0_yuvp: registered with hypervisor [25/29]
+[    0.457903] pkvm-s2mpu-v9 16470000.s2mpu_s0_gsa: registered with hypervisor [26/29]
+[    0.458682] pkvm-s2mpu-v9 190c0000.s2mpu_s0_aoc: registered with hypervisor [27/29]
+[    0.458848] pkvm-s2mpu-v9 155b0000.s2mpu_s0_alive: registered with hypervisor [28/29]
+[    0.458854] List of devices successfully finalized for pkvm s2mpu
+[    0.641949] init: Loading module /lib/modules/pkvm-s2mpu-v9.ko with args ''
+[    2.037010] init: No user specified for service 'vendor.force_pkvm', so it is root.
+--- simpleperf list head ---
+List of hw-cache events:
+  # More cache events are available in `simpleperf list raw`.
+  branch-load-misses
+  branch-loads
+  dTLB-load-misses
+  dTLB-loads
+  iTLB-load-misses
+  iTLB-loads
+  L1-dcache-load-misses
+  L1-dcache-loads
+  L1-icache-load-misses
+  L1-icache-loads
+  LLC-load-misses
+  LLC-loads
+
+List of coresight etm events:
+  cs_etm/autofdo/
+  cs-etm		# CoreSight ETM instruction tracing
+
+List of hardware events:
+  branch-instructions
+  branch-misses
+  bus-cycles
+  cache-misses
+  cache-references
+  cpu-cycles
+  instructions
+  stalled-cycles-backend
+  stalled-cycles-frontend
+
+List of pmu events:
+  arm_cmn_0/dn_dvmop_bpi/
+  arm_cmn_0/dn_dvmop_pici/
+  arm_cmn_0/dn_dvmop_tlbi/
+  arm_cmn_0/dn_dvmop_vici/
+  arm_cmn_0/dn_dvmsync/
+  arm_cmn_0/dn_retry/
+  arm_cmn_0/dn_rndop_filtered/
+  arm_cmn_0/dn_trk_occupancy_all/
+  arm_cmn_0/dn_trk_occupancy_dvmop/
+  arm_cmn_0/dn_trk_occupancy_dvmsync/
+  arm_cmn_0/dn_trkfull/
+  arm_cmn_0/dn_txsnp_flitv/
+  arm_cmn_0/dn_txsnp_stall/
+  arm_cmn_0/dn_vmid_filtered/
+  arm_cmn_0/dtc_cycles/
+  arm_cmn_0/hnf_atomic_fwd/
+  arm_cmn_0/hnf_brd_snoops_sent/
+  arm_cmn_0/hnf_cache_fill/
+  arm_cmn_0/hnf_cache_miss/
+  arm_cmn_0/hnf_cmp_adq_full/
+  arm_cmn_0/hnf_dir_snoops_sent/
+  arm_cmn_0/hnf_intv_dirty/
+  arm_cmn_0/hnf_ld_st_swp_adq_full/
+  arm_cmn_0/hnf_mc_reqs/
+  arm_cmn_0/hnf_mc_retries/
+  arm_cmn_0/hnf_mpam_hardlim/
+  arm_cmn_0/hnf_mpam_softlim/
+  arm_cmn_0/hnf_pocq_addrhaz/
+  arm_cmn_0/hnf_pocq_atomic_addrhaz/
+  arm_cmn_0/hnf_pocq_reqs_recvd/
+  arm_cmn_0/hnf_pocq_retry/
+  arm_cmn_0/hnf_qos_hh_retry/
+  arm_cmn_0/hnf_qos_pocq_occupancy_all/
+  arm_cmn_0/hnf_qos_pocq_occupancy_atomic/
+  arm_cmn_0/hnf_qos_pocq_occupancy_read/
+  arm_cmn_0/hnf_qos_pocq_occupancy_stash/
+  arm_cmn_0/hnf_qos_pocq_occupancy_write/
+  arm_cmn_0/hnf_seq_full/
+  arm_cmn_0/hnf_seq_hit/
+  arm_cmn_0/hnf_sf_evictions/
+  arm_cmn_0/hnf_sf_hit/
+  arm_cmn_0/hnf_sfbi_brd_snp_sent/
+  arm_cmn_0/hnf_sfbi_dir_snp_sent/
+  arm_cmn_0/hnf_slc_eviction/
+  arm_cmn_0/hnf_slc_fill_invalid_way/
+  arm_cmn_0/hnf_slc_sf_cache_access/
+  arm_cmn_0/hnf_snp_fwded/
+  arm_cmn_0/hnf_snp_sent/
+  arm_cmn_0/hnf_snp_sent_untrk/
+  arm_cmn_0/hnf_stash_data_pull/
+  arm_cmn_0/hnf_stash_snp_sent/
+  arm_cmn_0/hnf_txdat_stall/
+  arm_cmn_0/hnf_txrsp_stall/
+  arm_cmn_0/hni_arready_no_arvalid/
+  arm_cmn_0/hni_arvalid_no_arready/
+  arm_cmn_0/hni_awready_no_awvalid/
+  arm_cmn_0/hni_awvalid_no_awready/
+  arm_cmn_0/hni_nonpcie_serialization/
+  arm_cmn_0/hni_pcie_serialization/
+  arm_cmn_0/hni_rdt_rd_alloc/
+  arm_cmn_0/hni_rdt_rd_occ_cnt_ovfl/
+  arm_cmn_0/hni_rdt_wr_alloc/
+  arm_cmn_0/hni_rdt_wr_occ_cnt_ovfl/
+  arm_cmn_0/hni_rrt_rd_alloc/
+  arm_cmn_0/hni_rrt_rd_occ_cnt_ovfl/
+  arm_cmn_0/hni_rrt_wr_alloc/
+  arm_cmn_0/hni_rrt_wr_occ_cnt_ovfl/
+  arm_cmn_0/hni_txdat_stall/
+  arm_cmn_0/hni_txrsp_retryack/
+  arm_cmn_0/hni_wdb_alloc/
+  arm_cmn_0/hni_wdb_occ_cnt_ovfl/
+  arm_cmn_0/hni_wvalid_no_wready/
+  arm_cmn_0/mtsx_axi_rd_req/
+  arm_cmn_0/mtsx_axi_wr_req/
+  arm_cmn_0/mtsx_tc_fill/
+  arm_cmn_0/mtsx_tc_lookup/
+  arm_cmn_0/mtsx_tc_miss/
+  arm_cmn_0/mtsx_tcq_cmo_alloc/
+  arm_cmn_0/mtsx_tcq_hazard/
+  arm_cmn_0/mtsx_tcq_occ_cnt_ovfl/
+  arm_cmn_0/mtsx_tcq_rd_alloc/
+  arm_cmn_0/mtsx_tcq_wr_alloc/
+  arm_cmn_0/mtsx_tdb_forward/
+  arm_cmn_0/mtsx_tdb_occ_cnt_ovfl/
+  arm_cmn_0/mxp_e_dat_partial_dat_flit/
+  arm_cmn_0/mxp_e_dat_txflit_stall/
+  arm_cmn_0/mxp_e_dat_txflit_valid/
+  arm_cmn_0/mxp_e_pub_partial_dat_flit/
+  arm_cmn_0/mxp_e_pub_txflit_stall/
+--- cpu possible ---
+0-7
+--- cpu max freq ---
+cpu0 1950000
+cpu1 1950000
+cpu2 1950000
+cpu3 1950000
+cpu4 2600000
+cpu5 2600000
+cpu6 2600000
+cpu7 3105000
+--- cpu governor ---
+cpu0 sched_pixel
+cpu1 sched_pixel
+cpu2 sched_pixel
+cpu3 sched_pixel
+cpu4 sched_pixel
+cpu5 sched_pixel
+cpu6 sched_pixel
+cpu7 sched_pixel
+--- cpu cur freq ---
+cpu0 820000
+cpu1 820000
+cpu2 820000
+cpu3 820000
+cpu4 787000
+cpu5 1549000
+cpu6 578000
+cpu7 1885000
+--- topology core_id ---
+cpu0 0
+cpu1 1
+cpu2 2
+cpu3 3
+cpu4 4
+cpu5 5
+cpu6 6
+cpu7 7
+--- topology package ---
+cpu0 0
+cpu1 0
+cpu2 0
+cpu3 0
+cpu4 0
+cpu5 0
+cpu6 0
+cpu7 0
+--- thermal ---
+BIG=36000
+MID=37000
+usb_pwr_therm=29791
+btmspkr_therm=29724
+disp_therm=29836
+north_therm=29836
+soc_therm=31950
+battery=29500
+battery_cycle=5
+dc-mains=32500
+usbc-therm-adc=325
+max77779fg=29500
+LITTLE=35000
+soc=1
+smpl_gm=0
+vdroop1=0
+batoilo=0
+batoilo2=0
+batt_vs=29500
+mdis_morepower=0
+thb_hda=51
+cp_on_chip_0=35000
+cp_on_chip_1=36000
+G3D=34000
+cp_on_chip_2=35000
+cp_on_chip_3=33000
+cp_on_chip_4=33000
+rf2_therm=32000
+rf1_therm=32000
+ISP=33000
+TPU=34000
+AUR=34000
+rfpa_therm=30526
+quiet_therm=30815
+charging_therm=32106
+--- /dev/kvm ---
+crw-rw-rw- 1 root root 10, 232 2026-06-27 23:10 /dev/kvm

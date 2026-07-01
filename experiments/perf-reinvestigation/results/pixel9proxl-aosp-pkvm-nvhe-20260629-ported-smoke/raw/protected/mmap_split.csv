@@ -1,0 +1,35 @@
+
+### section=mmap_split label=mmap_unmap
+### command='/data/local/tmp/pixel-ported-suite/mmap_split_bench' 'mmap_unmap' '64' '2' '/data/local/tmp/pixel-ported-suite/mb.bin' 10 16 1
+### gate_start_mc=35000 gate_wait_sec=0 gate_ready_mc=35000 freq_before_khz=648000 thermal_before_mc=36000
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,64,2,1,mmap_unmap,10,16,6710886,410,21077,10538.500,10.538500,0.000,0
+### rc=0 freq_after_khz=578000 thermal_after_mc=35000
+
+### section=mmap_split label=write_touch_cold
+### command='/data/local/tmp/pixel-ported-suite/mmap_split_bench' 'write_touch_cold' '64' '2' '/data/local/tmp/pixel-ported-suite/mb.bin' 10 16 1
+### gate_start_mc=35000 gate_wait_sec=0 gate_ready_mc=35000 freq_before_khz=357000 thermal_before_mc=35000
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_cold,64,2,1,write_touch_cold,10,16,6710886,410,2919556,1459778.000,1459.778000,3560.434,0
+### rc=0 freq_after_khz=1328000 thermal_after_mc=35000
+
+### section=mmap_split label=munmap_after_no_touch
+### command='/data/local/tmp/pixel-ported-suite/mmap_split_bench' 'munmap_after_no_touch' '64' '2' '/data/local/tmp/pixel-ported-suite/mb.bin' 10 16 1
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=1418000 thermal_before_mc=35000
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_no_touch,64,2,1,munmap_after_no_touch,10,16,6710886,410,3907,1953.500,1.953500,0.000,0
+### rc=0 freq_after_khz=1795000 thermal_after_mc=36000
+
+### section=mmap_split label=munmap_after_write_touch
+### command='/data/local/tmp/pixel-ported-suite/mmap_split_bench' 'munmap_after_write_touch' '64' '2' '/data/local/tmp/pixel-ported-suite/mb.bin' 10 16 1
+### gate_start_mc=35000 gate_wait_sec=0 gate_ready_mc=35000 freq_before_khz=648000 thermal_before_mc=35000
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,64,2,1,munmap_after_write_touch,10,16,6710886,410,102986,51493.000,51.493000,0.000,0
+### rc=0 freq_after_khz=1795000 thermal_after_mc=37000
+
+### section=mmap_split label=mmap_write_touch_unmap
+### command='/data/local/tmp/pixel-ported-suite/mmap_split_bench' 'mmap_write_touch_unmap' '64' '2' '/data/local/tmp/pixel-ported-suite/mb.bin' 10 16 1
+### gate_start_mc=35000 gate_wait_sec=0 gate_ready_mc=35000 freq_before_khz=1795000 thermal_before_mc=36000
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_write_touch_unmap,64,2,1,mmap_write_touch_unmap,10,16,6710886,410,2320719,1160359.500,1160.359500,2830.145,0
+### rc=0 freq_after_khz=357000 thermal_after_mc=35000

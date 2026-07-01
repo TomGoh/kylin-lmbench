@@ -21,6 +21,8 @@ CPU="${CPU:-}"
 COOLDOWN_SEC="${COOLDOWN_SEC:-2}"
 FREQ_DROP_PCT="${FREQ_DROP_PCT:-5}"
 THERMAL_RISE_MC="${THERMAL_RISE_MC:-3000}"
+WAIT_THERMAL_MAX_MC="${WAIT_THERMAL_MAX_MC:-}"
+WAIT_THERMAL_POLL_SEC="${WAIT_THERMAL_POLL_SEC:-5}"
 
 die() {
     echo "error: $*" >&2
@@ -55,6 +57,29 @@ read_thermal() {
         | tr -d '\r'
 }
 
+is_uint() {
+    [[ "$1" =~ ^[0-9]+$ ]]
+}
+
+wait_for_thermal_gate() {
+    local start current waited
+
+    start="$(read_thermal_max)"
+    current="$start"
+    waited=0
+    if [ -z "$WAIT_THERMAL_MAX_MC" ] || ! is_uint "$WAIT_THERMAL_MAX_MC"; then
+        echo "${start},${waited},${current}"
+        return
+    fi
+
+    while is_uint "$current" && [ "$current" -ge "$WAIT_THERMAL_MAX_MC" ]; do
+        sleep "$WAIT_THERMAL_POLL_SEC"
+        waited=$((waited + WAIT_THERMAL_POLL_SEC))
+        current="$(read_thermal_max)"
+    done
+    echo "${start},${waited},${current}"
+}
+
 collect_metadata() {
     local dir="$1"
     mkdir -p "$dir"
@@ -70,6 +95,8 @@ collect_metadata() {
         echo "cooldown_sec=$COOLDOWN_SEC"
         echo "freq_drop_pct=$FREQ_DROP_PCT"
         echo "thermal_rise_mc=$THERMAL_RISE_MC"
+        echo "wait_thermal_max_mc=$WAIT_THERMAL_MAX_MC"
+        echo "wait_thermal_poll_sec=$WAIT_THERMAL_POLL_SEC"
         echo "--- adb devices ---"
         adb devices -l
         echo "--- uid ---"
@@ -149,10 +176,16 @@ append_with_context() {
     local thermal_detail_before="$9"
     local thermal_detail_after="${10}"
     local reject="${11}"
+    local thermal_gate_max="${12}"
+    local thermal_gate_start="${13}"
+    local thermal_wait_sec="${14}"
+    local thermal_gate_ready="${15}"
 
     python3 - "$csv" "$block_id" "$task_index" "$live_mode" "$CPU" \
         "$freq_before" "$freq_after" "$thermal_before" "$thermal_after" \
-        "$thermal_detail_before" "$thermal_detail_after" "$reject" <<'PY'
+        "$thermal_detail_before" "$thermal_detail_after" "$reject" \
+        "$thermal_gate_max" "$thermal_gate_start" "$thermal_wait_sec" \
+        "$thermal_gate_ready" <<'PY'
 import csv
 import sys
 
@@ -169,6 +202,10 @@ context = {
     "thermal_detail_before": sys.argv[10],
     "thermal_detail_after": sys.argv[11],
     "reject_reason": sys.argv[12],
+    "thermal_gate_max_mc": sys.argv[13],
+    "thermal_gate_start_mc": sys.argv[14],
+    "thermal_wait_sec": sys.argv[15],
+    "thermal_gate_ready_mc": sys.argv[16],
 }
 with open(path, newline="") as f:
     reader = csv.DictReader(f)
@@ -204,6 +241,8 @@ main() {
         while IFS=: read -r mode touch pages; do
             task_index=$((task_index + 1))
             local freq_before freq_after thermal_before thermal_after thermal_detail_before thermal_detail_after reject tmp
+            local thermal_gate_start thermal_wait_sec thermal_gate_ready
+            IFS=, read -r thermal_gate_start thermal_wait_sec thermal_gate_ready < <(wait_for_thermal_gate)
             freq_before="$(read_freq)"
             thermal_before="$(read_thermal_max)"
             thermal_detail_before="$(read_thermal)"
@@ -220,12 +259,16 @@ main() {
             if [ "$header_written" -eq 0 ]; then
                 append_with_context "$tmp" "$block" "$task_index" "$live_mode" \
                     "$freq_before" "$freq_after" "$thermal_before" "$thermal_after" \
-                    "$thermal_detail_before" "$thermal_detail_after" "$reject" > "$out_csv"
+                    "$thermal_detail_before" "$thermal_detail_after" "$reject" \
+                    "$WAIT_THERMAL_MAX_MC" "$thermal_gate_start" "$thermal_wait_sec" \
+                    "$thermal_gate_ready" > "$out_csv"
                 header_written=1
             else
                 append_with_context "$tmp" "$block" "$task_index" "$live_mode" \
                     "$freq_before" "$freq_after" "$thermal_before" "$thermal_after" \
-                    "$thermal_detail_before" "$thermal_detail_after" "$reject" | tail -n +2 >> "$out_csv"
+                    "$thermal_detail_before" "$thermal_detail_after" "$reject" \
+                    "$WAIT_THERMAL_MAX_MC" "$thermal_gate_start" "$thermal_wait_sec" \
+                    "$thermal_gate_ready" | tail -n +2 >> "$out_csv"
             fi
             rm -f "$tmp"
             sleep "$COOLDOWN_SEC"

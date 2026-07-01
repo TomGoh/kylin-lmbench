@@ -1,0 +1,5 @@
+
+### section=mmap_split_full label=mmap_unmap-0.5MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,0.5,10000,1,mmap_unmap,10,16,52428,4,32206828,3220.683,3.220683,0.000,0
+### rc=0
