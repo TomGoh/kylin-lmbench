@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="430" viewBox="0 0 760 430" role="img" aria-labelledby="title desc">
+  <title id="title">Pixel MADV_DONTNEED per-4KB page cost</title>
+  <desc id="desc">Protected-minus-NVHE cost per added 4KB page after touched-minus-untouched correction.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <text x="36.0" y="34.0" font-size="18" fill="#1F2933" font-weight="700" text-anchor="start">Pixel MADV_DONTNEED per-4KB page cost</text>
+  <text x="36.0" y="55.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="start">protected - NVHE after touched - untouched; ns per added 4KB page</text>
+  <line x1="96.0" y1="286.9" x2="636.0" y2="286.9" stroke="#5C6670" stroke-width="1"/>
+  <line x1="96.0" y1="286.9" x2="636.0" y2="286.9" stroke="#E8EDF3"/>
+  <text x="86.0" y="290.9" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">0</text>
+  <line x1="96.0" y1="193.6" x2="636.0" y2="193.6" stroke="#E8EDF3"/>
+  <text x="86.0" y="197.6" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">100</text>
+  <line x1="96.0" y1="100.4" x2="636.0" y2="100.4" stroke="#E8EDF3"/>
+  <text x="86.0" y="104.4" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">200</text>
+  <text x="30.0" y="86.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="start">ns/page</text>
+  <rect x="209.0" y="131.1" width="94.0" height="155.8" fill="#C23B2A" opacity="0.88"/>
+  <line x1="256.0" y1="156.2" x2="256.0" y2="106.0" stroke="#1F2933" stroke-width="2"/>
+  <line x1="243.0" y1="156.2" x2="269.0" y2="156.2" stroke="#1F2933" stroke-width="2"/>
+  <line x1="243.0" y1="106.0" x2="269.0" y2="106.0" stroke="#1F2933" stroke-width="2"/>
+  <line x1="198.0" y1="257.6" x2="314.0" y2="257.6" stroke="#64748B" stroke-dasharray="5 4"/>
+  <text x="256.0" y="358.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="middle">single page calls</text>
+  <text x="314.0" y="123.1" font-size="12" fill="#1F2933" font-weight="700" text-anchor="start">+167.0</text>
+  <rect x="399.0" y="286.9" width="94.0" height="13.0" fill="#4D7C59" opacity="0.88"/>
+  <line x1="446.0" y1="309.4" x2="446.0" y2="290.3" stroke="#1F2933" stroke-width="2"/>
+  <line x1="433.0" y1="309.4" x2="459.0" y2="309.4" stroke="#1F2933" stroke-width="2"/>
+  <line x1="433.0" y1="290.3" x2="459.0" y2="290.3" stroke="#1F2933" stroke-width="2"/>
+  <line x1="388.0" y1="277.3" x2="504.0" y2="277.3" stroke="#64748B" stroke-dasharray="5 4"/>
+  <text x="446.0" y="358.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="middle">one batched call</text>
+  <text x="504.0" y="317.8" font-size="12" fill="#1F2933" font-weight="700" text-anchor="start">-13.9</text>
+  <line x1="96.0" y1="78.0" x2="96.0" y2="328.0" stroke="#5C6670"/>
+  <line x1="96.0" y1="328.0" x2="636.0" y2="328.0" stroke="#5C6670"/>
+  <line x1="574.0" y1="66.0" x2="614.0" y2="66.0" stroke="#64748B" stroke-dasharray="5 4"/>
+  <text x="622.0" y="70.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="start">resolution floor</text>
+</svg>

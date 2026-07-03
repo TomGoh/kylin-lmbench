@@ -1,0 +1,24 @@
+
+### section=bw_mmap_rd label=mmap_only-64m-run-1
+### command='/data/local/tmp/pixel-overview-early/bw_mmap_rd' -P 1 -W 1 -N 3 64m mmap_only '/data/local/tmp/pixel-overview-early/lmb_64MB.bin'
+### gate_start_mc=38000 gate_wait_sec=0 gate_ready_mc=38000 freq_before_khz=578000 thermal_before_mc=38000
+67.11 24901.25
+### rc=0 freq_after_khz=1549000 thermal_after_mc=39000
+
+### section=bw_mmap_rd label=open2close-64m-run-1
+### command='/data/local/tmp/pixel-overview-early/bw_mmap_rd' -P 1 -W 1 -N 3 64m open2close '/data/local/tmp/pixel-overview-early/lmb_64MB.bin'
+### gate_start_mc=39000 gate_wait_sec=45 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=38000
+67.11 10308.58
+### rc=0 freq_after_khz=1795000 thermal_after_mc=41000
+
+### section=bw_mmap_rd label=mmap_only-64m-run-2
+### command='/data/local/tmp/pixel-overview-early/bw_mmap_rd' -P 1 -W 1 -N 3 64m mmap_only '/data/local/tmp/pixel-overview-early/lmb_64MB.bin'
+### gate_start_mc=39000 gate_wait_sec=5 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=38000
+67.11 23873.66
+### rc=0 freq_after_khz=1795000 thermal_after_mc=40000
+
+### section=bw_mmap_rd label=open2close-64m-run-2
+### command='/data/local/tmp/pixel-overview-early/bw_mmap_rd' -P 1 -W 1 -N 3 64m open2close '/data/local/tmp/pixel-overview-early/lmb_64MB.bin'
+### gate_start_mc=38000 gate_wait_sec=0 gate_ready_mc=38000 freq_before_khz=578000 thermal_before_mc=39000
+67.11 9417.47
+### rc=0 freq_after_khz=1795000 thermal_after_mc=41000

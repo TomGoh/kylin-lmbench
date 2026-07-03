@@ -3,12 +3,12 @@
 | 项目 | 内容 |
 |---|---|
 | 调查对象 | pKVM（protected KVM）模式下宿主机侧 `lat_mmap` 的性能退化 |
-| 测试平台 | N90、Kaitian、N80（均为 Phytium / Kylin V10 aarch64，内核 6.6.30 系列，Rust nVHE hypervisor） |
-| 调查周期 | 2026-06-04 至 2026-06-15 |
-| 状态 | 根因已判定，证据链完整；第 8 章进一步确认 +0.27 µs/slot 来自本地合成条目失效成本，而非跨核广播等待 |
+| 测试平台 | N90、Kaitian、N80（均为 Phytium / Kylin V10 aarch64，内核 6.6.30 系列，Rust nVHE hypervisor）；Pixel 9 Pro XL（Tensor G4 / AOSP userdebug）用于跨平台复测 |
+| 调查周期 | 2026-06-04 至 2026-07-01（Pixel 复测于 2026-06-29 至 2026-07-01） |
+| 状态 | Phytium 根因已判定，证据链完整；第 8 章进一步确认 +0.27 µs/slot 来自本地合成条目失效成本，而非跨核广播等待；第 9 章记录 Pixel 复测边界 |
 | 代码仓库 | 内核：`common`（本仓库）；测试：`kylin-lmbench` |
 
-**结论**：pKVM 为宿主机启用了 host stage-2 第二级地址翻译，使宿主机 `lat_mmap`（mmap → 写触摸 → munmap 的完整映射生命周期）在大尺寸下慢 42%～85%，而稳态内存访问（`lat_mem_rd`、`bw_mem`）几乎不受影响。逐层定位后，退化的来源被确定为单一机制：**munmap 拆除映射时，内核对小于 2 MB 的范围逐页发出 `TLBI` 指令，而 host stage-2 使每个 4K flush slot 对应的本地合成条目失效成本显著增加（由阈值扫描斜率折算，约 +0.27 µs/slot）**；当单次刷新批次达到 2 MB、内核改用整表刷新路径时，退化随之消失。核心缓解手段是硬件特性 FEAT_TLBIRANGE（飞腾D3000M平台不具备该特性，因而退化明显）。
+**结论**：在 N90、Kaitian、N80 这组 Phytium/Kylin 平台上，pKVM 为宿主机启用了 host stage-2 第二级地址翻译，使宿主机 `lat_mmap`（mmap → 写触摸 → munmap 的完整映射生命周期）在大尺寸下慢 42%～85%，而稳态内存访问（`lat_mem_rd`、`bw_mem`）几乎不受影响。逐层定位后，退化的来源被确定为单一机制：**munmap 拆除映射时，内核对小于 2 MB 的范围逐页发出 `TLBI` 指令，而 host stage-2 使每个 4K flush slot 对应的本地合成条目失效成本显著增加（由阈值扫描斜率折算，约 +0.27 µs/slot）**；当单次刷新批次达到 2 MB、内核改用整表刷新路径时，退化随之消失。核心缓解手段是硬件特性 FEAT_TLBIRANGE（飞腾D3000M平台不具备该特性，因而退化明显）。Pixel 9 Pro XL 复测显示：强制逐页执行 `MADV_DONTNEED` 页面撤销时仍能测到 protected 额外成本，但真实 `lat_mmap`、`munmap_after_write_touch` 和阈值扫描没有复现 Phytium 上的大幅变慢，因此 Phytium 结论不能不加条件地推广到所有 pKVM 设备。
 
 本报告为自包含的完整记录：每个阶段均给出实验背景、设计依据、关键代码、完整数据与分析。调查过程中有三处早期或中间归因被后续更精细的实验推翻（first-touch 假设、嵌套页表遍历假设、广播等待假设），本报告如实保留这些修正及其论证过程。
 
@@ -24,7 +24,8 @@
 6. [阶段四：宿主机侧成本分层——perf 事件分解（N80）](#6-阶段四宿主机侧成本分层perf-事件分解n80)
 7. [阶段五：机制判定——从两个候选到唯一解释（N80）](#7-阶段五机制判定从两个候选到唯一解释n80)
 8. [TLBI 微机制复查：广播假说的检验与否定（N80）](#8-tlbi-微机制复查广播假说的检验与否定n80)
-9. [最终结论：证据闭环、边界条件与优化方向](#9-最终结论证据闭环边界条件与优化方向)
+9. [Pixel 9 Pro XL 复测：真实 mmap 路径没有复现 Phytium 现象](#9-pixel-9-pro-xl-复测真实-mmap-路径没有复现-phytium-现象)
+10. [最终结论：证据闭环、边界条件与优化方向](#10-最终结论证据闭环边界条件与优化方向)
 - [附录 A：测试平台一览](#附录-a测试平台一览)
 - [附录 B：复现步骤](#附录-b复现步骤)
 - [附录 C：代码、脚本与数据索引](#附录-c代码脚本与数据索引)
@@ -67,7 +68,7 @@
                 → 根因 = a-1：逐页 TLBI 在 host stage-2 下的硬件开销。
 ```
 
-第 8 章进一步检验了 a-1 内部的"广播等待"子假说，并用在线核数、IS/NSH 直接计时、冷访存对照和 `perf`/mean 复核证明：上述 +0.27 µs/slot 是**本地**合成条目失效成本，而非**跨核广播**。最终证据闭环、边界条件与优化方向见第 9 章。
+第 8 章进一步检验了 a-1 内部的"广播等待"子假说，并用在线核数、IS/NSH 直接计时、冷访存对照和 `perf`/mean 复核证明：上述 +0.27 µs/slot 是**本地**合成条目失效成本，而非**跨核广播**。第 9 章把前文能在用户态复现的实验搬到 Pixel 9 Pro XL 上做对照，说明 Phytium 结论不能不加条件地外推到 Tensor G4；最终证据闭环、边界条件与优化方向见第 10 章。
 
 ---
 
@@ -1600,7 +1601,7 @@ op=3 的数据是正确的，但当时据此做出的机制结论是错误的，
 
 **结果**（N80，仅 `munmap()` 计时，单位 µs/iteration）：
 
-这一表先只看密集对照本身。`mmap` 和 4 KB 全量写触摸属于 setup，不进入计时区；计时区只覆盖最后一次 `munmap()`。因此这里的重点不是 `munmap` 绝对时间达到约 2.8 ms，而是 protected 是否比 nvhe 多出与 pKVM 相关的额外时间。
+这一表先只看密集对照本身。`mmap` 和 4 KB 全量写触摸属于准备阶段，不进入计时区；计时区只覆盖最后一次 `munmap()`。因此这里的重点不是 `munmap` 绝对时间达到约 2.8 ms，而是 protected 是否比 nvhe 多出与 pKVM 相关的额外时间。
 
 | 场景 | mmap 大小 | 写触摸范围 / 步长 | 已建立 PTE 数 | 预计 TLB 刷新路径 | nvhe µs/iter | protected µs/iter | Δ µs/iter |
 |---|---:|---:|---:|---|---:|---:|---:|
@@ -1836,7 +1837,7 @@ static inline void flush_tlb_mm(struct mm_struct *mm)
 for (int it = 0; it < iters; it++) {
     char *p = mmap(NULL, sz, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     for (size_t i = 0; i < tb; i += stride)
-        ((volatile char *)p)[i] = 1;     /* setup：触摸前 touch_mb MB，步长可控 */
+        ((volatile char *)p)[i] = 1;     /* 准备阶段：触摸前 touch_mb MB，步长可控 */
 
     double t0 = now_ns();
     munmap(p, sz);                       /* 正式计时只覆盖 munmap */
@@ -1866,7 +1867,7 @@ taskset -c "$CORE" "$DIR/munmap_only" file "$SIZE" "$ITERS" "$FILE" 6.4 16
 
 1.9 MB 与 2.0 MB 是最关键的两个点：前者仍低于 `MAX_DVM_OPS * stride = 2 MB`，后者刚好触发整表刷新路径。末尾 `6.4 16` 不参与阈值扫描拟合，它用于把扫描得到的单 slot 额外成本和原始 `lat_mmap` 的稀疏触摸形态对上。
 
-当前仓库保存下来的结果文件来自后续的通用版 `op_sweep` 复查（`experiments/munmap-tlbi/results/op-sweep-n80/{protected,nvhe}.txt`）。`op_sweep` 同时扫描 `munmap`、`MADV_DONTNEED` 和 `mprotect`，其中 `munmap` 分支的计时边界与 `munmap_only` 相同：mmap 与触摸是不计时 setup，正式计时只覆盖 teardown 操作。§7.5.3 的表和图只取这些结果文件中的 `munmap` 行。
+当前仓库保存下来的结果文件来自后续的通用版 `op_sweep` 复查（`experiments/munmap-tlbi/results/op-sweep-n80/{protected,nvhe}.txt`）。`op_sweep` 同时扫描 `munmap`、`MADV_DONTNEED` 和 `mprotect`，其中 `munmap` 分支的计时边界与 `munmap_only` 相同：mmap 与触摸属于不计时的准备阶段，正式计时只覆盖拆除操作。§7.5.3 的表和图只取这些结果文件中的 `munmap` 行。
 
 #### 7.5.3 结果
 
@@ -2204,9 +2205,285 @@ for (k = 0; k < memwork; k++)
 
 ---
 
-## 9. 最终结论：证据闭环、边界条件与优化方向
+## 9. Pixel 9 Pro XL 复测：真实 mmap 路径没有复现 Phytium 现象
 
-### 9.1 全部证据与候选机制对照
+第 8 章已经把 Phytium/N80 上的根因收敛到很具体的一点：小于 2 MB 的拆除范围走逐页 `TLBI` 路径，而 protected 模式下每个 4 KB 刷新槽位的本地失效成本明显更高。这个结论对 N80、N90、Kaitian 这组 Phytium/Kylin 平台成立，但它不能自动推广到 Pixel。Pixel 9 Pro XL 使用 Tensor G4、Android AOSP userdebug、另一套 SoC 微架构和内核配置；即使同样启用 pKVM，真实 `mmap` 生命周期是否也会变慢，仍然要单独验证。
+
+Pixel 复测的目的不是重新证明 Phytium 的根因，而是回答两个外推问题：
+
+1. **同类单页页面撤销成本是否仍然存在**：如果强制 `MADV_DONTNEED` 每次只处理一个 4 KB 页，Pixel 在 pKVM 下是否也比 NVHE 更慢？
+2. **真实多页路径是否会受影响**：`lat_mmap`、`munmap_after_write_touch`、阈值扫描和 `MADV_DONTNEED` / `mprotect` 这类真实路径，是否复现 Phytium 上启用 pKVM/Stage 2 页表的大幅开销？
+
+这两个问题必须分开看。前者用于探测底层单页页面撤销成本，后者才决定原始基准和实际拆除路径是否真的变慢。
+
+### 9.1 Pixel 实验平台、模式切换与温度控制
+
+Pixel 复测平台为 Pixel 9 Pro XL（`komodo`，Tensor G4，AOSP userdebug，adb root 可用）。Pixel 上 `kvm-arm.mode=protected` 默认来自 bootloader，但本实验**不改 bootloader**，因为 bootloader 刷错会带来不可接受的恢复风险。实际切换只使用一个安全杠杆：改写当前 slot 的 `vendor_kernel_boot_b`。
+
+切换方法如下：
+
+1. 先备份并校验原始 `vendor_kernel_boot_b`，同时备份 `persist`、`efs`、`mfg_data`、`trusty_persist` 等不可由 factory image 恢复的分区。备份目录记录 sha256。
+2. 生成 NVHE 镜像时，只在 `vendor_kernel_boot` 携带的 DTB `/chosen/bootargs` 中做**同长度二进制覆盖**：用 `kvm-arm.mode=nvhe` 加 padding 覆盖原有的 `kvm-arm.protected_modules=...` token。长度不变，所以 boot image header、FDT 大小和偏移不变。
+3. Pixel 的 cmdline 解析采用后出现的 `kvm-arm.mode` 覆盖前面的值。NVHE 镜像启动后，`/proc/cmdline` 中会同时出现 bootloader 给出的 `kvm-arm.mode=protected` 和 DTB 追加的 `kvm-arm.mode=nvhe`，最后一个生效；protected 模式则只有 `protected` 生效。
+4. 切到 NVHE 使用 `komodo-flash.sh nvhe`，只 flash `vendor_kernel_boot_b`；恢复 pKVM/protected 使用 `komodo-flash.sh restore`，把原始备份刷回同一分区。
+5. 每次切换后都运行 `komodo-verify.sh`：protected 期望 dmesg 出现 `Protected KVM`，NVHE 期望 dmesg 出现普通 `Hyp mode initialized successfully`；最终恢复还要确认 `vendor_kernel_boot_b` sha256 与原始备份完全一致。
+
+实际采集顺序按 A/B 配对执行，形态如下：
+
+```bash
+S=/home/haoze/.claude/skills/pixel-komodo-pkvm-nvhe/scripts
+
+# 原始状态是 protected/pKVM；先确认模式和分区 hash。
+bash "$S/komodo-verify.sh"
+
+# 在 protected 下运行同一批用户态采集脚本，输出到 raw/protected。
+OUT=<result-dir> CPU=4 WAIT_THERMAL_MAX_MC=39000 bash experiments/munmap-tlbi/pixel-run-madv-entry-slope.sh
+OUT=<result-dir> CPU=4 WAIT_THERMAL_MAX_MC=39000 bash experiments/perf-reinvestigation/pixel-run-overview-early.sh
+OUT=<result-dir> CPU=4 WAIT_THERMAL_MAX_MC=39000 bash experiments/perf-reinvestigation/pixel-run-ported-suite.sh
+
+# 切到 NVHE，只写 vendor_kernel_boot_b，并确认 live mode。
+bash "$S/komodo-flash.sh" nvhe
+bash "$S/komodo-verify.sh"
+
+# 在 NVHE 下运行完全相同的采集脚本和参数，输出到 raw/nvhe。
+OUT=<result-dir> CPU=4 WAIT_THERMAL_MAX_MC=39000 bash experiments/munmap-tlbi/pixel-run-madv-entry-slope.sh
+OUT=<result-dir> CPU=4 WAIT_THERMAL_MAX_MC=39000 bash experiments/perf-reinvestigation/pixel-run-overview-early.sh
+OUT=<result-dir> CPU=4 WAIT_THERMAL_MAX_MC=39000 bash experiments/perf-reinvestigation/pixel-run-ported-suite.sh
+
+# 实验结束后恢复原始 protected 镜像，并做 byte-perfect hash 校验。
+bash "$S/komodo-flash.sh" restore
+bash "$S/komodo-verify.sh"
+```
+
+因此，Pixel 的 protected/NVHE A/B 不是换内核、换用户态或换测试二进制，而是在同一台手机、同一 AOSP 系统、同一 kernel image、同一测试程序下，只改变 `kvm-arm.mode`。这使它能回答“打开 host stage-2/pKVM 保护后，用户态可见的 mmap 路径是否改变”这个问题。
+
+实验变量按下面方式控制：
+
+- **模式切换外置**：采集脚本都不负责刷机，只读取当前 live mode；每批数据分别在已验证的 protected 或 NVHE 启动后运行，避免测试脚本中途改变系统状态。
+- **CPU 绑定**：Pixel 采集统一使用 `CPU=4`，脚本通过 `taskset` 固定远端进程，metadata 记录 CPU mask、频率和拓扑信息。
+- **温度门限**：每个远端命令或随机任务开始前，等待最高 thermal zone 低于 `39000` mC；脚本把 `gate_start`、等待时间、`gate_ready`、运行前后最高温度都写入 `thermal_gate.tsv` 或 raw CSV。
+- **同一批二进制**：脚本把本仓库交叉编译出的 Android aarch64 测试程序 push 到 `/data/local/tmp/...`，metadata 记录本地二进制 sha256。
+- **同一参数矩阵**：protected 与 NVHE 使用相同的 size、touch range、stride、iters、run count 和 backing file 生成方式；overview-early 的 5 次统计由 6 月 29 日初始采集与 7 月 1 日补跑按 run label 合并得到。
+- **频率不做事后筛除**：手机会自然调频，正式分析不按单个任务频率变化删点；频率、温度和返回码保留为可审计字段。单页 `MADV_DONTNEED` 探针脚本还记录随机任务顺序、cooldown 和 reject reason，便于之后检查是否有明显运行条件异常。
+
+实验设计分三层，分别回答不同问题：
+
+1. **单页 / 批量 `MADV_DONTNEED` 每 4 KB 页增量耗时**：先 `mmap` 一段匿名映射，并按 touched/untouched 两种状态决定是否提前写触摸建立 PTE 和匿名页；计时窗口只覆盖调用 `madvise(..., MADV_DONTNEED)` 后，内核对这段映射内页面执行的撤销工作。这里撤销的不是整个 VMA，而是把指定范围内已触摸页面的 PTE 和匿名页关联清掉。`single` 模式把同一段 N 页映射按 4 KB 页拆开，对每页分别调用一次 `madvise(page, 4 KB, MADV_DONTNEED)`；`batched` 模式对同样地址范围只调用一次 `madvise(base, N * 4 KB, MADV_DONTNEED)`。分析时用 touched−untouched 扣掉系统调用和未建表页的背景成本，再按页数 N 拟合出每增加一个 4 KB 页带来的耗时。它用于判断 Pixel protected 下是否存在底层单页撤销额外成本，以及真实批量路径是否会把这个成本摊掉。
+2. **overview-early**：把前文阶段一、阶段二中能搬到 Android 用户态的实验搬过来，包括多尺寸 `lat_mmap_precise`、稳态访问对照和 12 项生命周期拆分。它用于判断真实 `mmap → touch → munmap` 路径是否像 Phytium/Kaitian 那样变慢，以及慢点是否仍集中在 `munmap_after_write_touch`。
+3. **ported suite**：把 N80/N90/Kaitian 上最关键的用户态微基准移植到 Pixel，包括 `munmap_only` 阈值扫描、`op_sweep munmap/MADV_DONTNEED/mprotect`、backing 对照和 hugepage 检查。它特别用于复测 §7.5.3 的 1.9 MB / 2 MB 阈值实验，判断 Pixel 是否出现同样的阈值突变。
+
+相关记录在：
+
+| 结果目录 | 内容 |
+|---|---|
+| `experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260629/` | 单页 / 批量 `MADV_DONTNEED` 每页增量耗时实验，两组 protected/NVHE 启动配对，含 simpleperf 关键点 |
+| `experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260629-overview-early/` | 前文阶段一、阶段二中可搬到 Pixel 用户态的初始复测：多尺寸 `lat_mmap_precise` 5 次，稳态内存对照与 12 项生命周期拆分各 3 次 |
+| `experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260701-overview-early-supplement/` | 7 月 1 日补跑：只补稳态内存对照与生命周期拆分，每项每模式再加 2 次 |
+| `experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260701-overview-early-5run/` | 合并后的 5 次统计目录：第 9 章的 overview-early 表格和图 9-2、图 9-3 均使用这个目录的 `summary/overview-early-diff.csv` |
+| `experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260629-ported/` | N80/N90/Kaitian 用户态微基准移植：`munmap_only`、`op_sweep`、backing 对照、`huge_check` 等 |
+
+### 9.2 前文用户态实验在 Pixel 上的覆盖情况
+
+截至这批数据，前文所有不依赖 N80 内核插桩、内核模块或 Kylin 板级控制的关键用户态实验，均已在 Pixel 上复测。特别是 §7.5.3 的 1.9 MB / 2 MB 阈值扫描，已经通过 `op_sweep` 的 `munmap` 行复测；同一批 ported suite 还用 `munmap_only` 给了独立交叉验证。
+
+| 前文章节 | 实验 | Pixel 覆盖 | Pixel 脚本与数据 | 说明 |
+|---|---|---|---|---|
+| §3.2 | 多尺寸 `lat_mmap_precise` | 已做 | `pixel-run-overview-early.sh`；5 次合并目录的 `overview-early-diff.csv` | 覆盖 0.5、1、2、4、8、16、64 MB，每尺寸每模式 5 次 |
+| §3.3 | 稳态访问对照：`lat_mem_rd`、`bw_mem`、`bw_mmap_rd` | 已做 | `pixel-run-overview-early.sh`；5 次合并目录的 `overview-early-diff.csv` | 用于判断是否是长期映射上的普通读写变慢，每项每模式 5 次 |
+| §4 | 12 项生命周期拆分 | 已做 | `pixel-run-overview-early.sh`；5 次合并目录的 `mmap_split_full.csv`、`overview-early-diff.csv` | 覆盖 `munmap_after_write_touch`、`write_touch_cold`、`mmap_write_touch_unmap` 等，每个子测试每模式 5 次 |
+| §7.3 | 稀疏原基准与密集触摸对照 | 已做 | `pixel-run-ported-suite.sh`；`munmap_threshold.txt`、`ported-suite-diff.csv` | 对应 6.4 MB / 16 KB 稀疏参考点和 64 MB / 4 KB 密集点 |
+| §7.5.3 | 1.9 MB / 2 MB 阈值扫描 | 已做 | `pixel-run-ported-suite.sh`；`op_sweep.txt`、`munmap_threshold.txt`、`ported-suite-diff.csv` | 这是 Phytium 上最有说服力的用户态判别实验，Pixel 已复测 |
+| §7.5.3 / §10.3 操作谱系 | `munmap`、`MADV_DONTNEED`、`mprotect` 对照 | 已做 | `op_sweep.txt`、`ported-suite-diff.csv` | Pixel 上三类操作均未出现 Phytium 那种大幅 protected 差距 |
+| Pixel 专项 | 单页与批量 `MADV_DONTNEED` 每页增量耗时 | 已做 | `pixel-run-madv-entry-slope.sh`；`single-summary.csv`、`batched-summary.csv` | 用于区分“强制逐页页面撤销成本”和“真实批量路径成本” |
+| §5、§7.1、§8 | EL2 gate、host stage-2 粒度、裸 TLBI 计时、在线核数扫描 | 未做，且不属于纯用户态可比实验 | N/A | 这些依赖 `/proc/xcore_stats`、`tlbi_ab.ko`、core hotplug 或定制内核接口，Pixel AOSP 用户态不能等价复现 |
+
+因此，Pixel 章节的边界是明确的：它可以回答“前文用户态现象是否复现”，不能回答“Pixel 上裸 `TLBI` 指令到底用什么硬件路径执行”。后者需要 Pixel 内核源码、硬件特性确认或可加载的内核侧计时模块。
+
+### 9.3 单页 `MADV_DONTNEED` 每页增量耗时：强制暴露每 4 KB 页的撤销成本
+
+Pixel 上首先做的是比 `lat_mmap` 更窄的单页探针。测试程序 `pixel_madv_entry_slope.c` 在计时窗口外完成 `mmap` 一段匿名内存、可选写触摸和准备工作，然后只计时 `madvise(..., MADV_DONTNEED)` 这一调用。注意这里不是 `munmap()`：VMA 还保留，`MADV_DONTNEED` 是传给 `madvise()` 的 advice；这个调用会让内核清掉指定范围内已建立的 PTE，并丢弃对应匿名页；之后再访问这些地址会重新缺页建立内容。
+
+这个探针使用匿名映射，和前文主线 `lat_mmap`、生命周期拆分、`munmap_only` 中的文件映射不同。因此它不能直接替代文件映射路径的完整结论；它的用途更窄，是把变量收缩到“已经建立的 PTE 和页面关联被撤销后，每增加一个 4 KB 页带来的成本”。两类映射在脏页处理、反向映射清理等细节上不同，但最终都需要清除 PTE 并走 TLB range flush 机制，逐页/整表选择逻辑具有可比性。后面的 ported suite 又用文件映射重新跑了 `op_sweep MADV_DONTNEED`、`munmap` 和 `mprotect`，作为主线文件映射口径下的交叉验证。
+
+这个探针的完整矩阵是：2 个调用粒度 × 2 个触摸状态 × 多个页数 N。两个调用粒度是：
+
+- `single` 实验：在同一个 N 页映射中，对每个 4 KB 页分别调用一次 `madvise(page, 4 KB, MADV_DONTNEED)`，人为放大“每页一次撤销”的成本。
+- `batched` 实验：对同一段 N 页连续地址只调用一次 `madvise(base, N * 4 KB, MADV_DONTNEED)`，接近真实多页批量路径。
+
+这里还要区分 `single` 探针和 Phytium/N80 上的真实 `munmap` 路径。`single` 不是一次系统调用内连续处理 N 个 4 KB 页，而是 N 次独立的 `madvise(page, 4 KB, MADV_DONTNEED)` 系统调用；每次进入内核只处理一个 4 KB 范围，更接近“单页撤销/单页 TLB 刷新”的小探针。N80 的 +0.27 µs/slot 则来自一次 `munmap` 内的连续 4 KB flush slot 斜率，两者不是同一层面的计量，不能直接做数值大小比较。第 9.3 的判读只使用方向性对照：如果 N 次单页调用有正信号，而一次连续范围调用没有正信号，就说明单页成本存在，但真实批量路径可能把它摊掉或绕开。
+
+每个调用粒度又分别跑两种触摸状态：
+
+- `touched`：计时前先写触摸这 N 页，让这些页真的建立 PTE 和匿名页；随后 `madvise(..., MADV_DONTNEED)` 需要撤销这些已建立的页表项和页面关联。
+- `untouched`：计时前只 `mmap`，不访问这 N 页；随后 `madvise(..., MADV_DONTNEED)` 仍然会经过系统调用和范围处理，但没有同等数量的已建立 PTE/匿名页要撤销。
+
+分析时先在同一种调用粒度、同一个页数 N 内计算 `touched - untouched`，目的就是扣掉循环、系统调用入口、参数检查、范围遍历和“未建表页”这类背景成本，留下“真的撤销已触摸页面”带来的增量。然后看这个增量随页数 N 增加的速度，把它换算成每增加一个 4 KB 页的耗时。最后再用相邻 protected/NVHE 启动配对做 protected−NVHE 差分。正式数据有两组同温度门限启动配对：
+
+| 探针 | 启动配对数 | protected−NVHE 每 4 KB 页增量耗时 | 95% 区间 | 分辨率下限 | 判读 |
+|---|---:|---:|---:|---:|---|
+| N 次单页 `MADV_DONTNEED` | 2 | +167.039 ns/op | [140.098, 193.981] | 31.382 ns/op | 单页页面撤销下 protected 有稳定额外成本 |
+| 1 次批量 `MADV_DONTNEED` | 2 | -13.926 ns/op | [-24.127, -3.725] | 10.201 ns/op | 没有正向的 protected 每页额外成本 |
+
+![Pixel MADV_DONTNEED 单页与批量每页增量耗时](figures/pixel-madv-entry-summary.svg)
+
+*图 9-1：Pixel 上 `MADV_DONTNEED` 的每 4 KB 页增量耗时差。柱形表示 touched/untouched 扣背景后，protected 相对 NVHE 每增加一个 4 KB 页多花或少花的时间；左柱是 N 次单页 `madvise(page, 4 KB, MADV_DONTNEED)`，右柱是一次连续范围 `madvise(base, N * 4 KB, MADV_DONTNEED)`。误差线来自两组启动配对，虚线为同一分析口径下的分辨率下限。图由 `docs/mmap/scripts/plot-pixel-pkvm-mmap.py` 从 `summary/single-summary.csv` 与 `summary/batched-summary.csv` 生成。*
+
+这个结果说明：Pixel protected 下并不是完全没有单页 PTE 撤销额外成本。强制把同一段 N 页映射改成 N 次单页 `MADV_DONTNEED` 调用时，额外成本约为 +167 ns/页，且高于两组启动配对的分辨率下限。simpleperf 关键点也支持“同类工作里等待更多，而不是多缺页”：在 `single/touched/pages=4096` 点，`page-faults` 几乎相同，而 `cpu-cycles` 和 `stalled-cycles-backend` 增加。
+
+| 事件 | NVHE | protected | protected−NVHE |
+|---|---:|---:|---:|
+| `page-faults` | 123,201 | 123,206 | +5 |
+| `cpu-cycles` | 568,500,838 | 657,753,337 | +89,252,499 |
+| `stalled-cycles-backend` | 362,981,067 | 444,603,460 | +81,622,393 |
+
+但这还不能推出真实 `mmap` 生命周期会变慢。原因在于 `single` 是人为拆成 N 次系统调用的小页探针，而真实内核路径会批量收集范围再刷新 TLB。`batched` 行已经显示：同样的页数，只要变成一次连续范围的 `MADV_DONTNEED(base, N * 4 KB)`，protected 就没有正向的每页差值。因此后续必须看原始基准和阈值扫描。
+
+### 9.4 原始 `lat_mmap` 与生命周期拆分：真实路径没有复现大幅变慢
+
+Pixel `overview-early` 复测了前文阶段一和阶段二中能在用户态搬过去的实验。6 月 29 日初始复测中，`lat_mmap_precise` 已经是每个尺寸每种模式 5 次，生命周期拆分和稳态访问对照是每项每种模式 3 次；7 月 1 日又在同样 39°C 温度门限下补跑了生命周期拆分和稳态访问对照各 2 次。下面表格和图使用合并后的 5 次统计目录，因此 `lat_mmap_precise`、生命周期拆分、稳态访问对照现在都是每个点 protected 与 NVHE 各 5 次取中位数。
+
+`lat_mmap_precise` 的多尺寸结果如下，单位为 µs/iteration：
+
+| size MB | protected | NVHE | protected−NVHE | ratio |
+|---:|---:|---:|---:|---:|
+| 0.5 | 11.744 | 11.493 | +0.251 | 1.022 |
+| 1 | 15.515 | 16.721 | -1.206 | 0.928 |
+| 2 | 23.135 | 24.969 | -1.835 | 0.927 |
+| 4 | 52.428 | 40.904 | +11.524 | 1.282 |
+| 8 | 90.666 | 88.049 | +2.617 | 1.030 |
+| 16 | 168.236 | 165.236 | +3.000 | 1.018 |
+| 64 | 630.541 | 631.601 | -1.060 | 0.998 |
+
+![Pixel lat_mmap_precise 多尺寸对照](figures/pixel-overview-lat-mmap.svg)
+
+*图 9-2：Pixel 上 `lat_mmap_precise` 多尺寸 protected/NVHE 对照。左图保留 0-64 MB 全范围，右图展开 0-8 MB 细节，避免小尺寸点被 64 MB 点压缩。64 MB 点几乎重合，与 N90/Phytium 上 64 MB protected 慢 85.03% 的结果不同。图由 `docs/mmap/scripts/plot-pixel-pkvm-mmap.py` 从 5 次合并目录的 `summary/overview-early-diff.csv` 生成。*
+
+Pixel 的 4 MB 点 protected 比 NVHE 高 +11.524 µs，但这个单点没有形成随尺寸增长的趋势，64 MB 原始路径反而几乎相等。因此不能把它当成 Phytium 机制在 Pixel 上复现的证据。
+
+更关键的是生命周期拆分。Phytium/Kaitian 上最有说服力的结果是 64 MB `munmap_after_write_touch` 慢 +205.003 µs，可解释完整路径额外时间的 95.7%。Pixel 上同一项如下：
+
+| 64 MB 子测试 | protected | NVHE | protected−NVHE | ratio |
+|---|---:|---:|---:|---:|
+| `mmap_unmap` | 6.137 | 9.773 | -3.636 | 0.628 |
+| `write_touch_cold` | 594.990 | 572.209 | +22.781 | 1.040 |
+| `munmap_after_no_touch` | 1.726 | 3.944 | -2.218 | 0.438 |
+| `munmap_after_write_touch` | 45.084 | 44.744 | +0.341 | 1.008 |
+| `mmap_write_touch_unmap` | 642.899 | 612.528 | +30.372 | 1.050 |
+| `mmap_read_touch_unmap` | 398.596 | 388.784 | +9.812 | 1.025 |
+
+`mmap_write_touch_unmap` 这个完整拆分项在 Pixel protected 下慢 +30.372 µs，但它不能替代 `munmap_after_write_touch` 的结论：同一次 5 次合并数据里，64 MB `lat_mmap_precise` 是 -1.060 µs，隔离后的 `munmap_after_write_touch` 只有 +0.341 µs。也就是说，Phytium 上“完整路径慢，且慢在写触摸后的 munmap”的关键链条，在 Pixel 上没有复现。
+
+把 `munmap_after_write_touch` 按尺寸展开后，这一点更明显：
+
+| size MB | protected | NVHE | protected−NVHE | ratio |
+|---:|---:|---:|---:|---:|
+| 0.5 | 5.006 | 2.710 | +2.295 | 1.847 |
+| 1 | 5.751 | 4.292 | +1.459 | 1.340 |
+| 2 | 7.417 | 8.192 | -0.775 | 0.905 |
+| 4 | 9.955 | 10.633 | -0.679 | 0.936 |
+| 8 | 13.903 | 13.507 | +0.396 | 1.029 |
+| 16 | 15.709 | 18.342 | -2.633 | 0.856 |
+| 64 | 45.084 | 44.744 | +0.341 | 1.008 |
+
+![Pixel munmap_after_write_touch 多尺寸对照](figures/pixel-overview-munmap-after-write.svg)
+
+*图 9-3：Pixel 上 `mmap_split` 中的 `munmap_after_write_touch`。左图保留 0-64 MB 全范围，右图展开 0-8 MB 细节；计时窗口只覆盖写触摸之后的 `munmap()`，前置 mmap 与写触摸不计时。64 MB 差距只有 +0.341 µs，没有 Phytium/Kaitian 的 +205 µs 级别信号。图由 `docs/mmap/scripts/plot-pixel-pkvm-mmap.py` 从 5 次合并目录的 `summary/overview-early-diff.csv` 生成。*
+
+小尺寸行需要单独读：0.5 MB 和 1 MB 的 protected 确实比 NVHE 多 +2.295 µs 和 +1.459 µs，ratio 分别到 1.847 和 1.340。但这里的 NVHE 基线只有 2.710 µs 和 4.292 µs，几微秒的绝对差会被比例放大；从 2 MB 起差距变成 -0.775、-0.679、+0.396、-2.633、+0.341 µs，既没有随尺寸增长的线性趋势，也没有 64 MB 上的大幅放大。因此这两个小尺寸正差距只能作为 Pixel 上的微小波动或残余信号记录，不能构成 Phytium 机制复现的证据。Phytium 的关键特征是逐页区间随触摸页数增长而持续放大，并在阈值处消失；Pixel 这组数据没有这个形态。
+
+稳态访问对照也没有显示“pKVM 下普通内存访问普遍变慢”：5 次合并数据中，`lat_mem_rd` 64 MB stride 128 为 +0.052 ns/load，`bw_mmap_rd mmap_only` 的 protected/NVHE 比值为 0.998（约 -0.20%），`bw_mem` 三项在两模式间有正有负，均不构成原始 Phytium 现象的替代解释。
+
+### 9.5 1.9 MB / 2 MB 阈值扫描：Pixel 没有出现 Phytium 的突变
+
+用户态可比实验里，§7.5.3 的阈值扫描最关键。它的设计非常直接：把 mmap 与触摸放在计时窗口外，只计最后的拆除操作；4 KB 密集触摸用于控制单次刷新批次是否低于 2 MB；6.4 MB / 16 KB 稀疏点用于对回原始 `lat_mmap` 的触摸形态。在 N80 上，`munmap` 的 protected−NVHE 差距从 1.9 MB 的 +130.2 µs 跳到 2.0 MB 的 +0.4 µs，6.4 MB / 16 KB 稀疏参考点为 +436.6 µs。这是前文判定 a-1 的核心证据。
+
+Pixel ported suite 对这个实验做了两层复测：一层是 `munmap_only`，只测 `munmap`；另一层是通用 `op_sweep`，同时测 `munmap`、`MADV_DONTNEED` 和 `mprotect`。下面的表列出最能和 §7.5.3 对比的点，单位为 µs/iteration，差距均为 protected−NVHE；图 9-4 则画出 `op_sweep` 的完整扫描，而不是只画这四列。
+
+表中的 `munmap_only` 与 `op_sweep munmap` 来自 ported suite 的不同运行批次，计时窗口同样只覆盖最后的 `munmap()`，但采集顺序、任务组合和当时系统状态不同，所以几微秒级差异属于正常采样波动。这里看的是两者是否共同指向同一形态：Pixel 没有 N80 那种 1.9 MB 大差距，也没有 2 MB 阈值突变。
+
+| Pixel 实验 | 1.9 MB / 4 KB dense | 2.0 MB / 4 KB dense | 6.4 MB / 16 KB sparse | 64 MB / 4 KB dense |
+|---|---:|---:|---:|---:|
+| `munmap_only` | +0.0 | -0.9 | +5.0 | +29.4 |
+| `op_sweep munmap` | +6.4 | -1.2 | -2.5 | +30.5 |
+| `op_sweep MADV_DONTNEED` | -5.2 | +3.5 | +1.5 | +22.2 |
+| `op_sweep mprotect` | +2.6 | +1.6 | +2.7 | +1.5 |
+
+![Pixel 阈值扫描与操作对照条形图](figures/pixel-ported-threshold-gap.svg)
+
+*图 9-4a：Pixel ported suite 中 `op_sweep` 的完整 protected−NVHE 差距，紧凑条形图版本。每一行是一个扫描点，三根横向柱分别表示 `munmap`、`MADV_DONTNEED` 和 `mprotect`；除 6.4 MB / 16 KB 稀疏参考点外，其余行均为 4 KB stride 密集触摸。数据来自 `ported-suite-diff.csv` 的全部 `op_sweep` 行，图由 `docs/mmap/scripts/plot-pixel-pkvm-mmap.py` 生成。*
+
+![Pixel 阈值扫描三操作趋势图](figures/pixel-ported-threshold-trends.svg)
+
+*图 9-4b：同一组 `op_sweep` 数据的三子图趋势版本。三个子图分别对应 `munmap`、`MADV_DONTNEED` 和 `mprotect`；横轴为触摸大小和步长，纵轴为 protected−NVHE，单位为 µs/iteration。实心折线连接 4 KB stride 的密集触摸点，最右侧空心点是 6.4 MB / 16 KB 稀疏参考点。*
+
+这两张图看的是同一批数据，作用不同：图 9-4a 适合逐行比较同一个扫描点下三类操作的绝对差距，图 9-4b 适合看每类操作随触摸大小变化的趋势。判断 Pixel 是否复现 Phytium 现象时，重点看 4 KB stride 折线是否在 2 MB 附近发生跳变。Pixel 上没有出现 N80/Phytium 那种形态：1.9 MB / 4 KB 与 2.0 MB / 4 KB 上，`munmap` 只是 +6.4 µs 和 -1.2 µs，`MADV_DONTNEED` 是 -5.2 µs 和 +3.5 µs，`mprotect` 是 +2.6 µs 和 +1.6 µs。6.4 MB / 16 KB 稀疏参考点也没有放大，三项分别为 -2.5、+1.5、+2.7 µs。全图里较明显的正差距主要出现在 64 MB / 4 KB 密集点，`munmap` 为 +30.5 µs，`MADV_DONTNEED` 为 +22.2 µs，但它们不是 2 MB 阈值附近的阶跃，`mprotect` 在同一位置也只有 +1.5 µs。因此，图 9-4a/9-4b 的作用是把“Pixel 没有复现 Phytium 阈值突变”从四个代表点扩展到完整扫描：Pixel 上有小幅正负波动和大尺寸残差，但没有出现 Phytium 上逐页区间被 protected 模式明显放大的形态。
+
+同一个 `op_sweep munmap` 实验也可以直接和 N80 放在一起比较。这个比较只看同一计时窗口：`mmap` 和触摸都在计时窗口外，正式计时只覆盖最后的 `munmap()`。因此它比跨平台比较完整 `lat_mmap` 更干净，也正好对应 §7.5.3 的核心判别实验。
+
+![Pixel 与 N80 同口径 munmap 阈值对比](figures/pixel-n80-munmap-threshold-comparison.svg)
+
+*图 9-5：Pixel 与 N80 的同口径 `op_sweep munmap` 阈值对比，纵轴为 protected−NVHE，单位为 µs/iteration。左图使用完整纵轴，显示 N80 在 1.9 MB 和 6.4 MB / 16 KB 稀疏点上的大信号；右图只展开 Pixel 的 -10 到 40 µs 小差距。N80 数据来自 `experiments/munmap-tlbi/results/op-sweep-n80/{protected,nvhe}.txt`，Pixel 数据来自 `pixel9proxl-aosp-pkvm-nvhe-20260629-ported/summary/ported-suite-diff.csv`，图由 `docs/mmap/scripts/plot-pixel-pkvm-mmap.py` 生成。*
+
+图 9-5 先看绝对时间差，因为前文的机制判断本来就是围绕“protected 额外多花多少时间”展开的。左图把 N80 和 Pixel 放在同一个 µs/iteration 纵轴上，差异非常直接：N80 在 1.9 MB / 4 KB 密集点是 +130.2 µs，在 6.4 MB / 16 KB 稀疏点是 +436.6 µs；Pixel 同口径分别只有 +6.4 µs 和 -2.5 µs，几乎贴近零线。右图把 Pixel 自己放大到 -10 到 40 µs，是为了确认 Pixel 的小波动没有被左图的大纵轴压扁：1.9 MB 为 +6.4 µs，2.0 MB 为 -1.2 µs，6.4 MB / 16 KB 为 -2.5 µs，64 MB 为 +30.5 µs。也就是说，Pixel 不是缺少数据点，而是在完全相同计时窗口下没有出现 N80 那种 1.9 MB 大差距和 6.4 MB 稀疏大差距；64 MB 的 +30.5 µs 是大尺寸密集点的小残差，不是 2 MB 阈值附近的阶跃。
+
+同一组数据也可以按相对 NVHE 基线的百分比来看，计算方式为 `(protected / NVHE - 1) * 100%`：
+
+![Pixel 与 N80 同口径 munmap 相对退化对比](figures/pixel-n80-munmap-threshold-relative-comparison.svg)
+
+*图 9-6：Pixel 与 N80 的同口径 `op_sweep munmap` 相对退化对比。左图使用完整纵轴，右图只展开 Pixel 的 -10% 到 +15% 区间。百分比能说明“相对各自 NVHE 基线慢了多少”，但不替代图 9-5 的绝对时间差；机制归因仍主要看 protected−NVHE 的绝对额外时间和阈值处的形态。*
+
+图 9-6 的作用是把平台基线差异归一化，回答“相对各自 NVHE，protected 慢了多少比例”。归一化后，N80 的核心信号仍然很强：1.9 MB 是 +134.6%，6.4 MB / 16 KB 是 +396.2%，而 2.0 MB 降到 +0.4%。Pixel 右图展开后可以看清自己的比例：1.9 MB 是 +12.3%，2.0 MB 是 -2.0%，6.4 MB / 16 KB 是 -5.5%，64 MB 是 +2.9%。这里要特别注意两个边界。第一，Pixel 1.9 MB 的 +12.3% 看起来不是零，但它对应的绝对时间只有 +6.4 µs，和 N80 的 +130.2 µs 不是一个量级。第二，64 MB 上 Pixel +2.9% 与 N80 +2.6% 的百分比接近，但两者都只是大尺寸密集点约 3% 的小比例残差，不能用来替代 N80 在 1.9 MB 和 6.4 MB / 16 KB 上的核心证据。百分比图有助于比较相对影响大小，但机制归因仍要回到图 9-5 的绝对额外时间和阈值形态。
+
+两种口径合在一起如下：
+
+| 点 | N80 protected−NVHE | N80 相对变化 | Pixel protected−NVHE | Pixel 相对变化 |
+|---|---:|---:|---:|---:|
+| 1.9 MB / 4 KB dense | +130.2 µs | +134.6% | +6.4 µs | +12.3% |
+| 2.0 MB / 4 KB dense | +0.4 µs | +0.4% | -1.2 µs | -2.0% |
+| 6.4 MB / 16 KB sparse | +436.6 µs | +396.2% | -2.5 µs | -5.5% |
+| 64 MB / 4 KB dense | +73.8 µs | +2.6% | +30.5 µs | +2.9% |
+
+这两张图把两个结论放在同一坐标系里：N80 在 1.9 MB 仍有 +130.2 µs / +134.6%，2.0 MB 附近降到 +0.4 µs / +0.4%，6.4 MB / 16 KB 稀疏参考点达到 +436.6 µs / +396.2%；Pixel 同口径下分别是 +6.4 µs / +12.3%、-1.2 µs / -2.0%、-2.5 µs / -5.5%，只有 64 MB 密集点达到 +30.5 µs / +2.9%。也就是说，Pixel 不是没有跑这个实验，而是跑了同一个实验后没有出现 N80 的阈值突变和稀疏大差距。64 MB 密集点的百分比还说明另一个边界：两边相对变化都只有约 3%，不能用它替代 N80 在 1.9 MB 和稀疏点上的核心证据。
+
+这组数据直接回答了“7.5.3 在 Pixel 上做了吗”：做了，而且结果没有复现 Phytium 现象。
+
+判读上有三点：
+
+1. **1.9 MB 并没有大幅 protected 开销**。`op_sweep munmap` 在 1.9 MB 是 +6.4 µs，`munmap_only` 是 +0.0 µs；这与 N80 的 +130.2 µs 不是一个量级。
+2. **2.0 MB 附近没有“从大幅变慢到归零”的证据**。Pixel 的 1.9 MB 与 2.0 MB 差距都在几微秒范围内上下摆动，而不是 N80 那种阈值处突变。
+3. **6.4 MB / 16 KB 稀疏参考点不慢**。这是对原始 `lat_mmap` 形态最重要的参考点。Pixel 的 `op_sweep munmap` 为 -2.5 µs，`munmap_only` 为 +5.0 µs；N80 同一形态是 +436.6 µs。
+
+64 MB 密集点在 Pixel 的 `munmap` / `MADV_DONTNEED` 中有 +20 到 +30 µs 的小正差距，但比例只有约 1.02 到 1.03，且没有 1.9 MB 的大幅逐页区间作为前提，也没有原始 `lat_mmap` 和 `munmap_after_write_touch` 的对应变慢。因此它只能作为小幅残差记录，不能解释为 Phytium 机制在 Pixel 上复现。
+
+`huge_check` 同时报告 `AnonHugePages=0`、`ShmemPmdMapped=0`、`FilePmdMapped=0`。因此 Pixel 这批 backing/hugepage 对照不能用于说明“THP 缓解有效或无效”，只能说明本次 Android 用户态条件下没有实际形成可观测的大页映射。
+
+### 9.6 Pixel 复测小结
+
+Pixel 复测给出的结论是分层的：
+
+- **单页层面**：强制 N 次单页 `MADV_DONTNEED` 页面撤销时，protected 比 NVHE 多约 +167 ns/页，且 simpleperf 显示 `page-faults` 基本相同、`cpu-cycles` 和 `stalled-cycles-backend` 增加。这说明 Pixel protected 下仍可测到单页 PTE 撤销额外成本。
+- **真实多页路径层面**：`lat_mmap_precise`、`munmap_after_write_touch`、`munmap_only` 阈值扫描、`op_sweep munmap`、`op_sweep MADV_DONTNEED`、`op_sweep mprotect` 都没有复现 Phytium 上的大幅 protected 变慢，也没有复现 1.9 MB / 2.0 MB 的明显突变。
+- **最合理的解释**：Tensor G4 / Pixel 的真实多页拆除路径很可能通过批量或范围式 TLB 维护把单页成本隐藏了；但在没有 Pixel 内核侧 TLBI 直接计时、硬件特性确认或源码级路径确认前，本文只把它写成“与批量或范围式处理相容”，不把它写成已证明。
+- **仍未排除的替代解释**：Pixel 的 TLB 微架构也可能让 host stage-2 合成条目的失效成本本身低于 Phytium/FTC862，因此即使真实路径仍有逐页刷新，应用层看到的 protected−NVHE 差距也会更小。现有数据不能完全排除这一点；不过 `single` 探针仍有 +167 ns/页，且 simpleperf 中 `stalled-cycles-backend` 明显增加，这又说明 Pixel protected 下并非完全没有单页撤销成本。因此本文把“批量或范围式处理隐藏单页成本”作为主要解释，把“Tensor G4 TLB 微架构差异使单页失效成本较低”作为并列替代解释，等待内核侧 TLBI 计时或源码路径确认。
+
+这也反过来限定了前文 Phytium 结论的适用范围：Phytium/N80/N90/Kaitian 上的问题是真实 `mmap` 生命周期中的大幅性能退化，根因是小范围逐页 `TLBI` 在 host stage-2 下变贵；Pixel 上只能看到强制单页探针的额外成本，真实 `mmap` 路径没有出现同等问题。因此，后续讨论优化方向时，应把 FEAT_TLBIRANGE、整表刷新阈值和 THP 视为解决 Phytium 类平台问题的手段，而不能假设所有 pKVM 设备都会在应用层看到相同退化。
+
+### 9.7 局限与后续可补项
+
+Pixel 复测的局限也要写清楚：
+
+1. 单页 `MADV_DONTNEED` 正式结果只有两组启动配对。它已经高于本轮分辨率下限，足以说明有单页信号；若要发布为独立 Pixel 性能结论，仍应扩展到四组或更多启动配对。
+2. `overview-early` 因温度门限不能像 Phytium 板那样高重复连续跑；当前 5 次统计由 6 月 29 日初始采集和 7 月 1 日补跑合并而来，两批都使用 39°C 温度门限。因此它适合判定“是否存在 Phytium 级别的大幅变慢”，不适合解释几微秒级个别点的波动。
+3. `ported-suite` 每个点只跑一轮，定位目标是覆盖前文可比较实验，尤其确认 7.5.3 这类关键实验是否在 Pixel 上复现。小幅 +/− 几微秒差距不应过度解释。
+4. Pixel 没有执行 EL2 gate、host stage-2 粒度统计、裸 TLBI 计时、在线核数扫描。这些不是遗漏的用户态实验，而是需要 Pixel 内核侧支持的实验。
+
+若后续要把 Pixel 机制也做到和 N80 一样闭环，需要补三类能力：确认 Tensor G4 是否暴露并启用 FEAT_TLBIRANGE；在 Pixel 内核上增加可审计的 TLBI 计时或 trace；在同一内核源码中确认 `madvise` / `munmap` 的实际 flush 分支。当前数据已经足够回答本文的问题：Pixel 用户态可比实验没有复现 Phytium 的真实 `mmap` 退化。
+
+---
+
+## 10. 最终结论：证据闭环、边界条件与优化方向
+
+### 10.1 全部证据与候选机制对照
 
 至此，主线候选已经从 a-1/a-2 收敛到 a-1-local。下面把所有关键证据按候选重新排列：
 
@@ -2223,7 +2500,9 @@ for (k = 0; k < memwork; k++)
 
 只有 a-1-local 能同时解释全部观测：退化随逐页 flush slot 数线性增长，在内核改走整表刷新路径时消失；同一条 TLBI 在 protected 下本地执行更慢，但不随在线核数或广播作用域放大。
 
-### 9.2 根因
+第 9 章的 Pixel 复测不改变这个 Phytium 根因判断，它回答的是另一个问题：该现象能否直接外推到 Tensor G4/Pixel。Pixel 上强制逐页执行 `MADV_DONTNEED` 页面撤销时能测到 protected 额外成本，但原始 `lat_mmap`、生命周期拆分和 1.9 MB / 2 MB 阈值扫描都没有出现 Phytium 那种大幅变慢。因此，最终结论应分成两层：Phytium 平台的根因已经闭环；跨平台影响取决于硬件和内核是否能把真实多页拆除路径批量化。
+
+### 10.2 根因
 
 pKVM（protected 模式）下宿主机 `lat_mmap` 的性能退化，根因为：
 
@@ -2245,17 +2524,19 @@ host stage-2（pKVM 隔离机制）
 
 定量上，两条独立路径吻合：阈值扫描从真实 `munmap` 推得约 +0.267 µs/slot；`tlbi_ab` 直接计时得到 protected 约 289 ns/slot、nvhe 约 23 ns/slot，差值约 266 ns/slot。原始稀疏 64 MB case 的 +435 µs 也可由约 1638 个 4K flush slot × 0.267 µs/slot ≈ 438 µs 解释。
 
-### 9.3 退化边界与实际影响
+### 10.3 退化边界与实际影响
 
 该退化有明确边界，并非"pKVM 下内存操作普遍变慢"：
 
 - **仅在小范围逐页 TLB 刷新路径上显著**：若单次刷新范围达到 2 MB，内核改用整表刷新路径，protected−nvhe 差距塌缩到约 0%～4%；但 `lat_mmap` 的 16 KB 稀疏触摸会让脏页按 PMD 分批，持续落在逐页路径。
 - **主要影响映射生命周期**：稳态读写、长期复用的映射（如 LMDB 打开后的常规读写）几乎不受影响；频繁建立/拆除中小映射的负载更容易触发。
-- **平台相关**：退化幅度取决于硬件是否支持 FEAT_TLBIRANGE。N80/N90/Kaitian 均不支持，因此逐页 TLBI 数量成为乘数；支持范围 TLBI 的平台可把长串逐页失效压缩为少数范围失效，退化会显著缩小。
+- **平台相关**：退化幅度取决于硬件是否支持 FEAT_TLBIRANGE、内核实际选择的 TLB 失效路径，以及真实拆除是否能被批量处理。N80/N90/Kaitian 均不支持 FEAT_TLBIRANGE，因此逐页 TLBI 数量成为乘数；Pixel 9 Pro XL 的用户态复测则显示，强制单页 `MADV_DONTNEED` 页面撤销成本虽存在，但真实多页 `mmap` 路径没有复现 Phytium 的大幅退化。
 
-**该退化不限于 `munmap`。** 2026-06-16 的操作谱系复查用同一套阈值扫描对照 `munmap`、`madvise(MADV_DONTNEED)`、`mprotect` 三类操作，显示 protected−nvhe 的逐页 gap 与操作名无关、主要由刷新 slot 数决定。`MADV_DONTNEED` 与 `munmap` 行为一致，因为它同样 zap 脏页并按 PMD 分批；jemalloc、tcmalloc、Go runtime 的 decommit 可能走到这一路。`mprotect` 则只有连续改动区间本身小于 2 MB 时明显受影响，稀疏大跨度不 zap 脏页、可一次性越过阈值，gap 接近 0。完整数据见 `pkvm-teardown-op-generality.en.md`。
+**该退化不限于 `munmap`。** 2026-06-16 的操作谱系复查用同一套阈值扫描对照 `munmap`、`madvise(MADV_DONTNEED)`、`mprotect` 三类操作，显示 protected−nvhe 的逐页差距与操作名无关、主要由刷新 slot 数决定。`MADV_DONTNEED` 与 `munmap` 行为一致，因为它同样 zap 脏页并按 PMD 分批；jemalloc、tcmalloc、Go runtime 的 decommit 可能走到这一路。`mprotect` 则只有连续改动区间本身小于 2 MB 时明显受影响，稀疏大跨度不 zap 脏页、可一次性越过阈值，差距接近 0。完整数据见 `pkvm-teardown-op-generality.en.md`。
 
-### 9.4 优化方向评估
+Pixel 复测把这条边界再往前推进了一步：同样的 `munmap`、`MADV_DONTNEED`、`mprotect` 用户态操作在 Pixel 上都跑过，但没有出现 N80 的 2 MB 附近明显突变，也没有出现 6.4 MB / 16 KB 稀疏参考点的大幅 protected 差距。这说明“操作类型可泛化”只在 Phytium 这类真实路径仍走长串逐页失效的平台上成立；一旦平台或内核把真实路径批量化，应用层看到的退化就会大幅缩小。
+
+### 10.4 优化方向评估
 
 | 方向 | 评估 |
 |---|---|
@@ -2265,7 +2546,7 @@ host stage-2（pKVM 隔离机制）
 | **应用层规避** | 复用映射、减少频繁小范围 unmap/decommit、合并相邻拆除，可降低逐页 slot 数。 |
 | **pKVM/hypervisor 侧** | 空间有限。宿主机 TLBI 不被陷入，hypervisor 无法拦截或加速；host stage-2 粒度已接近最大（99.5% 为 1G 块），提高映射粒度不能解决本问题。 |
 
-### 9.5 方法回顾：三次修正
+### 10.5 方法回顾：三次修正
 
 调查过程中三次修正都来自同一类问题：一个观测与多个假设相容，却被过早归因到其中一个。最终都靠专门对照实验把候选机制拆开。
 
@@ -2284,6 +2565,7 @@ host stage-2（pKVM 隔离机制）
 | N90 | Phytium FTC862 / 2.1 GHz（锁定） | Kylin V10 SP1 | `6.6.30+ #4`（Rust pKVM）、`6.6.30-pkvm-c+ #6`（C pKVM） | 阶段一：四模式对照与实现交叉验证 |
 | Kaitian（`ryuu`） | Phytium / — | Kylin V10 | `6.6.30+ #637` | 阶段二：mmap-split 拆分；LMDB 应用级对照 |
 | N80 | Phytium / 1.8 GHz（锁定） | Kylin V10 SP1 | `6.6.30xcore-stat+` / `6.6.30xcore-stat2+`（Rust nVHE hyp） | 阶段三至五：gate、perf、op=3、阈值扫描；第 8 章：在线核数与 TLBI 直接计时 |
+| Pixel 9 Pro XL（`komodo`） | Tensor G4 / Android 调频 | AOSP userdebug | `6.1.84-android14-11-g5c500deec3a7-ab12418271` | 第 9 章：用户态可比实验复测；protected/NVHE 通过 `vendor_kernel_boot_b` DTB bootargs 覆盖切换 |
 
 N80 关键硬件常数：`ID_AA64ISAR0_EL1 = 0x0000111110212120`，TLB 字段 [59:56] = 0，**不支持 FEAT_TLBIRANGE**；`MAX_DVM_OPS = PTRS_PER_PTE = 512`，整表刷新阈值 512 × 4 KB = 2 MB。
 
@@ -2321,6 +2603,27 @@ experiments/munmap-tlbi/run-sweep.sh   # RANGES="0.25 0.5 1 1.9 2 4 8 32 64"
 CORE=0 SIZE=64 ITERS=100 experiments/munmap-tlbi/run-core-scaling.sh
 #    TLBI IS/NSH 直接计时（需加载 experiments/munmap-tlbi/tlbi_ab/tlbi_ab.ko）：
 taskset -c 0 sh -c 'echo "0 2048 2 100" > /proc/tlbi_ab && cat /proc/tlbi_ab'
+
+# 7) 第 9 章：Pixel 9 Pro XL 用户态复测
+#    protected/NVHE 切换单独完成；下面三个采集脚本只在当前模式下采集数据，不负责刷机。
+OUT=<boot-dir> CPU=4 PAGES=256,512,1024,2048,4096,8192 RUNS=30 BLOCKS=1 \
+WAIT_THERMAL_MAX_MC=39000 WAIT_THERMAL_POLL_SEC=5 COOLDOWN_SEC=3 \
+FREQ_DROP_PCT=100 THERMAL_RISE_MC=1000000 \
+bash experiments/munmap-tlbi/pixel-run-madv-entry-slope.sh
+
+OUT=<result-dir> CPU=4 WAIT_THERMAL_MAX_MC=39000 \
+bash experiments/perf-reinvestigation/pixel-run-overview-early.sh
+
+OUT=<supplement-result-dir> CPU=4 WAIT_THERMAL_MAX_MC=39000 \
+LAT_RUNS=0 SPLIT_RUNS=2 STEADY_RUNS=2 \
+bash experiments/perf-reinvestigation/pixel-run-overview-early.sh
+
+OUT=<result-dir> CPU=4 WAIT_THERMAL_MAX_MC=39000 \
+bash experiments/perf-reinvestigation/pixel-run-ported-suite.sh
+
+python3 experiments/perf-reinvestigation/pixel-analyze-overview-early.py --result-dir <result-dir>
+python3 experiments/perf-reinvestigation/pixel-analyze-ported-suite.py --result-dir <result-dir>
+python3 docs/mmap/scripts/plot-pixel-pkvm-mmap.py
 ```
 
 ## 附录 C：代码、脚本与数据索引
@@ -2345,11 +2648,14 @@ taskset -c 0 sh -c 'echo "0 2048 2 100" > /proc/tlbi_ab && cat /proc/tlbi_ab'
 | `src/lat_mmap.c`、`src/lat_mmap_precise.c` | 原版与纳秒精度版 lat_mmap |
 | `experiments/mmap-split/mmap_split_bench.c` | 12 个生命周期子测试 |
 | `experiments/munmap-tlbi/{munmap_only.c,run-sweep.sh}` | 阈值扫描微基准与驱动脚本 |
+| `experiments/munmap-tlbi/{pixel_madv_entry_slope.c,pixel-run-madv-entry-slope.sh,pixel-analyze-madv-entry-slope.py,pixel-summarize-madv-entry-slope.py}` | Pixel 单页 / 批量 `MADV_DONTNEED` 每页增量耗时探针、采集与分析 |
+| `experiments/perf-reinvestigation/{pixel-run-overview-early.sh,pixel-analyze-overview-early.py}` | Pixel 复测阶段一/阶段二用户态实验：`lat_mmap_precise`、稳态访问、12 项生命周期拆分 |
+| `experiments/perf-reinvestigation/{pixel-run-ported-suite.sh,pixel-analyze-ported-suite.py}` | Pixel 移植 N80/N90/Kaitian 用户态微基准：`munmap_only`、`op_sweep`、backing 对照、`huge_check` |
 | `experiments/munmap-tlbi/run-core-scaling.sh` | 第 8 章在线核数扫描脚本（mean/min 同时记录，含同簇/跨簇集合） |
 | `experiments/munmap-tlbi/tlbi_ab/` | 第 8 章 TLBI IS/NSH 直接计时内核模块与 user-VA 驱动 |
 | `scripts/mmap-split-bench.sh`、`scripts/analyze-mmap-split.py` | 拆分实验驱动与分析 |
 | `scripts/el2-gate-bench.sh`、`scripts/host-mm-trace.sh` | EL2 gate 与 perf/funcgraph/tlbirange |
-| `docs/mmap/scripts/plot-*.py` | 本文图 3、图 4、图 6、图 7、图 8 的可复现绘图脚本；其中 `plot-n80-mechanism-controls.py` 生成 §7.3 与 §8.3/§8.4 的机制对照图 |
+| `docs/mmap/scripts/plot-*.py` | 本文各图的可复现绘图脚本；其中 `plot-n80-mechanism-controls.py` 生成 §7.3 与 §8.3/§8.4 的机制对照图，`plot-pixel-pkvm-mmap.py` 生成第 9 章 Pixel 图和 Pixel/N80 同口径阈值对比图 |
 | `bench-mmap.sh`、`prepare-host.sh`、`quiet-host.sh` | 四模式测试入口与环境控制 |
 
 **原始数据（kylin-lmbench/results/）**
@@ -2360,8 +2666,14 @@ taskset -c 0 sh -c 'echo "0 2048 2 100" > /proc/tlbi_ab && cat /proc/tlbi_ab'
 | `mmap-split-kaitian/{nvhe,pkvm}.csv` | 阶段二拆分数据 |
 | `lmdb-bench-kaitian/{nvhe,pkvm}/` | LMDB 应用级数据 |
 | `n80-munmap-gate-c0/{protected,nvhe}/` | 阶段三、四的 gate CSV 与 perf/funcgraph 日志 |
+| `experiments/munmap-tlbi/results/op-sweep-n80/{protected,nvhe}.txt` | §7.5.3 的 N80 `op_sweep` 阈值扫描原始输出；第 9 章 Pixel/N80 同口径对比图复用其中 `munmap` 行 |
 | `experiments/munmap-tlbi/results/corescaling-n80/` | 第 8 章在线核数扫描 CSV；其中 README 为早期中间判读，最终结论以 `INVESTIGATION-LOG.md` 和正文 §8 为准 |
 | `experiments/munmap-tlbi/results/tlbi-ab-n80/` | 第 8 章 TLBI IS/NSH 直接计时结果 |
+| `experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260629/` | Pixel 单页 / 批量 `MADV_DONTNEED` 每页增量耗时实验，含两组启动配对、summary CSV、simpleperf 关键点和最终 protected 恢复记录 |
+| `experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260629-overview-early/` | Pixel 阶段一/阶段二用户态初始复测：多尺寸 `lat_mmap_precise` 5 次，稳态访问和生命周期拆分各 3 次 |
+| `experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260701-overview-early-supplement/` | Pixel overview-early 补跑：稳态访问和生命周期拆分各补 2 次，温度门限同为 39°C |
+| `experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260701-overview-early-5run/` | Pixel overview-early 合并 5 次统计目录：第 9 章表格和图 9-2、图 9-3 的来源 |
+| `experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260629-ported/` | Pixel 移植 N80/N90/Kaitian 用户态微基准：`munmap_only` 阈值扫描、`op_sweep`、backing 对照、`huge_check` |
 
 ## 附录 D：阶段性详细文档
 
@@ -2376,4 +2688,5 @@ taskset -c 0 sh -c 'echo "0 2048 2 100" > /proc/tlbi_ab && cat /proc/tlbi_ab'
 | 5 粒度检查 | `c1-host-stage2-granularity.zh-CN.md`（含已更正的旧机制结论） |
 | 5 机制判定 | `c1-tlbi-threshold.zh-CN.md`（最终结论的完整推理链） |
 | 8 微机制复查 | `pkvm-munmap-corescaling-followup.en.md`、`experiments/munmap-tlbi/INVESTIGATION-LOG.md` |
+| 9 Pixel 复测 | `pixel-pkvm-mmap-experiment-plan.zh-CN.md`、`experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260629/README.md`、`experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260629-overview-early/README.md`、`experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260701-overview-early-supplement/README.md`、`experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260701-overview-early-5run/README.md`、`experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260629-ported/README.md` |
 | 方案与插桩 | `pkvm-mmap-optimization-plan.zh-CN.md`、`agile-popping-anchor.md`、`el2-gate-instrumentation.zh-CN.md` |

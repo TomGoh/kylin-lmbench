@@ -1,0 +1,840 @@
+
+### section=mmap_split_full label=openclose-0.5MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+openclose,0.5,10000,1,openclose,10,16,52428,4,53189087,5318.909,5.318909,0.000,0
+### rc=0
+
+### section=mmap_split_full label=openclose-0.5MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+openclose,0.5,10000,1,openclose,10,16,52428,4,50431355,5043.136,5.043135,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_unmap-0.5MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,0.5,10000,1,mmap_unmap,10,16,52428,4,48008382,4800.838,4.800838,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_unmap-0.5MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,0.5,10000,1,mmap_unmap,10,16,52428,4,52955444,5295.544,5.295544,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_populate_unmap-0.5MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_populate_unmap,0.5,10000,1,mmap_populate_unmap,10,16,52428,4,270534424,27053.442,27.053442,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_populate_unmap-0.5MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_populate_unmap,0.5,10000,1,mmap_populate_unmap,10,16,52428,4,311626098,31162.610,31.162610,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_write_touch_unmap-0.5MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_write_touch_unmap,0.5,10000,1,mmap_write_touch_unmap,10,16,52428,4,107158528,10715.853,10.715853,2678.963,0
+### rc=0
+
+### section=mmap_split_full label=mmap_write_touch_unmap-0.5MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_write_touch_unmap,0.5,10000,1,mmap_write_touch_unmap,10,16,52428,4,98598510,9859.851,9.859851,2464.963,0
+### rc=0
+
+### section=mmap_split_full label=mmap_read_touch_unmap-0.5MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_read_touch_unmap,0.5,10000,1,mmap_read_touch_unmap,10,16,52428,4,121065308,12106.531,12.106531,3026.633,0
+### rc=0
+
+### section=mmap_split_full label=mmap_read_touch_unmap-0.5MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_read_touch_unmap,0.5,10000,1,mmap_read_touch_unmap,10,16,52428,4,65372192,6537.219,6.537219,1634.305,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_cold-0.5MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_cold,0.5,10000,1,write_touch_cold,10,16,52428,4,53948462,5394.846,5.394846,1348.712,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_cold-0.5MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_cold,0.5,10000,1,write_touch_cold,10,16,52428,4,63304044,6330.404,6.330404,1582.601,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_cold-0.5MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_cold,0.5,10000,1,read_touch_cold,10,16,52428,4,28646875,2864.688,2.864688,716.172,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_cold-0.5MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_cold,0.5,10000,1,read_touch_cold,10,16,52428,4,26482864,2648.286,2.648286,662.072,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_hot-0.5MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_hot,0.5,10000,1,write_touch_hot,10,16,52428,4,66243,6.624,0.006624,1.656,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_hot-0.5MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_hot,0.5,10000,1,write_touch_hot,10,16,52428,4,56641,5.664,0.005664,1.416,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_hot-0.5MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_hot,0.5,10000,1,read_touch_hot,10,16,52428,4,35482,3.548,0.003548,0.887,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_hot-0.5MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_hot,0.5,10000,1,read_touch_hot,10,16,52428,4,39062,3.906,0.003906,0.977,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_no_touch-0.5MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_no_touch,0.5,10000,1,munmap_after_no_touch,10,16,52428,4,22408252,2240.825,2.240825,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_no_touch-0.5MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_no_touch,0.5,10000,1,munmap_after_no_touch,10,16,52428,4,21293382,2129.338,2.129338,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_write_touch-0.5MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,0.5,10000,1,munmap_after_write_touch,10,16,52428,4,26577480,2657.748,2.657748,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_write_touch-0.5MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,0.5,10000,1,munmap_after_write_touch,10,16,52428,4,27103358,2710.336,2.710336,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_read_touch-0.5MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_read_touch,0.5,10000,1,munmap_after_read_touch,10,16,52428,4,38069524,3806.952,3.806952,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_read_touch-0.5MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_read_touch,0.5,10000,1,munmap_after_read_touch,10,16,52428,4,39638790,3963.879,3.963879,0.000,0
+### rc=0
+
+### section=mmap_split_full label=openclose-1MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+openclose,1,8000,1,openclose,10,16,104857,7,43825683,5478.210,5.478210,0.000,0
+### rc=0
+
+### section=mmap_split_full label=openclose-1MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+openclose,1,8000,1,openclose,10,16,104857,7,43485677,5435.710,5.435710,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_unmap-1MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,1,8000,1,mmap_unmap,10,16,104857,7,23958374,2994.797,2.994797,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_unmap-1MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,1,8000,1,mmap_unmap,10,16,104857,7,47212891,5901.611,5.901611,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_populate_unmap-1MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_populate_unmap,1,8000,1,mmap_populate_unmap,10,16,104857,7,429597982,53699.748,53.699748,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_populate_unmap-1MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_populate_unmap,1,8000,1,mmap_populate_unmap,10,16,104857,7,397564047,49695.506,49.695506,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_write_touch_unmap-1MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_write_touch_unmap,1,8000,1,mmap_write_touch_unmap,10,16,104857,7,129122844,16140.355,16.140355,2305.765,0
+### rc=0
+
+### section=mmap_split_full label=mmap_write_touch_unmap-1MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_write_touch_unmap,1,8000,1,mmap_write_touch_unmap,10,16,104857,7,112070719,14008.840,14.008840,2001.263,0
+### rc=0
+
+### section=mmap_split_full label=mmap_read_touch_unmap-1MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_read_touch_unmap,1,8000,1,mmap_read_touch_unmap,10,16,104857,7,84532349,10566.544,10.566544,1509.506,0
+### rc=0
+
+### section=mmap_split_full label=mmap_read_touch_unmap-1MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_read_touch_unmap,1,8000,1,mmap_read_touch_unmap,10,16,104857,7,144916544,18114.568,18.114568,2587.795,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_cold-1MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_cold,1,8000,1,write_touch_cold,10,16,104857,7,58734731,7341.841,7.341841,1048.834,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_cold-1MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_cold,1,8000,1,write_touch_cold,10,16,104857,7,66319310,8289.914,8.289914,1184.273,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_cold-1MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_cold,1,8000,1,read_touch_cold,10,16,104857,7,30517600,3814.700,3.814700,544.957,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_cold-1MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_cold,1,8000,1,read_touch_cold,10,16,104857,7,29681090,3710.136,3.710136,530.019,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_hot-1MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_hot,1,8000,1,write_touch_hot,10,16,104857,7,93262,11.658,0.011658,1.665,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_hot-1MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_hot,1,8000,1,write_touch_hot,10,16,104857,7,30924,3.865,0.003866,0.552,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_hot-1MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_hot,1,8000,1,read_touch_hot,10,16,104857,7,159017,19.877,0.019877,2.840,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_hot-1MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_hot,1,8000,1,read_touch_hot,10,16,104857,7,190266,23.783,0.023783,3.398,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_no_touch-1MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_no_touch,1,8000,1,munmap_after_no_touch,10,16,104857,7,17909418,2238.677,2.238677,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_no_touch-1MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_no_touch,1,8000,1,munmap_after_no_touch,10,16,104857,7,10919870,1364.984,1.364984,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_write_touch-1MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,1,8000,1,munmap_after_write_touch,10,16,104857,7,25347871,3168.484,3.168484,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_write_touch-1MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,1,8000,1,munmap_after_write_touch,10,16,104857,7,34337774,4292.222,4.292222,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_read_touch-1MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_read_touch,1,8000,1,munmap_after_read_touch,10,16,104857,7,62998680,7874.835,7.874835,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_read_touch-1MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_read_touch,1,8000,1,munmap_after_read_touch,10,16,104857,7,32281371,4035.171,4.035171,0.000,0
+### rc=0
+
+### section=mmap_split_full label=openclose-2MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+openclose,2,5000,1,openclose,10,16,209715,13,26514648,5302.930,5.302930,0.000,0
+### rc=0
+
+### section=mmap_split_full label=openclose-2MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+openclose,2,5000,1,openclose,10,16,209715,13,30673422,6134.684,6.134684,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_unmap-2MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,2,5000,1,mmap_unmap,10,16,209715,13,30612875,6122.575,6.122575,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_unmap-2MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,2,5000,1,mmap_unmap,10,16,209715,13,33047893,6609.579,6.609579,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_populate_unmap-2MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_populate_unmap,2,5000,1,mmap_populate_unmap,10,16,209715,13,468229981,93645.996,93.645996,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_populate_unmap-2MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_populate_unmap,2,5000,1,mmap_populate_unmap,10,16,209715,13,455547323,91109.465,91.109465,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_write_touch_unmap-2MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_write_touch_unmap,2,5000,1,mmap_write_touch_unmap,10,16,209715,13,140352702,28070.540,28.070540,2159.272,0
+### rc=0
+
+### section=mmap_split_full label=mmap_write_touch_unmap-2MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_write_touch_unmap,2,5000,1,mmap_write_touch_unmap,10,16,209715,13,138851237,27770.247,27.770247,2136.173,0
+### rc=0
+
+### section=mmap_split_full label=mmap_read_touch_unmap-2MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_read_touch_unmap,2,5000,1,mmap_read_touch_unmap,10,16,209715,13,116071493,23214.299,23.214299,1785.715,0
+### rc=0
+
+### section=mmap_split_full label=mmap_read_touch_unmap-2MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_read_touch_unmap,2,5000,1,mmap_read_touch_unmap,10,16,209715,13,112584229,22516.846,22.516846,1732.065,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_cold-2MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_cold,2,5000,1,write_touch_cold,10,16,209715,13,84734508,16946.902,16.946902,1303.608,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_cold-2MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_cold,2,5000,1,write_touch_cold,10,16,209715,13,66056406,13211.281,13.211281,1016.252,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_cold-2MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_cold,2,5000,1,read_touch_cold,10,16,209715,13,42835366,8567.073,8.567073,659.006,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_cold-2MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_cold,2,5000,1,read_touch_cold,10,16,209715,13,47646325,9529.265,9.529265,733.020,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_hot-2MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_hot,2,5000,1,write_touch_hot,10,16,209715,13,626465,125.293,0.125293,9.638,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_hot-2MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_hot,2,5000,1,write_touch_hot,10,16,209715,13,707357,141.471,0.141471,10.882,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_hot-2MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_hot,2,5000,1,read_touch_hot,10,16,209715,13,109090,21.818,0.021818,1.678,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_hot-2MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_hot,2,5000,1,read_touch_hot,10,16,209715,13,327719,65.544,0.065544,5.042,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_no_touch-2MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_no_touch,2,5000,1,munmap_after_no_touch,10,16,209715,13,13048056,2609.611,2.609611,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_no_touch-2MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_no_touch,2,5000,1,munmap_after_no_touch,10,16,209715,13,8236008,1647.202,1.647202,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_write_touch-2MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,2,5000,1,munmap_after_write_touch,10,16,209715,13,42571144,8514.229,8.514229,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_write_touch-2MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,2,5000,1,munmap_after_write_touch,10,16,209715,13,40960679,8192.136,8.192136,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_read_touch-2MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_read_touch,2,5000,1,munmap_after_read_touch,10,16,209715,13,32128751,6425.750,6.425750,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_read_touch-2MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_read_touch,2,5000,1,munmap_after_read_touch,10,16,209715,13,51111338,10222.268,10.222268,0.000,0
+### rc=0
+
+### section=mmap_split_full label=openclose-4MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+openclose,4,3000,1,openclose,10,16,419430,26,19567627,6522.542,6.522542,0.000,0
+### rc=0
+
+### section=mmap_split_full label=openclose-4MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+openclose,4,3000,1,openclose,10,16,419430,26,10663615,3554.538,3.554538,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_unmap-4MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,4,3000,1,mmap_unmap,10,16,419430,26,12920654,4306.885,4.306885,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_unmap-4MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,4,3000,1,mmap_unmap,10,16,419430,26,23087118,7695.706,7.695706,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_populate_unmap-4MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_populate_unmap,4,3000,1,mmap_populate_unmap,10,16,419430,26,525232829,175077.610,175.077610,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_populate_unmap-4MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_populate_unmap,4,3000,1,mmap_populate_unmap,10,16,419430,26,510191365,170063.788,170.063788,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_write_touch_unmap-4MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_write_touch_unmap,4,3000,1,mmap_write_touch_unmap,10,16,419430,26,144072958,48024.319,48.024319,1847.089,0
+### rc=0
+
+### section=mmap_split_full label=mmap_write_touch_unmap-4MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_write_touch_unmap,4,3000,1,mmap_write_touch_unmap,10,16,419430,26,137428589,45809.530,45.809530,1761.905,0
+### rc=0
+
+### section=mmap_split_full label=mmap_read_touch_unmap-4MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_read_touch_unmap,4,3000,1,mmap_read_touch_unmap,10,16,419430,26,70427937,23475.979,23.475979,902.922,0
+### rc=0
+
+### section=mmap_split_full label=mmap_read_touch_unmap-4MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_read_touch_unmap,4,3000,1,mmap_read_touch_unmap,10,16,419430,26,110271362,36757.121,36.757121,1413.735,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_cold-4MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_cold,4,3000,1,write_touch_cold,10,16,419430,26,94011468,31337.156,31.337156,1205.275,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_cold-4MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_cold,4,3000,1,write_touch_cold,10,16,419430,26,95278842,31759.614,31.759614,1221.524,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_cold-4MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_cold,4,3000,1,read_touch_cold,10,16,419430,26,53670021,17890.007,17.890007,688.077,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_cold-4MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_cold,4,3000,1,read_touch_cold,10,16,419430,26,59370680,19790.227,19.790227,761.163,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_hot-4MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_hot,4,3000,1,write_touch_hot,10,16,419430,26,766399,255.466,0.255466,9.826,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_hot-4MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_hot,4,3000,1,write_touch_hot,10,16,419430,26,488322,162.774,0.162774,6.261,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_hot-4MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_hot,4,3000,1,read_touch_hot,10,16,419430,26,141154,47.051,0.047051,1.810,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_hot-4MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_hot,4,3000,1,read_touch_hot,10,16,419430,26,169189,56.396,0.056396,2.169,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_no_touch-4MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_no_touch,4,3000,1,munmap_after_no_touch,10,16,419430,26,9240200,3080.067,3.080067,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_no_touch-4MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_no_touch,4,3000,1,munmap_after_no_touch,10,16,419430,26,7352181,2450.727,2.450727,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_write_touch-4MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,4,3000,1,munmap_after_write_touch,10,16,419430,26,31900261,10633.420,10.633420,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_write_touch-4MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,4,3000,1,munmap_after_write_touch,10,16,419430,26,31146767,10382.256,10.382256,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_read_touch-4MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_read_touch,4,3000,1,munmap_after_read_touch,10,16,419430,26,27839835,9279.945,9.279945,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_read_touch-4MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_read_touch,4,3000,1,munmap_after_read_touch,10,16,419430,26,41740592,13913.531,13.913531,0.000,0
+### rc=0
+
+### section=mmap_split_full label=openclose-8MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+openclose,8,2000,1,openclose,10,16,838860,52,15697632,7848.816,7.848816,0.000,0
+### rc=0
+
+### section=mmap_split_full label=openclose-8MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+openclose,8,2000,1,openclose,10,16,838860,52,16048991,8024.495,8.024496,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_unmap-8MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,8,2000,1,mmap_unmap,10,16,838860,52,9269653,4634.827,4.634826,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_unmap-8MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,8,2000,1,mmap_unmap,10,16,838860,52,14290528,7145.264,7.145264,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_populate_unmap-8MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_populate_unmap,8,2000,1,mmap_populate_unmap,10,16,838860,52,665916138,332958.069,332.958069,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_populate_unmap-8MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_populate_unmap,8,2000,1,mmap_populate_unmap,10,16,838860,52,675765950,337882.975,337.882975,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_write_touch_unmap-8MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_write_touch_unmap,8,2000,1,mmap_write_touch_unmap,10,16,838860,52,163151570,81575.785,81.575785,1568.765,0
+### rc=0
+
+### section=mmap_split_full label=mmap_write_touch_unmap-8MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_write_touch_unmap,8,2000,1,mmap_write_touch_unmap,10,16,838860,52,146175700,73087.850,73.087850,1405.536,0
+### rc=0
+
+### section=mmap_split_full label=mmap_read_touch_unmap-8MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_read_touch_unmap,8,2000,1,mmap_read_touch_unmap,10,16,838860,52,118424397,59212.198,59.212198,1138.696,0
+### rc=0
+
+### section=mmap_split_full label=mmap_read_touch_unmap-8MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_read_touch_unmap,8,2000,1,mmap_read_touch_unmap,10,16,838860,52,116813883,58406.942,58.406942,1123.210,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_cold-8MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_cold,8,2000,1,write_touch_cold,10,16,838860,52,116500494,58250.247,58.250247,1120.197,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_cold-8MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_cold,8,2000,1,write_touch_cold,10,16,838860,52,142726700,71363.350,71.363350,1372.372,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_cold-8MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_cold,8,2000,1,read_touch_cold,10,16,838860,52,50721352,25360.676,25.360676,487.705,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_cold-8MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_cold,8,2000,1,read_touch_cold,10,16,838860,52,64310112,32155.056,32.155056,618.366,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_hot-8MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_hot,8,2000,1,write_touch_hot,10,16,838860,52,793782,396.891,0.396891,7.633,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_hot-8MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_hot,8,2000,1,write_touch_hot,10,16,838860,52,240275,120.138,0.120138,2.310,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_hot-8MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_hot,8,2000,1,read_touch_hot,10,16,838860,52,878987,439.493,0.439493,8.452,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_hot-8MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_hot,8,2000,1,read_touch_hot,10,16,838860,52,513550,256.775,0.256775,4.938,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_no_touch-8MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_no_touch,8,2000,1,munmap_after_no_touch,10,16,838860,52,6724183,3362.091,3.362092,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_no_touch-8MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_no_touch,8,2000,1,munmap_after_no_touch,10,16,838860,52,5650669,2825.334,2.825334,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_write_touch-8MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,8,2000,1,munmap_after_write_touch,10,16,838860,52,27014641,13507.320,13.507321,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_write_touch-8MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,8,2000,1,munmap_after_write_touch,10,16,838860,52,25349105,12674.552,12.674552,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_read_touch-8MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_read_touch,8,2000,1,munmap_after_read_touch,10,16,838860,52,29932181,14966.091,14.966090,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_read_touch-8MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_read_touch,8,2000,1,munmap_after_read_touch,10,16,838860,52,41978810,20989.405,20.989405,0.000,0
+### rc=0
+
+### section=mmap_split_full label=openclose-16MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+openclose,16,1000,1,openclose,10,16,1677721,103,4859009,4859.009,4.859009,0.000,0
+### rc=0
+
+### section=mmap_split_full label=openclose-16MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+openclose,16,1000,1,openclose,10,16,1677721,103,3543701,3543.701,3.543701,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_unmap-16MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,16,1000,1,mmap_unmap,10,16,1677721,103,4260743,4260.743,4.260743,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_unmap-16MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,16,1000,1,mmap_unmap,10,16,1677721,103,5002604,5002.604,5.002604,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_populate_unmap-16MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_populate_unmap,16,1000,1,mmap_populate_unmap,10,16,1677721,103,661197836,661197.836,661.197836,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_populate_unmap-16MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_populate_unmap,16,1000,1,mmap_populate_unmap,10,16,1677721,103,666664714,666664.714,666.664714,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_write_touch_unmap-16MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_write_touch_unmap,16,1000,1,mmap_write_touch_unmap,10,16,1677721,103,166582398,166582.398,166.582398,1617.305,0
+### rc=0
+
+### section=mmap_split_full label=mmap_write_touch_unmap-16MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_write_touch_unmap,16,1000,1,mmap_write_touch_unmap,10,16,1677721,103,139043660,139043.660,139.043660,1349.938,0
+### rc=0
+
+### section=mmap_split_full label=mmap_read_touch_unmap-16MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_read_touch_unmap,16,1000,1,mmap_read_touch_unmap,10,16,1677721,103,82287882,82287.882,82.287882,798.911,0
+### rc=0
+
+### section=mmap_split_full label=mmap_read_touch_unmap-16MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_read_touch_unmap,16,1000,1,mmap_read_touch_unmap,10,16,1677721,103,113854126,113854.126,113.854126,1105.380,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_cold-16MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_cold,16,1000,1,write_touch_cold,10,16,1677721,103,139392616,139392.616,139.392616,1353.326,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_cold-16MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_cold,16,1000,1,write_touch_cold,10,16,1677721,103,140202689,140202.689,140.202689,1361.191,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_cold-16MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_cold,16,1000,1,read_touch_cold,10,16,1677721,103,68361982,68361.982,68.361982,663.709,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_cold-16MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_cold,16,1000,1,read_touch_cold,10,16,1677721,103,47624175,47624.175,47.624175,462.371,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_hot-16MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_hot,16,1000,1,write_touch_hot,10,16,1677721,103,962199,962.199,0.962199,9.342,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_hot-16MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_hot,16,1000,1,write_touch_hot,10,16,1677721,103,421957,421.957,0.421957,4.097,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_hot-16MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_hot,16,1000,1,read_touch_hot,10,16,1677721,103,1196289,1196.289,1.196289,11.614,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_hot-16MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_hot,16,1000,1,read_touch_hot,10,16,1677721,103,433512,433.512,0.433512,4.209,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_no_touch-16MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_no_touch,16,1000,1,munmap_after_no_touch,10,16,1677721,103,2421591,2421.591,2.421591,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_no_touch-16MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_no_touch,16,1000,1,munmap_after_no_touch,10,16,1677721,103,3651355,3651.355,3.651355,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_write_touch-16MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,16,1000,1,munmap_after_write_touch,10,16,1677721,103,18651283,18651.283,18.651283,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_write_touch-16MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,16,1000,1,munmap_after_write_touch,10,16,1677721,103,16387830,16387.830,16.387830,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_read_touch-16MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_read_touch,16,1000,1,munmap_after_read_touch,10,16,1677721,103,24841295,24841.295,24.841295,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_read_touch-16MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_read_touch,16,1000,1,munmap_after_read_touch,10,16,1677721,103,24861825,24861.825,24.861825,0.000,0
+### rc=0
+
+### section=mmap_split_full label=openclose-64MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+openclose,64,300,1,openclose,10,16,6710886,410,2973511,9911.703,9.911703,0.000,0
+### rc=0
+
+### section=mmap_split_full label=openclose-64MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+openclose,64,300,1,openclose,10,16,6710886,410,2798462,9328.207,9.328207,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_unmap-64MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,64,300,1,mmap_unmap,10,16,6710886,410,2931885,9772.950,9.772950,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_unmap-64MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_unmap,64,300,1,mmap_unmap,10,16,6710886,410,1441813,4806.043,4.806043,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_populate_unmap-64MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_populate_unmap,64,300,1,mmap_populate_unmap,10,16,6710886,410,778167969,2593893.230,2593.893230,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_populate_unmap-64MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_populate_unmap,64,300,1,mmap_populate_unmap,10,16,6710886,410,776363851,2587879.503,2587.879503,0.000,0
+### rc=0
+
+### section=mmap_split_full label=mmap_write_touch_unmap-64MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_write_touch_unmap,64,300,1,mmap_write_touch_unmap,10,16,6710886,410,190030274,633434.247,633.434247,1544.962,0
+### rc=0
+
+### section=mmap_split_full label=mmap_write_touch_unmap-64MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_write_touch_unmap,64,300,1,mmap_write_touch_unmap,10,16,6710886,410,188128459,627094.863,627.094863,1529.500,0
+### rc=0
+
+### section=mmap_split_full label=mmap_read_touch_unmap-64MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_read_touch_unmap,64,300,1,mmap_read_touch_unmap,10,16,6710886,410,113805380,379351.267,379.351267,925.247,0
+### rc=0
+
+### section=mmap_split_full label=mmap_read_touch_unmap-64MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+mmap_read_touch_unmap,64,300,1,mmap_read_touch_unmap,10,16,6710886,410,117280965,390936.550,390.936550,953.504,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_cold-64MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_cold,64,300,1,write_touch_cold,10,16,6710886,410,171662757,572209.190,572.209190,1395.632,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_cold-64MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_cold,64,300,1,write_touch_cold,10,16,6710886,410,166001355,553337.850,553.337850,1349.605,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_cold-64MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_cold,64,300,1,read_touch_cold,10,16,6710886,410,79166102,263887.007,263.887007,643.627,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_cold-64MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_cold,64,300,1,read_touch_cold,10,16,6710886,410,78646207,262154.023,262.154023,639.400,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_hot-64MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_hot,64,300,1,write_touch_hot,10,16,6710886,410,983358,3277.860,3.277860,7.995,0
+### rc=0
+
+### section=mmap_split_full label=write_touch_hot-64MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+write_touch_hot,64,300,1,write_touch_hot,10,16,6710886,410,689331,2297.770,2.297770,5.604,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_hot-64MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_hot,64,300,1,read_touch_hot,10,16,6710886,410,1738648,5795.493,5.795493,14.135,0
+### rc=0
+
+### section=mmap_split_full label=read_touch_hot-64MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+read_touch_hot,64,300,1,read_touch_hot,10,16,6710886,410,1112061,3706.870,3.706870,9.041,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_no_touch-64MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_no_touch,64,300,1,munmap_after_no_touch,10,16,6710886,410,1631468,5438.227,5.438227,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_no_touch-64MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_no_touch,64,300,1,munmap_after_no_touch,10,16,6710886,410,1186248,3954.160,3.954160,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_write_touch-64MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,64,300,1,munmap_after_write_touch,10,16,6710886,410,13991458,46638.193,46.638193,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_write_touch-64MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_write_touch,64,300,1,munmap_after_write_touch,10,16,6710886,410,12946079,43153.597,43.153597,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_read_touch-64MB-run-1
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_read_touch,64,300,1,munmap_after_read_touch,10,16,6710886,410,34859749,116199.163,116.199163,0.000,0
+### rc=0
+
+### section=mmap_split_full label=munmap_after_read_touch-64MB-run-2
+mode,size_mb,iters,warmups,timed,touch_divisor,stride_kb,touch_bytes,touches_per_iter,total_ns,per_iter_ns,per_iter_us,per_touch_ns,sink
+munmap_after_read_touch,64,300,1,munmap_after_read_touch,10,16,6710886,410,37132081,123773.603,123.773603,0.000,0
+### rc=0
