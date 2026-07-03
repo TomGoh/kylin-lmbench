@@ -65,6 +65,14 @@
 
     C1 机制判定（**最终结论**）：完整推理链——密集 munmap 对照证伪 a-2、源码定位 2MB 阈值、阈值扫描证实 a-1。退化 = **逐页 `TLBI` 的 stage-2 硬件税**（每条 host TLBI 在 pKVM 下多 ~0.27µs，gap∝TLBI 条数，在 2MB 整表-flush 阈值处断崖消失）。核心杠杆 = **FEAT_TLBIRANGE**（N80 没有）。
 
+13. [kaitian-thp-mmap-experiment-plan.zh-CN.md](kaitian-thp-mmap-experiment-plan.zh-CN.md)
+
+    Kaitian（无 FEAT_TLBIRANGE）上的 **THP 缓解实验方案**：既然根因是逐页 TLBI、核心杠杆是 Phytium 缺失的 FEAT_TLBIRANGE，本方案检验 THP 能否作为软件侧替代——用 2MB 大页把 512 条 PTE TLBI 折叠成 1 条 PMD TLBI（`zap_huge_pmd` → 逐 PMD flush）。设计 protected×nvhe 全对照、三类实验（`anon_base` vs `anon_huge`、ext4 文件 THP always/never 负对照、tmpfs/shmem 共享映射），并以巨页生效（`AnonHugePages`/`ShmemPmdMapped`）为硬性前置门。关键前提：ext4 文件映射 `huge_fault` 仅 DAX 可用，故全局 THP 对文件后备无效，真正杠杆是匿名/shmem 的逐映射大页。
+
+14. [pkvm-thp-mitigation.zh-CN.md](pkvm-thp-mitigation.zh-CN.md)
+
+    Kaitian 上 THP 缓解实验的**实测报告（结论）**：protected×nvhe 全对照证明——全局 THP=always 对 ext4 文件 `lat_mmap` **无效**（+208µs 税原封不动，`huge_fault` 仅 DAX）；但大页确实形成处税真实消失——匿名小尺寸 +26/+50µs→0，同形态 `MAP_SHARED` 改 shmem/tmpfs `huge=` 后端后 **+208µs→+0.4µs**。定量闭环：ext4 +204µs ≈ 1630 slot × 0.125µs/slot，与 overview §4.3 一致。结论：THP 是 FEAT_TLBIRANGE 的**可行软件替代，但须让内存被大页映射（匿名/shmem），非全局开关**。
+
 ## 相关代码与数据
 
 - `lat_mmap` 原始代码：[src/lat_mmap.c](../../src/lat_mmap.c)

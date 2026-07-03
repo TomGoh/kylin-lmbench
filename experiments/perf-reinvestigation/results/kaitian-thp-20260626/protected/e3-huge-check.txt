@@ -1,0 +1,4 @@
+huge_check shmem mb=64 touch=6.400MB stride=16K :
+ShmemPmdMapped:     8192 kB
+huge_check shmem mb=64 touch=64.000MB stride=4K :
+ShmemPmdMapped:    65536 kB

@@ -1,0 +1,42 @@
+thermal_max=35000
+schema_version,mode,touch,page_size,pages,run_index,op_count,setup_elapsed_ns,setup_minor_faults_delta,elapsed_ns,timed_minor_faults_delta,cpu_before,cpu_after,status
+1,single,touched,4096,4096,0,4096,13471924,4096,9506103,0,4,4,ok
+1,single,touched,4096,4096,1,4096,9105509,4096,7401123,0,4,4,ok
+1,single,touched,4096,4096,2,4096,6965983,4096,6065267,0,4,4,ok
+1,single,touched,4096,4096,3,4096,6781860,4096,5002400,0,4,4,ok
+1,single,touched,4096,4096,4,4096,5299561,4096,4874674,0,4,4,ok
+1,single,touched,4096,4096,5,4096,5258342,4096,4258830,0,4,4,ok
+1,single,touched,4096,4096,6,4096,4461670,4096,4084188,0,4,4,ok
+1,single,touched,4096,4096,7,4096,4401286,4096,3995809,0,4,4,ok
+1,single,touched,4096,4096,8,4096,4512817,4096,3952841,0,4,4,ok
+1,single,touched,4096,4096,9,4096,4424235,4096,4058837,0,4,4,ok
+1,single,touched,4096,4096,10,4096,4429362,4096,3640096,0,4,4,ok
+1,single,touched,4096,4096,11,4096,4427246,4096,3461304,0,4,4,ok
+1,single,touched,4096,4096,12,4096,4404907,4096,3467652,0,4,4,ok
+1,single,touched,4096,4096,13,4096,4340821,4096,3492147,0,4,4,ok
+1,single,touched,4096,4096,14,4096,4493774,4096,3407268,0,4,4,ok
+1,single,touched,4096,4096,15,4096,4504679,4096,3507283,0,4,4,ok
+1,single,touched,4096,4096,16,4096,4339518,4096,3540039,0,4,4,ok
+1,single,touched,4096,4096,17,4096,4431193,4096,3580973,0,4,4,ok
+1,single,touched,4096,4096,18,4096,4521037,4096,3438924,0,4,4,ok
+1,single,touched,4096,4096,19,4096,4349162,4096,3399292,0,4,4,ok
+1,single,touched,4096,4096,20,4096,4495483,4096,3363403,0,4,4,ok
+1,single,touched,4096,4096,21,4096,4472372,4096,3606771,0,4,4,ok
+1,single,touched,4096,4096,22,4096,4360189,4096,3385172,0,4,4,ok
+1,single,touched,4096,4096,23,4096,4381063,4096,3424357,0,4,4,ok
+1,single,touched,4096,4096,24,4096,4430053,4096,3743531,0,4,4,ok
+1,single,touched,4096,4096,25,4096,4361776,4096,3811849,0,4,4,ok
+1,single,touched,4096,4096,26,4096,4379842,4096,3377766,0,4,4,ok
+1,single,touched,4096,4096,27,4096,4287109,4096,3721680,0,4,4,ok
+1,single,touched,4096,4096,28,4096,4438598,4096,3423055,0,4,4,ok
+1,single,touched,4096,4096,29,4096,4384725,4096,3434733,0,4,4,ok
+Performance counter statistics:
+
+#          count  event_name               # count / runtime
+  291.713866(ms)  task-clock               # 0.988558 cpus used
+     657,753,337  cpu-cycles               # 2.254698 GHz      
+     753,757,474  instructions             # 2.584 G/sec       
+     444,603,460  stalled-cycles-backend   # 1.524 G/sec       
+         123,206  page-faults              # 422.352 K/sec     
+
+Total test time: 0.295090 seconds.

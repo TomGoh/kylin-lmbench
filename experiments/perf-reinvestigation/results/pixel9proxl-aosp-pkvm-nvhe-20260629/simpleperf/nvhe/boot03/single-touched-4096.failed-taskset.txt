@@ -1,0 +1,13 @@
+thermal_max=36000
+taskset: Unknown option 'c' (see "taskset --help")
+simpleperf W workload.cpp:220] child process exited with exit code 1
+Performance counter statistics:
+
+#        count  event_name               # count / runtime
+  4.048054(ms)  task-clock               # 0.854425 cpus used
+     8,561,826  cpu-cycles               # 2.114410 GHz      
+    16,016,012  instructions             # 3.955 G/sec       
+     2,928,673  stalled-cycles-backend   # 723.259 M/sec     
+           436  page-faults              # 107.706 K/sec     
+
+Total test time: 0.004738 seconds.

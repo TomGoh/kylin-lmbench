@@ -1,0 +1,8 @@
+huge_check anon mb=64 touch=6.400MB stride=16K :
+AnonHugePages:      8192 kB
+huge_check anon mb=16 touch=1.600MB stride=16K :
+AnonHugePages:      2048 kB
+huge_check anon mb=8 touch=0.800MB stride=16K :
+AnonHugePages:      2048 kB
+huge_check anon mb=64 touch=64.000MB stride=4K :
+AnonHugePages:     65536 kB

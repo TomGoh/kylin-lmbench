@@ -1,0 +1,72 @@
+
+### section=munmap_threshold label=file-0.25MB-dense
+### command='/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '0.25' 4
+### gate_start_mc=36000 gate_wait_sec=0 gate_ready_mc=36000 freq_before_khz=578000 thermal_before_mc=35000
+file       mb=64 touch=0.250MB stride=4K : munmap mean=24.6 us  min=10.5 us
+### rc=0 freq_after_khz=1221000 thermal_after_mc=36000
+
+### section=munmap_threshold label=file-0.5MB-dense
+### command='/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '0.5' 4
+### gate_start_mc=36000 gate_wait_sec=0 gate_ready_mc=36000 freq_before_khz=578000 thermal_before_mc=37000
+file       mb=64 touch=0.500MB stride=4K : munmap mean=40.3 us  min=16.2 us
+### rc=0 freq_after_khz=578000 thermal_after_mc=37000
+
+### section=munmap_threshold label=file-1MB-dense
+### command='/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '1' 4
+### gate_start_mc=36000 gate_wait_sec=0 gate_ready_mc=36000 freq_before_khz=578000 thermal_before_mc=36000
+file       mb=64 touch=1.000MB stride=4K : munmap mean=44.5 us  min=19.8 us
+### rc=0 freq_after_khz=1549000 thermal_after_mc=36000
+
+### section=munmap_threshold label=file-1.5MB-dense
+### command='/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '1.5' 4
+### gate_start_mc=36000 gate_wait_sec=0 gate_ready_mc=36000 freq_before_khz=1795000 thermal_before_mc=37000
+file       mb=64 touch=1.500MB stride=4K : munmap mean=53.8 us  min=28.3 us
+### rc=0 freq_after_khz=578000 thermal_after_mc=37000
+
+### section=munmap_threshold label=file-1.9MB-dense
+### command='/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '1.9' 4
+### gate_start_mc=36000 gate_wait_sec=0 gate_ready_mc=36000 freq_before_khz=578000 thermal_before_mc=37000
+file       mb=64 touch=1.900MB stride=4K : munmap mean=59.6 us  min=34.7 us
+### rc=0 freq_after_khz=1221000 thermal_after_mc=37000
+
+### section=munmap_threshold label=file-2MB-dense
+### command='/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '2' 4
+### gate_start_mc=36000 gate_wait_sec=0 gate_ready_mc=36000 freq_before_khz=578000 thermal_before_mc=36000
+file       mb=64 touch=2.000MB stride=4K : munmap mean=50.5 us  min=37.0 us
+### rc=0 freq_after_khz=1549000 thermal_after_mc=36000
+
+### section=munmap_threshold label=file-2.1MB-dense
+### command='/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '2.1' 4
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=36000
+file       mb=64 touch=2.100MB stride=4K : munmap mean=62.0 us  min=38.0 us
+### rc=0 freq_after_khz=1795000 thermal_after_mc=37000
+
+### section=munmap_threshold label=file-4MB-dense
+### command='/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '4' 4
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=35000
+file       mb=64 touch=4.000MB stride=4K : munmap mean=75.6 us  min=68.2 us
+### rc=0 freq_after_khz=1795000 thermal_after_mc=39000
+
+### section=munmap_threshold label=file-8MB-dense
+### command='/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '8' 4
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=37000
+file       mb=64 touch=8.000MB stride=4K : munmap mean=145.2 us  min=132.6 us
+### rc=0 freq_after_khz=2600000 thermal_after_mc=39000
+
+### section=munmap_threshold label=file-16MB-dense
+### command='/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '16' 4
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=37000
+file       mb=64 touch=16.000MB stride=4K : munmap mean=278.6 us  min=264.9 us
+### rc=0 freq_after_khz=1795000 thermal_after_mc=39000
+
+### section=munmap_threshold label=file-64MB-dense
+### command='/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' '64' 4
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=357000 thermal_before_mc=36000
+file       mb=64 touch=64.000MB stride=4K : munmap mean=1066.3 us  min=1042.4 us
+### rc=0 freq_after_khz=1795000 thermal_after_mc=40000
+
+### section=munmap_threshold label=file-6.4MB-sparse
+### command='/data/local/tmp/pixel-ported-suite/munmap_only' file '64' '200' '/data/local/tmp/pixel-ported-suite/mb.bin' 6.4 16
+### gate_start_mc=40000 gate_wait_sec=5 gate_ready_mc=36000 freq_before_khz=578000 thermal_before_mc=36000
+file       mb=64 touch=6.400MB stride=16K : munmap mean=49.3 us  min=34.6 us
+### rc=0 freq_after_khz=1328000 thermal_after_mc=37000

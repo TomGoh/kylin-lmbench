@@ -15,11 +15,14 @@ class PixelRunnerScriptsTest(unittest.TestCase):
             "collect_metadata",
             "read_freq",
             "read_thermal",
+            "wait_for_thermal_gate",
             "combo_order",
             "--cpu",
             "mode_label",
             "freq_before",
             "thermal_before",
+            "thermal_gate_ready",
+            "WAIT_THERMAL_MAX_MC",
         ]:
             self.assertIn(needle, text)
 

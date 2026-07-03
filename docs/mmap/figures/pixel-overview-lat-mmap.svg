@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="560" viewBox="0 0 1180 560" role="img" aria-labelledby="title desc">
+  <title id="title">Pixel lat_mmap_precise overview</title>
+  <desc id="desc">Pixel protected and NVHE lat_mmap_precise medians across mapping sizes, with a 0-8MB detail panel.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <text x="590.0" y="34.0" font-size="21" fill="#1F2933" font-weight="700" text-anchor="middle">Pixel lat_mmap_precise</text>
+  <text x="590.0" y="57.0" font-size="13" fill="#64707D" font-weight="400" text-anchor="middle">median us/iteration; left panel shows full range, right panel expands 0-8 MB</text>
+  <line x1="500.0" y1="82.0" x2="530.0" y2="82.0" stroke="#C23B2A" stroke-width="2.5"/>
+  <circle cx="515.0" cy="82.0" r="4.0" fill="#C23B2A"/>
+  <text x="540.0" y="86.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="start">protected</text>
+  <line x1="500.0" y1="106.0" x2="530.0" y2="106.0" stroke="#4D7C59" stroke-width="2.5"/>
+  <circle cx="515.0" cy="106.0" r="4.0" fill="#4D7C59"/>
+  <text x="540.0" y="110.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="start">NVHE</text>
+  <text x="84.0" y="102.0" font-size="15" fill="#1F2933" font-weight="700" text-anchor="start">Full range: 0-64 MB</text>
+  <line x1="84.0" y1="435.0" x2="554.0" y2="435.0" stroke="#E8EDF3"/>
+  <text x="74.0" y="439.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">0</text>
+  <line x1="84.0" y1="356.2" x2="554.0" y2="356.2" stroke="#E8EDF3"/>
+  <text x="74.0" y="360.2" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">200</text>
+  <line x1="84.0" y1="277.5" x2="554.0" y2="277.5" stroke="#E8EDF3"/>
+  <text x="74.0" y="281.5" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">400</text>
+  <line x1="84.0" y1="198.8" x2="554.0" y2="198.8" stroke="#E8EDF3"/>
+  <text x="74.0" y="202.8" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">600</text>
+  <line x1="84.0" y1="120.0" x2="554.0" y2="120.0" stroke="#E8EDF3"/>
+  <text x="74.0" y="124.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">800</text>
+  <line x1="84.0" y1="120.0" x2="84.0" y2="435.0" stroke="#E8EDF3"/>
+  <line x1="84.0" y1="435.0" x2="84.0" y2="440.0" stroke="#5C6670"/>
+  <text x="84.0" y="457.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">0</text>
+  <line x1="201.5" y1="120.0" x2="201.5" y2="435.0" stroke="#E8EDF3"/>
+  <line x1="201.5" y1="435.0" x2="201.5" y2="440.0" stroke="#5C6670"/>
+  <text x="201.5" y="457.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">16</text>
+  <line x1="319.0" y1="120.0" x2="319.0" y2="435.0" stroke="#E8EDF3"/>
+  <line x1="319.0" y1="435.0" x2="319.0" y2="440.0" stroke="#5C6670"/>
+  <text x="319.0" y="457.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">32</text>
+  <line x1="436.5" y1="120.0" x2="436.5" y2="435.0" stroke="#E8EDF3"/>
+  <line x1="436.5" y1="435.0" x2="436.5" y2="440.0" stroke="#5C6670"/>
+  <text x="436.5" y="457.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">48</text>
+  <line x1="554.0" y1="120.0" x2="554.0" y2="435.0" stroke="#E8EDF3"/>
+  <line x1="554.0" y1="435.0" x2="554.0" y2="440.0" stroke="#5C6670"/>
+  <text x="554.0" y="457.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">64</text>
+  <polyline points="87.7,430.4 91.3,428.9 98.7,425.9 113.4,414.4 142.8,399.3 201.5,368.8 554.0,186.7" fill="none" stroke="#C23B2A" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="87.7" cy="430.4" r="4.0" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="91.3" cy="428.9" r="4.0" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="98.7" cy="425.9" r="4.0" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="113.4" cy="414.4" r="4.0" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="142.8" cy="399.3" r="4.0" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="201.5" cy="368.8" r="4.0" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="554.0" cy="186.7" r="4.0" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <polyline points="87.7,430.5 91.3,428.4 98.7,425.2 113.4,418.9 142.8,400.3 201.5,369.9 554.0,186.3" fill="none" stroke="#4D7C59" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="87.7" cy="430.5" r="4.0" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="91.3" cy="428.4" r="4.0" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="98.7" cy="425.2" r="4.0" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="113.4" cy="418.9" r="4.0" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="142.8" cy="400.3" r="4.0" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="201.5" cy="369.9" r="4.0" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="554.0" cy="186.3" r="4.0" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <line x1="84.0" y1="120.0" x2="84.0" y2="435.0" stroke="#5C6670"/>
+  <line x1="84.0" y1="435.0" x2="554.0" y2="435.0" stroke="#5C6670"/>
+  <text transform="translate(32.0 277.5) rotate(-90)" font-size="12" fill="#64707D" text-anchor="middle">us/iteration</text>
+  <text x="319.0" y="481.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="middle">mapping size (MB)</text>
+  <text x="665.0" y="102.0" font-size="15" fill="#1F2933" font-weight="700" text-anchor="start">Detail: 0-8 MB</text>
+  <line x1="665.0" y1="435.0" x2="1095.0" y2="435.0" stroke="#E8EDF3"/>
+  <text x="655.0" y="439.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">0</text>
+  <line x1="665.0" y1="372.0" x2="1095.0" y2="372.0" stroke="#E8EDF3"/>
+  <text x="655.0" y="376.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">20</text>
+  <line x1="665.0" y1="309.0" x2="1095.0" y2="309.0" stroke="#E8EDF3"/>
+  <text x="655.0" y="313.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">40</text>
+  <line x1="665.0" y1="246.0" x2="1095.0" y2="246.0" stroke="#E8EDF3"/>
+  <text x="655.0" y="250.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">60</text>
+  <line x1="665.0" y1="183.0" x2="1095.0" y2="183.0" stroke="#E8EDF3"/>
+  <text x="655.0" y="187.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">80</text>
+  <line x1="665.0" y1="120.0" x2="1095.0" y2="120.0" stroke="#E8EDF3"/>
+  <text x="655.0" y="124.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">100</text>
+  <line x1="665.0" y1="120.0" x2="665.0" y2="435.0" stroke="#E8EDF3"/>
+  <line x1="665.0" y1="435.0" x2="665.0" y2="440.0" stroke="#5C6670"/>
+  <text x="665.0" y="457.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">0</text>
+  <line x1="772.5" y1="120.0" x2="772.5" y2="435.0" stroke="#E8EDF3"/>
+  <line x1="772.5" y1="435.0" x2="772.5" y2="440.0" stroke="#5C6670"/>
+  <text x="772.5" y="457.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">2</text>
+  <line x1="880.0" y1="120.0" x2="880.0" y2="435.0" stroke="#E8EDF3"/>
+  <line x1="880.0" y1="435.0" x2="880.0" y2="440.0" stroke="#5C6670"/>
+  <text x="880.0" y="457.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">4</text>
+  <line x1="987.5" y1="120.0" x2="987.5" y2="435.0" stroke="#E8EDF3"/>
+  <line x1="987.5" y1="435.0" x2="987.5" y2="440.0" stroke="#5C6670"/>
+  <text x="987.5" y="457.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">6</text>
+  <line x1="1095.0" y1="120.0" x2="1095.0" y2="435.0" stroke="#E8EDF3"/>
+  <line x1="1095.0" y1="435.0" x2="1095.0" y2="440.0" stroke="#5C6670"/>
+  <text x="1095.0" y="457.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">8</text>
+  <polyline points="691.9,398.0 718.8,386.1 772.5,362.1 880.0,269.9 1095.0,149.4" fill="none" stroke="#C23B2A" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="691.9" cy="398.0" r="4.0" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="718.8" cy="386.1" r="4.0" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="772.5" cy="362.1" r="4.0" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="880.0" cy="269.9" r="4.0" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="1095.0" cy="149.4" r="4.0" fill="#C23B2A" stroke="#FFFFFF" stroke-width="1"/>
+  <polyline points="691.9,398.8 718.8,382.3 772.5,356.3 880.0,306.2 1095.0,157.6" fill="none" stroke="#4D7C59" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="691.9" cy="398.8" r="4.0" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="718.8" cy="382.3" r="4.0" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="772.5" cy="356.3" r="4.0" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="880.0" cy="306.2" r="4.0" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <circle cx="1095.0" cy="157.6" r="4.0" fill="#4D7C59" stroke="#FFFFFF" stroke-width="1"/>
+  <line x1="665.0" y1="120.0" x2="665.0" y2="435.0" stroke="#5C6670"/>
+  <line x1="665.0" y1="435.0" x2="1095.0" y2="435.0" stroke="#5C6670"/>
+  <text transform="translate(613.0 277.5) rotate(-90)" font-size="12" fill="#64707D" text-anchor="middle">us/iteration</text>
+  <text x="880.0" y="481.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="middle">mapping size (MB)</text>
+  <text x="590.0" y="532.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="middle">Source: pixel9proxl-aosp-pkvm-nvhe-20260701-overview-early-5run/summary/overview-early-diff.csv</text>
+</svg>

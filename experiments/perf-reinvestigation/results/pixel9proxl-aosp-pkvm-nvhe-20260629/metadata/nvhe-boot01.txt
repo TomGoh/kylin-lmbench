@@ -1,0 +1,226 @@
+date=2026-06-29T10:03:32+08:00
+label=nvhe-boot01
+serial=47091FDAS009VF
+--- adb devices ---
+List of devices attached
+47091FDAS009VF         device usb:1-1 product:aosp_komodo model:AOSP_on_komodo device:komodo transport_id:1
+
+--- uid ---
+0
+--- props ---
+komodo
+AOSP on komodo
+_b
+kvm.arm-protected
+0
+--- cmdline ---
+console=ttynull stack_depot_disable=on cgroup_disable=pressure kasan.page_alloc.sample=10 kasan.stacktrace=off kvm-arm.mode=protected bootconfig ioremap_guard root=/dev/ram0 rw clocksource=arch_sys_counter clk_ignore_unused loop.max_part=7 loop.hw_queue_depth=31 coherent_pool=4M firmware_class.path=/vendor/firmware irqaffinity=0 sysrq_always_enabled no_console_suspend softlockup_panic=1 kasan_multi_shot kvm-arm.mode=nvhe                                 dyndbg="func alloc_contig_dump_pages +p" printk.devkmsg=on cma_sysfs.experimental=Y cgroup_disable=memory cgroup.memory=nokmem rcupdate.rcu_expedited=1 rcu_nocbs=all rcutree.enable_rcu_lazy swiotlb=noforce disable_dma32=on sysctl.kernel.sched_pelt_multiplier=4 kasan=off kunit.enable=1 at24.write_timeout=100 log_buf_len=1024K bootconfig console=null exynos_drm.panel_name=google-km4.20a8a00a tcpci_max77759.conf_sbu=0 arm64.nomte ufs_pixel_fips140.fips_first_lba=151942 ufs_pixel_fips140.fips_last_lba=152453 ufs_pixel_fips140.fips_lu=0 id_aa64mmfr1.vh=0  bootconfig
+--- uname ---
+Linux localhost 6.1.84-android14-11-g5c500deec3a7-ab12418271 #1 SMP PREEMPT Thu Sep 26 10:25:24 UTC 2024 aarch64 Toybox
+--- kvm/tlb dmesg ---
+--- simpleperf list head ---
+List of hw-cache events:
+  # More cache events are available in `simpleperf list raw`.
+  branch-load-misses
+  branch-loads
+  dTLB-load-misses
+  dTLB-loads
+  iTLB-load-misses
+  iTLB-loads
+  L1-dcache-load-misses
+  L1-dcache-loads
+  L1-icache-load-misses
+  L1-icache-loads
+  LLC-load-misses
+  LLC-loads
+
+List of coresight etm events:
+  cs_etm/autofdo/
+  cs-etm		# CoreSight ETM instruction tracing
+
+List of hardware events:
+  branch-instructions
+  branch-misses
+  bus-cycles
+  cache-misses
+  cache-references
+  cpu-cycles
+  instructions
+  stalled-cycles-backend
+  stalled-cycles-frontend
+
+List of pmu events:
+  arm_cmn_0/dn_dvmop_bpi/
+  arm_cmn_0/dn_dvmop_pici/
+  arm_cmn_0/dn_dvmop_tlbi/
+  arm_cmn_0/dn_dvmop_vici/
+  arm_cmn_0/dn_dvmsync/
+  arm_cmn_0/dn_retry/
+  arm_cmn_0/dn_rndop_filtered/
+  arm_cmn_0/dn_trk_occupancy_all/
+  arm_cmn_0/dn_trk_occupancy_dvmop/
+  arm_cmn_0/dn_trk_occupancy_dvmsync/
+  arm_cmn_0/dn_trkfull/
+  arm_cmn_0/dn_txsnp_flitv/
+  arm_cmn_0/dn_txsnp_stall/
+  arm_cmn_0/dn_vmid_filtered/
+  arm_cmn_0/dtc_cycles/
+  arm_cmn_0/hnf_atomic_fwd/
+  arm_cmn_0/hnf_brd_snoops_sent/
+  arm_cmn_0/hnf_cache_fill/
+  arm_cmn_0/hnf_cache_miss/
+  arm_cmn_0/hnf_cmp_adq_full/
+  arm_cmn_0/hnf_dir_snoops_sent/
+  arm_cmn_0/hnf_intv_dirty/
+  arm_cmn_0/hnf_ld_st_swp_adq_full/
+  arm_cmn_0/hnf_mc_reqs/
+  arm_cmn_0/hnf_mc_retries/
+  arm_cmn_0/hnf_mpam_hardlim/
+  arm_cmn_0/hnf_mpam_softlim/
+  arm_cmn_0/hnf_pocq_addrhaz/
+  arm_cmn_0/hnf_pocq_atomic_addrhaz/
+  arm_cmn_0/hnf_pocq_reqs_recvd/
+  arm_cmn_0/hnf_pocq_retry/
+  arm_cmn_0/hnf_qos_hh_retry/
+  arm_cmn_0/hnf_qos_pocq_occupancy_all/
+  arm_cmn_0/hnf_qos_pocq_occupancy_atomic/
+  arm_cmn_0/hnf_qos_pocq_occupancy_read/
+  arm_cmn_0/hnf_qos_pocq_occupancy_stash/
+  arm_cmn_0/hnf_qos_pocq_occupancy_write/
+  arm_cmn_0/hnf_seq_full/
+  arm_cmn_0/hnf_seq_hit/
+  arm_cmn_0/hnf_sf_evictions/
+  arm_cmn_0/hnf_sf_hit/
+  arm_cmn_0/hnf_sfbi_brd_snp_sent/
+  arm_cmn_0/hnf_sfbi_dir_snp_sent/
+  arm_cmn_0/hnf_slc_eviction/
+  arm_cmn_0/hnf_slc_fill_invalid_way/
+  arm_cmn_0/hnf_slc_sf_cache_access/
+  arm_cmn_0/hnf_snp_fwded/
+  arm_cmn_0/hnf_snp_sent/
+  arm_cmn_0/hnf_snp_sent_untrk/
+  arm_cmn_0/hnf_stash_data_pull/
+  arm_cmn_0/hnf_stash_snp_sent/
+  arm_cmn_0/hnf_txdat_stall/
+  arm_cmn_0/hnf_txrsp_stall/
+  arm_cmn_0/hni_arready_no_arvalid/
+  arm_cmn_0/hni_arvalid_no_arready/
+  arm_cmn_0/hni_awready_no_awvalid/
+  arm_cmn_0/hni_awvalid_no_awready/
+  arm_cmn_0/hni_nonpcie_serialization/
+  arm_cmn_0/hni_pcie_serialization/
+  arm_cmn_0/hni_rdt_rd_alloc/
+  arm_cmn_0/hni_rdt_rd_occ_cnt_ovfl/
+  arm_cmn_0/hni_rdt_wr_alloc/
+  arm_cmn_0/hni_rdt_wr_occ_cnt_ovfl/
+  arm_cmn_0/hni_rrt_rd_alloc/
+  arm_cmn_0/hni_rrt_rd_occ_cnt_ovfl/
+  arm_cmn_0/hni_rrt_wr_alloc/
+  arm_cmn_0/hni_rrt_wr_occ_cnt_ovfl/
+  arm_cmn_0/hni_txdat_stall/
+  arm_cmn_0/hni_txrsp_retryack/
+  arm_cmn_0/hni_wdb_alloc/
+  arm_cmn_0/hni_wdb_occ_cnt_ovfl/
+  arm_cmn_0/hni_wvalid_no_wready/
+  arm_cmn_0/mtsx_axi_rd_req/
+  arm_cmn_0/mtsx_axi_wr_req/
+  arm_cmn_0/mtsx_tc_fill/
+  arm_cmn_0/mtsx_tc_lookup/
+  arm_cmn_0/mtsx_tc_miss/
+  arm_cmn_0/mtsx_tcq_cmo_alloc/
+  arm_cmn_0/mtsx_tcq_hazard/
+  arm_cmn_0/mtsx_tcq_occ_cnt_ovfl/
+  arm_cmn_0/mtsx_tcq_rd_alloc/
+  arm_cmn_0/mtsx_tcq_wr_alloc/
+  arm_cmn_0/mtsx_tdb_forward/
+  arm_cmn_0/mtsx_tdb_occ_cnt_ovfl/
+  arm_cmn_0/mxp_e_dat_partial_dat_flit/
+  arm_cmn_0/mxp_e_dat_txflit_stall/
+  arm_cmn_0/mxp_e_dat_txflit_valid/
+  arm_cmn_0/mxp_e_pub_partial_dat_flit/
+  arm_cmn_0/mxp_e_pub_txflit_stall/
+--- cpu possible ---
+0-7
+--- cpu max freq ---
+cpu0 1950000
+cpu1 1950000
+cpu2 1950000
+cpu3 1950000
+cpu4 2600000
+cpu5 2600000
+cpu6 2600000
+cpu7 3105000
+--- cpu governor ---
+cpu0 sched_pixel
+cpu1 sched_pixel
+cpu2 sched_pixel
+cpu3 sched_pixel
+cpu4 sched_pixel
+cpu5 sched_pixel
+cpu6 sched_pixel
+cpu7 sched_pixel
+--- cpu cur freq ---
+cpu0 820000
+cpu1 820000
+cpu2 820000
+cpu3 820000
+cpu4 578000
+cpu5 648000
+cpu6 578000
+cpu7 700000
+--- topology core_id ---
+cpu0 0
+cpu1 1
+cpu2 2
+cpu3 3
+cpu4 4
+cpu5 5
+cpu6 6
+cpu7 7
+--- topology package ---
+cpu0 0
+cpu1 0
+cpu2 0
+cpu3 0
+cpu4 0
+cpu5 0
+cpu6 0
+cpu7 0
+--- thermal ---
+BIG=36000
+MID=37000
+usb_pwr_therm=30103
+btmspkr_therm=30058
+disp_therm=30103
+north_therm=30437
+soc_therm=32974
+battery=30200
+battery_cycle=5
+dc-mains=34000
+usbc-therm-adc=340
+max77779fg=30200
+LITTLE=36000
+soc=17
+smpl_gm=0
+vdroop1=0
+batoilo=0
+batoilo2=0
+batt_vs=30194
+mdis_morepower=0
+thb_hda=51
+cp_on_chip_0=33000
+cp_on_chip_1=34000
+G3D=35000
+cp_on_chip_2=35000
+cp_on_chip_3=33000
+cp_on_chip_4=33000
+rf2_therm=31000
+rf1_therm=32000
+ISP=34000
+TPU=35000
+AUR=35000
+rfpa_therm=31260
+quiet_therm=31616
+charging_therm=33264
+--- /dev/kvm ---
+crw-rw-rw- 1 root root 10, 232 2026-06-25 01:52 /dev/kvm

@@ -49,7 +49,7 @@ Pixel 实验的唯一自变量应是 KVM 模式。其他条件尽量固定；无
 | 测试二进制 | 同一批 native benchmark，记录 `sha256sum` |
 | CPU | 主测试固定一个稳定核心。若 X4 峰值频率容易中途降频，优先选一个较稳定的 A720/mid core；稳定低频比会降频的峰值核心更适合斜率实验 |
 | 频率 | 优先固定 performance 模式或把目标 core cap 在稳定频点；每个 N 点前后记录 `scaling_cur_freq` |
-| 温度 | 每个 N 点前后记录 thermal zone；温度越界或发生 throttling 的数据单独标记并丢弃 |
+| 温度 | 每个 N 点启动前设置起跑温度阈值，只有关键 thermal zone / max thermal 低于该阈值才开始；每个 N 点前后仍记录 thermal zone。若后验发现 throttling 或进入高温区间，按 boot 或任务级标记并重跑，不用任务后升温规则删除单个 N 点 |
 | 映射类型 | per-entry 主实验使用 anonymous private mapping，避免文件页缓存和写回噪声 |
 | 页粒度 | 主实验按 `sysconf(_SC_PAGESIZE)` 确认 4 KB 页；尽量对映射调用 `MADV_NOHUGEPAGE`，避免 THP/mTHP 污染单页语义 |
 | 执行顺序 | 多次交错重启，避免单次启动状态偏差；每个 boot 内随机化 N 点顺序，避免热爬升与 N 单调相关 |
@@ -72,16 +72,16 @@ protected-boot04
 斜率实验需要额外的热/频率协议：
 
 1. 每个 boot 内不要按 `256 → 8192` 固定顺序扫 N，而是对 N 点随机排列；touched、untouched、batched 三类也应交错执行。
-2. 每个 N 点之间加入冷却间隔，直到目标 core 的 `scaling_cur_freq` 回到预期频点、关键 thermal zone 回到预设范围。
-3. 若某个 N 点执行前后频率下降、thermal 状态跨过预设阈值，或该点残差明显偏离，应标记为 reject 并在冷却后重跑。
-4. 阈值、冷却时间和 reject 规则必须写入结果 README，不能事后按数据形态选择。
+2. 每个 N 点启动前先轮询温度，直到 max thermal 或预先选定的关键 thermal zone 低于预设起跑阈值；随后才读取 `freq_before` / `thermal_before` 并启动 probe。
+3. 每个 N 点结束后加入固定冷却间隔；频率和温度前后值都记录进 CSV，但不因为任务后升温自动删除整个 N 点。若后验看到实际 throttling、明显频率塌陷、高温区间切换，或该点残差明显偏离，应按任务或整个 boot 标记并在冷却后重跑。
+4. 起跑温度阈值、轮询间隔、固定冷却时间、后验 reject / rerun 规则必须写入结果 README，不能事后按数据形态选择。
 
-本仓库已将这些要求固化到三个工具中：
+本仓库已将这些要求固化到以下工具中：
 
 | 工具 | 作用 |
 |---|---|
 | `experiments/munmap-tlbi/pixel_madv_entry_slope.c` | 设备端用户态探针，执行 touched/untouched、single/batched `MADV_DONTNEED`，输出 per-run CSV |
-| `experiments/munmap-tlbi/pixel-run-madv-entry-slope.sh` | host 端 runner，不切 KVM 模式；负责 push 工具、采 metadata、随机化任务顺序、记录频率/温度、写 reject_reason |
+| `experiments/munmap-tlbi/pixel-run-madv-entry-slope.sh` | host 端 runner，不切 KVM 模式；负责 push 工具、采 metadata、随机化任务顺序、执行起跑温度门控、记录频率/温度、写 reject_reason |
 | `experiments/munmap-tlbi/pixel-analyze-madv-entry-slope.py` | 读取 nvhe/protected CSV，拟合 slope，计算 raw delta、untouched drift、DiD per-entry cost 与解析下限 |
 | `experiments/munmap-tlbi/pixel-summarize-madv-entry-slope.py` | 汇总多个 boot pair 的 DiD 行，计算 median/mean、bootstrap CI、漂移项和最终 `resolution_floor_ns_per_op` |
 
@@ -95,7 +95,9 @@ make -C experiments/munmap-tlbi android
 
 ```bash
 OUT=experiments/munmap-tlbi/results/pixel-madv-entry-nvhe-boot01 \
-CPU=4 PAGES=256,512,1024,2048,4096,8192 RUNS=30 BLOCKS=1 COOLDOWN_SEC=2 \
+CPU=4 PAGES=256,512,1024,2048,4096,8192 RUNS=30 BLOCKS=1 \
+WAIT_THERMAL_MAX_MC=39000 WAIT_THERMAL_POLL_SEC=5 COOLDOWN_SEC=3 \
+FREQ_DROP_PCT=100 THERMAL_RISE_MC=1000000 \
 bash experiments/munmap-tlbi/pixel-run-madv-entry-slope.sh
 ```
 
@@ -226,6 +228,8 @@ block_id, task_index, mode_label, cpu_target,
 freq_before_khz, freq_after_khz,
 thermal_before_mc, thermal_after_mc,
 thermal_detail_before, thermal_detail_after,
+thermal_gate_max_mc, thermal_gate_start_mc,
+thermal_wait_sec, thermal_gate_ready_mc,
 reject_reason
 ```
 
@@ -589,7 +593,10 @@ fit range sensitivity, e.g. 256..8192 vs 512..4096
 mode, boot_id, cpu, workload, mapping_type, operation, n_pages,
 size_mb, touch_span_mb, stride_kb, runs,
 median_us, mean_us, mad_us, mad_pct, temp_before, temp_after,
-freq_before_khz, freq_after_khz, reject_reason
+freq_before_khz, freq_after_khz,
+thermal_gate_max_mc, thermal_gate_start_mc,
+thermal_wait_sec, thermal_gate_ready_mc,
+reject_reason
 ```
 
 DiD summary 至少包含：

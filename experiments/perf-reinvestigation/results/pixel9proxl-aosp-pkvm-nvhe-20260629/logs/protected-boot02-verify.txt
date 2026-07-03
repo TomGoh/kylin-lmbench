@@ -1,0 +1,4 @@
+kvm-arm.mode tokens : [kvm-arm.mode=protected ]   (last one wins)
+dmesg KVM line      : [    0.014284] CPU features: detected: Protected KVM
+vendor_kernel_boot_b sha256: da27174be409b06dc61376cb6f1a444f1b4bcea257640e22c5f12836eaab6d3f
+=> partition == ORIGINAL backup (protected; byte-perfect restore)

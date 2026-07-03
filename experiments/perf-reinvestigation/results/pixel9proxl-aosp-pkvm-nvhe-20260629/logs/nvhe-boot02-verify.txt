@@ -1,0 +1,4 @@
+kvm-arm.mode tokens : [kvm-arm.mode=protected kvm-arm.mode=nvhe ]   (last one wins)
+dmesg KVM line      : [    0.106489] kvm [1]: Hyp mode initialized successfully
+vendor_kernel_boot_b sha256: 3c858cc9cdcabee6c4e9cbd0bfb0b08c00e2fd89c6572bb529b55b1761c62630
+=> partition == nvhe image (currently in nvhe)

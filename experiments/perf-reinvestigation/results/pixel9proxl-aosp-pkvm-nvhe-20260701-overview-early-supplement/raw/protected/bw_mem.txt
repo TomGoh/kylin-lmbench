@@ -1,0 +1,36 @@
+
+### section=bw_mem label=rd-64m-run-1
+### command='/data/local/tmp/pixel-overview-early/bw_mem' -P 1 -W 1 -N 3 64m 'rd'
+### gate_start_mc=46000 gate_wait_sec=40 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=40000
+67.11 26234.90
+### rc=0 freq_after_khz=578000 thermal_after_mc=39000
+
+### section=bw_mem label=rd-64m-run-2
+### command='/data/local/tmp/pixel-overview-early/bw_mem' -P 1 -W 1 -N 3 64m 'rd'
+### gate_start_mc=38000 gate_wait_sec=0 gate_ready_mc=38000 freq_before_khz=578000 thermal_before_mc=38000
+67.11 26358.55
+### rc=0 freq_after_khz=578000 thermal_after_mc=40000
+
+### section=bw_mem label=wr-64m-run-1
+### command='/data/local/tmp/pixel-overview-early/bw_mem' -P 1 -W 1 -N 3 64m 'wr'
+### gate_start_mc=40000 gate_wait_sec=10 gate_ready_mc=37000 freq_before_khz=648000 thermal_before_mc=38000
+67.11 17110.88
+### rc=0 freq_after_khz=1945000 thermal_after_mc=40000
+
+### section=bw_mem label=wr-64m-run-2
+### command='/data/local/tmp/pixel-overview-early/bw_mem' -P 1 -W 1 -N 3 64m 'wr'
+### gate_start_mc=38000 gate_wait_sec=0 gate_ready_mc=38000 freq_before_khz=578000 thermal_before_mc=38000
+67.11 17396.98
+### rc=0 freq_after_khz=2450000 thermal_after_mc=42000
+
+### section=bw_mem label=rdwr-64m-run-1
+### command='/data/local/tmp/pixel-overview-early/bw_mem' -P 1 -W 1 -N 3 64m 'rdwr'
+### gate_start_mc=43000 gate_wait_sec=10 gate_ready_mc=38000 freq_before_khz=1795000 thermal_before_mc=38000
+67.11 18355.82
+### rc=0 freq_after_khz=1549000 thermal_after_mc=39000
+
+### section=bw_mem label=rdwr-64m-run-2
+### command='/data/local/tmp/pixel-overview-early/bw_mem' -P 1 -W 1 -N 3 64m 'rdwr'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=40000
+67.11 15861.23
+### rc=0 freq_after_khz=2600000 thermal_after_mc=42000

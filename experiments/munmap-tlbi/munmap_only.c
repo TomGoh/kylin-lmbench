@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <time.h>
+#include <stdint.h>
 #include <sys/mman.h>
 
 static double now_ns(void)
@@ -43,11 +44,22 @@ int main(int argc, char **argv)
         if (is_file) {
             p = mmap(NULL, sz, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
         } else {
-            p = mmap(NULL, sz, PROT_READ | PROT_WRITE,
-                     MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-            if (p != MAP_FAILED)
-                madvise(p, sz, !strcmp(mode, "anon_huge") ? MADV_HUGEPAGE
-                                                          : MADV_NOHUGEPAGE);
+            /* 2 MB-align the anon mapping so MADV_HUGEPAGE can actually form
+             * PMD huge pages even for a sub-2MB head touch. Over-allocate,
+             * trim head/tail slack (untimed); only munmap(p, sz) is timed.
+             * Alignment is benign for anon_base (still 4 KB) and fair to both. */
+            size_t aln = 2UL << 20;
+            char *raw = mmap(NULL, sz + aln, PROT_READ | PROT_WRITE,
+                             MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+            if (raw == MAP_FAILED) { perror("mmap"); return 1; }
+            uintptr_t a = ((uintptr_t)raw + aln - 1) & ~(aln - 1);
+            if (a != (uintptr_t)raw)
+                munmap(raw, a - (uintptr_t)raw);
+            if ((uintptr_t)raw + sz + aln > a + sz)
+                munmap((char *)(a + sz), (uintptr_t)raw + sz + aln - (a + sz));
+            p = (char *)a;
+            madvise(p, sz, !strcmp(mode, "anon_huge") ? MADV_HUGEPAGE
+                                                      : MADV_NOHUGEPAGE);
         }
         if (p == MAP_FAILED) { perror("mmap"); return 1; }
         for (size_t i = 0; i < tb; i += stride)

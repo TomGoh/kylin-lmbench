@@ -1,0 +1,67 @@
+# E1 anon_base vs anon_huge | core=0 iters=300 rounds=10
+# kernel=6.6.30-pkvm-clean
+# cmdline=BOOT_IMAGE=/vmlinuz-6.6.30-pkvm-clean root=UUID=8719a228-caca-4218-8e22-0e25d5ce8777 ro kvm-arm.mode=protected loglevel=7 console=tty1
+# thp=[always] madvise never
+# freq_start=1900000
+# date=2026-06-26T16:14:02+08:00
+point=8MB/sparse round=1 anon_base  mb=8 touch=0.800MB stride=16K : munmap mean=47.3 us  min=45.0 us
+point=8MB/sparse round=1 anon_huge  mb=8 touch=0.800MB stride=16K : munmap mean=5.1 us  min=4.8 us
+point=8MB/sparse round=2 anon_base  mb=8 touch=0.800MB stride=16K : munmap mean=48.9 us  min=45.5 us
+point=8MB/sparse round=2 anon_huge  mb=8 touch=0.800MB stride=16K : munmap mean=5.0 us  min=4.7 us
+point=8MB/sparse round=3 anon_base  mb=8 touch=0.800MB stride=16K : munmap mean=47.6 us  min=44.7 us
+point=8MB/sparse round=3 anon_huge  mb=8 touch=0.800MB stride=16K : munmap mean=5.0 us  min=4.6 us
+point=8MB/sparse round=4 anon_base  mb=8 touch=0.800MB stride=16K : munmap mean=48.2 us  min=45.2 us
+point=8MB/sparse round=4 anon_huge  mb=8 touch=0.800MB stride=16K : munmap mean=5.0 us  min=4.7 us
+point=8MB/sparse round=5 anon_base  mb=8 touch=0.800MB stride=16K : munmap mean=47.1 us  min=45.4 us
+point=8MB/sparse round=5 anon_huge  mb=8 touch=0.800MB stride=16K : munmap mean=5.0 us  min=4.6 us
+point=8MB/sparse round=6 anon_base  mb=8 touch=0.800MB stride=16K : munmap mean=47.9 us  min=45.0 us
+point=8MB/sparse round=6 anon_huge  mb=8 touch=0.800MB stride=16K : munmap mean=5.0 us  min=4.6 us
+point=8MB/sparse round=7 anon_base  mb=8 touch=0.800MB stride=16K : munmap mean=46.9 us  min=44.9 us
+point=8MB/sparse round=7 anon_huge  mb=8 touch=0.800MB stride=16K : munmap mean=5.0 us  min=4.6 us
+point=8MB/sparse round=8 anon_base  mb=8 touch=0.800MB stride=16K : munmap mean=47.8 us  min=44.9 us
+point=8MB/sparse round=8 anon_huge  mb=8 touch=0.800MB stride=16K : munmap mean=5.0 us  min=4.7 us
+point=8MB/sparse round=9 anon_base  mb=8 touch=0.800MB stride=16K : munmap mean=48.4 us  min=45.2 us
+point=8MB/sparse round=9 anon_huge  mb=8 touch=0.800MB stride=16K : munmap mean=5.0 us  min=4.7 us
+point=8MB/sparse round=10 anon_base  mb=8 touch=0.800MB stride=16K : munmap mean=49.3 us  min=44.9 us
+point=8MB/sparse round=10 anon_huge  mb=8 touch=0.800MB stride=16K : munmap mean=5.0 us  min=4.6 us
+point=16MB/sparse round=1 anon_base  mb=16 touch=1.600MB stride=16K : munmap mean=91.4 us  min=85.0 us
+point=16MB/sparse round=1 anon_huge  mb=16 touch=1.600MB stride=16K : munmap mean=5.0 us  min=4.7 us
+point=16MB/sparse round=2 anon_base  mb=16 touch=1.600MB stride=16K : munmap mean=91.8 us  min=85.4 us
+point=16MB/sparse round=2 anon_huge  mb=16 touch=1.600MB stride=16K : munmap mean=5.1 us  min=4.8 us
+point=16MB/sparse round=3 anon_base  mb=16 touch=1.600MB stride=16K : munmap mean=91.7 us  min=85.7 us
+point=16MB/sparse round=3 anon_huge  mb=16 touch=1.600MB stride=16K : munmap mean=6.1 us  min=4.7 us
+point=16MB/sparse round=4 anon_base  mb=16 touch=1.600MB stride=16K : munmap mean=91.1 us  min=85.4 us
+point=16MB/sparse round=4 anon_huge  mb=16 touch=1.600MB stride=16K : munmap mean=5.0 us  min=4.7 us
+point=16MB/sparse round=5 anon_base  mb=16 touch=1.600MB stride=16K : munmap mean=88.7 us  min=85.1 us
+point=16MB/sparse round=5 anon_huge  mb=16 touch=1.600MB stride=16K : munmap mean=5.1 us  min=4.8 us
+point=16MB/sparse round=6 anon_base  mb=16 touch=1.600MB stride=16K : munmap mean=86.9 us  min=85.3 us
+point=16MB/sparse round=6 anon_huge  mb=16 touch=1.600MB stride=16K : munmap mean=5.1 us  min=4.8 us
+point=16MB/sparse round=7 anon_base  mb=16 touch=1.600MB stride=16K : munmap mean=88.9 us  min=85.3 us
+point=16MB/sparse round=7 anon_huge  mb=16 touch=1.600MB stride=16K : munmap mean=5.1 us  min=4.7 us
+point=16MB/sparse round=8 anon_base  mb=16 touch=1.600MB stride=16K : munmap mean=88.9 us  min=85.2 us
+point=16MB/sparse round=8 anon_huge  mb=16 touch=1.600MB stride=16K : munmap mean=5.1 us  min=4.6 us
+point=16MB/sparse round=9 anon_base  mb=16 touch=1.600MB stride=16K : munmap mean=90.1 us  min=85.2 us
+point=16MB/sparse round=9 anon_huge  mb=16 touch=1.600MB stride=16K : munmap mean=5.0 us  min=4.8 us
+point=16MB/sparse round=10 anon_base  mb=16 touch=1.600MB stride=16K : munmap mean=87.9 us  min=85.0 us
+point=16MB/sparse round=10 anon_huge  mb=16 touch=1.600MB stride=16K : munmap mean=5.0 us  min=4.8 us
+point=64MB/sparse round=1 anon_base  mb=64 touch=6.400MB stride=16K : munmap mean=122.2 us  min=106.2 us
+point=64MB/sparse round=1 anon_huge  mb=64 touch=6.400MB stride=16K : munmap mean=19.9 us  min=17.9 us
+point=64MB/sparse round=2 anon_base  mb=64 touch=6.400MB stride=16K : munmap mean=121.3 us  min=105.3 us
+point=64MB/sparse round=2 anon_huge  mb=64 touch=6.400MB stride=16K : munmap mean=20.4 us  min=18.2 us
+point=64MB/sparse round=3 anon_base  mb=64 touch=6.400MB stride=16K : munmap mean=118.5 us  min=104.6 us
+point=64MB/sparse round=3 anon_huge  mb=64 touch=6.400MB stride=16K : munmap mean=19.3 us  min=17.7 us
+point=64MB/sparse round=4 anon_base  mb=64 touch=6.400MB stride=16K : munmap mean=121.8 us  min=105.3 us
+point=64MB/sparse round=4 anon_huge  mb=64 touch=6.400MB stride=16K : munmap mean=19.5 us  min=17.9 us
+point=64MB/sparse round=5 anon_base  mb=64 touch=6.400MB stride=16K : munmap mean=119.4 us  min=105.4 us
+point=64MB/sparse round=5 anon_huge  mb=64 touch=6.400MB stride=16K : munmap mean=20.1 us  min=18.1 us
+point=64MB/sparse round=6 anon_base  mb=64 touch=6.400MB stride=16K : munmap mean=119.8 us  min=105.2 us
+point=64MB/sparse round=6 anon_huge  mb=64 touch=6.400MB stride=16K : munmap mean=20.0 us  min=18.0 us
+point=64MB/sparse round=7 anon_base  mb=64 touch=6.400MB stride=16K : munmap mean=120.2 us  min=105.4 us
+point=64MB/sparse round=7 anon_huge  mb=64 touch=6.400MB stride=16K : munmap mean=20.0 us  min=18.4 us
+point=64MB/sparse round=8 anon_base  mb=64 touch=6.400MB stride=16K : munmap mean=121.4 us  min=108.1 us
+point=64MB/sparse round=8 anon_huge  mb=64 touch=6.400MB stride=16K : munmap mean=19.5 us  min=17.7 us
+point=64MB/sparse round=9 anon_base  mb=64 touch=6.400MB stride=16K : munmap mean=117.8 us  min=105.1 us
+point=64MB/sparse round=9 anon_huge  mb=64 touch=6.400MB stride=16K : munmap mean=19.8 us  min=18.0 us
+point=64MB/sparse round=10 anon_base  mb=64 touch=6.400MB stride=16K : munmap mean=120.5 us  min=104.7 us
+point=64MB/sparse round=10 anon_huge  mb=64 touch=6.400MB stride=16K : munmap mean=20.7 us  min=17.9 us
+# freq_end=1900000

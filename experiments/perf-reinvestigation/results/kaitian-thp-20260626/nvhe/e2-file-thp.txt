@@ -1,0 +1,22 @@
+thp=always r=1 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=89.3 us  min=87.7 us
+thp=never r=1 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=88.9 us  min=88.1 us
+thp=always r=2 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=88.8 us  min=88.0 us
+thp=never r=2 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=89.0 us  min=88.2 us
+thp=always r=3 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=91.3 us  min=87.6 us
+thp=never r=3 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=88.9 us  min=88.3 us
+thp=always r=4 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=88.9 us  min=88.0 us
+thp=never r=4 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=92.4 us  min=87.9 us
+thp=always r=5 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=88.3 us  min=87.4 us
+thp=never r=5 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=88.9 us  min=88.3 us
+thp=always r=6 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=89.5 us  min=88.0 us
+thp=never r=6 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=89.4 us  min=88.1 us
+thp=always r=7 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=89.1 us  min=88.1 us
+thp=never r=7 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=88.9 us  min=87.6 us
+thp=always r=8 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=88.6 us  min=88.0 us
+thp=never r=8 op_sweep_sparse: munmap   file mb=64 touch=6.400MB stride=16K : mean=88.9 us  min=88.0 us
+thp=always r=1 lat_mmap_precise: size_mb=64 iters=50 total_ns=21743136 per_iter_ns=434862.720 per_iter_us=434.862720
+thp=always r=2 lat_mmap_precise: size_mb=64 iters=50 total_ns=21099433 per_iter_ns=421988.660 per_iter_us=421.988660
+thp=always r=3 lat_mmap_precise: size_mb=64 iters=50 total_ns=21163272 per_iter_ns=423265.440 per_iter_us=423.265440
+thp=never r=1 lat_mmap_precise: size_mb=64 iters=50 total_ns=21264933 per_iter_ns=425298.660 per_iter_us=425.298660
+thp=never r=2 lat_mmap_precise: size_mb=64 iters=50 total_ns=21105273 per_iter_ns=422105.460 per_iter_us=422.105460
+thp=never r=3 lat_mmap_precise: size_mb=64 iters=50 total_ns=21056092 per_iter_ns=421121.840 per_iter_us=421.121840

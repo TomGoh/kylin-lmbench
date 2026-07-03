@@ -1,0 +1,210 @@
+
+### section=lat_mmap_precise label=size-0.5MB-run-1
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '0.5' '10000' '/data/local/tmp/pixel-overview-early/lmb_0.5MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=36000
+size_mb=0.5 iters=10000 total_ns=117438843 per_iter_ns=11743.884 per_iter_us=11.743884
+### rc=0 freq_after_khz=578000 thermal_after_mc=37000
+
+### section=lat_mmap_precise label=size-0.5MB-run-2
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '0.5' '10000' '/data/local/tmp/pixel-overview-early/lmb_0.5MB.bin'
+### gate_start_mc=36000 gate_wait_sec=0 gate_ready_mc=36000 freq_before_khz=578000 thermal_before_mc=36000
+size_mb=0.5 iters=10000 total_ns=108811401 per_iter_ns=10881.140 per_iter_us=10.881140
+### rc=0 freq_after_khz=1795000 thermal_after_mc=37000
+
+### section=lat_mmap_precise label=size-0.5MB-run-3
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '0.5' '10000' '/data/local/tmp/pixel-overview-early/lmb_0.5MB.bin'
+### gate_start_mc=36000 gate_wait_sec=0 gate_ready_mc=36000 freq_before_khz=1795000 thermal_before_mc=37000
+size_mb=0.5 iters=10000 total_ns=135894490 per_iter_ns=13589.449 per_iter_us=13.589449
+### rc=0 freq_after_khz=578000 thermal_after_mc=37000
+
+### section=lat_mmap_precise label=size-0.5MB-run-4
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '0.5' '10000' '/data/local/tmp/pixel-overview-early/lmb_0.5MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=648000 thermal_before_mc=36000
+size_mb=0.5 iters=10000 total_ns=119705241 per_iter_ns=11970.524 per_iter_us=11.970524
+### rc=0 freq_after_khz=2130000 thermal_after_mc=37000
+
+### section=lat_mmap_precise label=size-0.5MB-run-5
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '0.5' '10000' '/data/local/tmp/pixel-overview-early/lmb_0.5MB.bin'
+### gate_start_mc=38000 gate_wait_sec=0 gate_ready_mc=38000 freq_before_khz=1795000 thermal_before_mc=38000
+size_mb=0.5 iters=10000 total_ns=110656128 per_iter_ns=11065.613 per_iter_us=11.065613
+### rc=0 freq_after_khz=1795000 thermal_after_mc=40000
+
+### section=lat_mmap_precise label=size-1MB-run-1
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '1' '8000' '/data/local/tmp/pixel-overview-early/lmb_1MB.bin'
+### gate_start_mc=38000 gate_wait_sec=0 gate_ready_mc=38000 freq_before_khz=1065000 thermal_before_mc=38000
+size_mb=1 iters=8000 total_ns=123225301 per_iter_ns=15403.163 per_iter_us=15.403163
+### rc=0 freq_after_khz=1795000 thermal_after_mc=40000
+
+### section=lat_mmap_precise label=size-1MB-run-2
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '1' '8000' '/data/local/tmp/pixel-overview-early/lmb_1MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=648000 thermal_before_mc=37000
+size_mb=1 iters=8000 total_ns=124579102 per_iter_ns=15572.388 per_iter_us=15.572388
+### rc=0 freq_after_khz=1795000 thermal_after_mc=38000
+
+### section=lat_mmap_precise label=size-1MB-run-3
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '1' '8000' '/data/local/tmp/pixel-overview-early/lmb_1MB.bin'
+### gate_start_mc=38000 gate_wait_sec=0 gate_ready_mc=38000 freq_before_khz=648000 thermal_before_mc=37000
+size_mb=1 iters=8000 total_ns=154912150 per_iter_ns=19364.019 per_iter_us=19.364019
+### rc=0 freq_after_khz=1549000 thermal_after_mc=40000
+
+### section=lat_mmap_precise label=size-1MB-run-4
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '1' '8000' '/data/local/tmp/pixel-overview-early/lmb_1MB.bin'
+### gate_start_mc=40000 gate_wait_sec=5 gate_ready_mc=36000 freq_before_khz=910000 thermal_before_mc=38000
+size_mb=1 iters=8000 total_ns=118492676 per_iter_ns=14811.585 per_iter_us=14.811585
+### rc=0 freq_after_khz=2600000 thermal_after_mc=38000
+
+### section=lat_mmap_precise label=size-1MB-run-5
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '1' '8000' '/data/local/tmp/pixel-overview-early/lmb_1MB.bin'
+### gate_start_mc=36000 gate_wait_sec=0 gate_ready_mc=36000 freq_before_khz=1795000 thermal_before_mc=37000
+size_mb=1 iters=8000 total_ns=124121378 per_iter_ns=15515.172 per_iter_us=15.515172
+### rc=0 freq_after_khz=1795000 thermal_after_mc=38000
+
+### section=lat_mmap_precise label=size-2MB-run-1
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '2' '5000' '/data/local/tmp/pixel-overview-early/lmb_2MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=37000
+size_mb=2 iters=5000 total_ns=111932780 per_iter_ns=22386.556 per_iter_us=22.386556
+### rc=0 freq_after_khz=1795000 thermal_after_mc=38000
+
+### section=lat_mmap_precise label=size-2MB-run-2
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '2' '5000' '/data/local/tmp/pixel-overview-early/lmb_2MB.bin'
+### gate_start_mc=38000 gate_wait_sec=0 gate_ready_mc=38000 freq_before_khz=2130000 thermal_before_mc=38000
+size_mb=2 iters=5000 total_ns=115673259 per_iter_ns=23134.652 per_iter_us=23.134652
+### rc=0 freq_after_khz=1795000 thermal_after_mc=37000
+
+### section=lat_mmap_precise label=size-2MB-run-3
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '2' '5000' '/data/local/tmp/pixel-overview-early/lmb_2MB.bin'
+### gate_start_mc=40000 gate_wait_sec=5 gate_ready_mc=36000 freq_before_khz=648000 thermal_before_mc=37000
+size_mb=2 iters=5000 total_ns=142748291 per_iter_ns=28549.658 per_iter_us=28.549658
+### rc=0 freq_after_khz=1549000 thermal_after_mc=38000
+
+### section=lat_mmap_precise label=size-2MB-run-4
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '2' '5000' '/data/local/tmp/pixel-overview-early/lmb_2MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=37000
+size_mb=2 iters=5000 total_ns=112938273 per_iter_ns=22587.655 per_iter_us=22.587655
+### rc=0 freq_after_khz=1795000 thermal_after_mc=37000
+
+### section=lat_mmap_precise label=size-2MB-run-5
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '2' '5000' '/data/local/tmp/pixel-overview-early/lmb_2MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=37000
+size_mb=2 iters=5000 total_ns=143394450 per_iter_ns=28678.890 per_iter_us=28.678890
+### rc=0 freq_after_khz=1549000 thermal_after_mc=37000
+
+### section=lat_mmap_precise label=size-4MB-run-1
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '4' '3000' '/data/local/tmp/pixel-overview-early/lmb_4MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=37000
+size_mb=4 iters=3000 total_ns=158926717 per_iter_ns=52975.572 per_iter_us=52.975572
+### rc=0 freq_after_khz=1795000 thermal_after_mc=39000
+
+### section=lat_mmap_precise label=size-4MB-run-2
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '4' '3000' '/data/local/tmp/pixel-overview-early/lmb_4MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=36000
+size_mb=4 iters=3000 total_ns=158915690 per_iter_ns=52971.897 per_iter_us=52.971897
+### rc=0 freq_after_khz=1945000 thermal_after_mc=37000
+
+### section=lat_mmap_precise label=size-4MB-run-3
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '4' '3000' '/data/local/tmp/pixel-overview-early/lmb_4MB.bin'
+### gate_start_mc=39000 gate_wait_sec=5 gate_ready_mc=36000 freq_before_khz=1221000 thermal_before_mc=38000
+size_mb=4 iters=3000 total_ns=122164592 per_iter_ns=40721.531 per_iter_us=40.721531
+### rc=0 freq_after_khz=1795000 thermal_after_mc=40000
+
+### section=lat_mmap_precise label=size-4MB-run-4
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '4' '3000' '/data/local/tmp/pixel-overview-early/lmb_4MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=37000
+size_mb=4 iters=3000 total_ns=157284220 per_iter_ns=52428.073 per_iter_us=52.428073
+### rc=0 freq_after_khz=1795000 thermal_after_mc=38000
+
+### section=lat_mmap_precise label=size-4MB-run-5
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '4' '3000' '/data/local/tmp/pixel-overview-early/lmb_4MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=38000
+size_mb=4 iters=3000 total_ns=124707885 per_iter_ns=41569.295 per_iter_us=41.569295
+### rc=0 freq_after_khz=1418000 thermal_after_mc=38000
+
+### section=lat_mmap_precise label=size-8MB-run-1
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '8' '2000' '/data/local/tmp/pixel-overview-early/lmb_8MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=1795000 thermal_before_mc=38000
+size_mb=8 iters=2000 total_ns=179738403 per_iter_ns=89869.201 per_iter_us=89.869202
+### rc=0 freq_after_khz=1945000 thermal_after_mc=38000
+
+### section=lat_mmap_precise label=size-8MB-run-2
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '8' '2000' '/data/local/tmp/pixel-overview-early/lmb_8MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=37000
+size_mb=8 iters=2000 total_ns=171834473 per_iter_ns=85917.236 per_iter_us=85.917237
+### rc=0 freq_after_khz=1945000 thermal_after_mc=39000
+
+### section=lat_mmap_precise label=size-8MB-run-3
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '8' '2000' '/data/local/tmp/pixel-overview-early/lmb_8MB.bin'
+### gate_start_mc=40000 gate_wait_sec=5 gate_ready_mc=37000 freq_before_khz=1795000 thermal_before_mc=37000
+size_mb=8 iters=2000 total_ns=181331706 per_iter_ns=90665.853 per_iter_us=90.665853
+### rc=0 freq_after_khz=1795000 thermal_after_mc=39000
+
+### section=lat_mmap_precise label=size-8MB-run-4
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '8' '2000' '/data/local/tmp/pixel-overview-early/lmb_8MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=1945000 thermal_before_mc=37000
+size_mb=8 iters=2000 total_ns=186853719 per_iter_ns=93426.860 per_iter_us=93.426860
+### rc=0 freq_after_khz=1795000 thermal_after_mc=38000
+
+### section=lat_mmap_precise label=size-8MB-run-5
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '8' '2000' '/data/local/tmp/pixel-overview-early/lmb_8MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=37000
+size_mb=8 iters=2000 total_ns=190073812 per_iter_ns=95036.906 per_iter_us=95.036906
+### rc=0 freq_after_khz=1795000 thermal_after_mc=37000
+
+### section=lat_mmap_precise label=size-16MB-run-1
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '16' '1000' '/data/local/tmp/pixel-overview-early/lmb_16MB.bin'
+### gate_start_mc=39000 gate_wait_sec=5 gate_ready_mc=37000 freq_before_khz=2450000 thermal_before_mc=37000
+size_mb=16 iters=1000 total_ns=138631633 per_iter_ns=138631.633 per_iter_us=138.631633
+### rc=0 freq_after_khz=910000 thermal_after_mc=40000
+
+### section=lat_mmap_precise label=size-16MB-run-2
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '16' '1000' '/data/local/tmp/pixel-overview-early/lmb_16MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=1795000 thermal_before_mc=39000
+size_mb=16 iters=1000 total_ns=174367798 per_iter_ns=174367.798 per_iter_us=174.367798
+### rc=0 freq_after_khz=1795000 thermal_after_mc=39000
+
+### section=lat_mmap_precise label=size-16MB-run-3
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '16' '1000' '/data/local/tmp/pixel-overview-early/lmb_16MB.bin'
+### gate_start_mc=36000 gate_wait_sec=0 gate_ready_mc=36000 freq_before_khz=648000 thermal_before_mc=38000
+size_mb=16 iters=1000 total_ns=173846639 per_iter_ns=173846.639 per_iter_us=173.846639
+### rc=0 freq_after_khz=1795000 thermal_after_mc=38000
+
+### section=lat_mmap_precise label=size-16MB-run-4
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '16' '1000' '/data/local/tmp/pixel-overview-early/lmb_16MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=37000
+size_mb=16 iters=1000 total_ns=158376425 per_iter_ns=158376.425 per_iter_us=158.376425
+### rc=0 freq_after_khz=1328000 thermal_after_mc=39000
+
+### section=lat_mmap_precise label=size-16MB-run-5
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '16' '1000' '/data/local/tmp/pixel-overview-early/lmb_16MB.bin'
+### gate_start_mc=39000 gate_wait_sec=5 gate_ready_mc=36000 freq_before_khz=1945000 thermal_before_mc=38000
+size_mb=16 iters=1000 total_ns=168235718 per_iter_ns=168235.718 per_iter_us=168.235718
+### rc=0 freq_after_khz=1795000 thermal_after_mc=38000
+
+### section=lat_mmap_precise label=size-64MB-run-1
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '64' '300' '/data/local/tmp/pixel-overview-early/lmb_64MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=578000 thermal_before_mc=37000
+size_mb=64 iters=300 total_ns=189162191 per_iter_ns=630540.637 per_iter_us=630.540637
+### rc=0 freq_after_khz=578000 thermal_after_mc=37000
+
+### section=lat_mmap_precise label=size-64MB-run-2
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '64' '300' '/data/local/tmp/pixel-overview-early/lmb_64MB.bin'
+### gate_start_mc=38000 gate_wait_sec=0 gate_ready_mc=38000 freq_before_khz=648000 thermal_before_mc=37000
+size_mb=64 iters=300 total_ns=186808147 per_iter_ns=622693.823 per_iter_us=622.693823
+### rc=0 freq_after_khz=1795000 thermal_after_mc=39000
+
+### section=lat_mmap_precise label=size-64MB-run-3
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '64' '300' '/data/local/tmp/pixel-overview-early/lmb_64MB.bin'
+### gate_start_mc=39000 gate_wait_sec=5 gate_ready_mc=36000 freq_before_khz=1795000 thermal_before_mc=37000
+size_mb=64 iters=300 total_ns=195266439 per_iter_ns=650888.130 per_iter_us=650.888130
+### rc=0 freq_after_khz=1549000 thermal_after_mc=37000
+
+### section=lat_mmap_precise label=size-64MB-run-4
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '64' '300' '/data/local/tmp/pixel-overview-early/lmb_64MB.bin'
+### gate_start_mc=37000 gate_wait_sec=0 gate_ready_mc=37000 freq_before_khz=2130000 thermal_before_mc=37000
+size_mb=64 iters=300 total_ns=195104777 per_iter_ns=650349.257 per_iter_us=650.349257
+### rc=0 freq_after_khz=1795000 thermal_after_mc=38000
+
+### section=lat_mmap_precise label=size-64MB-run-5
+### command='/data/local/tmp/pixel-overview-early/lat_mmap_precise' '64' '300' '/data/local/tmp/pixel-overview-early/lmb_64MB.bin'
+### gate_start_mc=38000 gate_wait_sec=0 gate_ready_mc=38000 freq_before_khz=648000 thermal_before_mc=38000
+size_mb=64 iters=300 total_ns=164109416 per_iter_ns=547031.387 per_iter_us=547.031387
+### rc=0 freq_after_khz=1945000 thermal_after_mc=37000

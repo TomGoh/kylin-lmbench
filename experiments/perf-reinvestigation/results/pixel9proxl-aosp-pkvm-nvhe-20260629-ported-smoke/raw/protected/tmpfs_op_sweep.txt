@@ -1,0 +1,12 @@
+
+### section=tmpfs_op_sweep label=munmap-tmpfs-6.4MB-sparse
+### command='/data/local/tmp/pixel-ported-suite/op_sweep' munmap file 64 '2' '/dev/pixel-ported-suite-tmpfs.bin' 6.4 16
+### gate_start_mc=36000 gate_wait_sec=0 gate_ready_mc=36000 freq_before_khz=1418000 thermal_before_mc=38000
+munmap   file mb=64 touch=6.400MB stride=16K : mean=98.8 us  min=94.2 us
+### rc=0 freq_after_khz=578000 thermal_after_mc=36000
+
+### section=tmpfs_op_sweep label=munmap-tmpfs-64MB-full
+### command='/data/local/tmp/pixel-ported-suite/op_sweep' munmap file 64 '2' '/dev/pixel-ported-suite-tmpfs.bin' 64 4
+### gate_start_mc=36000 gate_wait_sec=0 gate_ready_mc=36000 freq_before_khz=1795000 thermal_before_mc=35000
+munmap   file mb=64 touch=64.000MB stride=4K : mean=1340.8 us  min=1158.0 us
+### rc=0 freq_after_khz=910000 thermal_after_mc=36000

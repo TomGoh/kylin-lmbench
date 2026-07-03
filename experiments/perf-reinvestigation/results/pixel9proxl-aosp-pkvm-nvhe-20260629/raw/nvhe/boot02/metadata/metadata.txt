@@ -1,0 +1,49 @@
+date=2026-06-29T11:31:42+08:00
+serial=47091FDAS009VF
+out=experiments/perf-reinvestigation/results/pixel9proxl-aosp-pkvm-nvhe-20260629/raw/nvhe/boot02
+pages=256,512,1024,2048,4096,8192
+runs=30
+blocks=1
+seed=1
+cpu=4
+cooldown_sec=3
+freq_drop_pct=100
+thermal_rise_mc=1000000
+wait_thermal_max_mc=39000
+wait_thermal_poll_sec=5
+--- adb devices ---
+List of devices attached
+47091FDAS009VF         device usb:1-1 product:aosp_komodo model:AOSP_on_komodo device:komodo transport_id:5
+
+--- uid ---
+0
+--- props ---
+komodo
+AOSP on komodo
+_b
+kvm.arm-protected
+0
+--- cmdline ---
+console=ttynull stack_depot_disable=on cgroup_disable=pressure kasan.page_alloc.sample=10 kasan.stacktrace=off kvm-arm.mode=protected bootconfig ioremap_guard root=/dev/ram0 rw clocksource=arch_sys_counter clk_ignore_unused loop.max_part=7 loop.hw_queue_depth=31 coherent_pool=4M firmware_class.path=/vendor/firmware irqaffinity=0 sysrq_always_enabled no_console_suspend softlockup_panic=1 kasan_multi_shot kvm-arm.mode=nvhe                                 dyndbg="func alloc_contig_dump_pages +p" printk.devkmsg=on cma_sysfs.experimental=Y cgroup_disable=memory cgroup.memory=nokmem rcupdate.rcu_expedited=1 rcu_nocbs=all rcutree.enable_rcu_lazy swiotlb=noforce disable_dma32=on sysctl.kernel.sched_pelt_multiplier=4 kasan=off kunit.enable=1 at24.write_timeout=100 log_buf_len=1024K bootconfig console=null exynos_drm.panel_name=google-km4.20a8a00a tcpci_max77759.conf_sbu=0 arm64.nomte ufs_pixel_fips140.fips_first_lba=151942 ufs_pixel_fips140.fips_last_lba=152453 ufs_pixel_fips140.fips_lu=0 id_aa64mmfr1.vh=0  bootconfig
+--- cpu topology ---
+cpu0 0
+cpu1 1
+cpu2 2
+cpu3 3
+cpu4 4
+cpu5 5
+cpu6 6
+cpu7 7
+--- freq ---
+cpu0 820000
+cpu1 820000
+cpu2 820000
+cpu3 820000
+cpu4 578000
+cpu5 578000
+cpu6 578000
+cpu7 700000
+--- thermal ---
+BIG=35000|MID=36000|usb_pwr_therm=29969|btmspkr_therm=29947|disp_therm=29991|north_therm=30837|soc_therm=33286|battery=30300|battery_cycle=5|dc-mains=33500|usbc-therm-adc=335|max77779fg=30300|LITTLE=36000|soc=8|smpl_gm=0|vdroop1=0|batoilo=0|batoilo2=0|batt_vs=30295|mdis_morepower=0|thb_hda=51|cp_on_chip_0=35000|cp_on_chip_1=36000|G3D=35000|cp_on_chip_2=36000|cp_on_chip_3=34000|cp_on_chip_4=34000|rf2_therm=32000|rf1_therm=33000|ISP=34000|TPU=35000|AUR=34000|rfpa_therm=31728|quiet_therm=31995|charging_therm=33553|
+--- binary sha256 ---
+655cab7615f0f12df68479aa022d0b42d49a76eca4b047cbbc21357fc4901ff3  experiments/munmap-tlbi/pixel_madv_entry_slope.android
