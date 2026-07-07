@@ -8,7 +8,7 @@
 | 状态 | Phytium 根因已判定，证据链完整；第 8 章进一步确认 +0.27 µs/slot 来自本地合成条目失效成本，而非跨核广播等待；第 9 章记录 Pixel 复测边界 |
 | 代码仓库 | 内核：`common`（本仓库）；测试：`kylin-lmbench` |
 
-**结论**：在 N90、Kaitian、N80 这组 Phytium/Kylin 平台上，pKVM 为宿主机启用了 host stage-2 第二级地址翻译，使宿主机 `lat_mmap`（mmap → 写触摸 → munmap 的完整映射生命周期）在大尺寸下慢 42%～85%，而稳态内存访问（`lat_mem_rd`、`bw_mem`）几乎不受影响。逐层定位后，退化的来源被确定为单一机制：**munmap 拆除映射时，内核对小于 2 MB 的范围逐页发出 `TLBI` 指令，而 host stage-2 使每个 4K flush slot 对应的本地合成条目失效成本显著增加（由阈值扫描斜率折算，约 +0.27 µs/slot）**；当单次刷新批次达到 2 MB、内核改用整表刷新路径时，退化随之消失。核心缓解手段是硬件特性 FEAT_TLBIRANGE（飞腾D3000M平台不具备该特性，因而退化明显）。Pixel 9 Pro XL 复测显示：强制逐页执行 `MADV_DONTNEED` 页面撤销时仍能测到 protected 额外成本，但真实 `lat_mmap`、`munmap_after_write_touch` 和阈值扫描没有复现 Phytium 上的大幅变慢，因此 Phytium 结论不能不加条件地推广到所有 pKVM 设备。
+**结论**：在 N90、Kaitian、N80 这组 Phytium/Kylin 平台上，pKVM 为宿主机启用了 host stage-2 第二级地址翻译，使宿主机 `lat_mmap`（mmap → 写触摸 → munmap 的完整映射生命周期）在大尺寸下慢 42%～85%，而稳态内存访问（`lat_mem_rd`、`bw_mem`）几乎不受影响。逐层定位后，退化的来源被确定为单一机制：**munmap 拆除映射时，内核对小于 2 MB 的范围逐页发出 `TLBI` 指令，而 host stage-2 使每个 4K flush slot 对应的本地合成条目失效成本显著增加（由阈值扫描斜率折算，约 +0.27 µs/slot）**；当单次刷新批次达到 2 MB、内核改用整表刷新路径时，退化随之消失。核心缓解手段是硬件特性 FEAT_TLBIRANGE（飞腾D3000M平台不具备该特性，因而退化明显）。Pixel 9 Pro XL（Tensor G4，经内核 cpucap 确认具备并启用 FEAT_TLBIRANGE，见 §9.1）复测显示：强制逐页执行 `MADV_DONTNEED` 页面撤销时仍能测到 protected 额外成本，但真实 `lat_mmap`、`munmap_after_write_touch` 和阈值扫描没有复现 Phytium 上的大幅变慢——与该平台具备范围 TLBI 一致，因此 Phytium 结论不能不加条件地推广到所有 pKVM 设备。
 
 本报告为自包含的完整记录：每个阶段均给出实验背景、设计依据、关键代码、完整数据与分析。调查过程中有三处早期或中间归因被后续更精细的实验推翻（first-touch 假设、嵌套页表遍历假设、广播等待假设），本报告如实保留这些修正及其论证过程。
 
@@ -436,6 +436,27 @@ tlb_remove_tlb_entry(tlb, pte, addr);                /* 将地址登记入 mmu_g
 ```
 
 对写触摸过的文件页，还须经 `folio_mark_dirty()` 将对应 folio 标记为 dirty（脏页），并归还页缓存、更新引用计数。全部表项清除后，`tlb_finish_mmu()` 对 mmu_gather 累计的地址范围执行一次 TLB 失效——该步骤的两条路径（逐页 TLBI 与整表刷新）在 §7.4 中详细分析，是本调查最终定位的退化所在。
+
+**补充预备概念：`madvise` 与 `MADV_DONTNEED`——不删 VMA 的页面撤销**
+
+后文多处把 `madvise` 用作 munmap 的对照探针（§9.3 的 Pixel 单页/批量探针、§9.5 与 §10.3 的 `op_sweep MADV_DONTNEED` 对照），这里先说明它的语义。`madvise(addr, length, advice)`（`mm/madvise.c:1497`）让进程就一段虚拟地址范围向内核提供使用建议——advice 即“建议”，`MADV_*` 前缀读作 memory advise；内核据此调整该范围内页面的管理策略，但映射本身（VMA）不因此消失。advice 取值定义在 `include/uapi/asm-generic/mman-common.h`，种类很多（预读类 `MADV_WILLNEED`、惰性释放 `MADV_FREE` 等），本报告只用到三个：
+
+| advice | 值 | 本报告中的用途 |
+|---|---:|---|
+| `MADV_DONTNEED` | 4 | 声明“这段范围内的页面内容不再需要”，内核**立即同步**撤销其中已建立的页（mman-common.h:49）。用作与 munmap 同机制、但不删 VMA 的拆除探针：N80 操作谱系对照（§10.3）与 Pixel 复测（§9.3、§9.5）都靠它 |
+| `MADV_NOHUGEPAGE` | 15 | 逐 VMA 禁止 THP 大页合成（:63）。Pixel 单页探针 `pixel_madv_entry_slope.c` 默认对测试映射调用它，防止内核把连续 4 KB 匿名页合成 2 MB 大页、干扰逐页测量（§9.3） |
+| `MADV_HUGEPAGE` | 14 | 逐 VMA 允许/鼓励 THP 大页合成（:62）。THP 缓解实验用它让匿名映射真正落到 2 MB 大页，把 512 条逐页 TLBI 折叠成 1 条 PMD TLBI（§10.4） |
+
+多数 advice 只是提示，内核可以不采纳；但 `MADV_DONTNEED` 名字虽然温和，实现却是有确定语义的重操作：内核同步清除该范围内全部已建立的 PTE 并释放对应页面——匿名页直接丢弃（内容作废，之后再访问会缺页得到清零页），文件页只解除本进程的映射（页缓存仍在，再访问时缺页重新建立关联）。调用之后 VMA 原样保留。内核路径：
+
+```
+sys_madvise / do_madvise                            mm/madvise.c:1497,1443
+  → madvise_vma_behavior → madvise_dontneed_free      mm/madvise.c:1065,883
+  → madvise_dontneed_single_vma                       mm/madvise.c:846
+  → zap_page_range_single                             mm/memory.c:1920
+```
+
+`zap_page_range_single()` 与上文 munmap 第（3）阶段的 `unmap_vmas()` 汇合到同一套 zap 机制：同样逐项清除 PTE、把地址范围登记进 mmu_gather、最后由 `tlb_finish_mmu()` 统一执行 TLB 失效。换句话说，`MADV_DONTNEED` 相当于“只做 munmap 的拆页与 TLB 失效工作，但不删 VMA、也不释放中间级页表页”。这正是本报告用它做探针的原因：它复用与 munmap 相同的 PTE 清除与 TLB 刷新路径（包括 §7.4 的逐页/整表阈值逻辑），又剔除了 VMA 删除等无关成本；而且 VMA 还在，同一段地址可以反复“触摸 → 撤销”而无需重新 mmap。它也不只是实验工具：jemalloc、tcmalloc、Go runtime 等分配器的 decommit 路径就是用 `MADV_DONTNEED`（或其惰性版本 `MADV_FREE`）归还内存的，因此 §10.3 的“退化不限于 munmap”对应用层有直接意义。
 
 **三个阶段的工作量来源汇总**：
 
@@ -2207,7 +2228,7 @@ for (k = 0; k < memwork; k++)
 
 ## 9. Pixel 9 Pro XL 复测：真实 mmap 路径没有复现 Phytium 现象
 
-第 8 章已经把 Phytium/N80 上的根因收敛到很具体的一点：小于 2 MB 的拆除范围走逐页 `TLBI` 路径，而 protected 模式下每个 4 KB 刷新槽位的本地失效成本明显更高。这个结论对 N80、N90、Kaitian 这组 Phytium/Kylin 平台成立，但它不能自动推广到 Pixel。Pixel 9 Pro XL 使用 Tensor G4、Android AOSP userdebug、另一套 SoC 微架构和内核配置；即使同样启用 pKVM，真实 `mmap` 生命周期是否也会变慢，仍然要单独验证。
+第 8 章已经把 Phytium/N80 上的根因收敛到很具体的一点：小于 2 MB 的拆除范围走逐页 `TLBI` 路径，而 protected 模式下每个 4 KB 刷新槽位的本地失效成本明显更高。这个结论对 N80、N90、Kaitian 这组 Phytium/Kylin 平台成立，但它不能自动推广到 Pixel。Pixel 9 Pro XL 使用 Tensor G4、Android AOSP userdebug、另一套 SoC 微架构和内核配置；特别地，Tensor G4 具备 N80/N90/Kaitian 所缺的 FEAT_TLBIRANGE（§9.1 给出确认方法与证据）。即使同样启用 pKVM，真实 `mmap` 生命周期是否也会变慢，仍然要单独验证。
 
 Pixel 复测的目的不是重新证明 Phytium 的根因，而是回答两个外推问题：
 
@@ -2218,7 +2239,21 @@ Pixel 复测的目的不是重新证明 Phytium 的根因，而是回答两个�
 
 ### 9.1 Pixel 实验平台、模式切换与温度控制
 
-Pixel 复测平台为 Pixel 9 Pro XL（`komodo`，Tensor G4，AOSP userdebug，adb root 可用）。Pixel 上 `kvm-arm.mode=protected` 默认来自 bootloader，但本实验**不改 bootloader**，因为 bootloader 刷错会带来不可接受的恢复风险。实际切换只使用一个安全杠杆：改写当前 slot 的 `vendor_kernel_boot_b`。
+Pixel 复测平台为 Pixel 9 Pro XL（`komodo`，Tensor G4，AOSP userdebug，adb root 可用），内核为 `6.1.84-android14`（GKI）。Pixel 上 `kvm-arm.mode=protected` 默认来自 bootloader，但本实验**不改 bootloader**，因为 bootloader 刷错会带来不可接受的恢复风险。实际切换只使用一个安全杠杆：改写当前 slot 的 `vendor_kernel_boot_b`。
+
+**硬件特性确认：Tensor G4 具备并启用 FEAT_TLBIRANGE。**这一点有三层证据，互相独立：
+
+1. **架构层面**：Tensor G4 的 8 个核心均为 Arm 官方 Armv9.2 IP——`/proc/cpuinfo` 实测为 1× Cortex-X4（part `0xd82`）+ 3× Cortex-A720（part `0xd81`）+ 4× Cortex-A520（part `0xd80`），implementer `0x41`（Arm）。FEAT_TLBIRANGE 在 Armv8.3 为可选、自 Armv8.4 起为强制实现项，而 Armv9.x 的架构基线高于 v8.4，因此三种核心按架构规范都必须实现范围 TLBI（`TLBI RVAE1IS` 等指令）。
+2. **内核 cpucap（决定性证据）**：启动期 dmesg 出现内核 CPU 特性检测行：
+
+   ```
+   [    0.014233] CPU features: detected: TLB range maintenance instructions
+   ```
+
+   该检测由 `has_cpuid_feature()` 在 EL1 读取**未脱敏**的 `ID_AA64ISAR0_EL1.TLB` 字段完成，且这是要求全部 CPU 都具备才会置位的系统级 cpucap（`ARM64_HAS_TLB_RANGE`）。它同时意味着 `system_supports_tlb_range()` 为真：§7.4 中 `__flush_tlb_range_nosync()` 在 Pixel 内核上走范围 TLBI 分支，N80 那种“< 2 MB 逐 4 KB slot 循环、≥ 2 MB 退到整表刷新”的两段式路径在这台设备上并不存在。该确认最早记录于 2026-06-24 的跨平台 A/B（`experiments/perf-reinvestigation/results/pixel-tensor-g4/README.md`），2026-07-07 又在同一台设备重启后的新鲜 dmesg 中复核一致。
+3. **行为学层面**：§9.5 的阈值扫描在 protected 和 NVHE 两种模式下都没有 2 MB 断崖，正是范围 TLBI 在用时的预期形态（对照 N80：无该特性，1.9 MB → 2.0 MB 出现突变）。
+
+需要说明为什么不能用用户态 `MRS` 直接确认：内核把 `ID_AA64ISAR0_EL1` 的 TLB 字段标记为 `FTR_HIDDEN`（`arch/arm64/kernel/cpufeature.c: ftr_id_aa64isar0[]`），EL0 读到的仿真值恒为 0，与硬件是否实现无关（`experiments/perf-reinvestigation/stage0/isar0.c` 的注释及其在 SM8850/Oryon 上的假阴性实测）。因此在无法插桩内核的用户态条件下，启动期 dmesg 的 cpucap 行是唯一可靠的确认途径；若日志缓冲已回卷，需要重启后立即抓取。
 
 切换方法如下：
 
@@ -2297,7 +2332,7 @@ bash "$S/komodo-verify.sh"
 | Pixel 专项 | 单页与批量 `MADV_DONTNEED` 每页增量耗时 | 已做 | `pixel-run-madv-entry-slope.sh`；`single-summary.csv`、`batched-summary.csv` | 用于区分“强制逐页页面撤销成本”和“真实批量路径成本” |
 | §5、§7.1、§8 | EL2 gate、host stage-2 粒度、裸 TLBI 计时、在线核数扫描 | 未做，且不属于纯用户态可比实验 | N/A | 这些依赖 `/proc/xcore_stats`、`tlbi_ab.ko`、core hotplug 或定制内核接口，Pixel AOSP 用户态不能等价复现 |
 
-因此，Pixel 章节的边界是明确的：它可以回答“前文用户态现象是否复现”，不能回答“Pixel 上裸 `TLBI` 指令到底用什么硬件路径执行”。后者需要 Pixel 内核源码、硬件特性确认或可加载的内核侧计时模块。
+因此，Pixel 章节的边界是明确的：它可以回答“前文用户态现象是否复现”，不能回答“Pixel 上裸 `TLBI` 指令到底用什么硬件路径执行”。后者所需的三项能力中，硬件特性确认一项已经闭环——§9.1 的内核 cpucap 证实 FEAT_TLBIRANGE 存在并启用；仍然缺的是内核侧 TLBI 直接计时或 trace，以及对 `madvise` / `munmap` 实际 flush 分支的 trace 级验证。
 
 ### 9.3 单页 `MADV_DONTNEED` 每页增量耗时：强制暴露每 4 KB 页的撤销成本
 
@@ -2336,7 +2371,7 @@ Pixel 上首先做的是比 `lat_mmap` 更窄的单页探针。测试程序 `pix
 | `cpu-cycles` | 568,500,838 | 657,753,337 | +89,252,499 |
 | `stalled-cycles-backend` | 362,981,067 | 444,603,460 | +81,622,393 |
 
-但这还不能推出真实 `mmap` 生命周期会变慢。原因在于 `single` 是人为拆成 N 次系统调用的小页探针，而真实内核路径会批量收集范围再刷新 TLB。`batched` 行已经显示：同样的页数，只要变成一次连续范围的 `MADV_DONTNEED(base, N * 4 KB)`，protected 就没有正向的每页差值。因此后续必须看原始基准和阈值扫描。
+但这还不能推出真实 `mmap` 生命周期会变慢。原因在于 `single` 是人为拆成 N 次系统调用的小页探针，而真实内核路径会批量收集范围再刷新 TLB——且按 §9.1 的确认，Pixel 内核对这类批量范围走的是范围 TLBI，而不是 N80 的逐 4 KB slot 循环。`batched` 行已经显示：同样的页数，只要变成一次连续范围的 `MADV_DONTNEED(base, N * 4 KB)`，protected 就没有正向的每页差值。因此后续必须看原始基准和阈值扫描。
 
 ### 9.4 原始 `lat_mmap` 与生命周期拆分：真实路径没有复现大幅变慢
 
@@ -2436,7 +2471,7 @@ Pixel ported suite 对这个实验做了两层复测：一层是 `munmap_only`�
 
 两种口径合在一起如下：
 
-| 点 | N80 protected−NVHE | N80 相对变化 | Pixel protected−NVHE | Pixel 相对变化 |
+|  | N80 protected−NVHE | N80 相对变化 | Pixel protected−NVHE | Pixel 相对变化 |
 |---|---:|---:|---:|---:|
 | 1.9 MB / 4 KB dense | +130.2 µs | +134.6% | +6.4 µs | +12.3% |
 | 2.0 MB / 4 KB dense | +0.4 µs | +0.4% | -1.2 µs | -2.0% |
@@ -2452,6 +2487,7 @@ Pixel ported suite 对这个实验做了两层复测：一层是 `munmap_only`�
 1. **1.9 MB 并没有大幅 protected 开销**。`op_sweep munmap` 在 1.9 MB 是 +6.4 µs，`munmap_only` 是 +0.0 µs；这与 N80 的 +130.2 µs 不是一个量级。
 2. **2.0 MB 附近没有“从大幅变慢到归零”的证据**。Pixel 的 1.9 MB 与 2.0 MB 差距都在几微秒范围内上下摆动，而不是 N80 那种阈值处突变。
 3. **6.4 MB / 16 KB 稀疏参考点不慢**。这是对原始 `lat_mmap` 形态最重要的参考点。Pixel 的 `op_sweep munmap` 为 -2.5 µs，`munmap_only` 为 +5.0 µs；N80 同一形态是 +436.6 µs。
+4. **无断崖正是 FEAT_TLBIRANGE 启用后的预期形态**。§9.1 已确认 Pixel 内核 `system_supports_tlb_range()` 为真，`__flush_tlb_range_nosync()` 对小范围直接发范围 TLBI，不存在 N80 那种“< 2 MB 逐 slot、≥ 2 MB 整表刷新”的路径切换，1.9 MB 与 2.0 MB 之间本来就不应出现阶跃。行为学证据（无断崖）与硬件特性证据（cpucap）在这里互相印证。
 
 64 MB 密集点在 Pixel 的 `munmap` / `MADV_DONTNEED` 中有 +20 到 +30 µs 的小正差距，但比例只有约 1.02 到 1.03，且没有 1.9 MB 的大幅逐页区间作为前提，也没有原始 `lat_mmap` 和 `munmap_after_write_touch` 的对应变慢。因此它只能作为小幅残差记录，不能解释为 Phytium 机制在 Pixel 上复现。
 
@@ -2463,10 +2499,10 @@ Pixel 复测给出的结论是分层的：
 
 - **单页层面**：强制 N 次单页 `MADV_DONTNEED` 页面撤销时，protected 比 NVHE 多约 +167 ns/页，且 simpleperf 显示 `page-faults` 基本相同、`cpu-cycles` 和 `stalled-cycles-backend` 增加。这说明 Pixel protected 下仍可测到单页 PTE 撤销额外成本。
 - **真实多页路径层面**：`lat_mmap_precise`、`munmap_after_write_touch`、`munmap_only` 阈值扫描、`op_sweep munmap`、`op_sweep MADV_DONTNEED`、`op_sweep mprotect` 都没有复现 Phytium 上的大幅 protected 变慢，也没有复现 1.9 MB / 2.0 MB 的明显突变。
-- **最合理的解释**：Tensor G4 / Pixel 的真实多页拆除路径很可能通过批量或范围式 TLB 维护把单页成本隐藏了；但在没有 Pixel 内核侧 TLBI 直接计时、硬件特性确认或源码级路径确认前，本文只把它写成“与批量或范围式处理相容”，不把它写成已证明。
-- **仍未排除的替代解释**：Pixel 的 TLB 微架构也可能让 host stage-2 合成条目的失效成本本身低于 Phytium/FTC862，因此即使真实路径仍有逐页刷新，应用层看到的 protected−NVHE 差距也会更小。现有数据不能完全排除这一点；不过 `single` 探针仍有 +167 ns/页，且 simpleperf 中 `stalled-cycles-backend` 明显增加，这又说明 Pixel protected 下并非完全没有单页撤销成本。因此本文把“批量或范围式处理隐藏单页成本”作为主要解释，把“Tensor G4 TLB 微架构差异使单页失效成本较低”作为并列替代解释，等待内核侧 TLBI 计时或源码路径确认。
+- **主要解释（硬件特性已确认）**：Tensor G4 / Pixel 的真实多页拆除路径通过范围式 TLB 维护把单页成本隐藏了。这个解释在早期只能写成“与批量或范围式处理相容”；§9.1 的内核 cpucap 确认 FEAT_TLBIRANGE 存在并启用后，“内核对多页拆除使用范围 TLBI”有了硬件特性与内核能力位的直接支撑，§9.5 的无断崖形态也与之互相印证。仍未闭环的只剩内核侧 TLBI 直接计时（量化每条范围失效在 protected 下的成本）和 flush 分支的 trace 级验证，因此本文把它作为已确立的主要解释，但不把量化归因写成已完成。
+- **替代解释的现状**：此前本文把“Tensor G4 TLB 微架构使 host stage-2 合成条目的失效成本本身较低”列为并列替代解释，其前提是“即使真实路径仍有逐页刷新，应用层差距也会很小”。FEAT_TLBIRANGE 确认启用后，真实多页路径已不走逐页刷新，这个替代解释不再与主要解释并列竞争多页结果的归因；它退化为一个尚未量化的独立问题——Tensor G4 上单条失效（以及范围失效）在 protected 下的微架构成本到底多大。`single` 探针的 +167 ns/页与 simpleperf 的 `stalled-cycles-backend` 增加说明这个成本不为零，但其绝对量级仍需内核侧计时才能与 N80 的 +0.27 µs/slot 做严格对比。
 
-这也反过来限定了前文 Phytium 结论的适用范围：Phytium/N80/N90/Kaitian 上的问题是真实 `mmap` 生命周期中的大幅性能退化，根因是小范围逐页 `TLBI` 在 host stage-2 下变贵；Pixel 上只能看到强制单页探针的额外成本，真实 `mmap` 路径没有出现同等问题。因此，后续讨论优化方向时，应把 FEAT_TLBIRANGE、整表刷新阈值和 THP 视为解决 Phytium 类平台问题的手段，而不能假设所有 pKVM 设备都会在应用层看到相同退化。
+这也反过来限定了前文 Phytium 结论的适用范围：Phytium/N80/N90/Kaitian 上的问题是真实 `mmap` 生命周期中的大幅性能退化，根因是小范围逐页 `TLBI` 在 host stage-2 下变贵；Pixel 上只能看到强制单页探针的额外成本，真实 `mmap` 路径没有出现同等问题——这与 Pixel 具备并启用 FEAT_TLBIRANGE 直接一致，等于在真实硬件上补齐了“有范围 TLBI 的 pKVM 设备不在应用层复现该退化”这一对照格。因此，后续讨论优化方向时，应把 FEAT_TLBIRANGE、整表刷新阈值和 THP 视为解决 Phytium 类平台问题的手段，而不能假设所有 pKVM 设备都会在应用层看到相同退化。
 
 ### 9.7 局限与后续可补项
 
@@ -2477,7 +2513,7 @@ Pixel 复测的局限也要写清楚：
 3. `ported-suite` 每个点只跑一轮，定位目标是覆盖前文可比较实验，尤其确认 7.5.3 这类关键实验是否在 Pixel 上复现。小幅 +/− 几微秒差距不应过度解释。
 4. Pixel 没有执行 EL2 gate、host stage-2 粒度统计、裸 TLBI 计时、在线核数扫描。这些不是遗漏的用户态实验，而是需要 Pixel 内核侧支持的实验。
 
-若后续要把 Pixel 机制也做到和 N80 一样闭环，需要补三类能力：确认 Tensor G4 是否暴露并启用 FEAT_TLBIRANGE；在 Pixel 内核上增加可审计的 TLBI 计时或 trace；在同一内核源码中确认 `madvise` / `munmap` 的实际 flush 分支。当前数据已经足够回答本文的问题：Pixel 用户态可比实验没有复现 Phytium 的真实 `mmap` 退化。
+若后续要把 Pixel 机制也做到和 N80 一样闭环，原本需要补三类能力，其中第一类已经完成：**确认 Tensor G4 是否暴露并启用 FEAT_TLBIRANGE——已由内核 cpucap 闭环**（§9.1，`TLB range maintenance instructions`；2026-06-24 首次记录于 `experiments/perf-reinvestigation/results/pixel-tensor-g4/README.md`，2026-07-07 重启复核一致）。仍待补的是两类：在 Pixel 内核上增加可审计的 TLBI 计时或 trace；在同一内核源码中确认 `madvise` / `munmap` 的实际 flush 分支（GKI 6.1 的通用 arm64 代码加上 cpucap 已强烈指向范围分支，但未经 trace 级验证）。当前数据已经足够回答本文的问题：Pixel 用户态可比实验没有复现 Phytium 的真实 `mmap` 退化。
 
 ---
 
@@ -2530,7 +2566,7 @@ host stage-2（pKVM 隔离机制）
 
 - **仅在小范围逐页 TLB 刷新路径上显著**：若单次刷新范围达到 2 MB，内核改用整表刷新路径，protected−nvhe 差距塌缩到约 0%～4%；但 `lat_mmap` 的 16 KB 稀疏触摸会让脏页按 PMD 分批，持续落在逐页路径。
 - **主要影响映射生命周期**：稳态读写、长期复用的映射（如 LMDB 打开后的常规读写）几乎不受影响；频繁建立/拆除中小映射的负载更容易触发。
-- **平台相关**：退化幅度取决于硬件是否支持 FEAT_TLBIRANGE、内核实际选择的 TLB 失效路径，以及真实拆除是否能被批量处理。N80/N90/Kaitian 均不支持 FEAT_TLBIRANGE，因此逐页 TLBI 数量成为乘数；Pixel 9 Pro XL 的用户态复测则显示，强制单页 `MADV_DONTNEED` 页面撤销成本虽存在，但真实多页 `mmap` 路径没有复现 Phytium 的大幅退化。
+- **平台相关**：退化幅度取决于硬件是否支持 FEAT_TLBIRANGE、内核实际选择的 TLB 失效路径，以及真实拆除是否能被批量处理。N80/N90/Kaitian 均不支持 FEAT_TLBIRANGE，因此逐页 TLBI 数量成为乘数；Pixel 9 Pro XL（Tensor G4，经内核 cpucap 确认支持并启用 FEAT_TLBIRANGE，见 §9.1）的用户态复测则显示，强制单页 `MADV_DONTNEED` 页面撤销成本虽存在，但真实多页 `mmap` 路径没有复现 Phytium 的大幅退化，与其具备范围 TLBI 一致。
 
 **该退化不限于 `munmap`。** 2026-06-16 的操作谱系复查用同一套阈值扫描对照 `munmap`、`madvise(MADV_DONTNEED)`、`mprotect` 三类操作，显示 protected−nvhe 的逐页差距与操作名无关、主要由刷新 slot 数决定。`MADV_DONTNEED` 与 `munmap` 行为一致，因为它同样 zap 脏页并按 PMD 分批；jemalloc、tcmalloc、Go runtime 的 decommit 可能走到这一路。`mprotect` 则只有连续改动区间本身小于 2 MB 时明显受影响，稀疏大跨度不 zap 脏页、可一次性越过阈值，差距接近 0。完整数据见 `pkvm-teardown-op-generality.en.md`。
 
@@ -2540,7 +2576,7 @@ Pixel 复测把这条边界再往前推进了一步：同样的 `munmap`、`MADV
 
 | 方向 | 评估 |
 |---|---|
-| **FEAT_TLBIRANGE（硬件）** | 核心缓解手段。范围 TLBI 将 N 个逐页 slot 压缩为少数范围失效，直接减少昂贵的合成条目失效次数。内核已有范围分支，平台支持即可受益。 |
+| **FEAT_TLBIRANGE（硬件）** | 核心缓解手段。范围 TLBI 将 N 个逐页 slot 压缩为少数范围失效，直接减少昂贵的合成条目失效次数。内核已有范围分支，平台支持即可受益。Pixel 9 Pro XL（Tensor G4，已确认启用该特性，§9.1）的真实拆除路径无可测退化，为这一缓解手段提供了实机 A/B 佐证（§9）。 |
 | **透明大页 THP（软件，逐映射）** | 已在 Kaitian 实测（[pkvm-thp-mitigation.zh-CN.md](pkvm-thp-mitigation.zh-CN.md)）：2 MB 大页把 512 条 PTE TLBI 折叠成 1 条 PMD TLBI，是 FEAT_TLBIRANGE 的软件侧替代。但**须让内存真的被大页映射**——全局 THP 开关对 ext4 文件 mmap 无效（`huge_fault` 仅 DAX，protected−nvhe 税 +208 µs 不变）；匿名（`MADV_HUGEPAGE`，<2 MB 逐页区间）与 shmem/tmpfs（`huge=`）后端可把税降到约 0。 |
 | **调整 `MAX_DVM_OPS` 阈值（内核）** | 可评估：降低阈值可让更多拆除批次提前走整表刷新，避开长串逐页 TLBI。代价是整表刷新会失效该 ASID 的更多 TLB 条目，增加后续重填成本，必须用实际负载权衡。 |
 | **应用层规避** | 复用映射、减少频繁小范围 unmap/decommit、合并相邻拆除，可降低逐页 slot 数。 |
