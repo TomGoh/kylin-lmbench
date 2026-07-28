@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="610" viewBox="0 0 1240 610" role="img" aria-labelledby="title desc">
+  <title id="title">D3000 lat_mmap anchor across mapping sizes</title>
+  <desc id="desc">Boot-start and boot-end D3000 lat_mmap_precise results for nVHE and pKVM, reduced inside each boot and aggregated across complete boot pairs.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <text x="620.0" y="35.0" font-size="22" fill="#1F2933" font-weight="700" text-anchor="middle">D3000 mechanism anchor: lat_mmap across mapping sizes</text>
+  <text x="620.0" y="59.0" font-size="13" fill="#64707D" font-weight="400" text-anchor="middle">THP profile from campaign metadata; n=5 complete boot pairs</text>
+  <text x="86.0" y="92.0" font-size="17" fill="#1F2933" font-weight="700" text-anchor="start">Boot start</text>
+  <text x="86.0" y="114.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">absolute latency; faint lines are individual boot pairs</text>
+  <line x1="86.0" y1="460.0" x2="556.0" y2="460.0" stroke="#E8EDF3"/>
+  <text x="76.0" y="464.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">0</text>
+  <line x1="86.0" y1="394.0" x2="556.0" y2="394.0" stroke="#E8EDF3"/>
+  <text x="76.0" y="398.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">120</text>
+  <line x1="86.0" y1="328.0" x2="556.0" y2="328.0" stroke="#E8EDF3"/>
+  <text x="76.0" y="332.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">240</text>
+  <line x1="86.0" y1="262.0" x2="556.0" y2="262.0" stroke="#E8EDF3"/>
+  <text x="76.0" y="266.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">360</text>
+  <line x1="86.0" y1="196.0" x2="556.0" y2="196.0" stroke="#E8EDF3"/>
+  <text x="76.0" y="200.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">480</text>
+  <line x1="86.0" y1="130.0" x2="556.0" y2="130.0" stroke="#E8EDF3"/>
+  <text x="76.0" y="134.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">600</text>
+  <line x1="86.0" y1="130.0" x2="86.0" y2="460.0" stroke="#F3F5F8"/>
+  <text x="86.0" y="483.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">0.5</text>
+  <line x1="153.1" y1="130.0" x2="153.1" y2="460.0" stroke="#F3F5F8"/>
+  <text x="153.1" y="483.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">1</text>
+  <line x1="220.3" y1="130.0" x2="220.3" y2="460.0" stroke="#F3F5F8"/>
+  <text x="220.3" y="483.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">2</text>
+  <line x1="287.4" y1="130.0" x2="287.4" y2="460.0" stroke="#F3F5F8"/>
+  <text x="287.4" y="483.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">4</text>
+  <line x1="354.6" y1="130.0" x2="354.6" y2="460.0" stroke="#F3F5F8"/>
+  <text x="354.6" y="483.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">8</text>
+  <line x1="421.7" y1="130.0" x2="421.7" y2="460.0" stroke="#F3F5F8"/>
+  <text x="421.7" y="483.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">16</text>
+  <line x1="556.0" y1="130.0" x2="556.0" y2="460.0" stroke="#F3F5F8"/>
+  <text x="556.0" y="483.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">64</text>
+  <line x1="86.0" y1="130.0" x2="86.0" y2="460.0" stroke="#5C6670"/>
+  <line x1="86.0" y1="460.0" x2="556.0" y2="460.0" stroke="#5C6670"/>
+  <polyline points="86.0,456.5 153.1,454.3 220.3,451.1 287.4,446.0 354.6,434.8 421.7,413.9 556.0,283.8" fill="none" stroke="#4D7C59" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="86.0,456.4 153.1,455.0 220.3,451.2 287.4,445.2 354.6,434.7 421.7,413.6 556.0,282.1" fill="none" stroke="#4D7C59" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="86.0,455.8 153.1,454.8 220.3,450.6 287.4,445.4 354.6,434.5 421.7,413.0 556.0,281.0" fill="none" stroke="#4D7C59" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="86.0,456.6 153.1,454.4 220.3,450.9 287.4,445.3 354.6,434.9 421.7,413.1 556.0,281.0" fill="none" stroke="#4D7C59" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="86.0,456.6 153.1,455.1 220.3,450.7 287.4,444.7 354.6,434.8 421.7,413.5 556.0,282.1" fill="none" stroke="#4D7C59" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="86.0,456.5 153.1,454.8 220.3,450.9 287.4,445.3 354.6,434.8 421.7,413.5 556.0,282.1" fill="none" stroke="#4D7C59" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="86.0" cy="456.5" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="153.1" cy="454.8" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="220.3" cy="450.9" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="287.4" cy="445.3" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="354.6" cy="434.8" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="421.7" cy="413.5" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="556.0" cy="282.1" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <polyline points="86.0,456.1 153.1,452.7 220.3,448.4 287.4,439.9 354.6,423.9 421.7,392.8 556.0,176.6" fill="none" stroke="#C23B2A" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="86.0,455.9 153.1,452.8 220.3,448.2 287.4,440.0 354.6,423.9 421.7,392.4 556.0,195.8" fill="none" stroke="#C23B2A" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="86.0,455.9 153.1,452.8 220.3,447.9 287.4,440.0 354.6,424.2 421.7,392.7 556.0,171.0" fill="none" stroke="#C23B2A" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="86.0,455.8 153.1,453.6 220.3,448.3 287.4,439.7 354.6,423.9 421.7,392.0 556.0,198.1" fill="none" stroke="#C23B2A" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="86.0,456.2 153.1,453.8 220.3,448.2 287.4,439.9 354.6,424.0 421.7,392.2 556.0,197.5" fill="none" stroke="#C23B2A" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="86.0,455.9 153.1,452.8 220.3,448.2 287.4,439.9 354.6,423.9 421.7,392.4 556.0,195.8" fill="none" stroke="#C23B2A" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="86.0" cy="455.9" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="153.1" cy="452.8" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="220.3" cy="448.2" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="287.4" cy="439.9" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="354.6" cy="423.9" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="421.7" cy="392.4" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="556.0" cy="195.8" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <rect x="431.0" y="144.0" width="115" height="29" rx="4" fill="#FFFFFF" stroke="#D9DEE7"/>
+  <text x="488.5" y="164.0" font-size="11" fill="#C23B2A" font-weight="700" text-anchor="middle">64 MiB: +48.5%</text>
+  <text x="321.0" y="509.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="middle">mapping size (MiB, log2 scale)</text>
+  <text x="684.0" y="92.0" font-size="17" fill="#1F2933" font-weight="700" text-anchor="start">Boot end</text>
+  <text x="684.0" y="114.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">absolute latency; faint lines are individual boot pairs</text>
+  <line x1="684.0" y1="460.0" x2="1154.0" y2="460.0" stroke="#E8EDF3"/>
+  <text x="674.0" y="464.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">0</text>
+  <line x1="684.0" y1="394.0" x2="1154.0" y2="394.0" stroke="#E8EDF3"/>
+  <text x="674.0" y="398.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">120</text>
+  <line x1="684.0" y1="328.0" x2="1154.0" y2="328.0" stroke="#E8EDF3"/>
+  <text x="674.0" y="332.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">240</text>
+  <line x1="684.0" y1="262.0" x2="1154.0" y2="262.0" stroke="#E8EDF3"/>
+  <text x="674.0" y="266.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">360</text>
+  <line x1="684.0" y1="196.0" x2="1154.0" y2="196.0" stroke="#E8EDF3"/>
+  <text x="674.0" y="200.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">480</text>
+  <line x1="684.0" y1="130.0" x2="1154.0" y2="130.0" stroke="#E8EDF3"/>
+  <text x="674.0" y="134.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">600</text>
+  <line x1="684.0" y1="130.0" x2="684.0" y2="460.0" stroke="#F3F5F8"/>
+  <text x="684.0" y="483.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">0.5</text>
+  <line x1="751.1" y1="130.0" x2="751.1" y2="460.0" stroke="#F3F5F8"/>
+  <text x="751.1" y="483.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">1</text>
+  <line x1="818.3" y1="130.0" x2="818.3" y2="460.0" stroke="#F3F5F8"/>
+  <text x="818.3" y="483.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">2</text>
+  <line x1="885.4" y1="130.0" x2="885.4" y2="460.0" stroke="#F3F5F8"/>
+  <text x="885.4" y="483.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">4</text>
+  <line x1="952.6" y1="130.0" x2="952.6" y2="460.0" stroke="#F3F5F8"/>
+  <text x="952.6" y="483.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">8</text>
+  <line x1="1019.7" y1="130.0" x2="1019.7" y2="460.0" stroke="#F3F5F8"/>
+  <text x="1019.7" y="483.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">16</text>
+  <line x1="1154.0" y1="130.0" x2="1154.0" y2="460.0" stroke="#F3F5F8"/>
+  <text x="1154.0" y="483.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">64</text>
+  <line x1="684.0" y1="130.0" x2="684.0" y2="460.0" stroke="#5C6670"/>
+  <line x1="684.0" y1="460.0" x2="1154.0" y2="460.0" stroke="#5C6670"/>
+  <polyline points="684.0,456.7 751.1,455.1 818.3,451.1 885.4,445.9 952.6,435.3 1019.7,413.3 1154.0,282.7" fill="none" stroke="#4D7C59" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="684.0,456.5 751.1,453.8 818.3,450.9 885.4,446.0 952.6,434.6 1019.7,413.7 1154.0,281.9" fill="none" stroke="#4D7C59" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="684.0,456.5 751.1,454.8 818.3,451.3 885.4,445.8 952.6,434.8 1019.7,413.8 1154.0,281.7" fill="none" stroke="#4D7C59" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="684.0,456.6 751.1,453.9 818.3,451.0 885.4,445.9 952.6,435.1 1019.7,413.5 1154.0,282.4" fill="none" stroke="#4D7C59" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="684.0,456.5 751.1,454.0 818.3,451.1 885.4,445.8 952.6,434.5 1019.7,413.7 1154.0,280.6" fill="none" stroke="#4D7C59" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="684.0,456.5 751.1,454.0 818.3,451.1 885.4,445.9 952.6,434.8 1019.7,413.7 1154.0,281.9" fill="none" stroke="#4D7C59" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="684.0" cy="456.5" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="751.1" cy="454.0" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="818.3" cy="451.1" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="885.4" cy="445.9" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="952.6" cy="434.8" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="1019.7" cy="413.7" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="1154.0" cy="281.9" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <polyline points="684.0,456.1 751.1,453.8 818.3,448.5 885.4,440.9 952.6,424.3 1019.7,393.0 1154.0,198.1" fill="none" stroke="#C23B2A" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="684.0,454.8 751.1,453.7 818.3,448.5 885.4,440.8 952.6,424.2 1019.7,392.8 1154.0,198.6" fill="none" stroke="#C23B2A" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="684.0,456.1 751.1,453.7 818.3,448.6 885.4,440.5 952.6,424.3 1019.7,393.1 1154.0,199.4" fill="none" stroke="#C23B2A" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="684.0,456.1 751.1,453.7 818.3,448.8 885.4,440.5 952.6,424.5 1019.7,392.4 1154.0,198.4" fill="none" stroke="#C23B2A" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="684.0,456.0 751.1,452.7 818.3,448.6 885.4,440.9 952.6,424.2 1019.7,392.8 1154.0,199.2" fill="none" stroke="#C23B2A" stroke-width="1.1" opacity="0.22"/>
+  <polyline points="684.0,456.1 751.1,453.7 818.3,448.6 885.4,440.8 952.6,424.3 1019.7,392.8 1154.0,198.6" fill="none" stroke="#C23B2A" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="684.0" cy="456.1" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="751.1" cy="453.7" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="818.3" cy="448.6" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="885.4" cy="440.8" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="952.6" cy="424.3" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="1019.7" cy="392.8" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="1154.0" cy="198.6" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <rect x="1029.0" y="144.0" width="115" height="29" rx="4" fill="#FFFFFF" stroke="#D9DEE7"/>
+  <text x="1086.5" y="164.0" font-size="11" fill="#C23B2A" font-weight="700" text-anchor="middle">64 MiB: +46.8%</text>
+  <text x="919.0" y="509.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="middle">mapping size (MiB, log2 scale)</text>
+  <line x1="482.0" y1="92.0" x2="510.0" y2="92.0" stroke="#4D7C59" stroke-width="3"/>
+  <circle cx="496.0" cy="92.0" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <text x="519.0" y="96.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="start">nVHE</text>
+  <line x1="600.0" y1="92.0" x2="628.0" y2="92.0" stroke="#C23B2A" stroke-width="3"/>
+  <circle cx="614.0" cy="92.0" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <text x="637.0" y="96.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="start">pKVM</text>
+  <text x="27.0" y="139.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="start">us</text>
+  <text x="620.0" y="592.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">Source: experiments/d3000-pkvm-apps/results/d3000-apps-always-20260717-093223/pair-*/{nvhe,protected}/anchors-{start,end}</text>
+</svg>

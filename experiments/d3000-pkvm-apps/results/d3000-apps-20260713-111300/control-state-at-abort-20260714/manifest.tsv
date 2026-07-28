@@ -1,0 +1,12 @@
+1	calibration	calibration	nvhe	-
+2	calibration	calibration	protected	-
+3	formal	1	nvhe	geek,redis,rabbitmq
+4	formal	1	protected	geek,redis,rabbitmq
+5	formal	2	protected	redis,rabbitmq,geek
+6	formal	2	nvhe	redis,rabbitmq,geek
+7	formal	3	nvhe	rabbitmq,geek,redis
+8	formal	3	protected	rabbitmq,geek,redis
+9	formal	4	protected	geek,rabbitmq,redis
+10	formal	4	nvhe	geek,rabbitmq,redis
+11	formal	5	nvhe	redis,geek,rabbitmq
+12	formal	5	protected	redis,geek,rabbitmq

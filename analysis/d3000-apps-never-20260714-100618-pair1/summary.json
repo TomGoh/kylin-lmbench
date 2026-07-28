@@ -1,0 +1,1290 @@
+[
+  {
+    "project": "rabbitmq",
+    "scenario": "q1-one-fast",
+    "metric": "consumer_p95",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.08148455318266645,
+    "mad": 0.0,
+    "ci95_low": 0.08148455318266645,
+    "ci95_high": 0.08148455318266645,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.08148455318266645,
+        14469.0,
+        15648.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q1-one-fast",
+    "metric": "consumer_p99",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.05576031387468783,
+    "mad": 0.0,
+    "ci95_low": 0.05576031387468783,
+    "ci95_high": 0.05576031387468783,
+    "equivalence_threshold": 0.05,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.05576031387468783,
+        16822.0,
+        17760.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q1-one-fast",
+    "metric": "published",
+    "unit": "msg/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": -0.02621040090717275,
+    "mad": 0.0,
+    "ci95_low": -0.02621040090717275,
+    "ci95_high": -0.02621040090717275,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        -0.02621040090717275,
+        69667.0,
+        67841.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q1-one-fast",
+    "metric": "received",
+    "unit": "msg/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": -0.026536352937799546,
+    "mad": 0.0,
+    "ci95_low": -0.026536352937799546,
+    "ci95_high": -0.026536352937799546,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        -0.026536352937799546,
+        69678.0,
+        67829.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q2-reliable",
+    "metric": "confirm_p95",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.013604670222289394,
+    "mad": 0.0,
+    "ci95_low": 0.013604670222289394,
+    "ci95_high": 0.013604670222289394,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.013604670222289394,
+        158622.0,
+        160780.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q2-reliable",
+    "metric": "confirm_p99",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.008363656384357876,
+    "mad": 0.0,
+    "ci95_low": 0.008363656384357876,
+    "ci95_high": 0.008363656384357876,
+    "equivalence_threshold": 0.05,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.008363656384357876,
+        199793.0,
+        201464.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q2-reliable",
+    "metric": "consumer_p95",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": -0.06823413739278306,
+    "mad": 0.0,
+    "ci95_low": -0.06823413739278306,
+    "ci95_high": -0.06823413739278306,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        -0.06823413739278306,
+        7154073.0,
+        6665921.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q2-reliable",
+    "metric": "consumer_p99",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": -0.06768059148785066,
+    "mad": 0.0,
+    "ci95_low": -0.06768059148785066,
+    "ci95_high": -0.06768059148785066,
+    "equivalence_threshold": 0.05,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        -0.06768059148785066,
+        7254384.0,
+        6763403.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q2-reliable",
+    "metric": "published",
+    "unit": "msg/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": -0.018014341514603904,
+    "mad": 0.0,
+    "ci95_low": -0.018014341514603904,
+    "ci95_high": -0.018014341514603904,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        -0.018014341514603904,
+        51459.0,
+        50532.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q2-reliable",
+    "metric": "received",
+    "unit": "msg/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": -0.014509827020871335,
+    "mad": 0.0,
+    "ci95_low": -0.014509827020871335,
+    "ci95_high": -0.014509827020871335,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        -0.014509827020871335,
+        50931.0,
+        50192.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate50",
+    "metric": "confirm_p95",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.023958333333333304,
+    "mad": 0.0,
+    "ci95_low": 0.023958333333333304,
+    "ci95_high": 0.023958333333333304,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.023958333333333304,
+        960.0,
+        983.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate50",
+    "metric": "confirm_p99",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.07030527289546717,
+    "mad": 0.0,
+    "ci95_low": 0.07030527289546717,
+    "ci95_high": 0.07030527289546717,
+    "equivalence_threshold": 0.05,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.07030527289546717,
+        1081.0,
+        1157.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate50",
+    "metric": "consumer_p95",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.021897810218978186,
+    "mad": 0.0,
+    "ci95_low": 0.021897810218978186,
+    "ci95_high": 0.021897810218978186,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.021897810218978186,
+        822.0,
+        840.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate50",
+    "metric": "consumer_p99",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.03347732181425478,
+    "mad": 0.0,
+    "ci95_low": 0.03347732181425478,
+    "ci95_high": 0.03347732181425478,
+    "equivalence_threshold": 0.05,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.03347732181425478,
+        926.0,
+        957.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate50",
+    "metric": "published",
+    "unit": "msg/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": -8.195713641767632e-05,
+    "mad": 0.0,
+    "ci95_low": -8.195713641767632e-05,
+    "ci95_high": -8.195713641767632e-05,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        -8.195713641767632e-05,
+        24403.0,
+        24401.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate50",
+    "metric": "received",
+    "unit": "msg/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": -0.00024585125998766166,
+    "mad": 0.0,
+    "ci95_low": -0.00024585125998766166,
+    "ci95_high": -0.00024585125998766166,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        -0.00024585125998766166,
+        24405.0,
+        24399.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate70",
+    "metric": "confirm_p95",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.013614703880190593,
+    "mad": 0.0,
+    "ci95_low": 0.013614703880190593,
+    "ci95_high": 0.013614703880190593,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.013614703880190593,
+        1469.0,
+        1489.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate70",
+    "metric": "confirm_p99",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.027900146842878115,
+    "mad": 0.0,
+    "ci95_low": 0.027900146842878115,
+    "ci95_high": 0.027900146842878115,
+    "equivalence_threshold": 0.05,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.027900146842878115,
+        2043.0,
+        2100.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate70",
+    "metric": "consumer_p95",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": -0.00191387559808609,
+    "mad": 0.0,
+    "ci95_low": -0.00191387559808609,
+    "ci95_high": -0.00191387559808609,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        -0.00191387559808609,
+        1045.0,
+        1043.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate70",
+    "metric": "consumer_p99",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.05540166204986141,
+    "mad": 0.0,
+    "ci95_low": 0.05540166204986141,
+    "ci95_high": 0.05540166204986141,
+    "equivalence_threshold": 0.05,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.05540166204986141,
+        1444.0,
+        1524.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate70",
+    "metric": "published",
+    "unit": "msg/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": -2.9262868346369153e-05,
+    "mad": 0.0,
+    "ci95_low": -2.9262868346369153e-05,
+    "ci95_high": -2.9262868346369153e-05,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        -2.9262868346369153e-05,
+        34173.0,
+        34172.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate70",
+    "metric": "received",
+    "unit": "msg/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": 2.9265437518244397e-05,
+    "mad": 0.0,
+    "ci95_low": 2.9265437518244397e-05,
+    "ci95_high": 2.9265437518244397e-05,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        2.9265437518244397e-05,
+        34170.0,
+        34171.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate85",
+    "metric": "confirm_p95",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.17653890824622542,
+    "mad": 0.0,
+    "ci95_low": 0.17653890824622542,
+    "ci95_high": 0.17653890824622542,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.17653890824622542,
+        2583.0,
+        3039.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate85",
+    "metric": "confirm_p99",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.17520755797308896,
+    "mad": 0.0,
+    "ci95_low": 0.17520755797308896,
+    "ci95_high": 0.17520755797308896,
+    "equivalence_threshold": 0.05,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.17520755797308896,
+        3493.0,
+        4105.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate85",
+    "metric": "consumer_p95",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.17070654976792166,
+    "mad": 0.0,
+    "ci95_low": 0.17070654976792166,
+    "ci95_high": 0.17070654976792166,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.17070654976792166,
+        1939.0,
+        2270.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate85",
+    "metric": "consumer_p99",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.18633776091081589,
+    "mad": 0.0,
+    "ci95_low": 0.18633776091081589,
+    "ci95_high": 0.18633776091081589,
+    "equivalence_threshold": 0.05,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.18633776091081589,
+        2635.0,
+        3126.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate85",
+    "metric": "published",
+    "unit": "msg/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": 0.0,
+    "mad": 0.0,
+    "ci95_low": 0.0,
+    "ci95_high": 0.0,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.0,
+        41469.0,
+        41469.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q3-rate85",
+    "metric": "received",
+    "unit": "msg/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": -7.233796296290951e-05,
+    "mad": 0.0,
+    "ci95_low": -7.233796296290951e-05,
+    "ci95_high": -7.233796296290951e-05,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        -7.233796296290951e-05,
+        41472.0,
+        41469.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q4-join-late",
+    "metric": "confirm_p95",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.021621621621621623,
+    "mad": 0.0,
+    "ci95_low": 0.021621621621621623,
+    "ci95_high": 0.021621621621621623,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.021621621621621623,
+        740.0,
+        756.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q4-join-late",
+    "metric": "confirm_p99",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.03005780346820819,
+    "mad": 0.0,
+    "ci95_low": 0.03005780346820819,
+    "ci95_high": 0.03005780346820819,
+    "equivalence_threshold": 0.05,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.03005780346820819,
+        865.0,
+        891.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q4-join-late",
+    "metric": "consumer_p95",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.048327137546468446,
+    "mad": 0.0,
+    "ci95_low": 0.048327137546468446,
+    "ci95_high": 0.048327137546468446,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.048327137546468446,
+        538.0,
+        564.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q4-join-late",
+    "metric": "consumer_p99",
+    "unit": "us",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.004457652303120341,
+    "mad": 0.0,
+    "ci95_low": 0.004457652303120341,
+    "ci95_high": 0.004457652303120341,
+    "equivalence_threshold": 0.05,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.004457652303120341,
+        673.0,
+        676.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q4-join-late",
+    "metric": "published",
+    "unit": "msg/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": 0.00019986009793138138,
+    "mad": 0.0,
+    "ci95_low": 0.00019986009793138138,
+    "ci95_high": 0.00019986009793138138,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.00019986009793138138,
+        10007.0,
+        10009.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q4-join-late",
+    "metric": "received",
+    "unit": "msg/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": 9.994003597846302e-05,
+    "mad": 0.0,
+    "ci95_low": 9.994003597846302e-05,
+    "ci95_high": 9.994003597846302e-05,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        9.994003597846302e-05,
+        10006.0,
+        10007.0
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q5-backlog",
+    "metric": "drain_time",
+    "unit": "s",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.07318840579710151,
+    "mad": 0.0,
+    "ci95_low": 0.07318840579710151,
+    "ci95_high": 0.07318840579710151,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.07318840579710151,
+        13.8,
+        14.81
+      ]
+    ]
+  },
+  {
+    "project": "rabbitmq",
+    "scenario": "q5-backlog",
+    "metric": "fill_time",
+    "unit": "s",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.030885780885780978,
+    "mad": 0.0,
+    "ci95_low": 0.030885780885780978,
+    "ci95_high": 0.030885780885780978,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.030885780885780978,
+        17.16,
+        17.69
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r1-steady",
+    "metric": "latency_avg",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.03065693430656924,
+    "mad": 0.0,
+    "ci95_low": 0.03065693430656924,
+    "ci95_high": 0.03065693430656924,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.03065693430656924,
+        0.685,
+        0.706
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r1-steady",
+    "metric": "latency_p50",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.03375527426160341,
+    "mad": 0.0,
+    "ci95_low": 0.03375527426160341,
+    "ci95_high": 0.03375527426160341,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.03375527426160341,
+        0.711,
+        0.735
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r1-steady",
+    "metric": "latency_p95",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.030967741935483906,
+    "mad": 0.0,
+    "ci95_low": 0.030967741935483906,
+    "ci95_high": 0.030967741935483906,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.030967741935483906,
+        0.775,
+        0.799
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r1-steady",
+    "metric": "latency_p99",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.028109627547435068,
+    "mad": 0.0,
+    "ci95_low": 0.028109627547435068,
+    "ci95_high": 0.028109627547435068,
+    "equivalence_threshold": 0.05,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.028109627547435068,
+        1.423,
+        1.463
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r1-steady",
+    "metric": "throughput",
+    "unit": "ops/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": -1.0106023892286764e-05,
+    "mad": 0.0,
+    "ci95_low": -1.0106023892286764e-05,
+    "ci95_high": -1.0106023892286764e-05,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        -1.0106023892286764e-05,
+        94003.34,
+        94002.39
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r2-pipeline",
+    "metric": "latency_avg",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.020618556701030855,
+    "mad": 0.0,
+    "ci95_low": 0.020618556701030855,
+    "ci95_high": 0.020618556701030855,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.020618556701030855,
+        2.522,
+        2.574
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r2-pipeline",
+    "metric": "latency_p50",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.023267086766844525,
+    "mad": 0.0,
+    "ci95_low": 0.023267086766844525,
+    "ci95_high": 0.023267086766844525,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.023267086766844525,
+        2.063,
+        2.111
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r2-pipeline",
+    "metric": "latency_p95",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.027034638130104094,
+    "mad": 0.0,
+    "ci95_low": 0.027034638130104094,
+    "ci95_high": 0.027034638130104094,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.027034638130104094,
+        3.551,
+        3.647
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r2-pipeline",
+    "metric": "latency_p99",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.02564787603526586,
+    "mad": 0.0,
+    "ci95_low": 0.02564787603526586,
+    "ci95_high": 0.02564787603526586,
+    "equivalence_threshold": 0.05,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.02564787603526586,
+        3.743,
+        3.839
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r2-pipeline",
+    "metric": "throughput",
+    "unit": "ops/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": -0.02037068486010396,
+    "mad": 0.0,
+    "ci95_low": -0.02037068486010396,
+    "ci95_high": -0.02037068486010396,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        -0.02037068486010396,
+        633948.74,
+        621034.77
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r3-ttl-eviction",
+    "metric": "latency_avg",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.031630170316301776,
+    "mad": 0.0,
+    "ci95_low": 0.031630170316301776,
+    "ci95_high": 0.031630170316301776,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.031630170316301776,
+        0.822,
+        0.848
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r3-ttl-eviction",
+    "metric": "latency_p50",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.028605482717520836,
+    "mad": 0.0,
+    "ci95_low": 0.028605482717520836,
+    "ci95_high": 0.028605482717520836,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.028605482717520836,
+        0.839,
+        0.863
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r3-ttl-eviction",
+    "metric": "latency_p95",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.024615384615384706,
+    "mad": 0.0,
+    "ci95_low": 0.024615384615384706,
+    "ci95_high": 0.024615384615384706,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.024615384615384706,
+        0.975,
+        0.999
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r3-ttl-eviction",
+    "metric": "latency_p99",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.03319502074688807,
+    "mad": 0.0,
+    "ci95_low": 0.03319502074688807,
+    "ci95_high": 0.03319502074688807,
+    "equivalence_threshold": 0.05,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.03319502074688807,
+        1.687,
+        1.743
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r3-ttl-eviction",
+    "metric": "throughput",
+    "unit": "ops/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": -0.001018812531468516,
+    "mad": 0.0,
+    "ci95_low": -0.001018812531468516,
+    "ci95_high": -0.001018812531468516,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        -0.001018812531468516,
+        93942.7,
+        93846.99
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r4-bgsave",
+    "metric": "latency_avg",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.029247910863509752,
+    "mad": 0.0,
+    "ci95_low": 0.029247910863509752,
+    "ci95_high": 0.029247910863509752,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.029247910863509752,
+        0.718,
+        0.739
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r4-bgsave",
+    "metric": "latency_p50",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.03265306122448974,
+    "mad": 0.0,
+    "ci95_low": 0.03265306122448974,
+    "ci95_high": 0.03265306122448974,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.03265306122448974,
+        0.735,
+        0.759
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r4-bgsave",
+    "metric": "latency_p95",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.027303754266211566,
+    "mad": 0.0,
+    "ci95_low": 0.027303754266211566,
+    "ci95_high": 0.027303754266211566,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.027303754266211566,
+        0.879,
+        0.903
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r4-bgsave",
+    "metric": "latency_p99",
+    "unit": "ms",
+    "higher_better": false,
+    "pairs": 1,
+    "median_delta": 0.03280929596719062,
+    "mad": 0.0,
+    "ci95_low": 0.03280929596719062,
+    "ci95_high": 0.03280929596719062,
+    "equivalence_threshold": 0.05,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        0.03280929596719062,
+        1.463,
+        1.511
+      ]
+    ]
+  },
+  {
+    "project": "redis",
+    "scenario": "r4-bgsave",
+    "metric": "throughput",
+    "unit": "ops/s",
+    "higher_better": true,
+    "pairs": 1,
+    "median_delta": -7.153660630343506e-05,
+    "mad": 0.0,
+    "ci95_low": -7.153660630343506e-05,
+    "ci95_high": -7.153660630343506e-05,
+    "equivalence_threshold": 0.03,
+    "equivalent": false,
+    "same_direction_4of5": false,
+    "pair_values": [
+      [
+        1,
+        -7.153660630343506e-05,
+        93937.92,
+        93931.2
+      ]
+    ]
+  }
+]

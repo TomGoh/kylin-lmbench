@@ -1,0 +1,15 @@
+rep=1 label=dense-1.9 munmap   file mb=64 touch=1.900MB stride=4K : mean=67.2 us  min=65.5 us
+rep=1 label=dense-2.0 munmap   file mb=64 touch=2.000MB stride=4K : mean=65.1 us  min=63.9 us
+rep=1 label=sparse-6.4 munmap   file mb=64 touch=6.400MB stride=16K : mean=71.7 us  min=70.7 us
+rep=2 label=dense-1.9 munmap   file mb=64 touch=1.900MB stride=4K : mean=66.8 us  min=65.7 us
+rep=2 label=dense-2.0 munmap   file mb=64 touch=2.000MB stride=4K : mean=65.0 us  min=63.6 us
+rep=2 label=sparse-6.4 munmap   file mb=64 touch=6.400MB stride=16K : mean=77.3 us  min=76.3 us
+rep=3 label=dense-1.9 munmap   file mb=64 touch=1.900MB stride=4K : mean=67.1 us  min=65.6 us
+rep=3 label=dense-2.0 munmap   file mb=64 touch=2.000MB stride=4K : mean=64.9 us  min=63.3 us
+rep=3 label=sparse-6.4 munmap   file mb=64 touch=6.400MB stride=16K : mean=71.6 us  min=70.5 us
+rep=4 label=dense-1.9 munmap   file mb=64 touch=1.900MB stride=4K : mean=66.7 us  min=65.1 us
+rep=4 label=dense-2.0 munmap   file mb=64 touch=2.000MB stride=4K : mean=65.2 us  min=63.7 us
+rep=4 label=sparse-6.4 munmap   file mb=64 touch=6.400MB stride=16K : mean=71.7 us  min=70.3 us
+rep=5 label=dense-1.9 munmap   file mb=64 touch=1.900MB stride=4K : mean=67.0 us  min=66.1 us
+rep=5 label=dense-2.0 munmap   file mb=64 touch=2.000MB stride=4K : mean=65.0 us  min=63.5 us
+rep=5 label=sparse-6.4 munmap   file mb=64 touch=6.400MB stride=16K : mean=71.7 us  min=71.0 us

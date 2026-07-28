@@ -1,0 +1,901 @@
+Linux 6.6.30+ (kylin) 	2026年07月17日 	_aarch64_	(8 CPU)
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分13秒  1000     41151   24.00   75.00    0.00    0.00   99.00     1  26443.00      0.00 9982096 9264004  28.47  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分14秒  1000     41151   23.00   76.00    0.00    0.00   99.00     0  26489.00      0.00 9982096 9367428  28.79  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分15秒  1000     41151   21.00  135.00    0.00    0.00  156.00     2  27025.00      0.00 9982096 9472132  29.11  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分16秒  1000     41151   24.00   41.00    0.00    0.00   65.00     2  25487.00      0.00 9982096 9572612  29.42  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分17秒  1000     41151   24.00   39.00    0.00    0.00   63.00     1  25701.00      0.00 9982096 9673988  29.73  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分18秒  1000     41151   27.00   37.00    0.00    0.00   64.00     0  27405.00      0.00 9982096 9778052  30.05  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分19秒  1000     41151   23.00   43.00    0.00    0.00   66.00     0  25096.00      0.00 11841680 9876996  30.36  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分20秒  1000     41151   24.00   41.00    0.00    0.00   65.00     2  25011.00      0.00 11841680 9975684  30.66  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分21秒  1000     41151   20.00   43.00    0.00    0.00   63.00     1  24784.00      0.00 11841680 10073220  30.96  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分22秒  1000     41151   25.00   38.00    0.00    0.00   63.00     2  24722.00      0.00 11841680 10170884  31.26  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分23秒  1000     41151   21.00   41.00    0.00    0.00   62.00     3  24752.00      0.00 11841680 10268420  31.56  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分24秒  1000     41151   26.00   39.00    0.00    0.00   65.00     3  28453.00      0.00 11923600 10372612  31.88  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分25秒  1000     41151   25.00   41.00    0.00    0.00   66.00     0  24239.00      0.00 11923600 10468228  32.17  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分26秒  1000     41151   23.00   42.00    0.00    0.00   65.00     3  23969.00      0.00 11923600 10562820  32.46  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分27秒  1000     41151   24.00   42.00    0.00    0.00   66.00     1  23701.00      0.00 11923600 10654296  32.74  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分28秒  1000     41151   26.00   40.00    0.00    0.00   66.00     1  23566.00      0.00 11923600 10747096  33.03  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分29秒  1000     41151   21.00   43.00    0.00    0.00   64.00     2  23581.00      0.00 11923600 10840280  33.32  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分30秒  1000     41151   22.00   40.00    0.00    0.00   62.00     3  23414.00      0.00 11923600 10932440  33.60  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分31秒  1000     41151   26.00   36.00    0.00    0.00   62.00     2  23217.00      0.00 11923600 11024088  33.88  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分32秒  1000     41151   21.00   41.00    0.00    0.00   62.00     3  22982.00      0.00 11923600 11114712  34.16  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分33秒  1000     41151   24.00   39.00    0.00    0.00   63.00     1  23040.00      0.00 11923600 11205464  34.44  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分34秒  1000     41151   21.00   42.00    0.00    0.00   63.00     3  23003.00      0.00 11923600 11296216  34.72  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分35秒  1000     41151   19.00   43.00    0.00    0.00   62.00     3  22630.00      0.00 11952272 11385432  34.99  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分36秒  1000     41151   21.00   41.00    0.00    0.00   62.00     1  22553.00      0.00 11952272 11474392  35.26  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分37秒  1000     41151   24.00   42.00    0.00    0.00   66.00     0  30444.00      0.00 11952272 11574588  35.57  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分38秒  1000     41151   27.00   38.00    0.00    0.00   65.00     3  22189.00      0.00 11952272 11661884  35.84  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分39秒  1000     41151   27.00   39.00    0.00    0.00   66.00     0  22133.00      0.00 14049424 11749308  36.11  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分40秒  1000     41151   25.00   41.00    0.00    0.00   66.00     3  21796.00      0.00 14049424 11835324  36.37  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分41秒  1000     41151   23.00   42.00    0.00    0.00   65.00     2  21727.00      0.00 14049424 11920956  36.64  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分42秒  1000     41151   25.00   41.00    0.00    0.00   66.00     1  21646.00      0.00 14049424 12006332  36.90  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分43秒  1000     41151   26.00   38.00    0.00    0.00   64.00     2  21241.00      0.00 14049424 12090172  37.16  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分44秒  1000     41151   26.00   40.00    0.00    0.00   66.00     2  21015.00      0.00 14049424 12172988  37.41  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分45秒  1000     41151   25.00   40.00    0.00    0.00   65.00     0  21031.00      0.00 14049424 12255932  37.67  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分46秒  1000     41151   25.00   41.00    0.00    0.00   66.00     2  20917.00      0.00 14049424 12338364  37.92  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分47秒  1000     41151   29.00   40.00    0.00    0.00   69.00     3  20734.00      0.00 14049424 12420156  38.17  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分48秒  1000     41151   28.00   39.00    0.00    0.00   67.00     1  20645.00      0.00 14049424 12493368  38.40  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分49秒  1000     41151   27.00   41.00    0.00    0.00   68.00     2  20519.00      0.00 14049424 12574136  38.64  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分50秒  1000     41151   23.00   44.00    0.00    0.00   67.00     1  20514.00      0.00 14049424 12655032  38.89  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分51秒  1000     41151   30.00   38.00    0.00    0.00   68.00     1  20100.00      0.00 14049424 12734392  39.14  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分52秒  1000     41151   25.00   43.00    0.00    1.00   68.00     0  20041.00      0.00 14049424 12813368  39.38  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分53秒  1000     41151   26.00   41.00    0.00    0.00   67.00     1  20018.00      0.00 14049424 12892344  39.62  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分54秒  1000     41151   27.00   40.00    0.00    0.00   67.00     2  19994.00      0.00 14049424 12971192  39.86  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分55秒  1000     41151   28.00   40.00    0.00    0.00   68.00     1  19741.00      0.00 14082192 13049016  40.10  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分56秒  1000     41151   26.00   41.00    0.00    0.00   67.00     0  19563.00      0.00 14082192 13126328  40.34  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分57秒  1000     41151   28.00   40.00    0.00    0.00   68.00     3  19539.00      0.00 14082192 13203384  40.58  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分58秒  1000     41151   26.00   42.00    0.00    0.00   68.00     1  19450.00      0.00 14082192 13279928  40.81  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时36分59秒  1000     41151   27.00   39.00    0.00    0.00   66.00     2  19247.00      0.00 14082192 13355960  41.05  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分00秒  1000     41151   30.00   38.00    0.00    0.00   68.00     3  19104.00      0.00 14082192 13431224  41.28  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分01秒  1000     41151   28.00   39.00    0.00    0.00   67.00     2  19014.00      0.00 14082192 13506232  41.51  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分02秒  1000     41151   28.00   40.00    0.00    0.00   68.00     3  18949.00      0.00 14082192 13580856  41.74  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分03秒  1000     41151   24.00   43.00    0.00    0.00   67.00     3  18492.00      0.00 14082192 13653816  41.96  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分04秒  1000     41151   24.00   42.00    0.00    0.00   66.00     2  18418.00      0.00 14082192 13726392  42.19  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分05秒  1000     41151   29.00   38.00    0.00    0.00   67.00     0  18450.00      0.00 14082192 13799224  42.41  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分06秒  1000     41151   31.00   37.00    0.00    0.00   68.00     1  18362.00      0.00 16703632 13871672  42.63  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分07秒  1000     41151   25.00   42.00    0.00    0.00   67.00     2  18058.00      0.00 16703632 13942840  42.85  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分08秒  1000     41151   24.00   43.00    0.00    0.00   67.00     0  18081.00      0.00 16703632 14014136  43.07  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分09秒  1000     41151   25.00   41.00    0.00    0.00   66.00     2  17831.00      0.00 16703632 14084536  43.29  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分10秒  1000     41151   26.00   41.00    0.00    0.00   67.00     0  17694.00      0.00 16703632 14154296  43.50  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分11秒  1000     41151   33.00   35.00    0.00    0.00   68.00     0  17554.00      0.00 16703632 14223416  43.71  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分12秒  1000     41151   24.00   43.00    0.00    0.00   67.00     1  17566.00      0.00 16703632 14292792  43.93  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分13秒  1000     41151   27.00   41.00    0.00    0.00   68.00     3  17564.00      0.00 16703632 14361912  44.14  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分14秒  1000     41151   26.00   40.00    0.00    0.00   66.00     1  17409.00      0.00 16703632 14430648  44.35  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分15秒  1000     41151   27.00   40.00    0.00    0.00   67.00     3  17270.00      0.00 16703632 14498744  44.56  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分16秒  1000     41151   28.00   40.00    0.00    0.00   68.00     3  17129.00      0.00 16703632 14566328  44.77  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分17秒  1000     41151   23.00   43.00    0.00    0.00   66.00     1  17106.00      0.00 16703632 14633656  44.97  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分18秒  1000     41151   25.00   42.00    0.00    0.00   67.00     1  16997.00      0.00 16703632 14700856  45.18  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分19秒  1000     41151   23.00   44.00    0.00    0.00   67.00     3  16695.00      0.00 16703632 14766648  45.38  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分20秒  1000     41151   26.00   41.00    0.00    0.00   67.00     1  16517.00      0.00 16703632 14831544  45.58  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分21秒  1000     41151   26.00   40.00    0.00    0.00   66.00     2  16514.00      0.00 16703632 14896824  45.78  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分22秒  1000     41151   26.00   41.00    0.00    0.00   67.00     3  16525.00      0.00 16744592 14962104  45.98  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分23秒  1000     41151   24.00   42.00    0.00    0.00   66.00     0  16396.00      0.00 16744592 15026744  46.18  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分24秒  1000     41151   26.00   42.00    0.00    1.00   68.00     1  16420.00      0.00 16744592 15091256  46.38  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分25秒  1000     41151   29.00   37.00    0.00    0.00   66.00     3  16296.00      0.00 16744592 15155640  46.58  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分26秒  1000     41151   25.00   42.00    0.00    0.00   67.00     2  16071.00      0.00 16744592 15219000  46.77  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分27秒  1000     41151   29.00   39.00    0.00    0.00   68.00     0  15953.00      0.00 16744592 15281976  46.97  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分28秒  1000     41151   24.00   42.00    0.00    0.00   66.00     2  15841.00      0.00 16744592 15344440  47.16  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分29秒  1000     41151   27.00   40.00    0.00    0.00   67.00     0  15724.00      0.00 16744592 15406392  47.35  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分30秒  1000     41151   23.00   43.00    0.00    0.00   66.00     2  15555.00      0.00 16744592 15467576  47.54  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分31秒  1000     41151   26.00   40.00    0.00    0.00   66.00     3  15480.00      0.00 16744592 15528888  47.73  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分32秒  1000     41151   29.00   39.00    0.00    0.00   68.00     2  15332.00      0.00 16744592 15589304  47.91  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分33秒  1000     41151   26.00   39.00    0.00    0.00   65.00     1  15083.00      0.00 16744592 15648696  48.09  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分34秒  1000     41151   23.00   45.00    0.00    0.00   68.00     1  15125.00      0.00 16744592 15708344  48.28  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分35秒  1000     41151   27.00   39.00    0.00    0.00   66.00     0  14876.00      0.00 16744592 15767096  48.46  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分36秒  1000     41151   29.00   37.00    0.00    0.00   66.00     3  14628.00      0.00 16744592 15824824  48.63  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分37秒  1000     41151   25.00   42.00    0.00    0.00   67.00     2  14399.00      0.00 16744592 15881400  48.81  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分38秒  1000     41151   25.00   41.00    0.00    0.00   66.00     2  14252.00      0.00 16744592 15937720  48.98  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分39秒  1000     41151   23.00   43.00    0.00    0.00   66.00     2  13821.00      0.00 16744592 15992120  49.15  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分40秒  1000     41151   28.00   38.00    0.00    0.00   66.00     1  13336.00      0.00 16744592 16044728  49.31  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分41秒  1000     41151   27.00   40.00    0.00    0.00   67.00     2  13205.00      0.00 16744592 16096696  49.47  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分42秒  1000     41151   26.00   40.00    0.00    0.00   66.00     1  12894.00      0.00 16744592 16147640  49.63  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分43秒  1000     41151   26.00   40.00    0.00    0.00   66.00     2  12551.00      0.00 16744592 16197048  49.78  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分44秒  1000     41151   29.00   37.00    0.00    0.00   66.00     1  12351.00      0.00 16744592 16245816  49.93  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分45秒  1000     41151   23.00   42.00    0.00    0.00   65.00     0  12119.00      0.00 16744592 16293560  50.08  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分46秒  1000     41151   23.00   43.00    0.00    0.00   66.00     0  11902.00      0.00 16744592 16340408  50.22  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分47秒  1000     41151   27.00   38.00    0.00    0.00   65.00     1  11301.00      0.00 16744592 16385208  50.36  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分48秒  1000     41151   24.00   41.00    0.00    0.00   65.00     3  11203.00      0.00 16744592 16429368  50.49  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分49秒  1000     41151   24.00   42.00    0.00    0.00   66.00     0  10853.00      0.00 16744592 16471992  50.62  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分50秒  1000     41151   28.00   38.00    0.00    0.00   66.00     3  10914.00      0.00 16744592 16515128  50.76  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分51秒  1000     41151   22.00   43.00    0.00    0.00   65.00     0  10582.00      0.00 19890320 16556856  50.88  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分52秒  1000     41151   24.00   41.00    0.00    0.00   65.00     2  10107.00      0.00 19890320 16596792  51.01  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分53秒  1000     41151   25.00   40.00    0.00    0.00   65.00     0  10007.00      0.00 19890320 16636088  51.13  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分54秒  1000     41151   30.00   39.00    0.00    0.00   69.00     3  21698.00      0.00 19890320 16692408  51.30  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分55秒  1000     41151   30.00   38.00    0.00    0.00   68.00     3  10056.00      0.00 19890320 16729528  51.42  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分56秒  1000     41151   29.00   38.00    0.00    1.00   67.00     2   9310.00      0.00 19890320 16766264  51.53  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分57秒  1000     41151   28.00   40.00    0.00    0.00   68.00     2   9147.00      0.00 19890320 16802360  51.64  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分58秒  1000     41151   26.00   42.00    0.00    0.00   68.00     0   8808.00      0.00 19890320 16836920  51.75  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时37分59秒  1000     41151   25.00   41.00    0.00    0.00   66.00     2   8649.00      0.00 19890320 16871096  51.85  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分00秒  1000     41151   29.00   39.00    0.00    0.00   68.00     3   8652.00      0.00 19890320 16905016  51.95  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分01秒  1000     41151   31.00   36.00    0.00    0.00   67.00     1   8328.00      0.00 19890320 16938040  52.06  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分02秒  1000     41151   28.00   40.00    0.00    0.00   68.00     1   8193.00      0.00 19890320 16970168  52.15  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分03秒  1000     41151   30.00   36.00    0.00    0.00   66.00     3   8006.00      0.00 19890320 17001784  52.25  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分04秒  1000     41151   30.00   37.00    0.00    0.00   67.00     2   7775.00      0.00 19890320 17032376  52.35  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分05秒  1000     41151   30.00   38.00    0.00    0.00   68.00     2   7466.00      0.00 19890320 17061816  52.44  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分06秒  1000     41151   26.00   40.00    0.00    0.00   66.00     2   7396.00      0.00 19890320 17091000  52.53  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分07秒  1000     41151   29.00   39.00    0.00    0.00   68.00     2   7263.00      0.00 19890320 17119800  52.61  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分08秒  1000     41151   21.00   46.00    0.00    0.00   67.00     0   6913.00      0.00 19890320 17146808  52.70  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分09秒  1000     41151   27.00   40.00    0.00    0.00   67.00     1   6822.00      0.00 19890320 17173816  52.78  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分10秒  1000     41151   30.00   37.00    0.00    0.00   67.00     1   6743.00      0.00 19890320 17200184  52.86  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分11秒  1000     41151   28.00   38.00    0.00    0.00   66.00     1   6421.00      0.00 19890320 17225656  52.94  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分12秒  1000     41151   25.00   42.00    0.00    0.00   67.00     2   6516.00      0.00 19890320 17251256  53.02  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分13秒  1000     41151   25.00   41.00    0.00    0.00   66.00     2   6123.00      0.00 19890320 17275448  53.09  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分14秒  1000     41151   29.00   39.00    0.00    0.00   68.00     1   6018.00      0.00 19890320 17299000  53.17  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分15秒  1000     41151   27.00   39.00    0.00    0.00   66.00     1   5759.00      0.00 19890320 17321656  53.24  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分16秒  1000     41151   25.00   42.00    0.00    0.00   67.00     1   5806.00      0.00 19890320 17344568  53.31  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分17秒  1000     41151   31.00   36.00    0.00    0.00   67.00     2   5550.00      0.00 19890320 17366328  53.37  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分18秒  1000     41151   27.00   38.00    0.00    0.00   65.00     3   5334.00      0.00 19890320 17387320  53.44  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分19秒  1000     41151   24.00   42.00    0.00    0.00   66.00     3   5138.00      0.00 19890320 17407544  53.50  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分20秒  1000     41151   27.00   40.00    0.00    0.00   67.00     1   4986.00      0.00 19939472 17427256  53.56  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分21秒  1000     41151   26.00   41.00    0.00    0.00   67.00     1   4883.00      0.00 19939472 17446456  53.62  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分22秒  1000     41151   30.00   36.00    0.00    0.00   66.00     1   4604.00      0.00 19939472 17464504  53.67  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分23秒  1000     41151   22.00   44.00    0.00    0.00   66.00     3   4527.00      0.00 19939472 17482296  53.73  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分24秒  1000     41151   23.00   42.00    0.00    0.00   65.00     1   4391.00      0.00 19939472 17499576  53.78  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分25秒  1000     41151   27.00   40.00    0.00    0.00   67.00     1   4246.00      0.00 19939472 17516216  53.83  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分26秒  1000     41151   24.00   43.00    0.00    0.00   67.00     3   3820.00      0.00 19939472 17531320  53.88  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分27秒  1000     41151   25.00   41.00    0.00    0.00   66.00     0   3780.00      0.00 19939472 17546168  53.93  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分28秒  1000     41151   23.00   42.00    0.00    0.00   65.00     2   3679.00      0.00 19939472 17560504  53.97  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分29秒  1000     41151   30.00   36.00    0.00    1.00   66.00     2   3235.00      0.00 19939472 17573304  54.01  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分30秒  1000     41151   23.00   39.00    0.00    0.00   62.00     1   6417.00      0.00 19939472 17582124  54.04  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分31秒  1000     41151   24.00   38.00    0.00    0.00   62.00     3   3194.00      0.00 19939472 17594668  54.07  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分32秒  1000     41151   22.00   41.00    0.00    0.00   63.00     1   3099.00      0.00 19939472 17606700  54.11  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分33秒  1000     41151   27.00   34.00    0.00    0.00   61.00     1   3009.00      0.00 19939472 17618476  54.15  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分34秒  1000     41151   27.00   36.00    0.00    0.00   63.00     3   3005.00      0.00 19939472 17630252  54.18  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分35秒  1000     41151   22.00   40.00    0.00    0.00   62.00     1   2615.00      0.00 19939472 17640492  54.21  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分36秒  1000     41151   24.00   39.00    0.00    0.00   63.00     0   2535.00      0.00 19939472 17650476  54.25  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分37秒  1000     41151   23.00   38.00    0.00    0.00   61.00     2   2309.00      0.00 19939472 17659436  54.27  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分38秒  1000     41151   27.00   36.00    0.00    0.00   63.00     2   2189.00      0.00 19939472 17668140  54.30  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分39秒  1000     41151   23.00   39.00    0.00    0.00   62.00     1   1884.00      0.00 19939472 17675308  54.32  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分40秒  1000     41151   26.00   35.00    0.00    0.00   61.00     2   1924.00      0.00 19939472 17682860  54.35  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分41秒  1000     41151   25.00   38.00    0.00    0.00   63.00     2   1628.00      0.00 19939472 17689260  54.36  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分42秒  1000     41151   23.00   39.00    0.00    0.00   62.00     1   1625.00      0.00 19939472 17695404  54.38  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分43秒  1000     41151   23.00   39.00    0.00    0.00   62.00     2   1523.00      0.00 19939472 17701292  54.40  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分44秒  1000     41151   20.00   42.00    0.00    0.00   62.00     0   1611.00      0.00 19939472 17707564  54.42  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分45秒  1000     41151   24.00   38.00    0.00    0.00   62.00     1   1265.00      0.00 19939472 17712428  54.44  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分46秒  1000     41151   24.00   38.00    0.00    0.00   62.00     1   1369.00      0.00 19939472 17717804  54.45  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分47秒  1000     41151   22.00   39.00    0.00    0.00   61.00     1   1094.00      0.00 19939472 17721900  54.47  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分48秒  1000     41151   25.00   37.00    0.00    0.00   62.00     2   1160.00      0.00 19939472 17726380  54.48  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分49秒  1000     41151   22.00   39.00    0.00    0.00   61.00     2   1108.00      0.00 19939472 17730604  54.49  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分50秒  1000     41151   26.00   37.00    0.00    0.00   63.00     0   1229.00      0.00 19939472 17735340  54.51  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分51秒  1000     41151   25.00   36.00    0.00    0.00   61.00     3   1036.00      0.00 19939472 17739180  54.52  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分52秒  1000     41151   24.00   38.00    0.00    0.00   62.00     0   1163.00      0.00 19939472 17743660  54.53  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分53秒  1000     41151   20.00   42.00    0.00    0.00   62.00     3   1254.00      0.00 19939472 17743896  54.53  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分54秒  1000     41151   24.00   37.00    0.00    0.00   61.00     0   1166.00      0.00 19939472 17748248  54.55  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分55秒  1000     41151   23.00   39.00    0.00    0.00   62.00     3   1115.00      0.00 19939472 17748132  54.55  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分56秒  1000     41151   22.00   40.00    0.00    0.00   62.00     1   1086.00      0.00 19939472 17752228  54.56  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分57秒  1000     41151   22.00   40.00    0.00    0.00   62.00     1   1105.00      0.00 19939472 17750288  54.55  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分58秒  1000     41151   24.00   37.00    0.00    0.00   61.00     2   1020.00      0.00 19939472 17750288  54.55  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时38分59秒  1000     41151   24.00   39.00    0.00    0.00   63.00     2   1088.00      0.00 19939472 17749900  54.55  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分00秒  1000     41151   23.00   38.00    0.00    0.00   61.00     1   1066.00      0.00 19939472 17749040  54.55  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分01秒  1000     41151   25.00   37.00    0.00    0.00   62.00     1   1097.00      0.00 19939472 17748140  54.55  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分02秒  1000     41151   22.00   39.00    0.00    0.00   61.00     2    884.00      0.00 19939472 17745232  54.54  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分03秒  1000     41151   22.00   40.00    0.00    0.00   62.00     0    854.00      0.00 19939472 17742140  54.53  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分04秒  1000     41151   22.00   39.00    0.00    0.00   61.00     3    971.00      0.00 19939472 17738904  54.52  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分05秒  1000     41151   25.00   37.00    0.00    0.00   62.00     3   1001.00      0.00 19939472 17732928  54.50  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分06秒  1000     41151   24.00   38.00    0.00    0.00   62.00     2    817.00      0.00 19939472 17729968  54.49  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分07秒  1000     41151   22.00   39.00    0.00    0.00   61.00     3    988.00      0.00 19939472 17723208  54.47  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分08秒  1000     41151   27.00   35.00    0.00    0.00   62.00     1    866.00      0.00 19939472 17719212  54.46  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分09秒  1000     41151   25.00   36.00    0.00    0.00   61.00     2    660.00      0.00 19939472 17712784  54.44  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分10秒  1000     41151   22.00   39.00    0.00    0.00   61.00     2    836.00      0.00 19939472 17708888  54.43  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分11秒  1000     41151   22.00   40.00    0.00    0.00   62.00     3    883.00      0.00 19939472 17701736  54.40  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分12秒  1000     41151   22.00   39.00    0.00    0.00   61.00     1    777.00      0.00 19939472 17700140  54.40  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分13秒  1000     41151   25.00   37.00    0.00    0.00   62.00     2    789.00      0.00 19939472 17692544  54.37  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分14秒  1000     41151   24.00   38.00    0.00    0.00   62.00     0    717.00      0.00 19939472 17685640  54.35  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分15秒  1000     41151   22.00   39.00    0.00    0.00   61.00     3    683.00      0.00 19939472 17678256  54.33  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分16秒  1000     41151   26.00   36.00    0.00    0.00   62.00     3    730.00      0.00 19939472 17670684  54.31  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分17秒  1000     41151   24.00   37.00    0.00    0.00   61.00     0    713.00      0.00 19939472 17667784  54.30  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分18秒  1000     41151   27.00   35.00    0.00    0.00   62.00     0    669.00      0.00 19939472 17657888  54.27  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分19秒  1000     41151   22.00   40.00    0.00    0.00   62.00     1    857.00      0.00 19939472 17649028  54.24  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分20秒  1000     41151   25.00   36.00    0.00    0.00   61.00     3    659.00      0.00 19939472 17638676  54.21  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分21秒  1000     41151   21.00   40.00    0.00    1.00   61.00     2    632.00      0.00 19939472 17626940  54.17  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分22秒  1000     41151   23.00   40.00    0.00    0.00   63.00     3    688.00      0.00 19939472 17615888  54.14  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分23秒  1000     41151   23.00   38.00    0.00    0.00   61.00     1    691.00      0.00 19939472 17612196  54.13  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分24秒  1000     41151   23.00   38.00    0.00    0.00   61.00     1    729.00      0.00 19939472 17597456  54.08  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分25秒  1000     41151   23.00   39.00    0.00    0.00   62.00     0    687.00      0.00 19939472 17583500  54.04  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分26秒  1000     41151   26.00   36.00    0.00    0.00   62.00     3    657.00      0.00 19939472 17570584  54.00  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分27秒  1000     41151   24.00   38.00    0.00    0.00   62.00     0    560.00      0.00 19939472 17560972  53.97  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分28秒  1000     41151   18.00   44.00    0.00    0.00   62.00     1    647.00      0.00 19939472 17549408  53.94  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分29秒  1000     41151   23.00   38.00    0.00    0.00   61.00     1    477.00      0.00 19939472 17538980  53.90  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分30秒  1000     41151   24.00   37.00    0.00    0.00   61.00     1    555.00      0.00 19939472 17528940  53.87  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分31秒  1000     41151   21.00   40.00    0.00    0.00   61.00     0    730.00      0.00 19939472 17525008  53.86  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分32秒  1000     41151   19.00   43.00    0.00    0.00   62.00     3    537.00      0.00 19939472 17511992  53.82  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分33秒  1000     41151   23.00   38.00    0.00    0.00   61.00     2    580.00      0.00 19939472 17495032  53.77  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分34秒  1000     41151   23.00   39.00    0.00    0.00   62.00     2    478.00      0.00 19939472 17480828  53.72  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分35秒  1000     41151   23.00   39.00    0.00    0.00   62.00     3    470.00      0.00 19939472 17465140  53.68  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分36秒  1000     41151   22.00   39.00    0.00    0.00   61.00     1    485.00      0.00 19939472 17449296  53.63  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分37秒  1000     41151   23.00   38.00    0.00    0.00   61.00     1    517.00      0.00 19939472 17433940  53.58  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分38秒  1000     41151   24.00   37.00    0.00    0.00   61.00     0    421.00      0.00 19939472 17418908  53.53  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分39秒  1000     41151   20.00   42.00    0.00    0.00   62.00     0    487.00      0.00 19939472 17414732  53.52  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分40秒  1000     41151   20.00   41.00    0.00    0.00   61.00     1    417.00      0.00 19939472 17403376  53.49  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分41秒  1000     41151   22.00   39.00    0.00    0.00   61.00     1    485.00      0.00 19939472 17391304  53.45  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分42秒  1000     41151   25.00   37.00    0.00    0.00   62.00     2    442.00      0.00 19939472 17376392  53.40  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分43秒  1000     41151   24.00   38.00    0.00    0.00   62.00     3    485.00      0.00 19939472 17361536  53.36  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分44秒  1000     41151   29.00   33.00    0.00    0.00   62.00     1    469.00      0.00 19939472 17345500  53.31  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分45秒  1000     41151   22.00   39.00    0.00    0.00   61.00     3    633.00      0.00 19939472 17327836  53.25  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分46秒  1000     41151   20.00   42.00    0.00    0.00   62.00     3    374.00      0.00 19939472 17312828  53.21  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分47秒  1000     41151   25.00   36.00    0.00    0.00   61.00     2    444.00      0.00 19939472 17295560  53.15  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分48秒  1000     41151   21.00   40.00    0.00    0.00   61.00     0    520.00      0.00 19939472 17280900  53.11  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分49秒  1000     41151   24.00   37.00    0.00    0.00   61.00     1    372.00      0.00 19939472 17269356  53.07  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分50秒  1000     41151   25.00   37.00    0.00    0.00   62.00     0    467.00      0.00 19939472 17254832  53.03  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分51秒  1000     41151   25.00   37.00    0.00    0.00   62.00     1    432.00      0.00 19939472 17242060  52.99  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分52秒  1000     41151   23.00   38.00    0.00    0.00   61.00     2    512.00      0.00 19939472 17227544  52.95  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分53秒  1000     41151   21.00   40.00    0.00    0.00   61.00     1    302.00      0.00 19939472 17212260  52.90  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分54秒  1000     41151   21.00   40.00    0.00    0.00   61.00     0    443.00      0.00 19939472 17194648  52.84  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分55秒  1000     41151   22.00   41.00    0.00    0.00   63.00     3    420.00      0.00 19939472 17178108  52.79  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分56秒  1000     41151   22.00   39.00    0.00    0.00   61.00     2    455.00      0.00 19939472 17160552  52.74  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分57秒  1000     41151   25.00   36.00    0.00    0.00   61.00     0    385.00      0.00 19939472 17145596  52.69  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分58秒  1000     41151   24.00   38.00    0.00    0.00   62.00     0    434.00      0.00 19939472 17128828  52.64  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时39分59秒  1000     41151   21.00   41.00    0.00    0.00   62.00     0    206.00      0.00 19939472 17113676  52.60  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分00秒  1000     41151   20.00   41.00    0.00    0.00   61.00     3    332.00      0.00 19939472 17097976  52.55  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分01秒  1000     41151   21.00   40.00    0.00    0.00   61.00     1    366.00      0.00 19939472 17078984  52.49  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分02秒  1000     41151   23.00   39.00    0.00    0.00   62.00     3    347.00      0.00 19939472 17061504  52.44  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分03秒  1000     41151   23.00   38.00    0.00    0.00   61.00     0    366.00      0.00 19939472 17045944  52.39  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分04秒  1000     41151   25.00   36.00    0.00    0.00   61.00     3    277.00      0.00 19939472 17028960  52.34  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分05秒  1000     41151   24.00   38.00    0.00    0.00   62.00     3    417.00      0.00 19939472 17016688  52.30  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分06秒  1000     41151   20.00   41.00    0.00    0.00   61.00     3    251.00      0.00 19939472 17001676  52.25  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分07秒  1000     41151   26.00   35.00    0.00    0.00   61.00     1    213.00      0.00 19939472 16988064  52.21  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分08秒  1000     41151   22.00   41.00    0.00    0.00   63.00     1    263.00      0.00 19939472 16972896  52.16  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分09秒  1000     41151   21.00   40.00    0.00    0.00   61.00     3    195.00      0.00 19939472 16958760  52.12  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分10秒  1000     41151   20.00   41.00    0.00    0.00   61.00     1    203.00      0.00 19939472 16942816  52.07  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分11秒  1000     41151   21.00   40.00    0.00    0.00   61.00     0    182.00      0.00 19939472 16926292  52.02  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分12秒  1000     41151   23.00   38.00    0.00    1.00   61.00     1    265.00      0.00 19939472 16910832  51.97  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分13秒  1000     41151   19.00   42.00    0.00    0.00   61.00     3    147.00      0.00 19939472 16893396  51.92  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分14秒  1000     41151   23.00   40.00    0.00    0.00   63.00     2    179.00      0.00 19939472 16876600  51.87  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分15秒  1000     41151   23.00   38.00    0.00    0.00   61.00     2    198.00      0.00 19939472 16856376  51.81  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分16秒  1000     41151   22.00   39.00    0.00    0.00   61.00     2    181.00      0.00 19939472 16840888  51.76  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分17秒  1000     41151   23.00   39.00    0.00    0.00   62.00     0    304.00      0.00 19939472 16823608  51.70  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分18秒  1000     41151   21.00   39.00    0.00    0.00   60.00     1    351.00      0.00 19939472 16818232  51.69  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分19秒  1000     41151   26.00   35.00    0.00    0.00   61.00     3    216.00      0.00 19939472 16804664  51.65  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分20秒  1000     41151   20.00   42.00    0.00    0.00   62.00     0    189.00      0.00 19939472 16792248  51.61  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分21秒  1000     41151   27.00   34.00    0.00    0.00   61.00     0    351.00      0.00 19939472 16776248  51.56  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分22秒  1000     41151   22.00   40.00    0.00    0.00   62.00     2    228.00      0.00 19939472 16759864  51.51  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分23秒  1000     41151   25.00   36.00    0.00    0.00   61.00     0    166.00      0.00 19939472 16744376  51.46  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分24秒  1000     41151   28.00   34.00    0.00    0.00   62.00     2    206.00      0.00 19939472 16727096  51.41  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分25秒  1000     41151   22.00   38.00    0.00    0.00   60.00     0    111.00      0.00 19939472 16709560  51.35  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分26秒  1000     41151   20.00   42.00    0.00    0.00   62.00     0    324.00      0.00 19939472 16691640  51.30  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分27秒  1000     41151   23.00   38.00    0.00    0.00   61.00     1     51.00      0.00 19939472 16672440  51.24  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分28秒  1000     41151   22.00   40.00    0.00    0.00   62.00     3    127.00      0.00 19939472 16653752  51.18  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分29秒  1000     41151   20.00   41.00    0.00    0.00   61.00     0    224.00      0.00 19939472 16638904  51.14  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分30秒  1000     41151   22.00   40.00    0.00    0.00   62.00     2    259.00      0.00 19939472 16626616  51.10  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分31秒  1000     41151   20.00   40.00    0.00    0.00   60.00     3    153.00      0.00 19939472 16614968  51.06  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分32秒  1000     41151   22.00   40.00    0.00    0.00   62.00     3    297.00      0.00 19939472 16603576  51.03  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分33秒  1000     41151   25.00   36.00    0.00    0.00   61.00     1    191.00      0.00 19939472 16598456  51.01  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分34秒  1000     41151   20.00   42.00    0.00    0.00   62.00     1    187.00      0.00 19939472 16580792  50.96  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分35秒  1000     41151   21.00   40.00    0.00    0.00   61.00     3    190.00      0.00 19939472 16563512  50.91  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分36秒  1000     41151   23.00   38.00    0.00    0.00   61.00     2    183.00      0.00 19939472 16545720  50.85  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分37秒  1000     41151   22.00   39.00    0.00    0.00   61.00     2     81.00      0.00 19939472 16527160  50.79  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分38秒  1000     41151   23.00   39.00    0.00    0.00   62.00     2    149.00      0.00 19939472 16505912  50.73  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分39秒  1000     41151   22.00   40.00    0.00    0.00   62.00     2     68.00      0.00 19939472 16485560  50.67  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分40秒  1000     41151   20.00   40.00    0.00    0.00   60.00     2    137.00      0.00 19939472 16475064  50.63  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分41秒  1000     41151   20.00   41.00    0.00    0.00   61.00     2    122.00      0.00 19939472 16463032  50.60  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分42秒  1000     41151   23.00   38.00    0.00    0.00   61.00     1    363.00      0.00 19939472 16452792  50.56  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分43秒  1000     41151   21.00   41.00    0.00    0.00   62.00     0    151.00      0.00 19939472 16445368  50.54  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分44秒  1000     41151   20.00   41.00    0.00    0.00   61.00     3     93.00      0.00 19939472 16434744  50.51  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分45秒  1000     41151   23.00   38.00    0.00    1.00   61.00     1    105.00      0.00 19939472 16419384  50.46  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分46秒  1000     41151   23.00   39.00    0.00    0.00   62.00     3    181.00      0.00 19939472 16400952  50.41  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分47秒  1000     41151   22.00   39.00    0.00    0.00   61.00     0     48.00      0.00 19939472 16384056  50.35  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分48秒  1000     41151   22.00   39.00    0.00    0.00   61.00     2    172.00      0.00 19939472 16363320  50.29  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分49秒  1000     41151   22.00   40.00    0.00    0.00   62.00     1    201.00      0.00 19939472 16347448  50.24  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分50秒  1000     41151   23.00   38.00    0.00    0.00   61.00     1    178.00      0.00 19939472 16330936  50.19  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分51秒  1000     41151   27.00   34.00    0.00    0.00   61.00     2     33.00      0.00 19939472 16324920  50.17  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分52秒  1000     41151   25.00   37.00    0.00    0.00   62.00     1    295.00      0.00 19939472 16312376  50.13  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分53秒  1000     41151   19.00   41.00    0.00    0.00   60.00     1    307.00      0.00 19939472 16302264  50.10  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分54秒  1000     41151   23.00   38.00    0.00    0.00   61.00     0     56.00      0.00 19939472 16291640  50.07  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分55秒  1000     41151   24.00   37.00    0.00    0.00   61.00     3     14.00      0.00 19939472 16277176  50.03  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分56秒  1000     41151   23.00   39.00    0.00    0.00   62.00     0     56.00      0.00 19939472 16258360  49.97  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分57秒  1000     41151   22.00   38.00    0.00    0.00   60.00     0     77.00      0.00 19939472 16241464  49.92  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分58秒  1000     41151   24.00   38.00    0.00    0.00   62.00     1     63.00      0.00 19939472 16224568  49.86  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时40分59秒  1000     41151   24.00   38.00    0.00    0.00   62.00     2      6.00      0.00 19939472 16206648  49.81  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时41分00秒  1000     41151   23.00   38.00    0.00    0.00   61.00     0     66.00      0.00 19939472 16192312  49.76  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时41分01秒  1000     41151   25.00   36.00    0.00    0.00   61.00     0    136.00      0.00 19939472 16182968  49.74  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时41分02秒  1000     41151   24.00   38.00    0.00    0.00   62.00     2    235.00      0.00 19939472 16172472  49.70  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时41分03秒  1000     41151   22.00   39.00    0.00    0.00   61.00     0     96.00      0.00 19939472 16159416  49.66  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时41分04秒  1000     41151   23.00   37.00    0.00    0.00   60.00     3     57.00      0.00 19939472 16145848  49.62  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时41分05秒  1000     41151   24.00   38.00    0.00    0.00   62.00     0     21.00      0.00 19939472 16134072  49.59  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时41分06秒  1000     41151   23.00   38.00    0.00    0.00   61.00     1     93.00      0.00 19939472 16127416  49.56  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时41分07秒  1000     41151   19.00   43.00    0.00    0.00   62.00     0     48.00      0.00 19939472 16112184  49.52  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时41分08秒  1000     41151   19.00   41.00    0.00    0.00   60.00     1     63.00      0.00 19939472 16099000  49.48  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时41分09秒  1000     41151   22.00   39.00    0.00    0.00   61.00     3     55.00      0.00 19939472 16086712  49.44  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时41分10秒  1000     41151   24.00   38.00    0.00    0.00   62.00     1    203.00      0.00 19939472 16072376  49.40  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时41分11秒  1000     41151   23.00   38.00    0.00    0.00   61.00     3     82.00      0.00 19939472 16066360  49.38  redis-server
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+19时41分12秒  1000     41151   22.00   38.00    0.00    0.00   60.00     1      9.00      0.00 19939472 16053560  49.34  redis-server

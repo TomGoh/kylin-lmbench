@@ -69,3 +69,14 @@ guest/rootfs.img
 # pKVM mmap/TLBI follow-up result snapshots.
 !results/op-sweep-n80/
 !results/op-sweep-n80/**
+
+# Complete D3000 application-campaign evidence archive.  These logs and raw
+# outputs are source data even though their suffixes are ignored elsewhere.
+!experiments/d3000-pkvm-apps/logs/
+!experiments/d3000-pkvm-apps/logs/**
+!experiments/d3000-pkvm-apps/results/
+!experiments/d3000-pkvm-apps/results/**
+
+# Local third-party sources, builds and commercial benchmark binaries retained
+# beside the D3000 archive; identities are committed, payloads are not.
+experiments/d3000-pkvm-apps/runtime-cache/

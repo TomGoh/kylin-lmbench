@@ -1,0 +1,9 @@
+id: q5-fill, starting producer #0
+id: q5-fill, starting producer #0, channel #0
+time                        sent    confirmed       nacked            confirm latency
+2026/07/14 09:55:54  50650 msg/s  50150 msg/s      0 msg/s 195/1992/6221/9598/12775/20190 µs
+2026/07/14 09:55:55  49399 msg/s  49899 msg/s      0 msg/s 279/6618/8170/11663/12666/14304 µs
+test stopped (Producer reached message limit)
+sending rate avg: 48780 msg/s
+receiving rate avg: 0 msg/s
+confirm latency min/median/75th/95th/99th/max 238/5294/7139/10892/12908/20720 µs

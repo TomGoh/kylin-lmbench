@@ -1,0 +1,207 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="836" viewBox="0 0 1180 836" role="img" aria-labelledby="title desc">
+  <title id="title">D3000 pKVM boot-pair penalty matrix</title>
+  <desc id="desc">Pair-by-pair pKVM penalty matrix. Positive red cells mean pKVM is worse; negative green cells mean pKVM is better.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <text x="590.0" y="34.0" font-size="22" fill="#1F2933" font-weight="700" text-anchor="middle">D3000 pKVM boot-pair penalty matrix</text>
+  <text x="590.0" y="58.0" font-size="13" fill="#64707D" font-weight="400" text-anchor="middle">positive/red = pKVM worse; each cell uses one boot median per mode</text>
+  <text x="590.0" y="80.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">blank cells are incomplete pairs, not zeroes</text>
+  <text x="392.0" y="114.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="middle">Pair 1</text>
+  <text x="512.0" y="114.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="middle">Pair 2</text>
+  <text x="632.0" y="114.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="middle">Pair 3</text>
+  <text x="752.0" y="114.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="middle">Pair 4</text>
+  <text x="872.0" y="114.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="middle">Pair 5</text>
+  <text x="992.0" y="114.0" font-size="12" fill="#1F2933" font-weight="700" text-anchor="middle">Median</text>
+  <text x="42.0" y="156.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">R1 avg latency</text>
+  <rect x="332.0" y="130.0" width="120.0" height="42.0" fill="#F6DAD6" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="392.0" y="156.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">+3.1%</text>
+  <rect x="452.0" y="130.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="512.0" y="156.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="572.0" y="130.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="632.0" y="156.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="692.0" y="130.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="752.0" y="156.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="812.0" y="130.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="872.0" y="156.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="932.0" y="130.0" width="120.0" height="42.0" fill="#F6DAD6" stroke="#9AA5B1" stroke-width="1.5"/>
+  <text x="992.0" y="156.0" font-size="11" fill="#1F2933" font-weight="700" text-anchor="middle">+3.1%</text>
+  <text x="42.0" y="198.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">R2 throughput</text>
+  <rect x="332.0" y="172.0" width="120.0" height="42.0" fill="#F9E4E0" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="392.0" y="198.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">+2.0%</text>
+  <rect x="452.0" y="172.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="512.0" y="198.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="572.0" y="172.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="632.0" y="198.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="692.0" y="172.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="752.0" y="198.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="812.0" y="172.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="872.0" y="198.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="932.0" y="172.0" width="120.0" height="42.0" fill="#F9E4E0" stroke="#9AA5B1" stroke-width="1.5"/>
+  <text x="992.0" y="198.0" font-size="11" fill="#1F2933" font-weight="700" text-anchor="middle">+2.0%</text>
+  <text x="42.0" y="240.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">R2 p99 latency</text>
+  <rect x="332.0" y="214.0" width="120.0" height="42.0" fill="#F7DFDB" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="392.0" y="240.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">+2.6%</text>
+  <rect x="452.0" y="214.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="512.0" y="240.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="572.0" y="214.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="632.0" y="240.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="692.0" y="214.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="752.0" y="240.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="812.0" y="214.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="872.0" y="240.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="932.0" y="214.0" width="120.0" height="42.0" fill="#F7DFDB" stroke="#9AA5B1" stroke-width="1.5"/>
+  <text x="992.0" y="240.0" font-size="11" fill="#1F2933" font-weight="700" text-anchor="middle">+2.6%</text>
+  <text x="42.0" y="282.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">R3 avg latency</text>
+  <rect x="332.0" y="256.0" width="120.0" height="42.0" fill="#F5D9D5" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="392.0" y="282.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">+3.2%</text>
+  <rect x="452.0" y="256.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="512.0" y="282.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="572.0" y="256.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="632.0" y="282.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="692.0" y="256.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="752.0" y="282.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="812.0" y="256.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="872.0" y="282.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="932.0" y="256.0" width="120.0" height="42.0" fill="#F5D9D5" stroke="#9AA5B1" stroke-width="1.5"/>
+  <text x="992.0" y="282.0" font-size="11" fill="#1F2933" font-weight="700" text-anchor="middle">+3.2%</text>
+  <text x="42.0" y="324.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">R4 avg latency</text>
+  <rect x="332.0" y="298.0" width="120.0" height="42.0" fill="#F6DCD7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="392.0" y="324.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">+2.9%</text>
+  <rect x="452.0" y="298.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="512.0" y="324.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="572.0" y="298.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="632.0" y="324.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="692.0" y="298.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="752.0" y="324.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="812.0" y="298.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="872.0" y="324.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="932.0" y="298.0" width="120.0" height="42.0" fill="#F6DCD7" stroke="#9AA5B1" stroke-width="1.5"/>
+  <text x="992.0" y="324.0" font-size="11" fill="#1F2933" font-weight="700" text-anchor="middle">+2.9%</text>
+  <text x="42.0" y="366.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q1 throughput</text>
+  <rect x="332.0" y="340.0" width="120.0" height="42.0" fill="#F7DEDA" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="392.0" y="366.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">+2.6%</text>
+  <rect x="452.0" y="340.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="512.0" y="366.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="572.0" y="340.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="632.0" y="366.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="692.0" y="340.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="752.0" y="366.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="812.0" y="340.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="872.0" y="366.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="932.0" y="340.0" width="120.0" height="42.0" fill="#F7DEDA" stroke="#9AA5B1" stroke-width="1.5"/>
+  <text x="992.0" y="366.0" font-size="11" fill="#1F2933" font-weight="700" text-anchor="middle">+2.6%</text>
+  <text x="42.0" y="408.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q2 throughput</text>
+  <rect x="332.0" y="382.0" width="120.0" height="42.0" fill="#FAE6E3" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="392.0" y="408.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">+1.8%</text>
+  <rect x="452.0" y="382.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="512.0" y="408.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="572.0" y="382.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="632.0" y="408.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="692.0" y="382.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="752.0" y="408.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="812.0" y="382.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="872.0" y="408.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="932.0" y="382.0" width="120.0" height="42.0" fill="#FAE6E3" stroke="#9AA5B1" stroke-width="1.5"/>
+  <text x="992.0" y="408.0" font-size="11" fill="#1F2933" font-weight="700" text-anchor="middle">+1.8%</text>
+  <text x="42.0" y="450.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q3 50% consumer p99</text>
+  <rect x="332.0" y="424.0" width="120.0" height="42.0" fill="#F5D8D3" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="392.0" y="450.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">+3.3%</text>
+  <rect x="452.0" y="424.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="512.0" y="450.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="572.0" y="424.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="632.0" y="450.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="692.0" y="424.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="752.0" y="450.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="812.0" y="424.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="872.0" y="450.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="932.0" y="424.0" width="120.0" height="42.0" fill="#F5D8D3" stroke="#9AA5B1" stroke-width="1.5"/>
+  <text x="992.0" y="450.0" font-size="11" fill="#1F2933" font-weight="700" text-anchor="middle">+3.3%</text>
+  <text x="42.0" y="492.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q3 70% consumer p99</text>
+  <rect x="332.0" y="466.0" width="120.0" height="42.0" fill="#EEC3BD" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="392.0" y="492.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">+5.5%</text>
+  <rect x="452.0" y="466.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="512.0" y="492.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="572.0" y="466.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="632.0" y="492.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="692.0" y="466.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="752.0" y="492.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="812.0" y="466.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="872.0" y="492.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="932.0" y="466.0" width="120.0" height="42.0" fill="#EEC3BD" stroke="#9AA5B1" stroke-width="1.5"/>
+  <text x="992.0" y="492.0" font-size="11" fill="#1F2933" font-weight="700" text-anchor="middle">+5.5%</text>
+  <text x="42.0" y="534.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q3 85% consumer p99</text>
+  <rect x="332.0" y="508.0" width="120.0" height="42.0" fill="#C64838" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="392.0" y="534.0" font-size="11" fill="#FFFFFF" font-weight="400" text-anchor="middle">+18.6%</text>
+  <rect x="452.0" y="508.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="512.0" y="534.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="572.0" y="508.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="632.0" y="534.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="692.0" y="508.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="752.0" y="534.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="812.0" y="508.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="872.0" y="534.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="932.0" y="508.0" width="120.0" height="42.0" fill="#C64838" stroke="#9AA5B1" stroke-width="1.5"/>
+  <text x="992.0" y="534.0" font-size="11" fill="#FFFFFF" font-weight="700" text-anchor="middle">+18.6%</text>
+  <text x="42.0" y="576.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q3 85% confirm p99</text>
+  <rect x="332.0" y="550.0" width="120.0" height="42.0" fill="#CA5243" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="392.0" y="576.0" font-size="11" fill="#FFFFFF" font-weight="400" text-anchor="middle">+17.5%</text>
+  <rect x="452.0" y="550.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="512.0" y="576.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="572.0" y="550.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="632.0" y="576.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="692.0" y="550.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="752.0" y="576.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="812.0" y="550.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="872.0" y="576.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="932.0" y="550.0" width="120.0" height="42.0" fill="#CA5243" stroke="#9AA5B1" stroke-width="1.5"/>
+  <text x="992.0" y="576.0" font-size="11" fill="#FFFFFF" font-weight="700" text-anchor="middle">+17.5%</text>
+  <text x="42.0" y="618.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q4 consumer p99</text>
+  <rect x="332.0" y="592.0" width="120.0" height="42.0" fill="#FEF3F0" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="392.0" y="618.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">+0.4%</text>
+  <rect x="452.0" y="592.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="512.0" y="618.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="572.0" y="592.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="632.0" y="618.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="692.0" y="592.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="752.0" y="618.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="812.0" y="592.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="872.0" y="618.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="932.0" y="592.0" width="120.0" height="42.0" fill="#FEF3F0" stroke="#9AA5B1" stroke-width="1.5"/>
+  <text x="992.0" y="618.0" font-size="11" fill="#1F2933" font-weight="700" text-anchor="middle">+0.4%</text>
+  <text x="42.0" y="660.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q5 fill time</text>
+  <rect x="332.0" y="634.0" width="120.0" height="42.0" fill="#F6DAD6" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="392.0" y="660.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">+3.1%</text>
+  <rect x="452.0" y="634.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="512.0" y="660.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="572.0" y="634.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="632.0" y="660.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="692.0" y="634.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="752.0" y="660.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="812.0" y="634.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="872.0" y="660.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="932.0" y="634.0" width="120.0" height="42.0" fill="#F6DAD6" stroke="#9AA5B1" stroke-width="1.5"/>
+  <text x="992.0" y="660.0" font-size="11" fill="#1F2933" font-weight="700" text-anchor="middle">+3.1%</text>
+  <text x="42.0" y="702.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q5 drain time</text>
+  <rect x="332.0" y="676.0" width="120.0" height="42.0" fill="#E9B2AB" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="392.0" y="702.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="middle">+7.3%</text>
+  <rect x="452.0" y="676.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="512.0" y="702.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="572.0" y="676.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="632.0" y="702.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="692.0" y="676.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="752.0" y="702.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="812.0" y="676.0" width="120.0" height="42.0" fill="#F1F4F7" stroke="#FFFFFF" stroke-width="1.0"/>
+  <text x="872.0" y="702.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">—</text>
+  <rect x="932.0" y="676.0" width="120.0" height="42.0" fill="#E9B2AB" stroke="#9AA5B1" stroke-width="1.5"/>
+  <text x="992.0" y="702.0" font-size="11" fill="#1F2933" font-weight="700" text-anchor="middle">+7.3%</text>
+  <rect x="400.0" y="758.0" width="76.0" height="18" fill="#4D7C59"/>
+  <text x="438.0" y="794.0" font-size="10" fill="#64707D" font-weight="400" text-anchor="middle">-20%</text>
+  <rect x="476.0" y="758.0" width="76.0" height="18" fill="#A1BBA8"/>
+  <text x="514.0" y="794.0" font-size="10" fill="#64707D" font-weight="400" text-anchor="middle">-10%</text>
+  <rect x="552.0" y="758.0" width="76.0" height="18" fill="#FFF7F5"/>
+  <text x="590.0" y="794.0" font-size="10" fill="#64707D" font-weight="400" text-anchor="middle">+0%</text>
+  <rect x="628.0" y="758.0" width="76.0" height="18" fill="#E09990"/>
+  <text x="666.0" y="794.0" font-size="10" fill="#64707D" font-weight="400" text-anchor="middle">+10%</text>
+  <rect x="704.0" y="758.0" width="76.0" height="18" fill="#C23B2A"/>
+  <text x="742.0" y="794.0" font-size="10" fill="#64707D" font-weight="400" text-anchor="middle">+20%</text>
+  <text x="590.0" y="819.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">Source: analysis/d3000-apps-never-20260714-100618-pair1/metrics.csv</text>
+</svg>

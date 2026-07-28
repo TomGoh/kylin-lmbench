@@ -1,0 +1,58 @@
+id: calibration, starting consumer #0
+id: calibration, starting consumer #0, channel #0
+id: calibration, starting consumer #1
+id: calibration, starting consumer #1, channel #0
+id: calibration, starting consumer #2
+id: calibration, starting consumer #2, channel #0
+id: calibration, starting consumer #3
+id: calibration, starting consumer #3, channel #0
+id: calibration, starting consumer #4
+id: calibration, starting consumer #4, channel #0
+id: calibration, starting consumer #5
+id: calibration, starting consumer #5, channel #0
+id: calibration, starting consumer #6
+id: calibration, starting consumer #6, channel #0
+id: calibration, starting consumer #7
+id: calibration, starting consumer #7, channel #0
+id: calibration, starting producer #0
+id: calibration, starting producer #0, channel #0
+id: calibration, starting producer #1
+id: calibration, starting producer #1, channel #0
+id: calibration, starting producer #2
+id: calibration, starting producer #2, channel #0
+id: calibration, starting producer #3
+id: calibration, starting producer #3, channel #0
+id: calibration, starting producer #4
+id: calibration, starting producer #4, channel #0
+id: calibration, starting producer #5
+id: calibration, starting producer #5, channel #0
+id: calibration, starting producer #6
+id: calibration, starting producer #6, channel #0
+id: calibration, starting producer #7
+id: calibration, starting producer #7, channel #0
+time                        sent    confirmed       nacked     received           consumer latency            confirm latency
+2026/07/13 11:05:34  47891 msg/s  45447 msg/s      0 msg/s  38606 msg/s 361/39651/109615/258533/337697/391819 µs 559/35938/58469/115471/154815/175942 µs
+2026/07/13 11:05:35  54553 msg/s  53000 msg/s      0 msg/s  47951 msg/s 6813/184637/305911/560799/619253/630916 µs 4018/60712/85112/126566/149214/184511 µs
+2026/07/13 11:05:36  52788 msg/s  52788 msg/s      0 msg/s  45883 msg/s 6440/283129/539395/747538/846567/857071 µs 3121/59422/85916/146863/190541/222281 µs
+2026/07/13 11:05:37  50371 msg/s  50949 msg/s      0 msg/s  51229 msg/s 10823/365459/507412/946184/985748/1011436 µs 10567/65131/94230/150915/206658/223840 µs
+2026/07/13 11:05:38  57060 msg/s  56481 msg/s      0 msg/s  45867 msg/s 11786/313054/864338/1031092/1105745/1159360 µs 9454/62470/90421/134752/163372/178089 µs
+2026/07/13 11:05:39  51905 msg/s  51905 msg/s      0 msg/s  50357 msg/s 3242/546950/983551/1334678/1423293/1439294 µs 6256/65987/93625/137759/171712/182381 µs
+2026/07/13 11:05:40  53586 msg/s  53586 msg/s      0 msg/s  45662 msg/s 18214/883244/1112705/1513327/1584239/1608322 µs 5018/64717/88991/154218/188088/234575 µs
+2026/07/13 11:05:41  53747 msg/s  53747 msg/s      0 msg/s  48043 msg/s 17891/957450/1102217/1637684/1704670/1771344 µs 4262/64266/90514/178032/231757/287788 µs
+2026/07/13 11:05:42  54612 msg/s  54612 msg/s      0 msg/s  45591 msg/s 61574/1096145/1307842/1890029/1934676/1945049 µs 3934/58143/87684/154032/176299/178540 µs
+2026/07/13 11:05:43  47697 msg/s  47733 msg/s      0 msg/s  54184 msg/s 128543/1175723/1511282/1737727/1842163/1900753 µs 5647/72134/100679/186320/252009/274596 µs
+2026/07/13 11:05:44  53906 msg/s  53870 msg/s      0 msg/s  47669 msg/s 7378/664285/1505089/1898416/2040206/2091451 µs 5413/59044/91000/164150/211793/248903 µs
+2026/07/13 11:05:45  57348 msg/s  57348 msg/s      0 msg/s  44753 msg/s 96784/1305851/1821182/2279121/2415430/2438984 µs 3427/54126/84664/160168/202416/226091 µs
+2026/07/13 11:05:46  53185 msg/s  53565 msg/s      0 msg/s  47545 msg/s 8386/1177269/1850819/2292359/2443921/2490334 µs 6879/61018/88870/133135/233866/277599 µs
+2026/07/13 11:05:47  51395 msg/s  51015 msg/s      0 msg/s  49022 msg/s 8039/1637675/2073858/2279595/2323451/2376178 µs 8837/69062/108781/155878/192407/201462 µs
+2026/07/13 11:05:48  53281 msg/s  53281 msg/s      0 msg/s  47174 msg/s 94430/1579917/2264121/2596172/2741454/2756302 µs 5751/57431/94775/145804/182937/234180 µs
+2026/07/13 11:05:49  51000 msg/s  51303 msg/s      0 msg/s  50639 msg/s 573902/1478616/2396309/2729518/2805216/2846094 µs 8089/62611/100270/153423/189129/226195 µs
+2026/07/13 11:05:50  52605 msg/s  52478 msg/s      0 msg/s  47489 msg/s 339161/1345467/2468278/2581523/2689225/2697728 µs 5798/59423/91369/170247/191940/234085 µs
+2026/07/13 11:05:51  52325 msg/s  52476 msg/s      0 msg/s  47411 msg/s 231650/2159057/2386629/2699359/2732980/2768254 µs 5876/66905/97166/160184/201246/205888 µs
+2026/07/13 11:05:52  51484 msg/s  51591 msg/s      0 msg/s  47114 msg/s 260334/2001599/2590192/2806334/2913771/2957655 µs 10527/67223/107295/150042/228474/334953 µs
+2026/07/13 11:05:53  49513 msg/s  49750 msg/s      0 msg/s  50694 msg/s 377035/2074439/2689335/3190369/3276261/3291661 µs 7539/65862/98887/176738/210079/236851 µs
+test stopped (Reached time limit)
+sending rate avg: 52002 msg/s
+receiving rate avg: 47992 msg/s
+consumer latency min/median/75th/95th/99th/max 726/1141215/1859788/2612224/2880978/3250447 µs
+confirm latency min/median/75th/95th/99th/max 480/62075/93791/160276/220023/286920 µs

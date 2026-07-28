@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="610" viewBox="0 0 1240 610" role="img" aria-labelledby="title desc">
+  <title id="title">D3000 RabbitMQ fixed-load tail latency</title>
+  <desc id="desc">RabbitMQ Q3 consumer and publisher-confirm p99 latency at 50, 70, and 85 percent of common capacity for nVHE and pKVM.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <text x="620.0" y="35.0" font-size="22" fill="#1F2933" font-weight="700" text-anchor="middle">D3000 RabbitMQ: tail latency versus fixed offered load</text>
+  <text x="620.0" y="59.0" font-size="13" fill="#64707D" font-weight="400" text-anchor="middle">boot medians; aggregate line is the median across 5 complete pairs</text>
+  <text x="86.0" y="92.0" font-size="17" fill="#1F2933" font-weight="700" text-anchor="start">Consumer p99</text>
+  <text x="86.0" y="114.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">absolute ms; faint lines are individual pairs</text>
+  <line x1="86.0" y1="460.0" x2="556.0" y2="460.0" stroke="#E8EDF3"/>
+  <text x="76.0" y="464.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">0.0</text>
+  <line x1="86.0" y1="394.0" x2="556.0" y2="394.0" stroke="#E8EDF3"/>
+  <text x="76.0" y="398.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">0.8</text>
+  <line x1="86.0" y1="328.0" x2="556.0" y2="328.0" stroke="#E8EDF3"/>
+  <text x="76.0" y="332.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">1.6</text>
+  <line x1="86.0" y1="262.0" x2="556.0" y2="262.0" stroke="#E8EDF3"/>
+  <text x="76.0" y="266.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">2.4</text>
+  <line x1="86.0" y1="196.0" x2="556.0" y2="196.0" stroke="#E8EDF3"/>
+  <text x="76.0" y="200.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">3.2</text>
+  <line x1="86.0" y1="130.0" x2="556.0" y2="130.0" stroke="#E8EDF3"/>
+  <text x="76.0" y="134.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">4.0</text>
+  <line x1="86.0" y1="130.0" x2="86.0" y2="460.0" stroke="#5C6670"/>
+  <line x1="86.0" y1="460.0" x2="556.0" y2="460.0" stroke="#5C6670"/>
+  <text x="86.0" y="484.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="middle">50%</text>
+  <text x="321.0" y="484.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="middle">70%</text>
+  <text x="556.0" y="484.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="middle">85%</text>
+  <polyline points="86.0,386.0 321.0,345.7 556.0,276.2" fill="none" stroke="#4D7C59" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="86.0" cy="386.0" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="321.0" cy="345.7" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="556.0" cy="276.2" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <polyline points="86.0,384.8 321.0,340.2 556.0,255.2" fill="none" stroke="#4D7C59" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="86.0" cy="384.8" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="321.0" cy="340.2" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="556.0" cy="255.2" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <polyline points="86.0,385.5 321.0,350.8 556.0,268.7" fill="none" stroke="#4D7C59" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="86.0" cy="385.5" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="321.0" cy="350.8" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="556.0" cy="268.7" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <polyline points="86.0,385.4 321.0,340.6 556.0,270.7" fill="none" stroke="#4D7C59" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="86.0" cy="385.4" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="321.0" cy="340.6" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="556.0" cy="270.7" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <polyline points="86.0,385.8 321.0,337.6 556.0,275.3" fill="none" stroke="#4D7C59" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="86.0" cy="385.8" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="321.0" cy="337.6" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="556.0" cy="275.3" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <polyline points="86.0,385.5 321.0,340.6 556.0,270.7" fill="none" stroke="#4D7C59" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="86.0" cy="385.5" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="321.0" cy="340.6" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="556.0" cy="270.7" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <polyline points="86.0,382.4 321.0,337.1 556.0,198.9" fill="none" stroke="#C23B2A" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="86.0" cy="382.4" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="321.0" cy="337.1" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="556.0" cy="198.9" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <polyline points="86.0,383.1 321.0,326.6 556.0,217.3" fill="none" stroke="#C23B2A" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="86.0" cy="383.1" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="321.0" cy="326.6" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="556.0" cy="217.3" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <polyline points="86.0,384.8 321.0,318.6 556.0,232.3" fill="none" stroke="#C23B2A" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="86.0" cy="384.8" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="321.0" cy="318.6" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="556.0" cy="232.3" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <polyline points="86.0,383.6 321.0,327.6 556.0,243.1" fill="none" stroke="#C23B2A" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="86.0" cy="383.6" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="321.0" cy="327.6" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="556.0" cy="243.1" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <polyline points="86.0,383.9 321.0,331.0 556.0,228.2" fill="none" stroke="#C23B2A" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="86.0" cy="383.9" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="321.0" cy="331.0" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="556.0" cy="228.2" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <polyline points="86.0,383.6 321.0,327.6 556.0,228.2" fill="none" stroke="#C23B2A" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="86.0" cy="383.6" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="321.0" cy="327.6" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="556.0" cy="228.2" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <rect x="436.0" y="142.0" width="112" height="29" rx="4" fill="#FFFFFF" stroke="#D9DEE7"/>
+  <text x="492.0" y="162.0" font-size="12" fill="#C23B2A" font-weight="700" text-anchor="middle">85%: +19.0%</text>
+  <text x="321.0" y="511.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="middle">offered load (% of common capacity)</text>
+  <text x="684.0" y="92.0" font-size="17" fill="#1F2933" font-weight="700" text-anchor="start">Publisher confirm p99</text>
+  <text x="684.0" y="114.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">absolute ms; faint lines are individual pairs</text>
+  <line x1="684.0" y1="460.0" x2="1154.0" y2="460.0" stroke="#E8EDF3"/>
+  <text x="674.0" y="464.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">0.0</text>
+  <line x1="684.0" y1="394.0" x2="1154.0" y2="394.0" stroke="#E8EDF3"/>
+  <text x="674.0" y="398.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">1.0</text>
+  <line x1="684.0" y1="328.0" x2="1154.0" y2="328.0" stroke="#E8EDF3"/>
+  <text x="674.0" y="332.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">2.0</text>
+  <line x1="684.0" y1="262.0" x2="1154.0" y2="262.0" stroke="#E8EDF3"/>
+  <text x="674.0" y="266.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">3.0</text>
+  <line x1="684.0" y1="196.0" x2="1154.0" y2="196.0" stroke="#E8EDF3"/>
+  <text x="674.0" y="200.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">4.0</text>
+  <line x1="684.0" y1="130.0" x2="1154.0" y2="130.0" stroke="#E8EDF3"/>
+  <text x="674.0" y="134.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="end">5.0</text>
+  <line x1="684.0" y1="130.0" x2="684.0" y2="460.0" stroke="#5C6670"/>
+  <line x1="684.0" y1="460.0" x2="1154.0" y2="460.0" stroke="#5C6670"/>
+  <text x="684.0" y="484.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="middle">50%</text>
+  <text x="919.0" y="484.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="middle">70%</text>
+  <text x="1154.0" y="484.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="middle">85%</text>
+  <polyline points="684.0,391.4 919.0,328.5 1154.0,262.1" fill="none" stroke="#4D7C59" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="684.0" cy="391.4" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="919.0" cy="328.5" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="1154.0" cy="262.1" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <polyline points="684.0,389.8 919.0,326.4 1154.0,242.2" fill="none" stroke="#4D7C59" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="684.0" cy="389.8" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="919.0" cy="326.4" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="1154.0" cy="242.2" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <polyline points="684.0,390.6 919.0,330.8 1154.0,252.7" fill="none" stroke="#4D7C59" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="684.0" cy="390.6" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="919.0" cy="330.8" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="1154.0" cy="252.7" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <polyline points="684.0,390.7 919.0,327.5 1154.0,255.6" fill="none" stroke="#4D7C59" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="684.0" cy="390.7" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="919.0" cy="327.5" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="1154.0" cy="255.6" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <polyline points="684.0,391.3 919.0,322.9 1154.0,259.4" fill="none" stroke="#4D7C59" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="684.0" cy="391.3" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="919.0" cy="322.9" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <circle cx="1154.0" cy="259.4" r="2.2" fill="#4D7C59" opacity="0.28"/>
+  <polyline points="684.0,390.7 919.0,327.5 1154.0,255.6" fill="none" stroke="#4D7C59" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="684.0" cy="390.7" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="919.0" cy="327.5" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <circle cx="1154.0" cy="255.6" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <polyline points="684.0,386.6 919.0,322.1 1154.0,185.8" fill="none" stroke="#C23B2A" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="684.0" cy="386.6" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="919.0" cy="322.1" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="1154.0" cy="185.8" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <polyline points="684.0,387.0 919.0,319.2 1154.0,205.2" fill="none" stroke="#C23B2A" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="684.0" cy="387.0" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="919.0" cy="319.2" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="1154.0" cy="205.2" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <polyline points="684.0,389.7 919.0,308.7 1154.0,218.7" fill="none" stroke="#C23B2A" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="684.0" cy="389.7" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="919.0" cy="308.7" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="1154.0" cy="218.7" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <polyline points="684.0,388.5 919.0,316.8 1154.0,226.3" fill="none" stroke="#C23B2A" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="684.0" cy="388.5" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="919.0" cy="316.8" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="1154.0" cy="226.3" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <polyline points="684.0,388.3 919.0,318.4 1154.0,217.6" fill="none" stroke="#C23B2A" stroke-width="1.2" opacity="0.22"/>
+  <circle cx="684.0" cy="388.3" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="919.0" cy="318.4" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <circle cx="1154.0" cy="217.6" r="2.2" fill="#C23B2A" opacity="0.28"/>
+  <polyline points="684.0,388.3 919.0,318.4 1154.0,217.6" fill="none" stroke="#C23B2A" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="684.0" cy="388.3" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="919.0" cy="318.4" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <circle cx="1154.0" cy="217.6" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <rect x="1034.0" y="142.0" width="112" height="29" rx="4" fill="#FFFFFF" stroke="#D9DEE7"/>
+  <text x="1090.0" y="162.0" font-size="12" fill="#C23B2A" font-weight="700" text-anchor="middle">85%: +17.0%</text>
+  <text x="919.0" y="511.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="middle">offered load (% of common capacity)</text>
+  <line x1="482.0" y1="93.0" x2="510.0" y2="93.0" stroke="#4D7C59" stroke-width="3"/>
+  <circle cx="496.0" cy="93.0" r="4" fill="#FFFFFF" stroke="#4D7C59" stroke-width="2"/>
+  <text x="519.0" y="97.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="start">nVHE</text>
+  <line x1="600.0" y1="93.0" x2="628.0" y2="93.0" stroke="#C23B2A" stroke-width="3"/>
+  <circle cx="614.0" cy="93.0" r="4" fill="#FFFFFF" stroke="#C23B2A" stroke-width="2"/>
+  <text x="637.0" y="97.0" font-size="12" fill="#1F2933" font-weight="400" text-anchor="start">pKVM</text>
+  <text x="620.0" y="591.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">Source: analysis/d3000-apps-always-20260717-093223/metrics.csv; Q3 rate gates must be valid</text>
+</svg>

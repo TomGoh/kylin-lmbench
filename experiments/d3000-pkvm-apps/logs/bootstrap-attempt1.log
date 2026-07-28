@@ -1,0 +1,75 @@
+-- Logs begin at Thu 2026-05-21 15:47:59 +08, end at Mon 2026-07-13 10:14:17 +08. --
+7月 13 10:11:28 kylin systemd[1]: Started /home/jose/kylin-lmbench-exp/scripts/bootstrap.sh.
+7月 13 10:11:28 kylin sudo[49555]:     jose : TTY=unknown ; PWD=/home/jose/kylin-lmbench-exp ; USER=root ; COMMAND=/usr/bin/mkdir -p /kylin-lmbench-exp-work/redis /kylin-lmbench-exp-work/rabbitmq /kylin-lmbench-exp-work/traces /kylin-lmbench-exp-work/tmp
+7月 13 10:11:28 kylin sudo[49555]: pam_unix(sudo:session): session opened for user root by (uid=0)
+7月 13 10:11:28 kylin sudo[49555]: pam_unix(sudo:session): session closed for user root
+7月 13 10:11:28 kylin sudo[49559]:     jose : TTY=unknown ; PWD=/home/jose/kylin-lmbench-exp ; USER=root ; COMMAND=/usr/bin/chown -R 1000:1000 /kylin-lmbench-exp-work
+7月 13 10:11:28 kylin sudo[49559]: pam_unix(sudo:session): session opened for user root by (uid=0)
+7月 13 10:11:28 kylin sudo[49559]: pam_unix(sudo:session): session closed for user root
+7月 13 10:11:28 kylin bootstrap.sh[49550]: [2026-07-13T10:11:28+08:00] installing build and runtime dependencies
+7月 13 10:11:28 kylin sudo[49574]:     jose : TTY=unknown ; PWD=/home/jose/kylin-lmbench-exp ; USER=root ; COMMAND=/usr/bin/apt-get update
+7月 13 10:11:28 kylin sudo[49574]: pam_unix(sudo:session): session opened for user root by (uid=0)
+7月 13 10:11:28 kylin bootstrap.sh[49575]: 命中:1 http://archive2.kylinos.cn/DEB/KYLIN_DEB V10-SP1 InRelease
+7月 13 10:11:28 kylin bootstrap.sh[49575]: 命中:2 http://archive.kylinos.cn/kylin/KYLIN-ALL 10.1-2303-updates InRelease
+7月 13 10:11:28 kylin bootstrap.sh[49575]: 命中:3 http://archive.kylinos.cn/kylin/KYLIN-ALL 10.1 InRelease
+7月 13 10:11:28 kylin bootstrap.sh[49575]: 命中:4 http://archive.kylinos.cn/kylin/KYLIN-ALL .tags--10.1-2303-bugfix-limit--quality-0829 InRelease
+7月 13 10:11:28 kylin bootstrap.sh[49575]: 命中:5 https://packages.microsoft.com/repos/code stable InRelease
+7月 13 10:11:30 kylin bootstrap.sh[49575]: 获取:6 https://cli.github.com/packages stable InRelease [3,917 B]
+7月 13 10:11:30 kylin bootstrap.sh[49575]: 命中:7 https://downloads.typora.io/linux ./ InRelease
+7月 13 10:11:30 kylin bootstrap.sh[49575]: 命中:8 https://downloads.cursor.com/aptrepo stable InRelease
+7月 13 10:11:30 kylin bootstrap.sh[49575]: 命中:9 https://packages.mozilla.org/apt mozilla InRelease
+7月 13 10:11:30 kylin bootstrap.sh[49575]: 已下载 3,917 B，耗时 2秒 (1,849 B/s)
+7月 13 10:11:31 kylin bootstrap.sh[49575]: 正在读取软件包列表...
+7月 13 10:11:31 kylin sudo[49574]: pam_unix(sudo:session): session closed for user root
+7月 13 10:11:31 kylin sudo[50054]:     jose : TTY=unknown ; PWD=/home/jose/kylin-lmbench-exp ; USER=root ; ENV=DEBIAN_FRONTEND=noninteractive ; COMMAND=/usr/bin/apt-get install -y build-essential gcc-10 g++-10 autoconf automake libtool pkg-config git curl ca-certificates rsync jq bc libevent-dev zlib1g-dev libssl-dev libcurl4-openssl-dev libsasl2-dev libzstd-dev liblz4-dev libjemalloc-dev openjdk-17-jre-headless numactl sysstat flex bison libelf-dev libdw-dev libunwind-dev libaudit-dev libslang2-dev libperl-dev python3-dev binutils-dev libcap-dev libnuma-dev
+7月 13 10:11:31 kylin sudo[50054]: pam_unix(sudo:session): session opened for user root by (uid=0)
+7月 13 10:11:31 kylin bootstrap.sh[50055]: 正在读取软件包列表...
+7月 13 10:11:31 kylin bootstrap.sh[50055]: 正在分析软件包的依赖关系树...
+7月 13 10:11:31 kylin bootstrap.sh[50055]: 正在读取状态信息...
+7月 13 10:11:32 kylin bootstrap.sh[50055]: zlib1g-dev 已经是最新版 (1:1.2.11.dfsg-2kylin1.5k0.2)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: zlib1g-dev 已设置为手动安装。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: sysstat 已经是最新版 (12.2.0-2kylin0.3)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: sysstat 已设置为手动安装。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: autoconf 已经是最新版 (2.69-11.1)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: automake 已经是最新版 (1:1.16.1-4kylin6)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: bc 已经是最新版 (1.07.1-2build1)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: bison 已经是最新版 (2:3.5.1+dfsg-1)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: build-essential 已经是最新版 (12.8kylin1)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: flex 已经是最新版 (2.6.4-6.2)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: libtool 已经是最新版 (2.4.6-14)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: libtool 已设置为手动安装。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: pkg-config 已经是最新版 (0.29.1-1kylin4)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: pkg-config 已设置为手动安装。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: ca-certificates 已经是最新版 (20240203~20.04.1k0.2)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: curl 已经是最新版 (7.68.0-1kylin2.25k0.2)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: git 已经是最新版 (1:2.25.1-1kylin3.14+esm3)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: libelf-dev 已经是最新版 (0.176-1.1kylin0.1)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: libssl-dev 已经是最新版 (1.1.1f-1kylin2.23k0.6)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: rsync 已经是最新版 (3.1.3-8kylin2k0.1)。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: 有一些软件包无法被安装。如果您用的是 unstable 发行版，这也许是
+7月 13 10:11:32 kylin bootstrap.sh[50055]: 因为系统无法达到您要求的状态造成的。该版本中可能会有一些您需要的软件
+7月 13 10:11:32 kylin bootstrap.sh[50055]: 包尚未被创建或是它们已被从新到(Incoming)目录移出。
+7月 13 10:11:32 kylin bootstrap.sh[50055]: 下列信息可能会对解决问题有所帮助：
+7月 13 10:11:32 kylin bootstrap.sh[50055]: 下列软件包有未满足的依赖关系：
+7月 13 10:11:32 kylin bootstrap.sh[50055]:  binutils-dev : 依赖: binutils (= 2.34-6kylin1.4k0.1) 但是 2.34-6kylin1.11 正要被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:                 依赖: libbinutils (= 2.34-6kylin1.4k0.1) 但是 2.34-6kylin1.11 正要被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:                 依赖: libctf0 (= 2.34-6kylin1.4k0.1) 但是 2.34-6kylin1.11 正要被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:                 依赖: libctf-nobfd0 (= 2.34-6kylin1.4k0.1) 但是 2.34-6kylin1.11 正要被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:  g++-10 : 依赖: gcc-10-base (= 10.3.0-1kylin1~20.04) 但是 10.5.0-1kylin1~20.04.1+esm1 正要被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:           依赖: libstdc++-10-dev (= 10.3.0-1kylin1~20.04) 但是它将不会被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:  gcc-10 : 依赖: cpp-10 (= 10.3.0-1kylin1~20.04) 但是它将不会被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:           依赖: gcc-10-base (= 10.3.0-1kylin1~20.04) 但是 10.5.0-1kylin1~20.04.1+esm1 正要被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:           依赖: libgcc-10-dev (= 10.3.0-1kylin1~20.04) 但是它将不会被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:  libaudit-dev : 依赖: libaudit1 (= 1:2.8.5-2kylin6k9.2) 但是 1:2.8.5-2kylin6k10.2 正要被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:  libcap-dev : 依赖: libcap2 (= 1:2.32-1kylin0.1) 但是 1:2.32-1kylin0.2 正要被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:  libcurl4-openssl-dev : 依赖: libcurl4 (= 7.68.0-1kylin2.18) 但是 7.68.0-1kylin2.25k0.2 正要被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:  libdw-dev : 依赖: libdw1 (= 0.176-1.1build1) 但是 0.176-1.1kylin0.1 正要被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:  libperl-dev : 依赖: perl:any (= 5.30.0-9kylin0.3k0.4)
+7月 13 10:11:32 kylin bootstrap.sh[50055]:                依赖: libperl5.30 (= 5.30.0-9kylin0.3k0.4) 但是 5.30.0-9kylin0.5k0.3 正要被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:  libunwind-dev : 依赖: libunwind8 (= 1.2.1-9build1k1) 但是 1.2.1-9build1k4 正要被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:  python3-dev : 依赖: libpython3-dev (= 3.8.2-0kylin2) 但是它将不会被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]:                依赖: python3.8-dev (>= 3.8.2-1~) 但是它将不会被安装
+7月 13 10:11:32 kylin bootstrap.sh[50055]: E: 无法修正错误，因为您要求某些软件包保持现状，就是它们破坏了软件包间的依赖关系。
+7月 13 10:11:32 kylin sudo[50054]: pam_unix(sudo:session): session closed for user root
+7月 13 10:11:32 kylin systemd[1]: d3000-pkvm-bootstrap.service: Main process exited, code=exited, status=100/n/a
+7月 13 10:11:32 kylin systemd[1]: d3000-pkvm-bootstrap.service: Failed with result 'exit-code'.

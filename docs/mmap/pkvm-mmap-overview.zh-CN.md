@@ -2226,9 +2226,9 @@ for (k = 0; k < memwork; k++)
 
 ---
 
-## 9. Pixel 9 Pro XL 复测：真实 mmap 路径没有复现 Phytium 现象
+## 9. Pixel 9 Pro XL 复测：真实 mmap 路径没有复现飞腾现象
 
-第 8 章已经把 Phytium/N80 上的根因收敛到很具体的一点：小于 2 MB 的拆除范围走逐页 `TLBI` 路径，而 protected 模式下每个 4 KB 刷新槽位的本地失效成本明显更高。这个结论对 N80、N90、Kaitian 这组 Phytium/Kylin 平台成立，但它不能自动推广到 Pixel。Pixel 9 Pro XL 使用 Tensor G4、Android AOSP userdebug、另一套 SoC 微架构和内核配置；特别地，Tensor G4 具备 N80/N90/Kaitian 所缺的 FEAT_TLBIRANGE（§9.1 给出确认方法与证据）。即使同样启用 pKVM，真实 `mmap` 生命周期是否也会变慢，仍然要单独验证。
+第 8 章已经把 Phytium/N80 上的根因收敛到很具体的一点：小于 2 MB 的拆除范围走逐页 `TLBI` 路径，而 protected 模式下每个 4 KB 刷新槽位的本地失效成本明显更高。这个结论对 N80、N90、Kaitian 这组飞腾平台成立，但它不能自动推广到 Pixel。Pixel 9 Pro XL 使用 Tensor G4、Android AOSP userdebug、另一套 SoC 微架构和内核配置；特别地，Tensor G4 具备 N80/N90/Kaitian 所缺的 FEAT_TLBIRANGE（§9.1 给出确认方法与证据）。即使同样启用 pKVM，真实 `mmap` 生命周期是否也会变慢，仍然要单独验证。
 
 Pixel 复测的目的不是重新证明 Phytium 的根因，而是回答两个外推问题：
 
@@ -2250,8 +2250,8 @@ Pixel 复测平台为 Pixel 9 Pro XL（`komodo`，Tensor G4，AOSP userdebug，a
    [    0.014233] CPU features: detected: TLB range maintenance instructions
    ```
 
-   该检测由 `has_cpuid_feature()` 在 EL1 读取**未脱敏**的 `ID_AA64ISAR0_EL1.TLB` 字段完成，且这是要求全部 CPU 都具备才会置位的系统级 cpucap（`ARM64_HAS_TLB_RANGE`）。它同时意味着 `system_supports_tlb_range()` 为真：§7.4 中 `__flush_tlb_range_nosync()` 在 Pixel 内核上走范围 TLBI 分支，N80 那种“< 2 MB 逐 4 KB slot 循环、≥ 2 MB 退到整表刷新”的两段式路径在这台设备上并不存在。该确认最早记录于 2026-06-24 的跨平台 A/B（`experiments/perf-reinvestigation/results/pixel-tensor-g4/README.md`），2026-07-07 又在同一台设备重启后的新鲜 dmesg 中复核一致。
-3. **行为学层面**：§9.5 的阈值扫描在 protected 和 NVHE 两种模式下都没有 2 MB 断崖，正是范围 TLBI 在用时的预期形态（对照 N80：无该特性，1.9 MB → 2.0 MB 出现突变）。
+   该检测由 `has_cpuid_feature()` 在 EL1 直接读取 `ID_AA64ISAR0_EL1.TLB` 字段完成，且这是要求全部 CPU 都具备才会置位的系统级 cpucap（`ARM64_HAS_TLB_RANGE`）。它同时意味着 `system_supports_tlb_range()` 为真：§7.4 中 `__flush_tlb_range_nosync()` 在 Pixel 内核上走Range TLBI 分支，N80 那种“< 2 MB 逐 4 KB 槽位循环刷新、≥ 2 MB 退到整表刷新”的两段式路径在这台设备上并不存在。
+3. **行为学层面**：§9.5 的阈值扫描在 protected 和 NVHE 两种模式下都没有 2 MB 断崖，正是范围 TLBI 在用时的预期形态（对照 N80：由于硬件不支持该特性，1.9 MB → 2.0 MB 时会出现延迟的突变）。
 
 需要说明为什么不能用用户态 `MRS` 直接确认：内核把 `ID_AA64ISAR0_EL1` 的 TLB 字段标记为 `FTR_HIDDEN`（`arch/arm64/kernel/cpufeature.c: ftr_id_aa64isar0[]`），EL0 读到的仿真值恒为 0，与硬件是否实现无关（`experiments/perf-reinvestigation/stage0/isar0.c` 的注释及其在 SM8850/Oryon 上的假阴性实测）。因此在无法插桩内核的用户态条件下，启动期 dmesg 的 cpucap 行是唯一可靠的确认途径；若日志缓冲已回卷，需要重启后立即抓取。
 

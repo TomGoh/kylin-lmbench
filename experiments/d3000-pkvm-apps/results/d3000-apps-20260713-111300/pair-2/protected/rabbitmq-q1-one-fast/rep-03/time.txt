@@ -1,0 +1,23 @@
+	Command being timed: "taskset -c 4-7 java -jar /home/jose/kylin-lmbench-exp/tools/perf-test-2.25.0.jar --uri amqp://pkvmbench:pkvmbench-local-only@127.0.0.1:5672/%2f --id q1-one-fast --size 1000 --time 360 --interval 1 --metrics-format compact --output-file /home/jose/kylin-lmbench-exp/results/d3000-apps-20260713-111300/pair-2/protected/rabbitmq-q1-one-fast/rep-03/perftest.csv --producers 1 --consumers 1 --queue q1-one-fast --auto-delete true --qos 500"
+	User time (seconds): 172.74
+	System time (seconds): 269.09
+	Percent of CPU this job got: 122%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 6:00.72
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 449328
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 27601
+	Voluntary context switches: 26908745
+	Involuntary context switches: 21937
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 1744
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

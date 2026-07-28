@@ -1,0 +1,15 @@
+id: q5-drain, starting consumer #0
+id: q5-drain, starting consumer #0, channel #0
+id: q5-drain, starting consumer #1
+id: q5-drain, starting consumer #1, channel #0
+id: q5-drain, starting consumer #2
+id: q5-drain, starting consumer #2, channel #0
+id: q5-drain, starting consumer #3
+id: q5-drain, starting consumer #3, channel #0
+time                    received           consumer latency
+2026/07/14 09:40:41  73299 msg/s 3001919/3107169/3212192/3348097/3381912/3395829 µs
+2026/07/14 09:40:42  26727 msg/s 2871743/2955997/2972745/2993660/3002299/3003379 µs
+test stopped (Consumer queue(s) empty [4])
+sending rate avg: 0 msg/s
+receiving rate avg: 32380 msg/s
+consumer latency min/median/75th/95th/99th/max 2871751/3053063/3158316/3306557/3365186/3390924 µs

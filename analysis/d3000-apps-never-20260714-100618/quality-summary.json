@@ -1,0 +1,194 @@
+{
+  "campaign": "d3000-apps-never-20260714-100618",
+  "campaign_complete": true,
+  "boot_block_valid_count": 10,
+  "scenario_counts": {
+    "pair-1/nvhe": {
+      "boot_valid": true,
+      "anchor_start_valid": true,
+      "anchor_end_valid": true,
+      "redis_valid": 20,
+      "rabbitmq_valid": 35,
+      "geekbench_formal_valid": 5
+    },
+    "pair-1/protected": {
+      "boot_valid": true,
+      "anchor_start_valid": true,
+      "anchor_end_valid": true,
+      "redis_valid": 20,
+      "rabbitmq_valid": 35,
+      "geekbench_formal_valid": 5
+    },
+    "pair-2/nvhe": {
+      "boot_valid": true,
+      "anchor_start_valid": true,
+      "anchor_end_valid": true,
+      "redis_valid": 20,
+      "rabbitmq_valid": 35,
+      "geekbench_formal_valid": 5
+    },
+    "pair-2/protected": {
+      "boot_valid": true,
+      "anchor_start_valid": true,
+      "anchor_end_valid": true,
+      "redis_valid": 20,
+      "rabbitmq_valid": 35,
+      "geekbench_formal_valid": 5
+    },
+    "pair-3/nvhe": {
+      "boot_valid": true,
+      "anchor_start_valid": true,
+      "anchor_end_valid": true,
+      "redis_valid": 20,
+      "rabbitmq_valid": 35,
+      "geekbench_formal_valid": 5
+    },
+    "pair-3/protected": {
+      "boot_valid": true,
+      "anchor_start_valid": true,
+      "anchor_end_valid": true,
+      "redis_valid": 20,
+      "rabbitmq_valid": 35,
+      "geekbench_formal_valid": 5
+    },
+    "pair-4/nvhe": {
+      "boot_valid": true,
+      "anchor_start_valid": true,
+      "anchor_end_valid": true,
+      "redis_valid": 20,
+      "rabbitmq_valid": 35,
+      "geekbench_formal_valid": 5
+    },
+    "pair-4/protected": {
+      "boot_valid": true,
+      "anchor_start_valid": true,
+      "anchor_end_valid": true,
+      "redis_valid": 20,
+      "rabbitmq_valid": 35,
+      "geekbench_formal_valid": 5
+    },
+    "pair-5/nvhe": {
+      "boot_valid": true,
+      "anchor_start_valid": true,
+      "anchor_end_valid": true,
+      "redis_valid": 20,
+      "rabbitmq_valid": 35,
+      "geekbench_formal_valid": 5
+    },
+    "pair-5/protected": {
+      "boot_valid": true,
+      "anchor_start_valid": true,
+      "anchor_end_valid": true,
+      "redis_valid": 20,
+      "rabbitmq_valid": 35,
+      "geekbench_formal_valid": 5
+    }
+  },
+  "q3_rate_gate": {
+    "validation_files": 150,
+    "minimum_samples": 301,
+    "maximum_samples": 301,
+    "maximum_absolute_error_pct": 0.13626635900141348,
+    "targets_by_scenario": {
+      "q3-rate50": [
+        24376.0
+      ],
+      "q3-rate70": [
+        34128.0
+      ],
+      "q3-rate85": [
+        41440.0
+      ]
+    }
+  },
+  "q5_queue_gate": {
+    "validation_files": 100,
+    "queue_count_valid_markers": 100,
+    "mismatches": []
+  },
+  "parsing_failed_files": [],
+  "project_metadata": {
+    "files": 30,
+    "thp_profiles": [
+      "never"
+    ],
+    "effective_thp_states": [
+      "always madvise [never]"
+    ]
+  },
+  "leg_metadata": {
+    "files": 10,
+    "kernels": [
+      "Linux kylin 6.6.30+ #2 SMP Thu May 21 16:48:24 CST 2026 aarch64 aarch64 aarch64 GNU/Linux"
+    ],
+    "aslr": [
+      "2"
+    ],
+    "swap_values": [
+      ""
+    ],
+    "protected_dmesg_with_feature": 5,
+    "nvhe_dmesg_with_hyp_init": 5,
+    "nvhe_dmesg_with_protected_feature": 0
+  },
+  "geekbench": {
+    "formal_result_urls": 50,
+    "unique_result_urls": 50,
+    "scores_json_files": 0
+  },
+  "capacity": {
+    "rabbitmq": {
+      "common": 48753.0,
+      "nvhe": {
+        "median": 49691.0,
+        "runs": [
+          49313.0,
+          49752.0,
+          49466.0,
+          49691.0,
+          50546.0
+        ]
+      },
+      "protected": {
+        "median": 48753.0,
+        "runs": [
+          48289.0,
+          48857.0,
+          48753.0,
+          47677.0,
+          48947.0
+        ]
+      }
+    },
+    "redis": {
+      "common": 136645.81,
+      "nvhe": {
+        "median": 138439.64,
+        "runs": [
+          138439.64,
+          138411.44,
+          136747.19,
+          138547.45,
+          138934.05
+        ]
+      },
+      "protected": {
+        "median": 136645.81,
+        "runs": [
+          137435.61,
+          136645.81,
+          135499.99,
+          136762.47,
+          136407.29
+        ]
+      }
+    }
+  },
+  "first_mode_by_pair": {
+    "1": "nvhe",
+    "2": "protected",
+    "3": "nvhe",
+    "4": "protected",
+    "5": "nvhe"
+  }
+}

@@ -1,0 +1,291 @@
+2026-07-15 15:58:35.083452+00:00 [notice] <0.45.0> Application syslog exited with reason: stopped
+2026-07-15 15:58:35.086398+00:00 [notice] <0.209.0> Logging: switching to configured handler(s); following messages may not be visible in this log output
+[38;5;87m2026-07-15 15:58:35.086833+00:00 [notice] <0.209.0> Logging: configured log handlers are now ACTIVE[0m
+2026-07-15 15:58:35.090996+00:00 [info] <0.209.0> ra: starting system coordination[0m
+2026-07-15 15:58:35.091060+00:00 [info] <0.209.0> starting Ra system: coordination in directory: /var/lib/rabbitmq/mnesia/rabbit@d3000-rabbit/coordination/rabbit@d3000-rabbit[0m
+2026-07-15 15:58:35.094733+00:00 [info] <0.216.0> ra_coordination_log_ets: in system coordination initialising. Mem table opts: [set,{write_concurrency,auto},public,{compressed,false}][0m
+2026-07-15 15:58:35.121830+00:00 [info] <0.222.0> ra system 'coordination' running pre init for 0 registered servers[0m
+2026-07-15 15:58:35.123921+00:00 [info] <0.223.0> ra: meta data store initialised for system coordination. 0 record(s) recovered[0m
+2026-07-15 15:58:35.126487+00:00 [info] <0.227.0> segment_writer: upgrading segment file names to new format in dirctory /var/lib/rabbitmq/mnesia/rabbit@d3000-rabbit/coordination/rabbit@d3000-rabbit[0m
+[38;5;87m2026-07-15 15:58:35.136446+00:00 [notice] <0.229.0> WAL in coordination initialising with name ra_coordination_log_wal[0m
+2026-07-15 15:58:35.143236+00:00 [info] <0.209.0> ra: starting system quorum_queues[0m
+2026-07-15 15:58:35.143288+00:00 [info] <0.209.0> starting Ra system: quorum_queues in directory: /var/lib/rabbitmq/mnesia/rabbit@d3000-rabbit/quorum/rabbit@d3000-rabbit[0m
+2026-07-15 15:58:35.143540+00:00 [info] <0.233.0> ra_log_ets: in system quorum_queues initialising. Mem table opts: [set,{write_concurrency,auto},public,{compressed,true}][0m
+2026-07-15 15:58:35.143931+00:00 [info] <0.237.0> ra system 'quorum_queues' running pre init for 0 registered servers[0m
+2026-07-15 15:58:35.144239+00:00 [info] <0.238.0> ra: meta data store initialised for system quorum_queues. 0 record(s) recovered[0m
+2026-07-15 15:58:35.144371+00:00 [info] <0.242.0> segment_writer: upgrading segment file names to new format in dirctory /var/lib/rabbitmq/mnesia/rabbit@d3000-rabbit/quorum/rabbit@d3000-rabbit[0m
+[38;5;87m2026-07-15 15:58:35.145325+00:00 [notice] <0.244.0> WAL in quorum_queues initialising with name ra_log_wal[0m
+2026-07-15 15:58:35.148489+00:00 [info] <0.246.0> ra_system_recover: ra system 'quorum_queues' server recovery strategy rabbit_quorum_queue:system_recover[0m
+2026-07-15 15:58:35.148567+00:00 [info] <0.246.0> [rabbit_quorum_queue:system_recover/1] rabbit not booted, skipping queue recovery[0m
+2026-07-15 15:58:35.148679+00:00 [info] <0.209.0> ra: starting system coordination[0m
+2026-07-15 15:58:35.148718+00:00 [info] <0.209.0> starting Ra system: coordination in directory: /var/lib/rabbitmq/mnesia/rabbit@d3000-rabbit/coordination/rabbit@d3000-rabbit[0m
+[38;5;87m2026-07-15 15:58:35.220172+00:00 [notice] <0.248.0> RabbitMQ metadata store: candidate -> leader in term: 1 machine version: 3, last applied 0[0m
+2026-07-15 15:58:35.220622+00:00 [info] <0.209.0> [0m
+2026-07-15 15:58:35.220622+00:00 [info] <0.209.0>  Starting RabbitMQ 4.3.1 on Erlang 27.3.4.13 [jit][0m
+2026-07-15 15:58:35.220622+00:00 [info] <0.209.0>  Copyright (c) 2007-2026 Broadcom Inc and/or its subsidiaries[0m
+2026-07-15 15:58:35.220622+00:00 [info] <0.209.0>  Licensed under the MPL 2.0. Website: https://rabbitmq.com[0m
+
+  ##  ##      RabbitMQ 4.3.1
+  ##  ##
+  ##########  Copyright (c) 2007-2026 Broadcom Inc and/or its subsidiaries
+  ######  ##
+  ##########  Licensed under the MPL 2.0. Website: https://rabbitmq.com
+
+  Erlang:      27.3.4.13 [jit]
+  TLS Library: OpenSSL - OpenSSL 3.5.7 9 Jun 2026
+  Release series support status: see https://www.rabbitmq.com/release-information
+
+  Doc guides:  https://www.rabbitmq.com/docs
+  Support:     https://www.rabbitmq.com/docs/contact
+  Tutorials:   https://www.rabbitmq.com/tutorials
+  Monitoring:  https://www.rabbitmq.com/docs/monitoring
+  Upgrading:   https://www.rabbitmq.com/docs/upgrade
+
+  Logs: <stdout>
+
+  Config file(s): /etc/rabbitmq/conf.d/10-defaults.conf
+
+  Starting broker...2026-07-15 15:58:35.221247+00:00 [info] <0.209.0> [0m
+2026-07-15 15:58:35.221247+00:00 [info] <0.209.0>  node           : rabbit@d3000-rabbit[0m
+2026-07-15 15:58:35.221247+00:00 [info] <0.209.0>  home dir       : /var/lib/rabbitmq[0m
+2026-07-15 15:58:35.221247+00:00 [info] <0.209.0>  config file(s) : /etc/rabbitmq/conf.d/10-defaults.conf[0m
+2026-07-15 15:58:35.221247+00:00 [info] <0.209.0>  log(s)         : <stdout>[0m
+2026-07-15 15:58:35.221247+00:00 [info] <0.209.0>  data dir       : /var/lib/rabbitmq/mnesia/rabbit@d3000-rabbit[0m
+[38;5;87m2026-07-15 15:58:35.436062+00:00 [notice] <0.251.0> Feature flags: attempt to enable `detailed_queues_endpoint`...[0m
+[38;5;87m2026-07-15 15:58:35.447223+00:00 [notice] <0.251.0> Feature flags: `detailed_queues_endpoint` enabled[0m
+[38;5;87m2026-07-15 15:58:35.447312+00:00 [notice] <0.251.0> Feature flags: attempt to enable `khepri_db`...[0m
+[38;5;87m2026-07-15 15:58:35.484776+00:00 [notice] <0.251.0> Feature flags: `khepri_db` enabled[0m
+[38;5;87m2026-07-15 15:58:35.484850+00:00 [notice] <0.251.0> Feature flags: attempt to enable `message_containers_deaths_v2`...[0m
+[38;5;87m2026-07-15 15:58:35.494697+00:00 [notice] <0.251.0> Feature flags: `message_containers_deaths_v2` enabled[0m
+[38;5;87m2026-07-15 15:58:35.494768+00:00 [notice] <0.251.0> Feature flags: attempt to enable `quorum_queue_non_voters`...[0m
+[38;5;87m2026-07-15 15:58:35.504846+00:00 [notice] <0.251.0> Feature flags: `quorum_queue_non_voters` enabled[0m
+[38;5;87m2026-07-15 15:58:35.504914+00:00 [notice] <0.251.0> Feature flags: attempt to enable `rabbit_exchange_type_local_random`...[0m
+[38;5;87m2026-07-15 15:58:35.514841+00:00 [notice] <0.251.0> Feature flags: `rabbit_exchange_type_local_random` enabled[0m
+[38;5;87m2026-07-15 15:58:35.514910+00:00 [notice] <0.251.0> Feature flags: attempt to enable `rabbitmq_4.0.0`...[0m
+[38;5;87m2026-07-15 15:58:35.526687+00:00 [notice] <0.251.0> Feature flags: `rabbitmq_4.0.0` enabled[0m
+[38;5;87m2026-07-15 15:58:35.526790+00:00 [notice] <0.251.0> Feature flags: attempt to enable `rabbitmq_4.1.0`...[0m
+[38;5;87m2026-07-15 15:58:35.535995+00:00 [notice] <0.251.0> Feature flags: `rabbitmq_4.1.0` enabled[0m
+[38;5;87m2026-07-15 15:58:35.536068+00:00 [notice] <0.251.0> Feature flags: attempt to enable `rabbitmq_4.2.0`...[0m
+[38;5;87m2026-07-15 15:58:35.547126+00:00 [notice] <0.251.0> Feature flags: `rabbitmq_4.2.0` enabled[0m
+2026-07-15 15:58:35.550496+00:00 [info] <0.209.0> Running boot step pre_boot defined by app rabbit[0m
+2026-07-15 15:58:35.550557+00:00 [info] <0.209.0> Running boot step rabbit_global_counters defined by app rabbit[0m
+2026-07-15 15:58:35.550861+00:00 [info] <0.209.0> Running boot step rabbit_osiris_metrics defined by app rabbit[0m
+2026-07-15 15:58:35.550987+00:00 [info] <0.209.0> Running boot step rabbit_core_metrics defined by app rabbit[0m
+2026-07-15 15:58:35.551358+00:00 [info] <0.209.0> Running boot step worker_pool defined by app rabbit[0m
+2026-07-15 15:58:35.551414+00:00 [info] <0.250.0> Will use 4 processes for default worker pool[0m
+2026-07-15 15:58:35.551456+00:00 [info] <0.250.0> Starting worker pool 'worker_pool' with 4 processes in it[0m
+2026-07-15 15:58:35.557249+00:00 [info] <0.209.0> Running boot step rabbit_registry defined by app rabbit[0m
+2026-07-15 15:58:35.557350+00:00 [info] <0.209.0> Running boot step database defined by app rabbit[0m
+2026-07-15 15:58:35.557625+00:00 [info] <0.209.0> Peer discovery: configured backend: rabbit_peer_discovery_classic_config[0m
+2026-07-15 15:58:35.557941+00:00 [info] <0.251.0> Feature flags: starting an unclustered node for the first time: all stable feature flags will be enabled by default[0m
+[38;5;87m2026-07-15 15:58:35.558438+00:00 [notice] <0.251.0> Feature flags: attempt to enable `rabbitmq_4.3.0`...[0m
+[38;5;87m2026-07-15 15:58:35.567519+00:00 [notice] <0.251.0> Feature flags: `rabbitmq_4.3.0` enabled[0m
+[38;5;87m2026-07-15 15:58:35.567597+00:00 [notice] <0.251.0> Feature flags: attempt to enable `topic_binding_projection_v4`...[0m
+[38;5;87m2026-07-15 15:58:35.709892+00:00 [notice] <0.251.0> Feature flags: `topic_binding_projection_v4` enabled[0m
+[38;5;87m2026-07-15 15:58:35.710026+00:00 [notice] <0.251.0> Feature flags: attempt to enable `tie_binding_to_dest_with_keep_while_cond`...[0m
+[38;5;87m2026-07-15 15:58:35.734519+00:00 [notice] <0.251.0> Feature flags: `tie_binding_to_dest_with_keep_while_cond` enabled[0m
+[38;5;87m2026-07-15 15:58:35.734595+00:00 [notice] <0.251.0> Feature flags: attempt to enable `track_qq_members_uids`...[0m
+[38;5;87m2026-07-15 15:58:35.743742+00:00 [notice] <0.251.0> Feature flags: `track_qq_members_uids` enabled[0m
+[38;5;87m2026-07-15 15:58:35.743811+00:00 [notice] <0.251.0> Feature flags: attempt to enable `topic_binding_projection_v5`...[0m
+[38;5;87m2026-07-15 15:58:35.762622+00:00 [notice] <0.251.0> Feature flags: `topic_binding_projection_v5` enabled[0m
+2026-07-15 15:58:35.762873+00:00 [info] <0.209.0> DB: virgin node -> run peer discovery[0m
+[38;5;214m2026-07-15 15:58:35.762965+00:00 [warning] <0.209.0> Classic peer discovery backend: list of nodes does not contain the local node [][0m
+[38;5;87m2026-07-15 15:58:35.763039+00:00 [notice] <0.209.0> Found the following metadata store members: [{rabbitmq_metadata,[0m
+[38;5;87m2026-07-15 15:58:35.763039+00:00 [notice] <0.209.0>                                               'rabbit@d3000-rabbit'}][0m
+2026-07-15 15:58:35.786015+00:00 [info] <0.209.0> Running boot step tracking_metadata_store defined by app rabbit[0m
+2026-07-15 15:58:35.786142+00:00 [info] <0.353.0> Setting up a table for connection tracking on this node: tracked_connection[0m
+2026-07-15 15:58:35.786207+00:00 [info] <0.353.0> Setting up a table for per-vhost connection counting on this node: tracked_connection_per_vhost[0m
+2026-07-15 15:58:35.786264+00:00 [info] <0.353.0> Setting up a table for per-user connection counting on this node: tracked_connection_per_user[0m
+2026-07-15 15:58:35.786319+00:00 [info] <0.353.0> Setting up a table for channel tracking on this node: tracked_channel[0m
+2026-07-15 15:58:35.786364+00:00 [info] <0.353.0> Setting up a table for channel tracking on this node: tracked_channel_per_user[0m
+2026-07-15 15:58:35.786415+00:00 [info] <0.209.0> Running boot step networking_metadata_store defined by app rabbit[0m
+2026-07-15 15:58:35.786483+00:00 [info] <0.209.0> Running boot step feature_flags defined by app rabbit[0m
+2026-07-15 15:58:35.786625+00:00 [info] <0.209.0> Running boot step rabbit_alarm defined by app rabbit[0m
+2026-07-15 15:58:35.794349+00:00 [info] <0.358.0> Memory high watermark set to 19065 MiB (19991376691 bytes) of 31775 MiB (33318961152 bytes) total[0m
+2026-07-15 15:58:35.796140+00:00 [info] <0.360.0> Enabling free disk space monitoring (disk free space: 773540970496, total memory: 33318961152)[0m
+2026-07-15 15:58:35.796206+00:00 [info] <0.360.0> Disk free limit set to 50MB[0m
+2026-07-15 15:58:35.797257+00:00 [info] <0.209.0> Running boot step auth_backend_plugins_check defined by app rabbit[0m
+2026-07-15 15:58:35.797335+00:00 [info] <0.209.0> Running boot step codec_correctness_check defined by app rabbit[0m
+2026-07-15 15:58:35.797389+00:00 [info] <0.209.0> Running boot step external_infrastructure defined by app rabbit[0m
+2026-07-15 15:58:35.797437+00:00 [info] <0.209.0> Running boot step rabbit_event defined by app rabbit[0m
+2026-07-15 15:58:35.797550+00:00 [info] <0.209.0> Running boot step rabbit_auth_mechanism_amqplain defined by app rabbit[0m
+2026-07-15 15:58:35.797630+00:00 [info] <0.209.0> Running boot step rabbit_auth_mechanism_anonymous defined by app rabbit[0m
+2026-07-15 15:58:35.797690+00:00 [info] <0.209.0> Running boot step rabbit_auth_mechanism_cr_demo defined by app rabbit[0m
+2026-07-15 15:58:35.797749+00:00 [info] <0.209.0> Running boot step rabbit_auth_mechanism_plain defined by app rabbit[0m
+2026-07-15 15:58:35.797823+00:00 [info] <0.209.0> Running boot step rabbit_exchange_type_direct defined by app rabbit[0m
+2026-07-15 15:58:35.797877+00:00 [info] <0.209.0> Running boot step rabbit_exchange_type_fanout defined by app rabbit[0m
+2026-07-15 15:58:35.797931+00:00 [info] <0.209.0> Running boot step rabbit_exchange_type_headers defined by app rabbit[0m
+2026-07-15 15:58:35.797980+00:00 [info] <0.209.0> Running boot step rabbit_exchange_type_local_random defined by app rabbit[0m
+2026-07-15 15:58:35.798035+00:00 [info] <0.209.0> Running boot step rabbit_exchange_type_modulus_hash defined by app rabbit[0m
+2026-07-15 15:58:35.798102+00:00 [info] <0.209.0> Running boot step rabbit_exchange_type_topic defined by app rabbit[0m
+2026-07-15 15:58:35.798174+00:00 [info] <0.209.0> Running boot step rabbit_priority_queue defined by app rabbit[0m
+2026-07-15 15:58:35.798221+00:00 [info] <0.209.0> Priority queues enabled, real BQ is rabbit_variable_queue[0m
+2026-07-15 15:58:35.798275+00:00 [info] <0.209.0> Running boot step kernel_ready defined by app rabbit[0m
+2026-07-15 15:58:35.798310+00:00 [info] <0.209.0> Running boot step pg_local_amqp_connection defined by app rabbit[0m
+2026-07-15 15:58:35.802950+00:00 [info] <0.209.0> Running boot step pg_local_amqp_session defined by app rabbit[0m
+2026-07-15 15:58:35.803066+00:00 [info] <0.209.0> Running boot step rabbit_sysmon_minder defined by app rabbit[0m
+2026-07-15 15:58:35.803200+00:00 [info] <0.209.0> Running boot step rabbit_epmd_monitor defined by app rabbit[0m
+2026-07-15 15:58:35.804021+00:00 [info] <0.368.0> epmd monitor knows us, inter-node communication (distribution) port: 25672[0m
+2026-07-15 15:58:35.804112+00:00 [info] <0.209.0> Running boot step guid_generator defined by app rabbit[0m
+2026-07-15 15:58:35.805256+00:00 [info] <0.209.0> Running boot step rabbit_node_monitor defined by app rabbit[0m
+2026-07-15 15:58:35.805346+00:00 [info] <0.372.0> Starting rabbit_node_monitor[0m
+2026-07-15 15:58:35.805417+00:00 [info] <0.209.0> Running boot step delegate_sup defined by app rabbit[0m
+2026-07-15 15:58:35.805799+00:00 [info] <0.209.0> Running boot step rabbit_chaos defined by app rabbit[0m
+2026-07-15 15:58:35.805882+00:00 [info] <0.209.0> Running boot step rabbit_fifo_dlx_sup defined by app rabbit[0m
+2026-07-15 15:58:35.805942+00:00 [info] <0.209.0> Running boot step core_initialized defined by app rabbit[0m
+2026-07-15 15:58:35.805970+00:00 [info] <0.209.0> Running boot step rabbit_channel_tracking_handler defined by app rabbit[0m
+2026-07-15 15:58:35.806050+00:00 [info] <0.209.0> Running boot step rabbit_classic_queue_type defined by app rabbit[0m
+2026-07-15 15:58:35.806115+00:00 [info] <0.209.0> Running boot step rabbit_classic_queue defined by app rabbit[0m
+2026-07-15 15:58:35.806181+00:00 [info] <0.209.0> Running boot step rabbit_connection_tracking_handler defined by app rabbit[0m
+2026-07-15 15:58:35.806224+00:00 [info] <0.209.0> Running boot step rabbit_definitions_hashing defined by app rabbit[0m
+2026-07-15 15:58:35.806272+00:00 [info] <0.209.0> Running boot step rabbit_exchange_parameters defined by app rabbit[0m
+2026-07-15 15:58:35.807437+00:00 [info] <0.209.0> Running boot step rabbit_policies defined by app rabbit[0m
+2026-07-15 15:58:35.807753+00:00 [info] <0.209.0> Running boot step rabbit_quorum_queue_type defined by app rabbit[0m
+2026-07-15 15:58:35.807851+00:00 [info] <0.209.0> Running boot step rabbit_stream_queue defined by app rabbit[0m
+2026-07-15 15:58:35.807907+00:00 [info] <0.209.0> Running boot step rabbit_policy defined by app rabbit[0m
+2026-07-15 15:58:35.807962+00:00 [info] <0.209.0> Running boot step rabbit_quorum_event_subscriber defined by app rabbit[0m
+2026-07-15 15:58:35.808034+00:00 [info] <0.209.0> Running boot step rabbit_quorum_queue defined by app rabbit[0m
+2026-07-15 15:58:35.808320+00:00 [info] <0.209.0> Running boot step quorum_memory_alarm_handler defined by app rabbit[0m
+2026-07-15 15:58:35.808367+00:00 [info] <0.209.0> Running boot step rabbit_stream_coordinator defined by app rabbit[0m
+2026-07-15 15:58:35.808499+00:00 [info] <0.209.0> Running boot step rabbit_vhost_limit defined by app rabbit[0m
+2026-07-15 15:58:35.808575+00:00 [info] <0.209.0> Running boot step rabbit_mgmt_reset_handler defined by app rabbitmq_management[0m
+2026-07-15 15:58:35.808640+00:00 [info] <0.209.0> Running boot step rabbit_mgmt_db_handler defined by app rabbitmq_management_agent[0m
+2026-07-15 15:58:35.808697+00:00 [info] <0.209.0> Management plugin: using rates mode 'basic'[0m
+2026-07-15 15:58:35.808861+00:00 [info] <0.209.0> Running boot step recovery defined by app rabbit[0m
+2026-07-15 15:58:35.808955+00:00 [info] <0.209.0> Running boot step prevent_startup_if_node_was_reset defined by app rabbit[0m
+2026-07-15 15:58:35.808993+00:00 [info] <0.209.0> Running boot step empty_db_check defined by app rabbit[0m
+2026-07-15 15:58:35.809080+00:00 [info] <0.209.0> Will seed default virtual host and user...[0m
+2026-07-15 15:58:35.809221+00:00 [info] <0.209.0> Adding vhost '/' (description: 'Default virtual host', tags: [])[0m
+2026-07-15 15:58:35.821170+00:00 [info] <0.401.0> Making sure data directory '/var/lib/rabbitmq/mnesia/rabbit@d3000-rabbit/msg_stores/vhosts/628WB79CIFDYO9LJI6DKMI09L' for vhost '/' exists[0m
+2026-07-15 15:58:35.821635+00:00 [info] <0.401.0> Setting segment_entry_count for vhost '/' with 0 queues to '2048'[0m
+2026-07-15 15:58:35.830608+00:00 [info] <0.401.0> Starting message stores for vhost '/'[0m
+2026-07-15 15:58:35.832110+00:00 [info] <0.401.0> Started message store of type transient for vhost '/'[0m
+[38;5;214m2026-07-15 15:58:35.849754+00:00 [warning] <0.414.0> Message store "628WB79CIFDYO9LJI6DKMI09L/msg_store_persistent": rebuilding indices from scratch[0m
+2026-07-15 15:58:35.850294+00:00 [info] <0.401.0> Started message store of type persistent for vhost '/'[0m
+2026-07-15 15:58:35.850400+00:00 [info] <0.401.0> Recovering 0 queues of type rabbit_classic_queue took 24ms[0m
+2026-07-15 15:58:35.850465+00:00 [info] <0.401.0> Recovering 0 queues of type rabbit_quorum_queue took 0ms[0m
+2026-07-15 15:58:35.850505+00:00 [info] <0.401.0> Recovering 0 queues of type rabbit_stream_queue took 0ms[0m
+2026-07-15 15:58:35.851541+00:00 [info] <0.209.0> Created user 'pkvmbench'[0m
+2026-07-15 15:58:35.865378+00:00 [info] <0.209.0> Successfully set user tags for user 'pkvmbench' to [administrator][0m
+2026-07-15 15:58:35.874367+00:00 [info] <0.209.0> Successfully set permissions for user 'pkvmbench' in virtual host '/' to '.*', '.*', '.*'[0m
+2026-07-15 15:58:35.874445+00:00 [info] <0.209.0> Running boot step rabbit_observer_cli defined by app rabbit[0m
+2026-07-15 15:58:35.874612+00:00 [info] <0.209.0> Running boot step rabbit_core_metrics_gc defined by app rabbit[0m
+2026-07-15 15:58:35.874725+00:00 [info] <0.209.0> Running boot step background_gc defined by app rabbit[0m
+2026-07-15 15:58:35.874851+00:00 [info] <0.209.0> Running boot step rabbit_observer_cli_classic_queues defined by app rabbit[0m
+2026-07-15 15:58:35.874905+00:00 [info] <0.209.0> Running boot step rabbit_observer_cli_quorum_queues defined by app rabbit[0m
+2026-07-15 15:58:35.874962+00:00 [info] <0.209.0> Running boot step routing_ready defined by app rabbit[0m
+2026-07-15 15:58:35.874989+00:00 [info] <0.209.0> Running boot step pre_flight defined by app rabbit[0m
+2026-07-15 15:58:35.875041+00:00 [info] <0.209.0> Running boot step notify_cluster defined by app rabbit[0m
+2026-07-15 15:58:35.875077+00:00 [info] <0.209.0> Running boot step networking defined by app rabbit[0m
+2026-07-15 15:58:35.875107+00:00 [info] <0.209.0> Running boot step rabbit_quorum_queue_periodic_membership_reconciliation defined by app rabbit[0m
+2026-07-15 15:58:35.875194+00:00 [info] <0.209.0> Running boot step definition_import_worker_pool defined by app rabbit[0m
+2026-07-15 15:58:35.875236+00:00 [info] <0.250.0> Starting worker pool 'definition_import_pool' with 4 processes in it[0m
+2026-07-15 15:58:35.875472+00:00 [info] <0.209.0> Running boot step cluster_name defined by app rabbit[0m
+2026-07-15 15:58:35.875545+00:00 [info] <0.209.0> Initialising internal cluster ID to 'rabbitmq-cluster-id--ZYuBX_CCYA4lgcybRJuoQ'[0m
+2026-07-15 15:58:35.876791+00:00 [info] <0.209.0> Running boot step virtual_host_reconciliation defined by app rabbit[0m
+2026-07-15 15:58:35.876967+00:00 [info] <0.209.0> Running boot step direct_client defined by app rabbit[0m
+2026-07-15 15:58:35.877040+00:00 [info] <0.209.0> Running boot step logger_exchange defined by app rabbit[0m
+2026-07-15 15:58:35.878394+00:00 [info] <0.209.0> Running boot step cluster_tags defined by app rabbit[0m
+2026-07-15 15:58:35.879598+00:00 [info] <0.209.0> Running boot step queue_type_registrations defined by app rabbit[0m
+2026-07-15 15:58:35.879641+00:00 [info] <0.209.0> Running boot step rabbit_management_load_definitions defined by app rabbitmq_management[0m
+2026-07-15 15:58:35.879753+00:00 [info] <0.446.0> Resetting node maintenance status[0m
+[38;5;214m2026-07-15 15:58:36.006746+00:00 [warning] <0.470.0> Deprecated features: `management_metrics_collection`: Feature `management_metrics_collection` is deprecated.[0m
+[38;5;214m2026-07-15 15:58:36.006746+00:00 [warning] <0.470.0> By default, this feature can still be used for now.[0m
+[38;5;214m2026-07-15 15:58:36.006746+00:00 [warning] <0.470.0> Its use will not be permitted by default in a future minor RabbitMQ version and the feature will be removed from a future major RabbitMQ version; actual versions to be determined.[0m
+[38;5;214m2026-07-15 15:58:36.006746+00:00 [warning] <0.470.0> To continue using this feature when it is not permitted by default, set the following parameter in your configuration:[0m
+[38;5;214m2026-07-15 15:58:36.006746+00:00 [warning] <0.470.0>     "deprecated_features.permit.management_metrics_collection = true"[0m
+[38;5;214m2026-07-15 15:58:36.006746+00:00 [warning] <0.470.0> To test RabbitMQ as if the feature was removed, set this in your configuration:[0m
+[38;5;214m2026-07-15 15:58:36.006746+00:00 [warning] <0.470.0>     "deprecated_features.permit.management_metrics_collection = false"[0m
+2026-07-15 15:58:36.034065+00:00 [info] <0.506.0> Management plugin: HTTP (non-TLS) listener started on port 15672[0m
+2026-07-15 15:58:36.034256+00:00 [info] <0.534.0> Statistics database started.[0m
+2026-07-15 15:58:36.034330+00:00 [info] <0.533.0> Starting worker pool 'management_worker_pool' with 3 processes in it[0m
+2026-07-15 15:58:36.045432+00:00 [info] <0.545.0> Prometheus metrics: HTTP (non-TLS) listener started on port 15692[0m
+2026-07-15 15:58:36.045565+00:00 [info] <0.446.0> Ready to start client connection listeners[0m
+2026-07-15 15:58:36.047070+00:00 [info] <0.589.0> started TCP listener on [::]:5672[0m
+ completed with 4 plugins.
+2026-07-15 15:58:36.099285+00:00 [info] <0.446.0> Server startup complete; 4 plugins started.[0m
+2026-07-15 15:58:36.099285+00:00 [info] <0.446.0>  * rabbitmq_prometheus[0m
+2026-07-15 15:58:36.099285+00:00 [info] <0.446.0>  * rabbitmq_management[0m
+2026-07-15 15:58:36.099285+00:00 [info] <0.446.0>  * rabbitmq_management_agent[0m
+2026-07-15 15:58:36.099285+00:00 [info] <0.446.0>  * rabbitmq_web_dispatch[0m
+2026-07-15 15:58:36.285016+00:00 [info] <0.10.0> Time to start RabbitMQ: 2507 ms[0m
+2026-07-15 15:58:37.227303+00:00 [info] <0.606.0> accepting AMQP connection 127.0.0.1:37160 -> 127.0.0.1:5672[0m
+2026-07-15 15:58:37.254290+00:00 [info] <0.606.0> connection 127.0.0.1:37160 -> 127.0.0.1:5672 has a client-provided name: perf-test-configuration-0[0m
+2026-07-15 15:58:37.258712+00:00 [info] <0.606.0> connection 127.0.0.1:37160 -> 127.0.0.1:5672 - perf-test-configuration-0: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 15:58:37.264041+00:00 [info] <0.615.0> accepting AMQP connection 127.0.0.1:37172 -> 127.0.0.1:5672[0m
+2026-07-15 15:58:37.265363+00:00 [info] <0.615.0> connection 127.0.0.1:37172 -> 127.0.0.1:5672 has a client-provided name: perf-test-consumer-0[0m
+2026-07-15 15:58:37.265997+00:00 [info] <0.615.0> connection 127.0.0.1:37172 -> 127.0.0.1:5672 - perf-test-consumer-0: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 15:58:37.304097+00:00 [info] <0.640.0> accepting AMQP connection 127.0.0.1:37184 -> 127.0.0.1:5672[0m
+2026-07-15 15:58:37.305443+00:00 [info] <0.640.0> connection 127.0.0.1:37184 -> 127.0.0.1:5672 has a client-provided name: perf-test-producer-0[0m
+2026-07-15 15:58:37.305982+00:00 [info] <0.640.0> connection 127.0.0.1:37184 -> 127.0.0.1:5672 - perf-test-producer-0: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 15:59:37.320903+00:00 [info] <0.606.0> closing AMQP connection (127.0.0.1:37160 -> 127.0.0.1:5672 - perf-test-configuration-0, vhost: '/', user: 'pkvmbench', duration: '1M, 0s')[0m
+2026-07-15 15:59:37.322419+00:00 [info] <0.640.0> closing AMQP connection (127.0.0.1:37184 -> 127.0.0.1:5672 - perf-test-producer-0, vhost: '/', user: 'pkvmbench', duration: '1M, 0s')[0m
+2026-07-15 15:59:37.324110+00:00 [info] <0.615.0> closing AMQP connection (127.0.0.1:37172 -> 127.0.0.1:5672 - perf-test-consumer-0, vhost: '/', user: 'pkvmbench', duration: '1M, 0s')[0m
+2026-07-15 16:00:11.428883+00:00 [info] <0.696.0> accepting AMQP connection 127.0.0.1:52210 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.452508+00:00 [info] <0.696.0> connection 127.0.0.1:52210 -> 127.0.0.1:5672 has a client-provided name: perf-test-configuration-0[0m
+2026-07-15 16:00:11.456701+00:00 [info] <0.696.0> connection 127.0.0.1:52210 -> 127.0.0.1:5672 - perf-test-configuration-0: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.758790+00:00 [info] <0.736.0> accepting AMQP connection 127.0.0.1:52224 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.760052+00:00 [info] <0.736.0> connection 127.0.0.1:52224 -> 127.0.0.1:5672 has a client-provided name: perf-test-consumer-0[0m
+2026-07-15 16:00:11.760651+00:00 [info] <0.736.0> connection 127.0.0.1:52224 -> 127.0.0.1:5672 - perf-test-consumer-0: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.767571+00:00 [info] <0.750.0> accepting AMQP connection 127.0.0.1:52240 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.768791+00:00 [info] <0.750.0> connection 127.0.0.1:52240 -> 127.0.0.1:5672 has a client-provided name: perf-test-consumer-1[0m
+2026-07-15 16:00:11.769346+00:00 [info] <0.750.0> connection 127.0.0.1:52240 -> 127.0.0.1:5672 - perf-test-consumer-1: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.770574+00:00 [info] <0.764.0> accepting AMQP connection 127.0.0.1:52242 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.771586+00:00 [info] <0.764.0> connection 127.0.0.1:52242 -> 127.0.0.1:5672 has a client-provided name: perf-test-consumer-2[0m
+2026-07-15 16:00:11.772126+00:00 [info] <0.764.0> connection 127.0.0.1:52242 -> 127.0.0.1:5672 - perf-test-consumer-2: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.773197+00:00 [info] <0.778.0> accepting AMQP connection 127.0.0.1:52254 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.774162+00:00 [info] <0.778.0> connection 127.0.0.1:52254 -> 127.0.0.1:5672 has a client-provided name: perf-test-consumer-3[0m
+2026-07-15 16:00:11.774651+00:00 [info] <0.778.0> connection 127.0.0.1:52254 -> 127.0.0.1:5672 - perf-test-consumer-3: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.775691+00:00 [info] <0.792.0> accepting AMQP connection 127.0.0.1:52256 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.776642+00:00 [info] <0.792.0> connection 127.0.0.1:52256 -> 127.0.0.1:5672 has a client-provided name: perf-test-consumer-4[0m
+2026-07-15 16:00:11.777134+00:00 [info] <0.792.0> connection 127.0.0.1:52256 -> 127.0.0.1:5672 - perf-test-consumer-4: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.778527+00:00 [info] <0.806.0> accepting AMQP connection 127.0.0.1:52268 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.779503+00:00 [info] <0.806.0> connection 127.0.0.1:52268 -> 127.0.0.1:5672 has a client-provided name: perf-test-consumer-5[0m
+2026-07-15 16:00:11.780065+00:00 [info] <0.806.0> connection 127.0.0.1:52268 -> 127.0.0.1:5672 - perf-test-consumer-5: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.781205+00:00 [info] <0.820.0> accepting AMQP connection 127.0.0.1:52278 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.782202+00:00 [info] <0.820.0> connection 127.0.0.1:52278 -> 127.0.0.1:5672 has a client-provided name: perf-test-consumer-6[0m
+2026-07-15 16:00:11.782731+00:00 [info] <0.820.0> connection 127.0.0.1:52278 -> 127.0.0.1:5672 - perf-test-consumer-6: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.783801+00:00 [info] <0.834.0> accepting AMQP connection 127.0.0.1:52294 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.784770+00:00 [info] <0.834.0> connection 127.0.0.1:52294 -> 127.0.0.1:5672 has a client-provided name: perf-test-consumer-7[0m
+2026-07-15 16:00:11.785308+00:00 [info] <0.834.0> connection 127.0.0.1:52294 -> 127.0.0.1:5672 - perf-test-consumer-7: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.787465+00:00 [info] <0.848.0> accepting AMQP connection 127.0.0.1:52306 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.788446+00:00 [info] <0.848.0> connection 127.0.0.1:52306 -> 127.0.0.1:5672 has a client-provided name: perf-test-producer-0[0m
+2026-07-15 16:00:11.788997+00:00 [info] <0.848.0> connection 127.0.0.1:52306 -> 127.0.0.1:5672 - perf-test-producer-0: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.796200+00:00 [info] <0.862.0> accepting AMQP connection 127.0.0.1:52308 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.797279+00:00 [info] <0.862.0> connection 127.0.0.1:52308 -> 127.0.0.1:5672 has a client-provided name: perf-test-producer-1[0m
+2026-07-15 16:00:11.797855+00:00 [info] <0.862.0> connection 127.0.0.1:52308 -> 127.0.0.1:5672 - perf-test-producer-1: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.799162+00:00 [info] <0.876.0> accepting AMQP connection 127.0.0.1:52316 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.800133+00:00 [info] <0.876.0> connection 127.0.0.1:52316 -> 127.0.0.1:5672 has a client-provided name: perf-test-producer-2[0m
+2026-07-15 16:00:11.800692+00:00 [info] <0.876.0> connection 127.0.0.1:52316 -> 127.0.0.1:5672 - perf-test-producer-2: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.801854+00:00 [info] <0.890.0> accepting AMQP connection 127.0.0.1:52328 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.802836+00:00 [info] <0.890.0> connection 127.0.0.1:52328 -> 127.0.0.1:5672 has a client-provided name: perf-test-producer-3[0m
+2026-07-15 16:00:11.803380+00:00 [info] <0.890.0> connection 127.0.0.1:52328 -> 127.0.0.1:5672 - perf-test-producer-3: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.804570+00:00 [info] <0.904.0> accepting AMQP connection 127.0.0.1:52340 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.805541+00:00 [info] <0.904.0> connection 127.0.0.1:52340 -> 127.0.0.1:5672 has a client-provided name: perf-test-producer-4[0m
+2026-07-15 16:00:11.806078+00:00 [info] <0.904.0> connection 127.0.0.1:52340 -> 127.0.0.1:5672 - perf-test-producer-4: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.807203+00:00 [info] <0.918.0> accepting AMQP connection 127.0.0.1:52348 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.808161+00:00 [info] <0.918.0> connection 127.0.0.1:52348 -> 127.0.0.1:5672 has a client-provided name: perf-test-producer-5[0m
+2026-07-15 16:00:11.808698+00:00 [info] <0.918.0> connection 127.0.0.1:52348 -> 127.0.0.1:5672 - perf-test-producer-5: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.809894+00:00 [info] <0.932.0> accepting AMQP connection 127.0.0.1:52354 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.810832+00:00 [info] <0.932.0> connection 127.0.0.1:52354 -> 127.0.0.1:5672 has a client-provided name: perf-test-producer-6[0m
+2026-07-15 16:00:11.811343+00:00 [info] <0.932.0> connection 127.0.0.1:52354 -> 127.0.0.1:5672 - perf-test-producer-6: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:00:11.812430+00:00 [info] <0.946.0> accepting AMQP connection 127.0.0.1:52362 -> 127.0.0.1:5672[0m
+2026-07-15 16:00:11.813379+00:00 [info] <0.946.0> connection 127.0.0.1:52362 -> 127.0.0.1:5672 has a client-provided name: perf-test-producer-7[0m
+2026-07-15 16:00:11.813804+00:00 [info] <0.946.0> connection 127.0.0.1:52362 -> 127.0.0.1:5672 - perf-test-producer-7: user 'pkvmbench' authenticated and granted access to vhost '/'[0m
+2026-07-15 16:06:11.829209+00:00 [info] <0.696.0> closing AMQP connection (127.0.0.1:52210 -> 127.0.0.1:5672 - perf-test-configuration-0, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.830155+00:00 [info] <0.848.0> closing AMQP connection (127.0.0.1:52306 -> 127.0.0.1:5672 - perf-test-producer-0, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.830763+00:00 [info] <0.862.0> closing AMQP connection (127.0.0.1:52308 -> 127.0.0.1:5672 - perf-test-producer-1, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.831319+00:00 [info] <0.876.0> closing AMQP connection (127.0.0.1:52316 -> 127.0.0.1:5672 - perf-test-producer-2, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.831817+00:00 [info] <0.890.0> closing AMQP connection (127.0.0.1:52328 -> 127.0.0.1:5672 - perf-test-producer-3, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.832279+00:00 [info] <0.904.0> closing AMQP connection (127.0.0.1:52340 -> 127.0.0.1:5672 - perf-test-producer-4, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.832727+00:00 [info] <0.918.0> closing AMQP connection (127.0.0.1:52348 -> 127.0.0.1:5672 - perf-test-producer-5, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.833147+00:00 [info] <0.932.0> closing AMQP connection (127.0.0.1:52354 -> 127.0.0.1:5672 - perf-test-producer-6, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.833540+00:00 [info] <0.946.0> closing AMQP connection (127.0.0.1:52362 -> 127.0.0.1:5672 - perf-test-producer-7, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.834154+00:00 [info] <0.736.0> closing AMQP connection (127.0.0.1:52224 -> 127.0.0.1:5672 - perf-test-consumer-0, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.834684+00:00 [info] <0.750.0> closing AMQP connection (127.0.0.1:52240 -> 127.0.0.1:5672 - perf-test-consumer-1, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.835229+00:00 [info] <0.764.0> closing AMQP connection (127.0.0.1:52242 -> 127.0.0.1:5672 - perf-test-consumer-2, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.835726+00:00 [info] <0.778.0> closing AMQP connection (127.0.0.1:52254 -> 127.0.0.1:5672 - perf-test-consumer-3, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.836273+00:00 [info] <0.792.0> closing AMQP connection (127.0.0.1:52256 -> 127.0.0.1:5672 - perf-test-consumer-4, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.836748+00:00 [info] <0.806.0> closing AMQP connection (127.0.0.1:52268 -> 127.0.0.1:5672 - perf-test-consumer-5, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.837345+00:00 [info] <0.820.0> closing AMQP connection (127.0.0.1:52278 -> 127.0.0.1:5672 - perf-test-consumer-6, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m
+2026-07-15 16:06:11.837918+00:00 [info] <0.834.0> closing AMQP connection (127.0.0.1:52294 -> 127.0.0.1:5672 - perf-test-consumer-7, vhost: '/', user: 'pkvmbench', duration: '6M, 0s')[0m

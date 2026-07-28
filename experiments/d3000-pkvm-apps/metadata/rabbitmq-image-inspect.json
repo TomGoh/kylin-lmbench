@@ -1,0 +1,98 @@
+[
+    {
+        "Id": "sha256:df8b2fac0a39e495db17a2b29b7ddff9665fd9ae99a6a40d9ced684158c7ea14",
+        "RepoTags": [
+            "rabbitmq:4.3.1-management"
+        ],
+        "RepoDigests": [
+            "rabbitmq@sha256:8734b9e9cd03d12b2e1d973415fc4c5c941c5eca351b4bd63f721782b1bf7c8b"
+        ],
+        "Parent": "",
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-06-10T21:01:27.220261817Z",
+        "DockerVersion": "",
+        "Author": "",
+        "Config": {
+            "Hostname": "",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "15671/tcp": {},
+                "15672/tcp": {},
+                "15691/tcp": {},
+                "15692/tcp": {},
+                "25672/tcp": {},
+                "4369/tcp": {},
+                "5671/tcp": {},
+                "5672/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/opt/rabbitmq/sbin:/opt/erlang/bin:/opt/openssl/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "ERLANG_INSTALL_PATH_PREFIX=/opt/erlang",
+                "OPENSSL_INSTALL_PATH_PREFIX=/opt/openssl",
+                "RABBITMQ_DATA_DIR=/var/lib/rabbitmq",
+                "RABBITMQ_VERSION=4.3.1",
+                "RABBITMQ_PGP_KEY_ID=0x0A9AF2115F4687BD29803A206B73A36E6026DFCA",
+                "RABBITMQ_HOME=/opt/rabbitmq",
+                "HOME=/var/lib/rabbitmq",
+                "LANG=C.UTF-8",
+                "LANGUAGE=C.UTF-8",
+                "LC_ALL=C.UTF-8",
+                "RUNNING_UNDER_SYSTEMD=true"
+            ],
+            "Cmd": [
+                "rabbitmq-server"
+            ],
+            "Image": "",
+            "Volumes": {
+                "/var/lib/rabbitmq": {}
+            },
+            "WorkingDir": "",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "org.opencontainers.image.version": "24.04"
+            }
+        },
+        "Architecture": "arm64",
+        "Variant": "v8",
+        "Os": "linux",
+        "Size": 270197778,
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/2251d58754af066cdab9443b75d4d8ab0af04ca04bb724d71661860694575cc1/diff:/var/lib/docker/overlay2/95f2070322abbe4511007030a5b5f2c086c70d717b7d1bd55e11716403fcbc68/diff:/var/lib/docker/overlay2/e9b9d836116c10f672c919eea0d9a0bdc20b55b174b79a4ffbece05284483b03/diff:/var/lib/docker/overlay2/15b6beefd8566ab6e8085429103b372b2d087e03eb65bdafd6a326e51ac32621/diff:/var/lib/docker/overlay2/215a5c28fd94d5e883dc27a36f7f8ffa6845de4512b4ed2fe7a81de5169236c8/diff:/var/lib/docker/overlay2/c8e5c932ddd5824e38251c0b13da858b2a58e6ca0e07a09c5ca9c540fee7123b/diff:/var/lib/docker/overlay2/8f968ccc2857cbc53d0b671b3c6149ca4d1d67ff71ba3ebcf2440c0dabf7c2d3/diff:/var/lib/docker/overlay2/4cafe3b7aa5ac8f6cf857cd398209616c7ce39992052dde72e36c6a4d2ddb945/diff:/var/lib/docker/overlay2/cc971d16cb03e3efb5aae900d4f831f8eb0aa94110a8971d83e99e48cf78867c/diff:/var/lib/docker/overlay2/39532df183a0fa1bde5c3f0ead80abf7749435c69d7a253d5397407cfa440738/diff",
+                "MergedDir": "/var/lib/docker/overlay2/b8d36cbdd69896a212d2dd8139e7d69560cfb8a8d9b78995fbe7d38c547f848e/merged",
+                "UpperDir": "/var/lib/docker/overlay2/b8d36cbdd69896a212d2dd8139e7d69560cfb8a8d9b78995fbe7d38c547f848e/diff",
+                "WorkDir": "/var/lib/docker/overlay2/b8d36cbdd69896a212d2dd8139e7d69560cfb8a8d9b78995fbe7d38c547f848e/work"
+            },
+            "Name": "overlay2"
+        },
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:2d8834226313616cc27c8a08ca876096cf83f18090b5fa07fd65dba017ec9e5e",
+                "sha256:97d42c8a3363b8b40aa557663a5959457ce07324b7d10eede4ca1a2c1a3f51f2",
+                "sha256:1289fb76635da5e94ace778ea4016f48764c5365e81bb6850c087548c1e9e5ea",
+                "sha256:5832b5407fbaf689420ec1e8c6accb4be1eb2e1a21629c298ce138ef5a3a46f8",
+                "sha256:41aa8a6f5cc9445f74603ba54a867bb0de6c5da7c3fae407a9e25959e5bfd69e",
+                "sha256:4346947990b025c1fd40b40b2c13dc7489ee0b837e47a1d530c4c781447a51b2",
+                "sha256:d069f806923dee97ec13836b3d229b06cfbd012e69fc013e1d71dde6277adda1",
+                "sha256:ece050846ae9051f8ef431ba56536c27483d90acad0589d7d3ff39a1850e8320",
+                "sha256:b975770e0bfe5f54f51ef7bd8f1b06992f6f51823ae979a100d60b50dc2d6076",
+                "sha256:91275b2ba1dcef8a99a32ef97c7f302be044f1421349d36984d3640cdac6e2e8",
+                "sha256:fd885a49b2602e3d3aa069f8a40cc7b512420f586a72ee8c865553774a2eb5ee"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "0001-01-01T00:00:00Z"
+        }
+    }
+]

@@ -1,0 +1,19 @@
+[Unit]
+Description=D3000 nVHE/pKVM application benchmark campaign
+After=network-online.target docker.service multi-user.target
+Before=graphical.target
+Wants=network-online.target docker.service
+ConditionPathExists=/home/jose/kylin-lmbench-exp/state/campaign-enabled
+
+[Service]
+Type=oneshot
+User=jose
+Group=jose
+WorkingDirectory=/home/jose/kylin-lmbench-exp
+ExecStart=/usr/bin/flock -n /home/jose/kylin-lmbench-exp/state/campaign.lock /home/jose/kylin-lmbench-exp/scripts/resume-campaign.sh
+TimeoutStartSec=infinity
+StandardOutput=append:/home/jose/kylin-lmbench-exp/logs/campaign-service.log
+StandardError=append:/home/jose/kylin-lmbench-exp/logs/campaign-service.log
+
+[Install]
+WantedBy=multi-user.target

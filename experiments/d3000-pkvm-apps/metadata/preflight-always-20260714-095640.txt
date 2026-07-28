@@ -1,0 +1,10 @@
+thp_profile=always project=anchors effective=always
+thp_profile=always project=redis effective=always
+thp_profile=always project=rabbitmq effective=always
+thp_profile=always project=geekbench effective=always
+thp_handoff_selftest=pass
+manifest_legs=12
+formal_pairs=5
+profile=always
+runtime_bundle_sha256=a1385b35a98df385e49243b7f06916bccc88d345a197d55fba537c48c722dd62
+preflight=pass

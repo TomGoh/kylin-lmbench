@@ -1,0 +1,410 @@
+ usage:  perf-test [-?] [-a] [-A <arg>] [-ad <arg>] [-b <arg>] [-B <arg>]
+ [-bc <arg>] [-bfc <arg>] [-c <arg>] [-C <arg>] [-ca <arg>] [-cal <arg>]
+    [-cri <arg>] [-csd <arg>] [-ct <arg>] [-ctp <arg>] [-d <arg>] [-D
+    <arg>] [-dcr] [-e <arg>] [-E] [-ei <arg>] [-em <arg>] [-env] [-ew
+    <arg>] [-f <arg>] [-h <arg>] [-H <arg>] [-hst <arg>] [-i <arg>] [-isn
+    <arg>] [-ist <arg>] [-jb] [-k <arg>] [-K] [-L <arg>] [-ll <arg>] [-m
+    <arg>] [-M <arg>] [-ma <arg>] [-mf <arg>] [-mh] [-mlb <arg>] [-mp
+    <arg>] [-ms] [-n <arg>] [-na] [-niot <arg>] [-niotp <arg>] [-nty]
+    [-ntyep] [-ntykq] [-ntyt <arg>] [-o <arg>] [-o2gr <arg>] [-o2id <arg>]
+    [-o2p <arg>] [-o2sec <arg>] [-o2uri <arg>] [-p] [-P <arg>] [-pi <arg>]
+ [-po] [-prsd <arg>] [-pst <arg>] [-q <arg>] [-Q <arg>] [-qa <arg>] [-qf
+    <arg>] [-qp <arg>] [-qpf <arg>] [-qpt <arg>] [-qq] [-r <arg>] [-R
+    <arg>] [-re <arg>] [-rkcs <arg>] [-S] [-s <arg>] [-sb] [-sco <arg>]
+    [-se] [-smssb <arg>] [-sni <arg>] [-sq] [-sst <arg>] [-st <arg>] [-sul
+    <arg>] [-t <arg>] [-T <arg>] [-tnd <arg>] [-trbs <arg>] [-tsbs <arg>]
+    [-u <arg>] [-udsc] [-v] [--verbose] [--verbose-full] [-vl <arg>] [-vr
+    <arg>] [-vs <arg>] [-x <arg>] [-X <arg>] [-y <arg>] [-Y <arg>] [-z
+    <arg>]
+
+                    Options                              Description       
+ -?, --help                                        show usage              
+ -d, --id <arg>                                    test ID, default is     
+                                                    auto-generated         
+ -h, --uri <arg>                                   connection URI, default 
+                                                    is amqp://localhost    
+ -H, --uris <arg>                                  connection URIs         
+                                                    (separated by commas)  
+ -t, --type <arg>                                  exchange type, default  
+                                                    is direct              
+ -e, --exchange <arg>                              exchange name, default  
+                                                    is 'direct'            
+ -u, --queue <arg>                                 queue name, default is  
+                                                    auto-generated         
+ -k, --routing-key <arg>                           routing key, default is 
+                                                    auto-generated         
+ -K, --random-routing-key                          use random routing key  
+                                                   per message, default is 
+                                                    false                  
+ -sb, --skip-binding-queues                        don't bind queues to the
+                                                    exchange, default is   
+                                                    false                  
+ -i, --interval <arg>                              sampling interval in    
+                                                    seconds, default is 1  
+ -r, --rate <arg>                                  producer rate limit,    
+                                                    default is no limit    
+ -R, --consumer-rate <arg>                         consumer rate limit,    
+                                                    default is no limit    
+ -x, --producers <arg>                             producer count, default 
+                                                    is 1                   
+ -y, --consumers <arg>                             consumer count, default 
+                                                    is 1                   
+ -S, --slow-start                                  start consumers slowly  
+                                                    (1 sec delay between   
+                                                   each), default is false 
+ -X, --producer-channel-count <arg>                channels per producer,  
+                                                    default is 1           
+ -Y, --consumer-channel-count <arg>                channels per consumer,  
+                                                    default is 1           
+ -m, --ptxsize <arg>                               producer tx size,       
+                                                    default is 0 (no       
+                                                    transaction)           
+ -n, --ctxsize <arg>                               consumer tx size,       
+                                                    default is 0 (no       
+                                                    transaction)           
+ -c, --confirm <arg>                               max unconfirmed         
+                                                    publishes, default is  
+                                                    -1 (no confirm)        
+ -ct, --confirm-timeout <arg>                      waiting timeout for     
+                                                    unconfirmed publishes  
+                                                    before failing (in     
+                                                   seconds), default is 30 
+ -a, --autoack                                     auto ack, default is    
+                                                    false (no auto-ack)    
+ -A, --multi-ack-every <arg>                       multi ack every, default
+                                                    is 0 (no multi-ack)    
+ -q, --qos <arg>                                   consumer prefetch count,
+                                                    default is 0           
+                                                    (unlimited)            
+ -Q, --global-qos <arg>                            channel prefetch count, 
+                                                    default is 0           
+                                                    (unlimited)            
+ -s, --size <arg>                                  message size in bytes,  
+                                                    default (and minimum   
+                                                    value) is 12           
+ -z, --time <arg>                                  run duration in seconds 
+                                                    (unlimited by default) 
+ -C, --pmessages <arg>                             producer message count, 
+                                                   default is 0 (no limit) 
+ -D, --cmessages <arg>                             consumer message count, 
+                                                   default is 0 (no limit) 
+ -f, --flag <arg>                                  message flag(s),        
+                                                    supported values:      
+                                                    persistent and         
+                                                    mandatory. Use the     
+                                                   option several times to 
+                                                   specify several values. 
+ -M, --framemax <arg>                              requested maximum frame 
+                                                    size, default is 0 (no 
+                                                    limit)                 
+ -b, --heartbeat <arg>                             requested heartbeat     
+                                                    interval, default is 0 
+                                                   (no interval requested) 
+ -p, --predeclared                                 allow use of predeclared
+                                                    objects, default is    
+                                                    false                  
+ -B, --body <arg>                                  comma-separated list of 
+                                                   files to use in message 
+                                                    bodies                 
+ -T, --body-content-type <arg>                     body content-type       
+ -o, --output-file <arg>                           output file for timing  
+                                                    results                
+ -ad, --auto-delete <arg>                          should the queue be     
+                                                    auto-deleted, default  
+                                                    is true                
+ -ms, --use-millis                                 should latency be       
+                                                    collected in           
+                                                    milliseconds, default  
+                                                    is false. Set to true  
+                                                    if producers and       
+                                                    consumers run on       
+                                                    different machines.    
+ -qa, --queue-args <arg>                           queue arguments as      
+                                                    key/value pairs,       
+                                                    separated by commas,   
+                                                    e.g. x-max-length=10   
+ -L, --consumer-latency <arg>                      consumer latency in     
+                                                    microseconds, default  
+                                                    is 0                   
+ -udsc, --use-default-ssl-context                  use JVM default SSL     
+                                                    context, default is    
+                                                    false                  
+ -se, --sasl-external                              use SASL EXTERNAL       
+                                                   authentication, default 
+                                                    is false. Set to true  
+                                                    if using client        
+                                                    certificate            
+                                                   authentication with the 
+                                                    rabbitmq_auth_mechanis 
+                                                    m_ssl plugin.          
+ -v, --version                                     print version           
+                                                    information            
+ -qp, --queue-pattern <arg>                        queue name pattern for  
+                                                    creating queues in     
+                                                    sequence, e.g.         
+                                                    'perf-test-%d'         
+ -qpf, --queue-pattern-from <arg>                  queue name pattern range
+                                                    start (inclusive)      
+ -qpt, --queue-pattern-to <arg>                    queue name pattern range
+                                                    end (inclusive)        
+ -hst, --heartbeat-sender-threads <arg>            number of threads for   
+                                                   producers and consumers 
+                                                    heartbeat senders,     
+                                                   default is 1 thread per 
+                                                    connection (not        
+                                                    necessary when using   
+                                                    Netty)                 
+ -mp, --message-properties <arg>                   message properties as   
+                                                    key/value pairs,       
+                                                    separated by commas,   
+                                                    e.g. priority=5.       
+                                                   Non-standard properties 
+                                                    are treated like       
+                                                    arbitrary headers.     
+ -rkcs, --routing-key-cache-size <arg>             size of the random      
+                                                   routing keys cache. See 
+                                                    --random-routing-key.  
+                                                    Default is 0 (no       
+                                                    cache).                
+ -E, --exclusive                                   use server-named        
+                                                    exclusive queues. Such 
+                                                   queues can only be used 
+                                                    by their declaring     
+                                                    connection! Default is 
+                                                    false.                 
+ -P, --publishing-interval <arg>                   publishing interval in  
+                                                    seconds (opposite of   
+                                                    producer rate limit)   
+ -prsd, --producer-random-start-delay <arg>        max random delay in     
+                                                    seconds to start       
+                                                    producers, default is  
+                                                    no delay               
+ -pst, --producer-scheduler-threads <arg>          number of threads to use
+                                                    when using             
+                                                    --publishing-interval, 
+                                                    default is calculated  
+                                                    by PerfTest            
+ -niot, --nio-threads <arg>                        number of NIO threads to
+                                                    use, default is 1      
+                                                    (deprecated, use Netty 
+                                                    instead)               
+ -niotp, --nio-thread-pool <arg>                   size of NIO thread pool,
+                                                    should be slightly     
+                                                    higher than number of  
+                                                   NIO threads, default is 
+                                                    --nio-threads + 2      
+                                                    (deprecated, use Netty 
+                                                    instead)               
+ -mh, --metrics-help                               show metrics usage      
+ -env, --environment-variables                     show usage with         
+                                                    environment variables  
+ -dcr, --disable-connection-recovery               disable automatic       
+                                                    connection recovery,   
+                                                    default is false       
+                                                    (recovery enabled)     
+ -ctp, --consumers-thread-pools <arg>              number of thread pools  
+                                                    to use for all         
+                                                    consumers, default is  
+                                                    to use a thread pool   
+                                                    for each consumer      
+ -st, --shutdown-timeout <arg>                     shutdown timeout,       
+                                                    default is 5 seconds   
+ -sst, --servers-startup-timeout <arg>             start timeout in seconds
+                                                   (in case the servers(s) 
+                                                    is (are) not available 
+                                                    when the run starts).  
+                                                    Default is to fail     
+                                                    immediately if the     
+                                                   servers(s) is (are) not 
+                                                    available.             
+ -sul, --servers-up-limit <arg>                    number of available     
+                                                    servers needed before  
+                                                    starting the run. Used 
+                                                    in conjunction with    
+                                                    --servers-start-timeou 
+                                                    t. Default is deduced  
+                                                    from --uri or --uris.  
+ -vr, --variable-rate <arg>                        variable publishing rate
+                                                    with [RATE]:[DURATION] 
+                                                    syntax, where [RATE]   
+                                                    integer >= 0 and       
+                                                   [DURATION] integer > 0. 
+                                                    Use the option several 
+                                                    times to specify       
+                                                    several values.        
+ -vs, --variable-size <arg>                        variable message size   
+                                                    with [SIZE]:[DURATION] 
+                                                    syntax, where [SIZE]   
+                                                    integer > 0 and        
+                                                   [DURATION] integer > 0. 
+                                                    Use the option several 
+                                                    times to specify       
+                                                    several values.        
+ -vl, --variable-latency <arg>                     variable consumer       
+                                                   processing latency with 
+                                                    [MICROSECONDS]:[DURATI 
+                                                    ON] syntax, where      
+                                                    [MICROSECONDS] integer 
+                                                    >= 0 and [DURATION]    
+                                                    integer > 0. Use the   
+                                                   option several times to 
+                                                   specify several values. 
+ -po, --polling                                    use basic.get to consume
+                                                    messages. Do not use   
+                                                    this in real           
+                                                    applications. Default  
+                                                    is false.              
+ -pi, --polling-interval <arg>                     time to wait before     
+                                                   polling with basic.get, 
+                                                   in millisecond, default 
+                                                    is 0.                  
+ -na, --nack                                       nack messages, requeue  
+                                                    them by default.       
+ -re, --requeue <arg>                              should nacked messages  
+                                                   be requeued, default is 
+                                                    true.                  
+ -jb, --json-body                                  generate a random JSON  
+                                                    document for message   
+                                                    body. Use with --size. 
+ -bfc, --body-field-count <arg>                    number of pre-generated 
+                                                    fields and values for  
+                                                    body. Use with         
+                                                   --json-body. Default is 
+                                                    1000.                  
+ -bc, --body-count <arg>                           number of pre-generated 
+                                                    message bodies. Use    
+                                                    with --json-body.      
+                                                    Default is 100.        
+ -ca, --consumer-args <arg>                        consumer arguments as   
+                                                    key/value pairs,       
+                                                    separated by commas,   
+                                                    e.g. x-priority=10     
+ -cri, --connection-recovery-interval <arg>        connection recovery     
+                                                    interval in seconds.   
+                                                    Default is 5 seconds.  
+                                                    Interval syntax, e.g.  
+                                                    30-60, is supported to 
+                                                    specify an random      
+                                                    interval between 2     
+                                                    values between each    
+                                                    attempt.               
+ -qf, --queue-file <arg>                           file to look up queue   
+                                                    names from             
+ -sni, --server-name-indication <arg>              server names for Server 
+                                                    Name Indication TLS    
+                                                   parameter, separated by 
+                                                    commas                 
+ -qq, --quorum-queue                               create quorum queue(s)  
+ -sq, --stream-queue                               create stream queue(s)  
+ -ew, --exit-when <arg>                            exit when queue(s) empty
+                                                   or consumer(s) idle for 
+                                                    1 second, valid values 
+                                                    are empty or idle      
+ -csd, --consumer-start-delay <arg>                fixed delay before      
+                                                    starting consumers in  
+                                                    seconds, default is no 
+                                                    delay                  
+ -em, --exposed-metrics <arg>                      metrics to be exposed as
+                                                    key/value pairs,       
+                                                    separated by commas,   
+                                                    e.g.                   
+                                                    expected_published=500 
+                                                    00                     
+ -mf, --metrics-format <arg>                       metrics format to use on
+                                                    the console, possible  
+                                                    values are compact,    
+                                                    default                
+ -mlb, --max-length-bytes <arg>                    max size of created     
+                                                    queues, use 0 for no   
+                                                    limit, default is no   
+                                                    limit                  
+ -smssb, --stream-max-segment-size-bytes <arg>     max size of stream      
+                                                    segments when streams  
+                                                    are in use, default is 
+                                                    set by server          
+ -ll, --leader-locator <arg>                       leader locator strategy 
+                                                    for created quorum     
+                                                    queues and streams.    
+                                                    Possible values:       
+                                                   client-local, balanced. 
+                                                    Default is set by      
+                                                    server.                
+ -ma, --max-age <arg>                              max age of stream       
+                                                    segments using the ISO 
+                                                    8601 duration format,  
+                                                    e.g. PT10M30S for 10   
+                                                    minutes 30 seconds,    
+                                                    P5DT8H for 5 days 8    
+                                                    hours. Default is no   
+                                                    max age.               
+ -sco, --stream-consumer-offset <arg>              stream offset to start  
+                                                    listening from. Valid  
+                                                    values are 'first',    
+                                                    'last', 'next', an     
+                                                    unsigned long, or an   
+                                                    ISO 8601 formatted     
+                                                    timestamp (eg.         
+                                                    2022-06-03T07:45:54Z). 
+                                                    Default is 'next'.     
+ -ei, --expected-instances <arg>                   number of expected      
+                                                    PerfTest instances to  
+                                                   synchronize. Default is 
+                                                    0, that is no          
+                                                   synchronization.Test ID 
+                                                    is mandatory when      
+                                                    instance               
+                                                    synchronization is in  
+                                                    use.                   
+ -isn, --instance-sync-namespace <arg>             Kubernetes namespace for
+                                                    instance               
+                                                    synchronization        
+ -ist, --instance-sync-timeout <arg>               Instance synchronization
+                                                    time in seconds.       
+                                                   Default is 600 seconds. 
+ -o2uri, --oauth2-token-endpoint <arg>             OAuth2 token endpoint   
+                                                    URI. At least          
+                                                    --oauth2-client-id and 
+                                                    --oauth2-client-secret 
+                                                    should be also         
+                                                    specified for OAuth2   
+                                                    flow to work.          
+ -o2id, --oauth2-client-id <arg>                   OAuth2 client id        
+ -o2sec, --oauth2-client-secret <arg>              OAuth2 client secret    
+ -o2gr, --oauth2-grant-type <arg>                  OAuth2 grant type.      
+                                                    Default is             
+                                                    'client_credential'    
+ -o2p, --oauth2-parameters <arg>                   Additional parameters   
+                                                    for OAuth2 token       
+                                                    endpoint, e.g.         
+                                                    orgId=1234. Can be     
+                                                    specified multiple     
+                                                    times.                 
+ --verbose                                         Output message          
+                                                    information. Use only  
+                                                    with slow rates.       
+ --verbose-full                                    Same as --verbose, but  
+                                                    with message headers   
+                                                    and body as well. Use  
+                                                    only with slow rates.  
+ -tsbs, --tcp-send-buffer-size <arg>               value for TCP SO_SNDBUF 
+                                                    option                 
+ -trbs, --tcp-receive-buffer-size <arg>            value for TCP SO_RCVBUF 
+                                                    option                 
+ -tnd, --tcp-no-delay <arg>                        value for TCP NODELAY   
+                                                    option                 
+ -cal, --connection-allocation <arg>               the way to allocate     
+                                                   connection across nodes 
+                                                    (random or             
+                                                    round-robin), default  
+                                                    is random.             
+ -nty, --netty                                     use Netty for IO        
+ -ntyt, --netty-threads <arg>                      number of Netty threads 
+                                                    to use (default is     
+                                                    Netty's default)       
+ -ntyep, --netty-epoll                             use Netty's native epoll
+                                                   transport (Linux x86-64 
+                                                    only)                  
+ -ntykq, --netty-kqueue                            use Netty's native      
+                                                   kqueue transport (macOS 
+                                                    aarch64 only)          
+

@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="765" viewBox="0 0 1240 765" role="img" aria-labelledby="title desc">
+  <title id="title">D3000 pKVM application penalty overview</title>
+  <desc id="desc">Boot-paired pKVM penalty. Positive values mean pKVM is worse. Bars are medians across boot pairs and dots are individual boot pairs.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <text x="620.0" y="34.0" font-size="22" fill="#1F2933" font-weight="700" text-anchor="middle">D3000 pKVM application penalty overview</text>
+  <text x="620.0" y="58.0" font-size="13" fill="#64707D" font-weight="400" text-anchor="middle">positive = pKVM worse; repetitions are reduced inside each boot before pairing</text>
+  <text x="620.0" y="80.0" font-size="12" fill="#64707D" font-weight="400" text-anchor="middle">n=5 paired boots per shown metric</text>
+  <text x="42.0" y="112.0" font-size="17" fill="#1F2933" font-weight="700" text-anchor="start">Redis</text>
+  <text x="42.0" y="133.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">bar = median paired penalty; dots = boot pairs</text>
+  <line x1="224.0" y1="146.0" x2="224.0" y2="394.0" stroke="#E8EDF3" stroke-width="1.0"/>
+  <text x="224.0" y="416.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">-4%</text>
+  <line x1="313.0" y1="146.0" x2="313.0" y2="394.0" stroke="#E8EDF3" stroke-width="1.0"/>
+  <text x="313.0" y="416.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">-2%</text>
+  <line x1="402.0" y1="146.0" x2="402.0" y2="394.0" stroke="#5C6670" stroke-width="1.5"/>
+  <text x="402.0" y="416.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">+0%</text>
+  <line x1="491.0" y1="146.0" x2="491.0" y2="394.0" stroke="#E8EDF3" stroke-width="1.0"/>
+  <text x="491.0" y="416.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">+2%</text>
+  <line x1="580.0" y1="146.0" x2="580.0" y2="394.0" stroke="#E8EDF3" stroke-width="1.0"/>
+  <text x="580.0" y="416.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">+4%</text>
+  <text x="42.0" y="175.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">R1 avg latency</text>
+  <rect x="402.0" y="163.0" width="78.1" height="16" rx="3" fill="#C23B2A" opacity="0.55"/>
+  <circle cx="518.9" cy="168.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 1: +2.63%</title></circle>
+  <circle cx="389.2" cy="171.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 2: -0.29%</title></circle>
+  <circle cx="480.1" cy="174.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 3: +1.75%</title></circle>
+  <circle cx="551.9" cy="168.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 4: +3.37%</title></circle>
+  <circle cx="427.7" cy="171.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 5: +0.58%</title></circle>
+  <text x="487.1" y="175.0" font-size="10" fill="#C23B2A" font-weight="700" text-anchor="start">+1.75%</text>
+  <text x="42.0" y="223.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">R2 throughput</text>
+  <rect x="402.0" y="211.0" width="88.6" height="16" rx="3" fill="#C23B2A" opacity="0.55"/>
+  <circle cx="514.6" cy="216.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 1: +2.53%</title></circle>
+  <circle cx="461.0" cy="219.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 2: +1.32%</title></circle>
+  <circle cx="490.6" cy="222.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 3: +1.99%</title></circle>
+  <circle cx="507.6" cy="216.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 4: +2.37%</title></circle>
+  <circle cx="461.7" cy="219.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 5: +1.34%</title></circle>
+  <text x="497.6" y="223.0" font-size="10" fill="#C23B2A" font-weight="700" text-anchor="start">+1.99%</text>
+  <text x="42.0" y="271.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">R2 p99 latency</text>
+  <rect x="402.0" y="259.0" width="75.8" height="16" rx="3" fill="#C23B2A" opacity="0.55"/>
+  <circle cx="554.8" cy="264.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 1: +3.43%</title></circle>
+  <circle cx="439.6" cy="267.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 2: +0.84%</title></circle>
+  <circle cx="477.8" cy="270.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 3: +1.70%</title></circle>
+  <circle cx="515.2" cy="264.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 4: +2.54%</title></circle>
+  <circle cx="439.4" cy="267.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 5: +0.84%</title></circle>
+  <text x="484.8" y="271.0" font-size="10" fill="#C23B2A" font-weight="700" text-anchor="start">+1.70%</text>
+  <text x="42.0" y="319.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">R3 avg latency</text>
+  <rect x="402.0" y="307.0" width="70.4" height="16" rx="3" fill="#C23B2A" opacity="0.55"/>
+  <circle cx="542.9" cy="312.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 1: +3.17%</title></circle>
+  <circle cx="428.8" cy="315.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 2: +0.60%</title></circle>
+  <circle cx="472.4" cy="318.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 3: +1.58%</title></circle>
+  <circle cx="537.5" cy="312.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 4: +3.05%</title></circle>
+  <circle cx="450.2" cy="315.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 5: +1.08%</title></circle>
+  <text x="479.4" y="319.0" font-size="10" fill="#C23B2A" font-weight="700" text-anchor="start">+1.58%</text>
+  <text x="42.0" y="367.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">R4 avg latency</text>
+  <rect x="402.0" y="355.0" width="87.0" height="16" rx="3" fill="#C23B2A" opacity="0.55"/>
+  <circle cx="525.8" cy="360.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 1: +2.78%</title></circle>
+  <circle cx="408.1" cy="363.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 2: +0.14%</title></circle>
+  <circle cx="489.0" cy="366.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 3: +1.96%</title></circle>
+  <circle cx="525.6" cy="360.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 4: +2.78%</title></circle>
+  <circle cx="438.8" cy="363.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 5: +0.83%</title></circle>
+  <text x="496.0" y="367.0" font-size="10" fill="#C23B2A" font-weight="700" text-anchor="start">+1.96%</text>
+  <text x="638.0" y="112.0" font-size="17" fill="#1F2933" font-weight="700" text-anchor="start">RabbitMQ / Geekbench</text>
+  <text x="638.0" y="133.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">bar = median paired penalty; dots = boot pairs</text>
+  <line x1="820.0" y1="146.0" x2="820.0" y2="634.0" stroke="#E8EDF3" stroke-width="1.0"/>
+  <text x="820.0" y="656.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">-60%</text>
+  <line x1="909.0" y1="146.0" x2="909.0" y2="634.0" stroke="#E8EDF3" stroke-width="1.0"/>
+  <text x="909.0" y="656.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">-30%</text>
+  <line x1="998.0" y1="146.0" x2="998.0" y2="634.0" stroke="#5C6670" stroke-width="1.5"/>
+  <text x="998.0" y="656.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">+0%</text>
+  <line x1="1087.0" y1="146.0" x2="1087.0" y2="634.0" stroke="#E8EDF3" stroke-width="1.0"/>
+  <text x="1087.0" y="656.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">+30%</text>
+  <line x1="1176.0" y1="146.0" x2="1176.0" y2="634.0" stroke="#E8EDF3" stroke-width="1.0"/>
+  <text x="1176.0" y="656.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">+60%</text>
+  <text x="638.0" y="175.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q1 throughput</text>
+  <rect x="998.0" y="163.0" width="4.6" height="16" rx="3" fill="#C23B2A" opacity="0.55"/>
+  <circle cx="1002.6" cy="168.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 1: +1.56%</title></circle>
+  <circle cx="1006.3" cy="171.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 2: +2.78%</title></circle>
+  <circle cx="988.1" cy="174.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 3: -3.33%</title></circle>
+  <circle cx="991.2" cy="168.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 4: -2.30%</title></circle>
+  <circle cx="1012.4" cy="171.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 5: +4.84%</title></circle>
+  <text x="1009.6" y="175.0" font-size="10" fill="#C23B2A" font-weight="700" text-anchor="start">+1.56%</text>
+  <text x="638.0" y="223.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q2 throughput</text>
+  <rect x="998.0" y="211.0" width="10.0" height="16" rx="3" fill="#C23B2A" opacity="0.55"/>
+  <circle cx="1009.9" cy="216.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 1: +4.00%</title></circle>
+  <circle cx="1004.0" cy="219.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 2: +2.02%</title></circle>
+  <circle cx="1004.9" cy="222.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 3: +2.31%</title></circle>
+  <circle cx="1008.4" cy="216.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 4: +3.51%</title></circle>
+  <circle cx="1008.0" cy="219.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 5: +3.37%</title></circle>
+  <text x="1015.0" y="223.0" font-size="10" fill="#C23B2A" font-weight="700" text-anchor="start">+3.37%</text>
+  <text x="638.0" y="271.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q3 50% consumer p99</text>
+  <rect x="998.0" y="259.0" width="7.2" height="16" rx="3" fill="#C23B2A" opacity="0.55"/>
+  <circle cx="1012.6" cy="264.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 1: +4.91%</title></circle>
+  <circle cx="1004.5" cy="267.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 2: +2.19%</title></circle>
+  <circle cx="1000.6" cy="270.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 3: +0.89%</title></circle>
+  <circle cx="1005.2" cy="264.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 4: +2.43%</title></circle>
+  <circle cx="1005.9" cy="267.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 5: +2.67%</title></circle>
+  <text x="1012.2" y="271.0" font-size="10" fill="#C23B2A" font-weight="700" text-anchor="start">+2.43%</text>
+  <text x="638.0" y="319.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q3 70% consumer p99</text>
+  <rect x="998.0" y="307.0" width="32.4" height="16" rx="3" fill="#C23B2A" opacity="0.55"/>
+  <circle cx="1020.5" cy="312.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 1: +7.58%</title></circle>
+  <circle cx="1031.7" cy="315.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 2: +11.36%</title></circle>
+  <circle cx="1085.4" cy="318.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 3: +29.46%</title></circle>
+  <circle cx="1030.4" cy="312.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 4: +10.92%</title></circle>
+  <circle cx="1014.0" cy="315.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 5: +5.39%</title></circle>
+  <text x="1037.4" y="319.0" font-size="10" fill="#C23B2A" font-weight="700" text-anchor="start">+10.92%</text>
+  <text x="638.0" y="367.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q3 85% consumer p99</text>
+  <rect x="998.0" y="355.0" width="56.4" height="16" rx="3" fill="#C23B2A" opacity="0.55"/>
+  <circle cx="1122.8" cy="360.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 1: +42.06%</title></circle>
+  <circle cx="1052.8" cy="363.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 2: +18.49%</title></circle>
+  <circle cx="1054.4" cy="366.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 3: +19.02%</title></circle>
+  <circle cx="1041.3" cy="360.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 4: +14.60%</title></circle>
+  <circle cx="1073.7" cy="363.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 5: +25.50%</title></circle>
+  <text x="1061.4" y="367.0" font-size="10" fill="#C23B2A" font-weight="700" text-anchor="start">+19.02%</text>
+  <text x="638.0" y="415.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q3 85% confirm p99</text>
+  <rect x="998.0" y="403.0" width="50.3" height="16" rx="3" fill="#C23B2A" opacity="0.55"/>
+  <circle cx="1112.4" cy="408.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 1: +38.55%</title></circle>
+  <circle cx="1048.3" cy="411.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 2: +16.97%</title></circle>
+  <circle cx="1046.6" cy="414.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 3: +16.40%</title></circle>
+  <circle cx="1040.5" cy="408.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 4: +14.34%</title></circle>
+  <circle cx="1059.9" cy="411.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 5: +20.86%</title></circle>
+  <text x="1055.3" y="415.0" font-size="10" fill="#C23B2A" font-weight="700" text-anchor="start">+16.97%</text>
+  <text x="638.0" y="463.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q4 consumer p99</text>
+  <rect x="998.0" y="451.0" width="5.4" height="16" rx="3" fill="#C23B2A" opacity="0.55"/>
+  <circle cx="1004.3" cy="456.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 1: +2.11%</title></circle>
+  <circle cx="999.8" cy="459.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 2: +0.60%</title></circle>
+  <circle cx="1002.9" cy="462.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 3: +1.66%</title></circle>
+  <circle cx="1003.4" cy="456.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 4: +1.81%</title></circle>
+  <circle cx="1004.3" cy="459.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 5: +2.11%</title></circle>
+  <text x="1010.4" y="463.0" font-size="10" fill="#C23B2A" font-weight="700" text-anchor="start">+1.81%</text>
+  <text x="638.0" y="511.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q5 fill time</text>
+  <rect x="998.0" y="499.0" width="4.6" height="16" rx="3" fill="#C23B2A" opacity="0.55"/>
+  <circle cx="1005.7" cy="504.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 1: +2.60%</title></circle>
+  <circle cx="1001.2" cy="507.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 2: +1.09%</title></circle>
+  <circle cx="999.5" cy="510.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 3: +0.52%</title></circle>
+  <circle cx="1002.6" cy="504.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 4: +1.55%</title></circle>
+  <circle cx="1007.5" cy="507.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 5: +3.19%</title></circle>
+  <text x="1009.6" y="511.0" font-size="10" fill="#C23B2A" font-weight="700" text-anchor="start">+1.55%</text>
+  <text x="638.0" y="559.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Q5 drain time</text>
+  <rect x="978.4" y="547.0" width="19.6" height="16" rx="3" fill="#4D7C59" opacity="0.55"/>
+  <circle cx="977.7" cy="552.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 1: -6.85%</title></circle>
+  <circle cx="978.4" cy="555.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 2: -6.62%</title></circle>
+  <circle cx="1021.5" cy="558.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 3: +7.93%</title></circle>
+  <circle cx="1022.6" cy="552.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 4: +8.31%</title></circle>
+  <circle cx="977.2" cy="555.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 5: -7.00%</title></circle>
+  <text x="971.4" y="559.0" font-size="10" fill="#4D7C59" font-weight="700" text-anchor="end">-6.62%</text>
+  <text x="638.0" y="607.0" font-size="11" fill="#1F2933" font-weight="400" text-anchor="start">Geekbench suite wall time</text>
+  <rect x="998.0" y="595.0" width="1.2" height="16" rx="3" fill="#C23B2A" opacity="0.55"/>
+  <circle cx="998.5" cy="600.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 1: +0.18%</title></circle>
+  <circle cx="998.2" cy="603.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 2: +0.05%</title></circle>
+  <circle cx="998.1" cy="606.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 3: +0.04%</title></circle>
+  <circle cx="997.8" cy="600.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 4: -0.06%</title></circle>
+  <circle cx="998.4" cy="603.0" r="3.2" fill="#243B53" stroke="#FFFFFF" stroke-width="0.8"><title>Pair 5: +0.15%</title></circle>
+  <text x="1005.2" y="607.0" font-size="10" fill="#C23B2A" font-weight="700" text-anchor="start">+0.05%</text>
+  <rect x="395.0" y="707.0" width="18" height="12" rx="2" fill="#C23B2A" opacity="0.7"/>
+  <text x="421.0" y="718.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">pKVM penalty</text>
+  <rect x="605.0" y="707.0" width="18" height="12" rx="2" fill="#4D7C59" opacity="0.7"/>
+  <text x="631.0" y="718.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="start">pKVM improvement</text>
+  <text x="620.0" y="748.0" font-size="11" fill="#64707D" font-weight="400" text-anchor="middle">Source: analysis/d3000-apps-always-20260717-093223/metrics.csv</text>
+</svg>

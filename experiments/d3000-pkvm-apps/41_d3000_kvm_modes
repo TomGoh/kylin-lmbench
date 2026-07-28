@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e
+
+cat <<'EOF'
+menuentry 'D3000 Linux 6.6.30+ (nVHE benchmark)' --unrestricted --class kylin --class gnu-linux --class gnu --class os --id 'd3000-6.6.30-nvhe' {
+    insmod part_gpt
+    insmod ext2
+    search --no-floppy --fs-uuid --set=root 458281ab-9f79-4afb-948a-95ac39a813d9
+    echo 'Loading Linux 6.6.30+ in nVHE mode ...'
+    linux /vmlinuz-6.6.30+ root=UUID=eb34825f-907a-4f97-a5dc-ff7dc84d00a0 ro quiet splash loglevel=0 resume=UUID=3ca639c8-8f5b-43eb-8d8f-6ef6a5b33bd3 security=kysec kvm-arm.mode=nvhe
+    initrd /initrd.img-6.6.30+
+}
+menuentry 'D3000 Linux 6.6.30+ (protected pKVM benchmark)' --unrestricted --class kylin --class gnu-linux --class gnu --class os --id 'd3000-6.6.30-protected' {
+    insmod part_gpt
+    insmod ext2
+    search --no-floppy --fs-uuid --set=root 458281ab-9f79-4afb-948a-95ac39a813d9
+    echo 'Loading Linux 6.6.30+ in protected pKVM mode ...'
+    linux /vmlinuz-6.6.30+ root=UUID=eb34825f-907a-4f97-a5dc-ff7dc84d00a0 ro quiet splash loglevel=0 resume=UUID=3ca639c8-8f5b-43eb-8d8f-6ef6a5b33bd3 security=kysec kvm-arm.mode=protected
+    initrd /initrd.img-6.6.30+
+}
+EOF
