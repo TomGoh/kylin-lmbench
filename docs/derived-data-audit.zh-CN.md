@@ -13,7 +13,7 @@
 - `docs/n90-kvm-host/lmbench-N10-4config.xlsx`
 - `docs/n90-kvm-host/lmbench-N10-4config-mean.xlsx`
 
-说明：guest、VirtCCA、海光 CSV 目录当前没有已落盘的派生 CSV/XLSX 文件；这些目录下主要是原始 `iter*.txt`。
+说明：guest、VirtCCA、海光的结果目录下只有原始 `iter*.txt`，没有逐目录的派生 CSV/XLSX。由这些原始日志生成的跨平台比值表 `docs/vm-ratio-comparison.{csv,xlsx}` 和 `docs/vm-ratio-comparison-highlights.csv`（由 `scripts/build-vm-ratio-comparison.py` 生成，使用 10 轮均值）不在本次核验范围内。这批虚拟机数据的测试方法和基线一致性核对见 `docs/vm-lmbench-methodology.zh-CN.md`。
 
 ## 核验方法
 

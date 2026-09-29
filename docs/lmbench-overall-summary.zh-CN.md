@@ -4,7 +4,9 @@
 
 1. N90 主机侧测试：在同一台 Phytium N90 上切换 `kvm-arm.mode=none/vhe/nvhe/protected`，测试主机自身的 lmbench 表现。
 2. N90 客户机侧测试：在 N90 的 NVHE 和 pKVM 环境下运行 `~/x-kernel` 客户机，并在客户机内运行 lmbench。仓库中也保留了一组 VHE 客户机结果，主要作为参考。
-3. 其他机密虚拟化环境：在鲲鹏服务器上对比普通虚拟机和 VirtCCA 机密虚拟机；在海光服务器上已经收集到 CSV 机密虚拟机数据，普通虚拟机测试仍在运行。
+3. 其他机密虚拟化环境：在鲲鹏服务器上对比普通虚拟机和 VirtCCA 机密虚拟机；在海光服务器上对比普通虚拟机和 CSV 机密虚拟机。
+
+虚拟机测试的完整流程、各平台虚拟化配置，以及 CPU 频率、内存主频、vCPU 绑核是否一致的核对，见 [vm-lmbench-methodology.zh-CN.md](vm-lmbench-methodology.zh-CN.md)。
 
 本次整理重点解决两个问题：第一，核验总览文档中的关键数字是否能从现有结果文件复算出来；第二，把分析表述改成准确、书面、可读的中文，避免把尚未验证的推断写成定论。
 
@@ -17,13 +19,17 @@
 | N90 主机 4 模式 | `results/n90-day3-host/*.csv`，`results/precise-mmap/*.log` | 直接复算 CSV 中位数；用 `scripts/analyze-precise-mmap.py` 复核 mmap 精测结果 | 这是本仓库中最完整、最干净的数据集 |
 | N90 x-kernel 客户机 | `results/xkernel-n90-*/xkernel-*-iter*.txt` | 用 `parse-lmbench.py` 重新解析原始日志，再复算中位数 | 结论主要看 NVHE 与 pKVM；VHE 结果保留为参考 |
 | 鲲鹏 VirtCCA | `results/virtcca-regular-results/`，`results/virtcca-cvm-results/` | 用 `parse-lmbench.py` 重新解析原始日志，再复算中位数 | 普通虚拟机与 VirtCCA 机密虚拟机都有 10 轮数据 |
-| 海光 CSV | `results/hygon_csv_results/` | 用 `parse-lmbench.py` 重新解析原始日志，复算 CSV 机密虚拟机的绝对值 | 目前缺少普通虚拟机基线，不能计算 CSV 开销 |
+| 海光 CSV | `results/hygon_regular_results/`，`results/hygon_csv_results/` | 用 `parse-lmbench.py` 重新解析原始日志，再复算中位数 | 普通虚拟机与 CSV 机密虚拟机都有 10 轮数据 |
 
 需要注意：
 
 1. 客户机原始日志中有一些非 lmbench 输出，例如 `lat_rpc` 在 musl 环境下被跳过、`lat_http` 缺少 `webpage-lm`、附加 DMA 测试输出等。这些内容没有纳入本文的核心结论。
 
-2. 海光 CSV 日志中出现了 `vfork: Function not implemented` 和端口绑定冲突等信息。因此海光部分当前只报告解析器能够稳定提取的 lmbench 指标，不做机制归因。
+2. 海光两组日志中都出现了 `vfork: Function not implemented` 和端口绑定冲突等信息。`vfork` 报错只影响附加 DMA 测试的计时，不影响 lmbench 指标。原因是 x86_64 上 musl 调用独立的 `vfork` 系统调用，而测试时的 x-kernel 没有实现它。因此海光部分只报告解析器能够稳定提取的 lmbench 指标。
+
+3. 本文表格使用中位数，N90 客户机表还丢弃了第 1 轮；`docs/vm-ratio-comparison.{csv,xlsx}` 使用 10 轮均值。两者的数值会有小幅差异，引用时应注明口径。
+
+4. 各平台只比较同机比值，不比较不同服务器的绝对值。海光客户机的计时基准很可能被设为 4 GHz 而不是实际 TSC 频率，因此海光的绝对时间和带宽数值整体存在缩放，不能与鲲鹏、N90 直接比较（第 6 节）。
 
 ## 2. 总体结论
 
@@ -31,8 +37,8 @@
 |---|---|---|
 | N90 主机侧 `kvm-arm.mode` 对照 | `none/vhe/nvhe/protected` 对主机 syscall、IPC、STREAM、TLB 的影响很小；pKVM 在主机侧最明显的额外成本出现在 `lat_mmap`，64 MB 精测慢约 42% | 高 |
 | N90 x-kernel 客户机 NVHE 与 pKVM 对照 | 丢弃第 1 轮后，pKVM 相对 NVHE 的主要稳定差异是 minor page fault 约 +5%；syscall、IPC、STREAM、随机内存访问和 TLB 基本持平 | 中高 |
-| 鲲鹏 VirtCCA 与普通虚拟机对照 | VirtCCA 对 STREAM 读写混合带宽、IPC 延迟和大工作集随机访问影响显著；纯 syscall 和纯读 `stream2 sum` 基本不变 | 高 |
-| 海光 CSV | 已有 CSV 机密虚拟机的 10 轮绝对数据，但还没有普通虚拟机基线，不能评价 CSV 相对开销 | 待补基线 |
+| 鲲鹏 VirtCCA 与普通虚拟机对照 | VirtCCA 对 STREAM 带宽、IPC 延迟和大工作集随机访问影响显著；syscall 基本不变 | 高 |
+| 海光 CSV 与普通虚拟机对照 | CSV 对 syscall、pipe/AF_UNIX、上下文切换和 STREAM 的影响在 ±0.6% 以内，minor page fault +1.0%，64 MB 随机访问 +2.1%；TCP 和 shell 在 CSV 下反而更快，原因未明。两组的客户机内核构建不同，vCPU 上限可能不同 | 中 |
 
 最重要的分析边界是：不能把所有 pKVM 结果合并成一句“pKVM 只有 page fault 开销”。在 N90 主机侧，pKVM 的显著信号是 `lat_mmap` 建立映射慢；在 N90 x-kernel 客户机侧，显著信号是 minor page fault 慢约 5%。这两者都和页表或内存映射建立有关，但测试对象不同，不能混写。
 
@@ -123,7 +129,7 @@ N90 客户机侧使用 `~/x-kernel` 作为客户机内核，在客户机内部�
 | TCP loopback latency | us | 109.5330 | 111.3358 | 110.7185 | -0.55% |
 | STREAM copy | MB/s | 18146.76 | 18532.99 | 18480.01 | -0.29% |
 | STREAM triad | MB/s | 17314.45 | 17187.36 | 17400.76 | +1.24% |
-| stream2 sum | MB/s | 7173.88 | 7170.87 | 7163.04 | -0.11% |
+| stream2 sum（CPU 指标，见 7.2 节） | MB/s | 7173.88 | 7170.87 | 7163.04 | -0.11% |
 | random read, 64 MB | ns | 193.049 | 192.027 | 192.355 | +0.17% |
 | TLB effective | pages | 48 | 48 | 48 | 0.00% |
 
@@ -163,48 +169,72 @@ N90 客户机侧使用 `~/x-kernel` 作为客户机内核，在客户机内部�
 | STREAM copy | MB/s | 42288.08 | 19841.89 | -53.08% |
 | STREAM triad | MB/s | 40829.34 | 18188.92 | -55.45% |
 | stream2 fill | MB/s | 22339.54 | 20022.78 | -10.37% |
-| stream2 sum | MB/s | 11554.43 | 11455.68 | -0.85% |
+| stream2 sum（CPU 指标，见 7.2 节） | MB/s | 11554.43 | 11455.68 | -0.85% |
 | random read, 4 MB | ns | 24.493 | 28.865 | +17.85% |
 | random read, 64 MB | ns | 52.591 | 168.407 | +220.22% |
 | TLB effective | pages | 32 | 32 | 0.00% |
 
-VirtCCA 的性能特征和 N90 pKVM 明显不同。它不只是影响首次建映射或 page fault，而是在 IPC、大工作集随机访问和 STREAM 读写混合带宽上都有显著影响。尤其是 STREAM copy 和 triad 减半，说明该机制对持续内存读写负载很敏感。
+VirtCCA 的性能特征和 N90 pKVM 明显不同。它不只是影响首次建映射或 page fault，而是在 IPC、大工作集随机访问和 STREAM 带宽上都有显著影响。尤其是 STREAM copy 和 triad 减半，说明该机制对持续内存访问负载很敏感。
+
+`stream2 sum` 几乎不变，但这不能说明 VirtCCA 不影响内存读取。该测试受浮点加法延迟限制，衡量的是 CPU 而不是内存（7.2 节）。它与 syscall 一起不变，说明两组测试时的 CPU 核心频率一致。
 
 不过，fork 和上下文切换类指标不宜直接解释为“VirtCCA 更快”。例如 fork 在 VirtCCA 下看似更快，而 shell 明显更慢；这类指标很可能受到调度、计时或客户机时钟行为影响。本文只把它们作为异常现象保留，不作为正向性能结论。
 
 ## 6. 海光 CSV 测试
 
-海光服务器目前只有 CSV 机密虚拟机数据，普通虚拟机基线还没有完成。因此本节只报告绝对值，不计算 CSV 开销。
+### 6.1 数据说明
 
-| 指标 | 单位 | CSV 机密虚拟机 |
-|---|---:|---:|
-| null syscall | us | 0.6779 |
-| read syscall | us | 1.5393 |
-| stat syscall | us | 1.7197 |
-| minor page fault | us | 166.3162 |
-| fork | us | 114.5558 |
-| shell | us | 6790.75 |
-| ctx 16p/16K | us | 4.860 |
-| pipe latency | us | 8.9484 |
-| AF_UNIX latency | us | 20.1705 |
-| TCP loopback latency | us | 237.9516 |
-| STREAM copy | MB/s | 16516.66 |
-| STREAM triad | MB/s | 17790.57 |
-| stream2 sum | MB/s | 11452.09 |
-| random read, 64 MB | ns | 105.3085 |
-| TLB effective | pages | 64 |
+海光服务器上有两组客户机数据：
 
-这组数据已经可以作为后续对照的 CSV 侧样本，但不能单独说明 CSV 的相对开销。普通虚拟机数据完成后，应使用同一套解析脚本复算两侧中位数，再更新本节。
+| 目录 | 含义 |
+|---|---|
+| `results/hygon_regular_results/` | 普通虚拟机 |
+| `results/hygon_csv_results/` | CSV 机密虚拟机 |
+
+两组数据都包含 10 轮原始日志，并可由 `parse-lmbench.py` 稳定解析。下表为 10 轮中位数。
+
+### 6.2 关键结果
+
+| 指标 | 单位 | 普通虚拟机 | CSV | CSV 相对普通虚拟机 |
+|---|---:|---:|---:|---:|
+| null syscall | us | 0.6783 | 0.6779 | -0.07% |
+| read syscall | us | 1.5392 | 1.5393 | +0.01% |
+| stat syscall | us | 1.7291 | 1.7197 | -0.54% |
+| minor page fault | us | 164.6645 | 166.3162 | +1.00% |
+| fork | us | 114.65 | 114.56 | -0.08% |
+| shell | us | 7748.50 | 6790.75 | -12.36% |
+| ctx 16p/16K | us | 4.880 | 4.860 | -0.41% |
+| pipe latency | us | 8.9611 | 8.9484 | -0.14% |
+| AF_UNIX latency | us | 20.2208 | 20.1705 | -0.25% |
+| TCP loopback latency | us | 259.1420 | 237.9516 | -8.18% |
+| STREAM copy | MB/s | 16530.25 | 16516.66 | -0.08% |
+| STREAM triad | MB/s | 17862.12 | 17790.57 | -0.40% |
+| stream2 sum（CPU 指标，见 7.2 节） | MB/s | 11449.01 | 11452.09 | +0.03% |
+| random read, 64 MB | ns | 103.127 | 105.309 | +2.12% |
+| TLB effective | pages | 64 | 64 | 0.00% |
+
+CSV 在本组数据中的开销很小：syscall、pipe/AF_UNIX、上下文切换和 STREAM 的差异都在 ±0.6% 以内，可见的代价是 minor page fault +1.0% 和 64 MB 随机访问 +2.1%。这与 CSV 在内存控制器中做透明加解密的机制相符，与鲲鹏 VirtCCA 的大幅内存开销形成对比。
+
+TCP 回环和 shell 在 CSV 下反而更快，本文不作为正向结论。一个可能的原因是两组的客户机内核配置不同（6.3 节），vCPU 上限可能不同，从而影响调度和网络栈路径，但目前没有数据验证。
+
+### 6.3 解读海光数据的前提
+
+1. **两组使用了不同的客户机内核构建。** x-kernel 在编译期把 CSV 加密位（`SEV_CBIT_POS=47`）无条件写进页表，这样的内核只能在开启加密的虚拟机中运行，所以普通虚拟机必须使用另一份构建。这一点同时说明 CSV 组的内存加密确实处于开启状态。按测试时 x-kernel 主线的配置，CSV 构建最多启用 1 个 CPU，普通构建最多 4 个。实际分配的 vCPU 数没有记录。
+2. **绝对值存在整体缩放。** 测试时的 x-kernel 在 x86 上通过 CPUID leaf 0x16 获取 TSC 频率，海光处理器不提供该 leaf，于是退回默认值 4 GHz。海光客户机测得 L1 加载延迟 0.905 ns，若计时准确，对应约 4.4 GHz 的核心频率，超出海光服务器处理器的范围，与这一推断相符。两组的缩放因子相同，所以上表的相对变化不受影响；但海光的绝对值不能与鲲鹏、N90 直接比较。可通过客户机启动日志中的 `TSC frequency` 一行确认。
+
+详细推理见 [vm-lmbench-methodology.zh-CN.md](vm-lmbench-methodology.zh-CN.md) 第 4.3 节和第 6.1 节。
 
 ## 7. 分析结论与边界
 
-### 7.1 pKVM 与 VirtCCA 的开销形态不同
+### 7.1 pKVM、VirtCCA 与 CSV 的开销形态不同
 
 N90 pKVM 的已核验结果显示，主机侧最明显的开销出现在 `lat_mmap` 建立映射路径；x-kernel 客户机侧最明显的开销出现在 minor page fault。syscall、IPC、STREAM 和随机内存访问在稳定阶段基本没有明显差异。
 
 鲲鹏 VirtCCA 则不同。它对 STREAM copy/triad、IPC 和 64 MB 随机访问都有大幅影响。这说明 VirtCCA 的成本更像是持续运行阶段的内存访问或缓存一致性成本，而不是只在建映射时支付的一次性成本。
 
 这个差异可以作为当前最重要的机制判断：pKVM 的成本更集中，VirtCCA 的成本更分散、更容易影响内存带宽型负载。
+
+海光 CSV 在本组数据中开销最小，只在 minor page fault 和大工作集随机访问上有 1–2% 的代价。三种机制的开销形态因此可以概括为：pKVM 集中在建映射，VirtCCA 分散在持续内存访问，CSV 在 lmbench 粒度上接近零。
 
 ### 7.2 哪些结论目前不应过度表达
 
@@ -214,7 +244,9 @@ N90 pKVM 的已核验结果显示，主机侧最明显的开销出现在 `lat_mm
 
 第三，fork、shell、上下文切换等指标容易出现分桶或计时异常。它们适合提示问题，不适合单独作为机密虚拟化开销的主要证据。
 
-第四，海光 CSV 目前没有普通虚拟机基线。所有关于 CSV “快多少”或“慢多少”的说法都应等基线完成后再写。
+第四，海光的绝对值不能与其他平台横向比较（6.3 节），只能使用同机比值。海光两组的客户机内核构建不同，TCP 和 shell 在 CSV 下更快这类现象不宜解释为 CSV 的收益。
+
+第五，`stream2 sum` 不是内存带宽指标。它的内层循环是 `s += a[i]`（`src/stream.c`），是一条串行的浮点加法依赖链，带宽约等于"8 字节 / double 加法延迟"。在全部 8 组虚拟机数据上，实测值与这个估算相差不到 3%。因此它不变只能说明 CPU 核心频率一致，不能说明"纯读内存不受影响"。
 
 ## 8. 可复核文件索引
 
@@ -228,16 +260,17 @@ N90 pKVM 的已核验结果显示，主机侧最明显的开销出现在 `lat_mm
 | N90 x-kernel 客户机结果 | `results/xkernel-n90-kvm-nvhe-20260606-133103/`，`results/xkernel-n90-pkvm-np-clean-20260606-164648/` |
 | N90 VHE 客户机参考结果 | `results/xkernel-n90-kvm-vhe-20260605-201819/` |
 | 鲲鹏 VirtCCA 结果 | `results/virtcca-regular-results/`，`results/virtcca-cvm-results/` |
-| 海光 CSV 结果 | `results/hygon_csv_results/` |
+| 海光 CSV 结果 | `results/hygon_regular_results/`，`results/hygon_csv_results/` |
+| 虚拟机测试方法与基线一致性 | `docs/vm-lmbench-methodology.zh-CN.md` |
 | 主机侧运行脚本 | `bench.sh`，`prepare-host.sh`，`scripts/apply-masks.sh`，`scripts/verify-clean-env.sh` |
-| 解析与表格脚本 | `parse-lmbench.py`，`scripts/build-xlsx-median.py`，`scripts/build-xlsx-mean.py`，`scripts/analyze-precise-mmap.py` |
+| 解析与表格脚本 | `parse-lmbench.py`，`scripts/build-xlsx-median.py`，`scripts/build-xlsx-mean.py`，`scripts/analyze-precise-mmap.py`，`scripts/build-vm-ratio-comparison.py`，`scripts/check-vm-baseline.py` |
 | 关键测试代码 | `src/lat_mmap.c`，`src/lat_mmap_precise.c`，`src/lat_mem_rd.c`，`src/lib_mem.c` |
 
 ## 9. 后续工作
 
-1. 补齐海光普通虚拟机基线，并用同一解析口径更新 CSV 对照。
+1. 补测时记录宿主机侧的 CPU 频率、内存主频、vCPU 绑核、NUMA 放置和 VMM 启动命令，并保存客户机 `autorun.sh` 和启动日志。清单见 `docs/vm-lmbench-methodology.zh-CN.md` 第 9 节。海光还需确认客户机的 TSC 频率，并让两组使用相同的 vCPU 数。
 2. 对 N90 x-kernel 客户机结果补充更明确的 host 侧环境记录，尤其是每组数据对应的 `kvm-arm.mode`、CPU 绑核和噪声控制状态。
 3. 对 VirtCCA 的 STREAM 和随机访问开销补充 PMU 或更定向的内存测试，避免只凭 lmbench 现象做过强机制判断。
-4. 修复客户机结果中的辅助测试问题：`webpage-lm` 缺失导致 `lat_http` 不可用，RPC 在 musl 构建下被跳过，海光 CSV 的部分附加 DMA 命令受 `vfork` 未实现影响。
+4. 修复客户机结果中的辅助测试问题：`webpage-lm` 缺失导致 `lat_http` 不可用，RPC 在 musl 构建下被跳过，海光的部分附加 DMA 命令受 `vfork` 未实现影响。
 
-文档版本：2026-06-07，基于当前仓库结果文件复核。
+文档版本：2026-06-07，基于当前仓库结果文件复核；2026-09-29 补入海光普通虚拟机对照，修正 `stream2 sum` 的解读，补充统计口径和海光计时说明。
