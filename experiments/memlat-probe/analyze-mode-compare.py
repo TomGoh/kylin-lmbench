@@ -8,8 +8,12 @@ The first directory is the reference.  The question each table answers:
   state     were the runs taken in the same platform state (THP, CPU and
             interconnect frequency)?  If not, the comparison is not between
             boot modes.
-  random    do the modes make the same number of page walks per access, and
-            if so how many extra cycles does each walk cost?
+  random    do the modes make the same number of page walks and the same
+            number of cache refills per access, and if so how many extra
+            cycles does each walk cost?  (On the N80 the placement of the
+            frames alone moved the 64 MB random latency by 3 to 4 percent
+            together with the L2 refill count, so equal refill counts are part
+            of the test.)
   seq       the same per page crossing, for the sequential chase over 64 MB
   llc       how the sequential points around the L3 size vary from one fresh
             process to the next, and whether that follows physical contiguity
@@ -162,15 +166,16 @@ def main():
 
     print(f"## Random chase (lmbench -t, stride 16): reference = {ref}\n")
     print("Per access, median over seeds: time in ns (the minimum of 11 repetitions of each run, as lmbench reports), cycles, "
-          "page walks (l2d_tlb_refill).  'extra cycles per walk' = (cycles - reference cycles) / walks.\n")
+          "page walks (l2d_tlb_refill), L2 and L3 cache refills.  'extra cycles per walk' = (cycles - reference cycles) / walks.  "
+          "It measures the cost of a walk only if 'walks ratio' is 1 and 'extra L2 refills' is about 0.\n")
     head = "| size |"
     sep = "|---:|"
     for n in names:
-        head += f" {n}: ns | cycles | walks | L3 refills |"
-        sep += "---:|---:|---:|---:|"
+        head += f" {n}: ns | cycles | walks | L2 refills | L3 refills |"
+        sep += "---:|---:|---:|---:|---:|"
         if n != ref:
-            head += " extra ns | extra cycles | walks ratio | extra cycles per walk |"
-            sep += "---:|---:|---:|---:|"
+            head += " extra ns | extra cycles | walks ratio | extra L2 refills | extra cycles per walk |"
+            sep += "---:|---:|---:|---:|---:|"
     print(head)
     print(sep)
     by = {n: collections.defaultdict(list) for n in names}
@@ -182,14 +187,14 @@ def main():
         r0 = by[ref][s]
         for n in names:
             rs = by[n].get(s, [])
-            ns, cyc, w, l3 = med(rs, "ns_min"), med(rs, "ev11"), med(rs, "ev2d"), med(rs, "ev2a")
-            line += f" {ns:.2f} | {cyc:.2f} | {w:.4f} | {l3:.3f} |"
+            ns, cyc, w, l2, l3 = med(rs, "ns_min"), med(rs, "ev11"), med(rs, "ev2d"), med(rs, "ev17"), med(rs, "ev2a")
+            line += f" {ns:.2f} | {cyc:.2f} | {w:.4f} | {l2:.3f} | {l3:.3f} |"
             if n != ref:
                 dns, dc = ns - med(r0, "ns_min"), cyc - med(r0, "ev11")
                 w0 = med(r0, "ev2d")
                 ratio = f"{w / w0:.3f}" if w0 > 0.02 else "n/a"
                 per = f"{dc / w:.1f}" if w > 0.02 else "n/a"
-                line += f" {dns:+.2f} | {dc:+.2f} | {ratio} | {per} |"
+                line += f" {dns:+.2f} | {dc:+.2f} | {ratio} | {l2 - med(r0, 'ev17'):+.3f} | {per} |"
         print(line)
 
     print(f"\n## Sequential chase over 64 MB by stride: reference = {ref}\n")
