@@ -1,14 +1,15 @@
 #!/bin/sh
 # Experiments that need no system change: they run in whatever platform state
-# the machine is in and only record that state.  cpu0.  About 65 minutes.
+# the machine is in and only record that state.  cpu0.  About 8 minutes.
 # Root is optional: without it the physical-layout fields read pfn=na.
-# Expects ./probe3 ./bgload ./lat_mem_rd next to this script.
+# Expects ./probe3 ./bgload next to this script.
 #
 #   expR.log   Exp R: sequential stride 256 at 4..64 MB, fresh process per point,
 #              chain built once (rebuild=0) versus rewritten before every
 #              interval as lmbench does (rebuild=1), 20 laps
 #   expBG.log  Exp BG: the headline points with memory traffic from other cores
-#   expH-*.log Exp H: lmbench's own lat_mem_rd, repeated sweeps
+#
+# lmbench's own program is run by run9-lmbench-current-state.sh.
 cd "$(dirname "$0")" || exit 1
 DF=/sys/class/devfreq/nocfreq
 E=11,2d,2a,17,5,13
@@ -51,24 +52,4 @@ for bg in none r1 w1 w2; do
 done
 echo "# run6 BG done $(date -Is) $(st)" >> meta.log
 
-# H: lmbench's own program.  Each sweep is one invocation, as in scripts/lmbench.
-: > expH-rand.log
-: > expH-seq256.log
-: > expH-seqall.log
-for i in 1 2 3; do
-  echo "## sweep=$i $(date -Is) $(st)" >> expH-rand.log
-  taskset -c 0 ./lat_mem_rd -t -P 1 64 16 >> expH-rand.log 2>&1
-done
-for i in $(seq 1 16); do
-  echo "## sweep=$i $(date -Is) $(st)" >> expH-seq256.log
-  taskset -c 0 ./lat_mem_rd -P 1 64 256 >> expH-seq256.log 2>&1
-done
-for i in 1 2 3; do
-  echo "## sweep=$i $(date -Is) $(st)" >> expH-seqall.log
-  taskset -c 0 ./lat_mem_rd -P 1 64 16 32 64 128 256 512 1024 >> expH-seqall.log 2>&1
-done
-for i in 4 5; do
-  echo "## sweep=$i $(date -Is) $(st)" >> expH-rand.log
-  taskset -c 0 ./lat_mem_rd -t -P 1 64 16 >> expH-rand.log 2>&1
-done
 echo "# run6 done $(date -Is) $(st)" >> meta.log
