@@ -290,6 +290,9 @@ sudo reboot
 跨配置分析将定量回答第 1 节列的三个问题，并对 §4 列出的影响因子做"如果没钳死会怎样"的反事实
 推演。
 
+专题：[`llc-boundary-8mb-analysis.md`](llc-boundary-8mb-analysis.md) —— LLC 边界 8 MB
+顺序延迟 pkvm "+3.55%" 的来源（双峰分布 + 物理页布局，非 pKVM 开销）。
+
 ## 9. 文件清单
 
 ```
