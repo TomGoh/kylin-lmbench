@@ -31,6 +31,11 @@
   Exp L2  sorted, reversed and shuffled virtual order of pages taken from
           huge pages, on the N80 and on the workstation
           (expL2-n80.log, ../memlat-d80f3-20260930/expL2-d80f3.log)
+  Exp H2, H3  lmbench's own lat_mem_rd with memory held back by another
+          process, so that its children get frames from larger free blocks;
+          H2 with probe3 before and after every sweep, H3 with the layout of
+          lmbench's own buffers read from /proc/<pid>/pagemap
+          (expH2.log, expH3.log, expH3-frames.log)
   Exp G1-G4  the interconnect-frequency experiments, if their logs exist
           (expG1.log, expG2.log, expG3.log, expG4-*.log)
 
@@ -168,7 +173,9 @@ def exp_r():
     print("## Exp R: sequential stride 256, fresh process per point, 20 laps; interconnect pinned at 1800 MHz\n")
     print("rebuild 0 = chain built once; rebuild 1 = chain rewritten before every timed interval, as lmbench does.  "
           "ns = minimum of 11 intervals.  adjacency = fraction of virtually adjacent pages that are also physically "
-          "adjacent, in either direction.\n")
+          "adjacent, in either direction.  In every lap the rebuild 1 process ran right after the rebuild 0 process and "
+          "received its frames in reverse order, so at 64 MB (and 16 MB) rebuild 1 always has a descending and rebuild 0 an "
+          "ascending layout: the rebuild setting is aliased with the direction of the layout and with run order.\n")
     print("| size | rebuild | n | min | median | max | max / min | CV | largest gap between neighbouring values | "
           "median adjacency | L3 refills per access | page walks per access |")
     print("|---:|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|---:|")
@@ -183,28 +190,36 @@ def exp_r():
         print(f"| {k[0]:g} MB | {k[1]} | {len(v)} | {min(v):.2f} | {st.median(v):.2f} | {max(v):.2f} | {max(v) / min(v):.3f} | "
               f"{100 * st.pstdev(v) / st.mean(v):.1f}% | {100 * g[0]:.1f}% ({g[1]:.2f} to {g[2]:.2f}) | {st.median(adj):.3f} | "
               f"{st.median(r['ev2a'] for r in rs):.3f} | {st.median(r['ev2d'] for r in rs):.4f} |")
-    print("\nRank correlation of the latency with the physical layout (both rebuild settings pooled):\n")
-    print("| size | n | rho(ns, adjacency) | rho(ns, distinct 2 MiB regions) | adjacency range | ns range |")
-    print("|---:|---:|---:|---:|---|---|")
+    print("\nRank correlation of the latency with the physical layout (both rebuild settings pooled).  lap = position of the "
+          "process in the run (1 to 20); the partial correlation removes the lap trend from both variables:\n")
+    print("| size | n | rho(ns, adjacency) | rho(ns, distinct 2 MiB regions) | rho(adjacency, lap) | rho(ns, lap) | "
+          "partial rho(ns, adjacency) given lap | adjacency range | ns range |")
+    print("|---:|---:|---:|---:|---:|---:|---:|---|---|")
     for sz in sorted({k[0] for k in by}):
         rs = by[(sz, 0)] + by[(sz, 1)]
         ns = [r["ns_min"] for r in rs]
         adj = [r["contig_frac"] + r["rcontig_frac"] for r in rs]
         mb = [r["mb2_regions"] for r in rs]
-        print(f"| {sz:g} MB | {len(rs)} | {spearman(ns, adj):+.2f} | {spearman(ns, mb):+.2f} | {min(adj):.2f}-{max(adj):.2f} | "
-              f"{min(ns):.2f}-{max(ns):.2f} |")
+        lap = list(range(1, len(by[(sz, 0)]) + 1)) + list(range(1, len(by[(sz, 1)]) + 1))
+        rxy, rxz, ryz = spearman(ns, adj), spearman(ns, lap), spearman(adj, lap)
+        part = (rxy - rxz * ryz) / math.sqrt((1 - rxz ** 2) * (1 - ryz ** 2))
+        print(f"| {sz:g} MB | {len(rs)} | {rxy:+.2f} | {spearman(ns, mb):+.2f} | {ryz:+.2f} | {rxz:+.2f} | {part:+.2f} | "
+              f"{min(adj):.2f}-{max(adj):.2f} | {min(ns):.2f}-{max(ns):.2f} |")
     # consecutive processes reuse the frames the previous one freed, in reverse order
-    sw = 0
+    one = both = 0
     pairs = 0
     seq = [r for r in rows]
     for a, b in zip(seq, seq[1:]):
         if a["size_mb"] == b["size_mb"]:
             pairs += 1
-            if abs(a["contig_frac"] - b["rcontig_frac"]) < 0.02 and abs(a["rcontig_frac"] - b["contig_frac"]) < 0.02:
-                sw += 1
-    print(f"\nFrame reuse: in {sw} of {pairs} pairs of consecutive processes at the same size, the ascending adjacency of "
-          "one equals the descending adjacency of the next within 0.02, i.e. the second process received the frames the "
-          "first one had just freed, in reverse order.\n")
+            if abs(a["contig_frac"] - b["rcontig_frac"]) < 0.02:
+                one += 1
+                if abs(a["rcontig_frac"] - b["contig_frac"]) < 0.02:
+                    both += 1
+    print(f"\nFrame reuse: in {one} of {pairs} pairs of consecutive processes at the same size, the ascending adjacency of "
+          f"the first equals the descending adjacency of the second within 0.02 (in {both} of them the reverse relation "
+          "holds as well), which indicates that the second process received the frames the first one had just freed, "
+          "in reverse order.  Frame numbers were not logged by probe3.\n")
 
 
 def exp_bg():
@@ -440,7 +455,10 @@ def exp_s():
     print("## Exp S: random chase on pages taken from one 1 GiB physical slot at a time; interconnect pinned at 1800 MHz\n")
     print("Each slot is measured twice per run: pass 2 uses the same data pages after moving them to a new virtual range "
           "(new page-table pages).  ns = median of 5 full cycles.  'RAM in slot' and 'kernel or reserved inside' come from "
-          "/proc/iomem; a slot that is not entirely ordinary RAM cannot be one 1 GiB stage-2 block.\n")
+          "/proc/iomem; a slot that is not entirely ordinary RAM cannot be one 1 GiB stage-2 block.  This table is NOT a "
+          "comparison of 1 GiB with 2 MiB blocks: a protected VM was running and had pages in eight further slots "
+          "(vm-frames-n80.txt), and one donated page turns a slot's 1 GiB block into 2 MiB blocks.  Only the slots at "
+          "0x22c0000000 and 0x2300000000 can still have been 1 GiB blocks; see the slot table further down.\n")
     for (size, pick) in sorted({(k[1], k[2]) for k in runs}):
         keys = [k for k in runs if k[1] == size and k[2] == pick]
         print(f"### {size} MB per slot, pages picked: {'lowest addresses of the slot' if pick == 'low' else 'spread evenly over the slot'}, "
@@ -597,20 +615,23 @@ def exp_v3():
     if not any(r["_tag"] == "V3" for r in runs):
         return
     print("## Exp V3: the shared-against-clear comparison repeated with other page sets\n")
-    print("One page set of class shared per run (two passes); class clear from every slot of the same run.  "
-          "extra = median of the shared set minus the median of class clear in the same run; 'same slot' uses only the "
-          "clear set taken from the slot the shared set comes from.  Runs: V2 (seed 31) and V3 (seeds 41, 43, 47).\n")
+    print("From 6 MB upward one page set of class shared per run (two passes), all from slot 0x20c0000000 and all drawn from the "
+          "same population of about 50 thousand pool pages; below 6 MB several slots have a shared set.  Class clear from every "
+          "slot of the same run.  extra = median of the shared sets minus the median of class clear in the same run; 'same slot' "
+          "compares each shared set with the clear set of its own slot (median over the slots).  Runs: V2 and V3; the seed "
+          "changes the order of the chase, not which pages are selected.\n")
     m = lambda rs, key: st.median(r[key] for r in rs)
     for pick in ("even", "low"):
         sel = [r for r in runs if r["pick"] == pick]
         if not sel:
             continue
         print(f"### Pages picked: {'spread evenly over the pool pages of the slot' if pick == 'even' else 'lowest addresses (physically contiguous)'}\n")
-        print("| size | runs | extra ns per run | median (min-max) | relative | same slot: extra ns per run | extra cycles per run | "
-              "page walks per access: clear / shared | extra L2 refills per run | distinct 2 MiB regions of the shared set |")
-        print("|---:|---:|---|---|---:|---|---|---|---|---|")
+        print("| size | runs | slots with a shared set | extra ns per run | median (min-max) | relative | same slot: extra ns per run | "
+              "extra cycles per run | page walks per access: clear / shared | extra L2 refills per run | "
+              "distinct 2 MiB regions of the shared set |")
+        print("|---:|---:|---|---|---|---:|---|---|---|---|---|")
         for sz in sorted({r["size_mb"] for r in sel}):
-            ex, exs, cyc, l2, reg, wc, ws, rel = [], [], [], [], [], [], [], []
+            ex, exs, cyc, l2, reg, wc, ws, rel, nsl = [], [], [], [], [], [], [], [], []
             for r in sel:
                 if r["size_mb"] != sz:
                     continue
@@ -618,21 +639,25 @@ def exp_v3():
                 cl = [x for x in r["_rows"] if x["class"] == "clear"]
                 if not sh or not cl:
                     continue
-                slot = sh[0]["_slot"]
-                sh = [x for x in sh if x["_slot"] == slot]
-                same = [x for x in cl if x["_slot"] == slot]
+                # every slot that has a shared set counts (below 6 MB several slots have one)
                 ex.append(m(sh, "ns_med") - m(cl, "ns_med"))
                 rel.append(100 * (m(sh, "ns_med") / m(cl, "ns_med") - 1))
-                if same:
-                    exs.append(m(sh, "ns_med") - m(same, "ns_med"))
+                per_slot = []
+                for slot in sorted({x["_slot"] for x in sh}):
+                    same = [x for x in cl if x["_slot"] == slot]
+                    if same:
+                        per_slot.append(m([x for x in sh if x["_slot"] == slot], "ns_med") - m(same, "ns_med"))
+                if per_slot:
+                    exs.append(st.median(per_slot))
                 cyc.append(m(sh, "ev11") - m(cl, "ev11"))
                 l2.append(m(sh, "ev17") - m(cl, "ev17"))
-                reg.append(sh[0]["mb2_regions"])
+                reg.append(m(sh, "mb2_regions"))
+                nsl.append(len({x["_slot"] for x in sh}))
                 wc.append(m(cl, "ev2d"))
                 ws.append(m(sh, "ev2d"))
             if not ex:
                 continue
-            print(f"| {sz:g} MB | {len(ex)} | {', '.join(f'{x:+.1f}' for x in ex)} | {st.median(ex):+.1f} ({min(ex):+.1f} to {max(ex):+.1f}) | "
+            print(f"| {sz:g} MB | {len(ex)} | {', '.join(str(x) for x in nsl)} | {', '.join(f'{x:+.1f}' for x in ex)} | {st.median(ex):+.1f} ({min(ex):+.1f} to {max(ex):+.1f}) | "
                   f"{st.median(rel):+.1f}% | {', '.join(f'{x:+.1f}' for x in exs)} | {', '.join(f'{x:+.1f}' for x in cyc)} | "
                   f"{st.median(wc):.3f} / {st.median(ws):.3f} | {', '.join(f'{x:+.2f}' for x in l2)} | {', '.join(f'{x:.0f}' for x in reg)} |")
         print()
@@ -758,9 +783,12 @@ def exp_w():
     print("sorted = virtual order follows ascending physical address; shuffled = the same selection rule, pages mapped in a random "
           "virtual order.  clear = stage-2 block mappings; shared = 4 KiB stage-2 leaves (2 MiB regions shared with the VM).  "
           "ns = median over sets (slots) and the two passes.\n")
+    print("selection step = pool pages of the class in the slot per selected page (1 for the lowest-address sets): with evenly "
+          "spread pages every step-th pool page in ascending frame order is taken.  It is not a physical distance; frame "
+          "numbers per page were not logged.\n")
     print("| size | pages picked | class | slots | sorted: ns (min-max) | shuffled: ns (min-max) | shuffled vs sorted | "
-          "page walks per access: sorted / shuffled | L2 refills: sorted / shuffled | adjacency when sorted |")
-    print("|---:|---|---|---:|---|---|---:|---|---|---:|")
+          "page walks per access: sorted / shuffled | L2 refills: sorted / shuffled | adjacency when sorted | selection step (min-max) |")
+    print("|---:|---|---|---:|---|---|---:|---|---|---:|---|")
     m = lambda rs, key: st.median(r[key] for r in rs)
     for sz in sorted({r["_size"] for r in rows}):
         for pick in ("low", "even"):
@@ -775,9 +803,13 @@ def exp_w():
                 print(f"| {sz:g} MB | {'lowest addresses' if pick == 'low' else 'spread evenly'} | {cls} | {nslots} | "
                       f"{st.median(a):.2f} ({min(a):.2f}-{max(a):.2f}) | {st.median(b):.2f} ({min(b):.2f}-{max(b):.2f}) | "
                       f"{100 * (st.median(b) / st.median(a) - 1):+.1f}% | {m(so, 'ev2d'):.4f} / {m(sh, 'ev2d'):.4f} | "
-                      f"{m(so, 'ev17'):.3f} / {m(sh, 'ev17'):.3f} | {m(so, 'contig_frac'):.2f} |")
+                      f"{m(so, 'ev17'):.3f} / {m(sh, 'ev17'):.3f} | {m(so, 'contig_frac'):.2f} | "
+                      + ("1" if pick == "low" else
+                         f"{min(r['frames_in_class'] for r in so) / (sz * 256):.1f}-{max(r['frames_in_class'] for r in so) / (sz * 256):.1f}")
+                      + " |")
     # the same slot for both classes, where shared exists
-    print("\nSame slot, both classes (slot 0x20c0000000 where available):\n")
+    print("\nSame slot, both classes (slot 0x20c0000000 where available).  With evenly spread pages the two classes of one "
+          "slot have different selection steps, so this comparison is not at equal spacing:\n")
     print("| size | pages picked | order | clear: ns | shared: ns | shared vs clear |")
     print("|---:|---|---|---:|---:|---:|")
     for sz in sorted({r["_size"] for r in rows}):
@@ -868,7 +900,7 @@ def exp_x():
     h = [per_stride for hd, per_stride in lmbench_sweeps("expH-seq256.log") if hd.get("thp") == "off"]
     rr = probe_rows("expR.log")
     if h and ref:
-        print("\n### lmbench's own lat_mem_rd, stride 256: Exp H (about 18:00) against Exp X3 (20:00), same platform state\n")
+        print("\n### lmbench's own lat_mem_rd, stride 256: Exp H (18:45 to 19:13) against Exp X3 (19:56 to 20:07), same platform state\n")
         print("Between the two the free memory of the machine became fragmented (hours of experiments that shuffle "
               "and free gigabytes of pages).  The adjacency column is what probe3, which allocates in the same "
               "way, recorded at about the same time (Exp R for the earlier, Exp X1 for the later session).\n")
@@ -1325,6 +1357,125 @@ def exp_l2():
         print()
 
 
+def held_sweeps(name):
+    """Sweeps of run25/run26: -> list of dicts {rep, hold, noc, pre, post, t0, rows: {size_mb: (time, ns)}}."""
+    path = os.path.join(DEV, name)
+    if not os.path.exists(path):
+        return []
+    out = []
+    cur = None
+    with open(path) as fh:
+        for line in fh:
+            line = line.rstrip("\n")
+            if line.startswith("## rep="):
+                d = kv(line)
+                cur = {"rep": int(d["rep"]), "hold": int(d["hold_mb"]), "noc": d.get("noc"), "gov": d.get("gov"),
+                       "t0": d.get("start"), "pre": None, "post": None, "rows": collections.OrderedDict(), "noc_end": None}
+                out.append(cur)
+            elif line.startswith("## end") and cur is not None:
+                cur["noc_end"] = kv(line).get("noc")
+            elif line.startswith("P ") and cur is not None:
+                cur[line.split()[1]] = kv(line)
+            elif cur is not None:
+                p = line.split()
+                if len(p) == 3:
+                    try:
+                        cur["rows"][float(p[1])] = (float(p[0]), float(p[2]))
+                    except ValueError:
+                        pass
+    return out
+
+
+def exp_h2():
+    sw = held_sweeps("expH2.log")
+    if not sw:
+        return
+    print("## Exp H2: lmbench's own lat_mem_rd (stride 256) with memory held back, probe3 before and after every sweep\n")
+    print("A stopped process holds back the given amount before the sweep.  probe3 (sequential, stride 256, 8 MB, lmbench's loop "
+          "form, chain rewritten before every interval) runs right before and right after the sweep and reports the adjacency of "
+          "its own buffer (ascending / descending).  lmbench: lat_mem_rd -P 1 64 256 under nothp.  Interconnect: "
+          + ", ".join(sorted({f"{s['gov']} {s['noc']:.0f}" for s in sw})) + " at the start of every sweep.\n")
+    print("| rep | held back | probe3 before: adjacency asc / desc | ns | lmbench 4 MB | 6 MB | 8 MB | 12 MB | 16 MB | 32 MB | 64 MB | "
+          "probe3 after: adjacency asc / desc | ns |")
+    print("|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---|---:|")
+    for x in sw:
+        pre, post = x["pre"], x["post"]
+        cell = lambda sz: f"{x['rows'][sz][1]:.2f}" if sz in x["rows"] else ""
+        print(f"| {x['rep']} | {x['hold']} MB | {pre['contig_frac']:.2f} / {pre['rcontig_frac']:.2f} | {pre['ns_min']:.2f} | "
+              + " | ".join(cell(sz) for sz in (4.0, 6.0, 8.0, 12.0, 16.0, 32.0, 64.0))
+              + f" | {post['contig_frac']:.2f} / {post['rcontig_frac']:.2f} | {post['ns_min']:.2f} |")
+    pr = [(p["contig_frac"] + p["rcontig_frac"], p["ns_min"]) for x in sw for p in (x["pre"], x["post"]) if p]
+    hi = [n for a, n in pr if a >= 0.8]
+    lo = [n for a, n in pr if a <= 0.3]
+    print(f"\nprobe3, 8 MB: {len(hi)} runs with total adjacency of at least 0.8: median {st.median(hi):.2f} ns "
+          f"({min(hi):.2f}-{max(hi):.2f})" if hi else "\nprobe3: no run with adjacency of at least 0.8", end="")
+    if lo:
+        print(f"; {len(lo)} runs with at most 0.3: median {st.median(lo):.2f} ns ({min(lo):.2f}-{max(lo):.2f})"
+              + (f"; ratio {st.median(hi) / st.median(lo):.3f}" if hi else ""), end="")
+    print(f".  Spearman rho(ns, total adjacency) over the {len(pr)} probe3 runs: {spearman([n for _, n in pr], [a for a, _ in pr]):+.2f}.\n")
+    print("lmbench's own values by the amount held back (median, min-max over the sweeps):\n")
+    print("| held back | sweeps | 4 MB | 6 MB | 8 MB | 12 MB | 16 MB | 24 MB | 32 MB | 48 MB | 64 MB |")
+    print("|---:|---:|---|---|---|---|---|---|---|---|---|")
+    for hold in sorted({x["hold"] for x in sw}):
+        sel = [x for x in sw if x["hold"] == hold]
+        cells = []
+        for sz in (4.0, 6.0, 8.0, 12.0, 16.0, 24.0, 32.0, 48.0, 64.0):
+            v = [x["rows"][sz][1] for x in sel if sz in x["rows"]]
+            cells.append(f"{st.median(v):.2f} ({min(v):.2f}-{max(v):.2f})" if v else "")
+        print(f"| {hold} MB | {len(sel)} | " + " | ".join(cells) + " |")
+    print()
+
+
+def exp_h3():
+    sw = held_sweeps("expH3.log")
+    path = os.path.join(DEV, "expH3-frames.log")
+    if not sw or not os.path.exists(path):
+        return
+    fr = []
+    with open(path) as fh:
+        for line in fh:
+            if line.startswith("t="):
+                fr.append(kv(line))
+    print("## Exp H3: lmbench's own lat_mem_rd (stride 256), with the physical layout of its own buffers\n")
+    print("As H2, and a watcher reads /proc/<pid>/pagemap of every lat_mem_rd child a quarter of a second after it appeared.  "
+          "adjacency = fraction of virtually adjacent pages of the child's buffer that are physically adjacent (ascending / "
+          "descending); runs = maximal runs of physically adjacent pages.  A child is matched to the lmbench output line of the "
+          "same size that was printed after the child was sampled.\n")
+    pts = collections.defaultdict(list)     # size -> list of (hold, rep, ns, asc, desc, runs, regions)
+    for x in sw:
+        for sz, (t, ns) in x["rows"].items():
+            # the child of this size: sampled before the line was printed, and the latest such
+            cand = [f for f in fr if abs(f["size_mb"] - sz) < 0.003 and f["t"] <= t]
+            if not cand:
+                continue
+            f = max(cand, key=lambda c: c["t"])
+            if t - f["t"] > 3.0:
+                continue
+            pts[sz].append((x["hold"], x["rep"], ns, f["contig_frac"], f["rcontig_frac"], f["runs"], f["mb2_regions"]))
+    print("### The 8 MB point, every sweep\n")
+    print("| rep | held back | lmbench ns | adjacency of its buffer: asc / desc | runs | longest possible = 1 | 2 MiB regions |")
+    print("|---:|---:|---:|---|---:|---|---:|")
+    for hold, rep, ns, a, d, runs, reg in sorted(pts.get(8.0, []), key=lambda p: (p[1], p[0])):
+        print(f"| {rep} | {hold} MB | {ns:.2f} | {a:.3f} / {d:.3f} | {runs:.0f} | | {reg:.0f} |")
+    print("\n### By size: latency against the adjacency of lmbench's own buffer\n")
+    print("| size | sweeps matched | total adjacency (min-max) | ns (min-max) | Spearman rho(ns, total adjacency) | "
+          "sweeps with adjacency >= 0.8: n, median ns | sweeps with adjacency <= 0.3: n, median ns | ratio |")
+    print("|---:|---:|---|---|---:|---|---|---:|")
+    for sz in sorted(pts):
+        if sz < 2.0:
+            continue
+        v = pts[sz]
+        adj = [p[3] + p[4] for p in v]
+        ns = [p[2] for p in v]
+        hi = [p[2] for p in v if p[3] + p[4] >= 0.8]
+        lo = [p[2] for p in v if p[3] + p[4] <= 0.3]
+        rho = spearman(ns, adj) if len(set(adj)) > 2 else float("nan")
+        print(f"| {sz:g} MB | {len(v)} | {min(adj):.2f}-{max(adj):.2f} | {min(ns):.2f}-{max(ns):.2f} | {rho:+.2f} | "
+              + (f"{len(hi)}, {st.median(hi):.2f}" if hi else "0") + " | " + (f"{len(lo)}, {st.median(lo):.2f}" if lo else "0") + " | "
+              + (f"{st.median(hi) / st.median(lo):.3f}" if hi and lo else "") + " |")
+    print()
+
+
 def main():
     exp_r()
     exp_bg()
@@ -1345,6 +1496,8 @@ def main():
     exp_n5()
     exp_t2()
     exp_l2()
+    exp_h2()
+    exp_h3()
     exp_g1()
     exp_g2()
     exp_h("expG4", "Exp G4: lmbench's own lat_mem_rd in three interconnect states")
