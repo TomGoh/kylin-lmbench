@@ -71,6 +71,7 @@ sudo taskset -c 0 ./frames 64 16 1024 11,2d,2a,17,5,13 compact
 | `run2.sh` | `expL` `expT` | 同一组物理页换顺序、首次触页顺序 |
 | `run3.sh` | `expF` | 按物理位置挑选页集合后做随机访问 |
 | `run4-noc-governor.sh` | （未执行） | 把互连调频固定在几个频率、再切回自动调频，各测一遍。**会修改系统设置**，2026-09-30 没有执行 |
+| `run5-mode-compare.sh` | （未执行）`modecmp-<模式>-<时间>/` | 同一台机器换启动模式各跑一遍的对照测量，见下文。不改任何系统设置，2026-09-30 没有执行 |
 
 ## 分析脚本
 
@@ -78,21 +79,50 @@ sudo taskset -c 0 ./frames 64 16 1024 11,2d,2a,17,5,13 compact
 python3 analyze-host-memlat.py     # N90 宿主机四模式数据：论文三个数字、逐轮值、显著性检验、增量曲线
 python3 analyze-device-logs.py     # N80 日志：各实验的汇总表
 python3 analyze-guest-memlat.py    # N90 上 x-kernel 客户机内的数据（图 8），与宿主机数据分开
+python3 analyze-mode-compare.py modecmp-none-* modecmp-protected-*   # run5 的输出目录，第一个是对照基准
 ```
 
-两个脚本只用 Python 标准库，输出是 Markdown 表格。2026-09-30 的输出存在
+这些脚本只用 Python 标准库，输出是 Markdown 表格。2026-09-30 的输出存在
 `results/memlat-n80-20260930/derived/`。
 
 ## 在 N90 上补做四模式对照
 
-N80 上只测了 protected 一种模式。要在论文平台上拿到同机证据，对 `none`、`nvhe`、`vhe`、`protected`
-四种启动方式各跑一遍 `run_all.sh`（每种约 7 分钟），再用 `analyze-device-logs.py` 对比：
-预期各模式的页表遍历次数相同，只有 protected 的每跳时间更长，而且多出来的时间随遍历次数同步增长。
+到 2026-09-30 为止，硬件计数器数据只有 N80 在 protected 一种模式下的；N90 四种模式的数据只有 lmbench 的时间，
+而且每种模式只有一次开机，没有记录互连调频状态和 THP 细分开关。所以"保护模式下每次页表遍历更贵"
+目前是与数据相符的推断，还不是同机实测。补上这一步的办法：
+
+```bash
+make
+# 对 kvm-arm.mode=none、nvhe、vhe、protected 各重启一次，每次执行（约 15 分钟）：
+sudo sh run5-mode-compare.sh
+# 四个输出目录拿回来之后：
+python3 analyze-mode-compare.py modecmp-none-* modecmp-nvhe-* modecmp-vhe-* modecmp-protected-*
+```
+
+`run5-mode-compare.sh` 做三组测量，并在开始和结束时各记录一次平台状态
+（启动参数、内核配置里的 `CONFIG_X1_RMS`、THP 全部开关、CPU 频率、各 devfreq 设备的调频策略与频率、
+正在运行的服务）。每跑一个点的前后还各读一次互连频率，写在该点日志行的开头。
+
+| 日志 | 内容 | 对应的问题 |
+| --- | --- | --- |
+| `rand.log` | 随机访问，14 个大小 × 5 个随机种子 | 各模式每次访问的页表遍历次数是否相同；相同的话，protected 每次遍历多花多少个周期 |
+| `seq.log` | 64 MB 顺序访问，6 种步长 × 5 次 | 顺序访问时每次跨页多花多少 |
+| `llc.log` | 步长 256、4–64 MB，每个点一个新进程，重复 30 轮 | 8 MB 附近的两个取值跟物理页连续度走，还是跟互连频率走 |
+
+判读方法：
+
+- 先看对比脚本输出的第一张表。各次测量除了启动模式以外的列（THP、CPU 频率、互连调频策略和频率）必须一致，
+  否则比较的就不是启动模式。
+- 随机访问表里，"walks ratio"应当是 1（遍历次数与模式无关），"extra cycles per walk"如果从 3 MB 到 64 MB
+  基本是同一个数，就说明多出来的时间确实花在页表遍历上。
+- `llc.log` 那张表里，如果延迟与"互连频率"的秩相关接近 ±1 而与物理连续度无关，两个取值就是互连调频造成的；
+  反过来则是物理页布局造成的。
+
 切换启动参数的办法见 `docs/n90-kvm-host/SUMMARY.md` 第 6 节。
 
 ## 对系统的影响
 
-- `run_all.sh`、`run2.sh`、`run3.sh` 只在用户态运行，不加载内核模块，不改任何系统设置。
+- `run_all.sh`、`run2.sh`、`run3.sh`、`run5-mode-compare.sh` 只在用户态运行，不加载内核模块，不改任何系统设置。
 - `run4-noc-governor.sh` 是例外：它会临时改写 `/sys/class/devfreq/nocfreq/governor`，退出时恢复。
 - `layout` 和 `frames` 会分配一个较大的内存池（192 MB 和 1 GiB），运行结束即释放。
 - 以 root 运行只是为了读物理页号。
