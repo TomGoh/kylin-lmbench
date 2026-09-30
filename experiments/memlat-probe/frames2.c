@@ -21,8 +21,14 @@
  *
  * usage: frames2 <size_mb> <pool_mb> <events,hex,...> [seed] [pick low|even] [regions file|-] [mode] [order]
  *   pick even: take every k-th pool page of the slot instead of the lowest ones
- *   mode: rand (default, lmbench -t pattern) or seq<stride>, e.g. seq256 (lmbench
- *     sequential pattern with that stride)
+ *   mode: rand (default, lmbench -t pattern), seq<stride>, e.g. seq256 (lmbench
+ *     sequential pattern with that stride), or tlb<L>, e.g. tlb1: a chase that
+ *     moves to another page on every hop and uses only L cache lines of each
+ *     page (L = 1..64).  With tlb1 over 4096 pages the data are 4096 lines
+ *     (256 KiB, inside the L2 cache) while every hop needs a page walk, so the
+ *     time per hop is dominated by address translation; tlb4 over 1024 pages
+ *     touches the same number of lines within the reach of the second-level
+ *     TLB and serves as the no-walk reference.
  *   order: sorted (default: virtual order = ascending physical address) or
  *     shuffled (the same pages in a random virtual order)
  *   regions file: one hexadecimal 2 MiB region number (PFN >> 9) per line, as
@@ -173,6 +179,7 @@ static int nev, fd[MAXEV];
 static uint64_t evcfg[MAXEV];
 
 static size_t seq_stride;	/* 0: random chase; otherwise sequential chase with this stride */
+static size_t tlb_lines;	/* > 0: one page per hop, this many cache lines used per page */
 
 static uint64_t *shared_reg;	/* sorted 2 MiB region numbers that hold VM pages */
 static size_t nshared;
@@ -220,6 +227,27 @@ static void measure(char *dst, size_t npages, size_t *pages, size_t *words)
 	char **p;
 	int i;
 
+	if (tlb_lines) {
+		/*
+		 * Pages in the order of pages[] (a random permutation), tlb_lines
+		 * rounds; in round j page k is touched at cache line (37k + 17j) mod 64,
+		 * so consecutive hops are on different pages and the lines of the
+		 * working set are spread over all cache sets.
+		 */
+		size_t L = tlb_lines;
+
+		for (j = 0; j < L; j++)
+			for (k = 0; k < npages; k++) {
+				size_t nj = k + 1 < npages ? j : (j + 1) % L, nk = (k + 1) % npages;
+				char *cur = dst + pages[k] + ((37 * k + 17 * j) % 64) * 64;
+				char *next = dst + pages[nk] + ((37 * nk + 17 * nj) % 64) * 64;
+
+				*(char **)cur = next;
+			}
+		p = (char **)(dst + pages[0]);
+		hops = npages * L;
+		goto timed;
+	}
 	if (seq_stride) {
 		/* lmbench stride_initialize over the whole range */
 		size_t len = npages * PAGE;
@@ -307,7 +335,7 @@ int main(int argc, char **argv)
 	unsigned seed;
 
 	if (argc < 4) {
-		fprintf(stderr, "usage: %s <size_mb> <pool_mb> <events> [seed] [pick low|even] [regions file|-] [rand|seq<stride>] [sorted|shuffled]\n", argv[0]);
+		fprintf(stderr, "usage: %s <size_mb> <pool_mb> <events> [seed] [pick low|even] [regions file|-] [rand|seq<stride>|tlb<lines>] [sorted|shuffled]\n", argv[0]);
 		return 2;
 	}
 	len = (size_t)(atof(argv[1]) * 1024 * 1024);
@@ -319,6 +347,11 @@ int main(int argc, char **argv)
 		load_regions(argv[6]);
 	if (argc > 7 && !strncmp(argv[7], "seq", 3))
 		seq_stride = strtoul(argv[7] + 3, NULL, 0);
+	if (argc > 7 && !strncmp(argv[7], "tlb", 3)) {
+		tlb_lines = strtoul(argv[7] + 3, NULL, 0);
+		if (tlb_lines < 1 || tlb_lines > 64)
+			return 2;
+	}
 	shuffled = argc > 8 && !strcmp(argv[8], "shuffled");
 	unroll = getenv("CHASE_UNROLL") && atoi(getenv("CHASE_UNROLL"));
 	for (tok = strtok(evs, ","); tok && nev < MAXEV; tok = strtok(NULL, ","))
@@ -437,8 +470,8 @@ int main(int argc, char **argv)
 						}
 				printf("slot=0x%llx phys=0x%llx class=%s mode=%s stride=%zu order=%s frames_in_class=%zu pass=%d size_mb=%.0f pfn_min=0x%llx pfn_max=0x%llx contig_frac=%.4f mb2_regions=%zu va_region_changes=%zu",
 				       (unsigned long long)(sel[0].pfn >> 18), (unsigned long long)((sel[0].pfn >> 18) << 30),
-				       !nshared ? "all" : cls ? "shared" : "clear", seq_stride ? "seq" : "rand",
-				       seq_stride ? seq_stride : STRIDE, shuffled ? "shuffled" : "sorted", n, pass,
+				       !nshared ? "all" : cls ? "shared" : "clear", tlb_lines ? "tlb" : seq_stride ? "seq" : "rand",
+				       tlb_lines ? tlb_lines : seq_stride ? seq_stride : STRIDE, shuffled ? "shuffled" : "sorted", n, pass,
 				       len / 1048576.0, (unsigned long long)sel[0].pfn, (unsigned long long)sel[npages - 1].pfn,
 				       (double)contig / (npages - 1), mb2, vachg);
 				measure(d, npages, pages, words);
