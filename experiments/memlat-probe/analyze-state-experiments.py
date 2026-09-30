@@ -512,12 +512,54 @@ def exp_v():
         print()
 
 
+def exp_v2():
+    path = os.path.join(DEV, "expV2.log")
+    if not os.path.exists(path):
+        return
+    rows = []
+    size = None
+    with open(path) as fh:
+        for line in fh:
+            if line.startswith("## "):
+                size = kv(line)["size_mb"]
+            elif line.startswith("slot=") and size is not None:
+                d = kv(line)
+                d["_slot"] = int(str(line.split()[0].split("=")[1]), 16)
+                d["_size"] = size
+                rows.append(d)
+    print("## Exp V2: shared against clear at working-set sizes from 2 MB to 64 MB\n")
+    print("For each size: the median over all slots and both passes of class clear, and class shared in every slot that has "
+          "enough shared pages.  extra = shared minus clear of the same slot.\n")
+    print("| size | pages | clear, all slots: ns | cycles | page walks per access | L1 refills | L2 refills | slot | shared: ns | cycles | "
+          "page walks | L1 refills | L2 refills | L3 refills | extra ns | extra cycles | extra cycles per walk | extra L1 refills | extra L2 refills |")
+    print("|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
+    for sz in sorted({r["_size"] for r in rows}):
+        clear = [r for r in rows if r["_size"] == sz and r["class"] == "clear"]
+        m = lambda rs, key: st.median(r[key] for r in rs)
+        head = (f"| {sz:g} MB | {int(sz * 256)} | {m(clear, 'ns_med'):.1f} | {m(clear, 'ev11'):.1f} | {m(clear, 'ev2d'):.3f} | "
+                f"{m(clear, 'ev3'):.3f} | {m(clear, 'ev17'):.3f} |")
+        slots = sorted({r["_slot"] for r in rows if r["_size"] == sz and r["class"] == "shared"})
+        if not slots:
+            print(head + " none | | | | | | | | | | | |")
+        for s in slots:
+            sh = [r for r in rows if r["_size"] == sz and r["class"] == "shared" and r["_slot"] == s]
+            cl = [r for r in clear if r["_slot"] == s] or clear
+            dc = m(sh, 'ev11') - m(cl, 'ev11')
+            w = m(sh, 'ev2d')
+            per = f"{dc / w:.1f}" if w > 0.02 else "n/a"
+            print(head + f" 0x{s << 30:x} | {m(sh, 'ns_med'):.1f} | {m(sh, 'ev11'):.1f} | {w:.3f} | {m(sh, 'ev3'):.3f} | "
+                  f"{m(sh, 'ev17'):.3f} | {m(sh, 'ev2a'):.3f} | {m(sh, 'ns_med') - m(cl, 'ns_med'):+.1f} | {dc:+.1f} | {per} | "
+                  f"{m(sh, 'ev3') - m(cl, 'ev3'):+.3f} | {m(sh, 'ev17') - m(cl, 'ev17'):+.3f} |")
+    print()
+
+
 def main():
     exp_r()
     exp_bg()
     exp_h()
     exp_s()
     exp_v()
+    exp_v2()
     exp_g1()
     exp_g2()
     exp_h("expG4", "Exp G4: lmbench's own lat_mem_rd in three interconnect states")

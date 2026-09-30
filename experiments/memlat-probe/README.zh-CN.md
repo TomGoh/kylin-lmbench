@@ -4,7 +4,8 @@
 调查的来龙去脉见 [docs/memlat/](../../docs/memlat/README.md)，原始日志见
 [results/memlat-n80-20260930/](../../results/memlat-n80-20260930/)。
 
-这些程序**全部跑在宿主机 Linux 上**，不涉及任何虚拟机。
+这些程序**全部跑在宿主机 Linux 上**，不在虚拟机里面跑，也不启动虚拟机。
+（2026-09-30 在 N80 上测量时，后台有一个开机自启动的保护虚拟机在运行；`vm-frames.py` 和 `frames2` 的分类模式就是为了量它对宿主机的影响。）
 
 ## 程序
 
@@ -14,7 +15,8 @@
 | `probe3.c` | 同上，另外可以像 lmbench 那样在每个计时区间之前重写一遍指针链（`rebuild=1`），并在每个计时区间前后读一次片上互连的频率；11 个区间的时间按先后全部打印 |
 | `layout.c` | **同一组物理页**按不同的虚拟顺序排列（物理升序、物理降序、随机），顺序访问延迟会不会变 |
 | `frames.c` | 物理页集中在一处还是分散在各处，随机访问延迟会不会变 |
-| `frames2.c` | 同一个进程里，按物理地址所在的 1 GiB 区间逐个取页做随机访问；每个区间测两遍（第二遍把同一批页搬到新的虚拟地址） |
+| `frames2.c` | 同一个进程里，按物理地址所在的 1 GiB 区间逐个取页做随机访问；每个区间测两遍（第二遍把同一批页搬到新的虚拟地址）。给它一份"虚拟机内存占了哪些 2 MiB 区间"的清单时，每个区间再分成与虚拟机共用 2 MiB 区间的页（shared）和不共用的页（clear）两类分别测 |
+| `vm-frames.py` | 只读：读出正在运行的虚拟机的内存落在哪些 1 GiB、2 MiB 物理区间里，并写出上面那份清单 |
 | `bgload.c` | 在另一个核上连续读或写一块内存，制造背景内存流量 |
 | `nocsample.c` | 每隔固定时间记录一次片上互连频率，不 fork |
 | `nothp.c` | 对一个进程及其子进程关掉透明大页（`prctl`），不改系统设置。用来让 lmbench 的 `malloc` 缓冲区使用 4 KiB 页 |
@@ -86,6 +88,8 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 | `run6-current-state.sh` | `expR` `expBG` | 指针链建一次与每个区间前重写的对比；别的核上有内存流量时的表现 |
 | `run9-lmbench-current-state.sh` | `expH-*` | lmbench 原版 `lat_mem_rd` 重复多遍（4 KiB 页），同时记录互连频率 |
 | `run10-slots.sh` | `expS` | 按 1 GiB 物理区间分别做随机访问 |
+| `run11-vm-shared.sh` | `expV` `vm-frames-n80.txt` | 同一个 1 GiB 区间里，与保护虚拟机共用 2 MiB 区间的页和不共用的页分别做随机访问 |
+| `run12-vm-shared-sizes.sh` | `expV2` | 上一项在 2–64 MB 各个工作集大小上各做一遍 |
 
 **不改系统设置、但还没有执行的：**
 
@@ -112,7 +116,7 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 python3 analyze-host-memlat.py        # N90 宿主机四模式数据：论文三个数字、逐轮值、显著性检验、增量曲线
 python3 analyze-guest-memlat.py       # N90 上 x-kernel 客户机内的数据（图 8），与宿主机数据分开
 python3 analyze-device-logs.py        # N80 下午的实验 A、B、C、D、L、T、F
-python3 analyze-state-experiments.py  # N80 傍晚的实验 R、BG、H、S，以及 G1–G4（日志存在时）
+python3 analyze-state-experiments.py  # N80 傍晚的实验 R、BG、H、S、V、V2，以及 G1–G4（日志存在时）
 python3 analyze-mode-compare.py modecmp-none-* modecmp-protected-*   # run5 的输出目录，第一个是对照基准
 ```
 
