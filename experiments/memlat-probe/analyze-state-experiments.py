@@ -24,6 +24,13 @@
   Exp N3  page sets that mix two GiB slots in a fixed proportion (expN3.log)
   Exp N4  pages first touched in chain order or in ascending virtual order
           (expN4-n80.log, ../memlat-d80f3-20260930/expN4-d80f3.log)
+  Exp N5  the share of probe3's pages in 2 MiB regions of the running VM, and
+          one fit over all clean probe3 runs of N2, N4 and N5 (expN5.log)
+  Exp T2  first-touch order on the workstation, unprivileged
+          (../memlat-d80f3-20260930/expT2.log)
+  Exp L2  sorted, reversed and shuffled virtual order of pages taken from
+          huge pages, on the N80 and on the workstation
+          (expL2-n80.log, ../memlat-d80f3-20260930/expL2-d80f3.log)
   Exp G1-G4  the interconnect-frequency experiments, if their logs exist
           (expG1.log, expG2.log, expG3.log, expG4-*.log)
 
@@ -1195,6 +1202,129 @@ def exp_n4():
     print()
 
 
+def exp_n5():
+    rows = tagged_rows(os.path.join(DEV, "expN5.log"), "N5")
+    if not rows:
+        return
+    print("## Exp N5: which stage-2 class the pages of probe3's own buffer are in, and what a page walk costs it\n")
+    print("N80 as root, memory held back as in N2, one process per cell.  candidate share = pages in the two 1 GiB-candidate "
+          "slots; shared share = pages in 2 MiB regions that hold pages of the running VM (region list taken at the start; "
+          "the list taken at the end is identical).  cycles per walk = (cycles - median cycles of 1024 x 2 at the same touch "
+          "order) / page walks per hop.  model = 24.1 + 4.0 x candidate share + 9.5 x shared share, the three class values "
+          "measured with frames2 (written down before the run).\n")
+    ref = {}
+    for pf in (0.0, 1.0):
+        v = [r["ev11"] for r in rows if r["pages"] == 1024.0 and r["prefault"] == pf and r["ev17"] < 0.05]
+        ref[pf] = st.median(v)
+    print("| rep | held back | touch order | candidate share | shared share | 2 MiB regions | cycles | page walks per hop | "
+          "L2 refills per hop | cycles per walk | model | measured - model |")
+    print("|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
+    ok = tot = 0
+    for r in rows:
+        if r["pages"] != 2048.0:
+            continue
+        pw = (r["ev11"] - ref[r["prefault"]]) / r["ev2d"]
+        model = 24.1 + 4.0 * r["_cand"] + 9.5 * r["shared_frac"]
+        dirty = r["ev17"] >= 0.05
+        if not dirty:
+            tot += 1
+            ok += abs(pw - model) <= 1.0
+        print(f"| {int(r['rep'])} | {int(r['hold_mb'])} MB | {'ascending' if r['prefault'] else 'chain'} | {r['_cand']:.3f} | "
+              f"{r['shared_frac']:.3f} | {int(r['mb2_regions'])} | {r['ev11']:.2f} | {r['ev2d']:.3f} | {r['ev17']:.3f} | "
+              + (f"{pw:.2f} | {model:.2f} | {pw - model:+.2f} |" if not dirty else "(L2 refills: not a translation measurement) | | |"))
+    n_dirty = sum(1 for r in rows if r["pages"] == 2048.0 and r["ev17"] >= 0.05)
+    print(f"\nWithin 1.0 cycle of the model: {ok} of {tot} processes ({n_dirty} further processes had 0.5 L2 refills per hop and are left out).  "
+          f"Shared share: {min(r['shared_frac'] for r in rows):.3f} to {max(r['shared_frac'] for r in rows):.3f}.\n")
+
+    # one fit over every clean 2048 x 1 process of N2, N4 and N5
+    allr = []
+    for name, tag in (("expN2.log", "N2"), ("expN4-n80.log", "N4"), ("expN5.log", "N5")):
+        for r in tagged_rows(os.path.join(DEV, name), tag):
+            if r["pages"] == 2048.0 and r["stride"] == 1.0 and r["ev17"] < 0.05:
+                r["_tag"] = tag
+                allr.append(r)
+    if len(allr) > 5:
+        ref2 = 13.97
+        print("### All clean probe3 runs of 2048 x 1 (Exp N2, N4, N5): cycles per walk against candidate share and number of 2 MiB regions\n")
+        print(f"cycles per walk = (cycles - {ref2}) / page walks per hop; {ref2} is the median of 1024 x 2 in N4 and N5.\n")
+        print("| runs | n | cycles per walk (min-max) | a | b: per unit candidate share (s.e.) | c: per 100 regions (s.e.) | R^2 | r(share, regions) |")
+        print("|---|---:|---|---:|---|---|---:|---:|")
+        for label, sel in (("N2 + N4 + N5", allr), ("N2", [r for r in allr if r["_tag"] == "N2"]),
+                           ("N4", [r for r in allr if r["_tag"] == "N4"]), ("N5", [r for r in allr if r["_tag"] == "N5"])):
+            y = [(r["ev11"] - ref2) / r["ev2d"] for r in sel]
+            f = [r["_cand"] for r in sel]
+            g = [r["mb2_regions"] / 100 for r in sel]
+            a0, b1, b2, se1, se2, r2 = ols2(f, g, y)
+            print(f"| {label} | {len(sel)} | {min(y):.2f}-{max(y):.2f} | {a0:.2f} | {b1:+.2f} ({se1:.2f}) | {b2:+.3f} ({se2:.3f}) | {r2:.2f} | {pearson(f, g):+.2f} |")
+    print()
+
+
+def exp_t2():
+    rows = tagged_rows(os.path.join(D80, "expT2.log"), "T2")
+    if not rows:
+        return
+    print("## Exp T2: first-touch order on the workstation (no host stage-2, unprivileged, frame numbers not readable)\n")
+    print("probe2, sequential chase, stride 256; a stopped process holds back memory so that the buffer comes from larger free "
+          "blocks.  ns = median of three processes (min-max).\n")
+    print("| size | held back | ascending first touch | random | descending | random vs ascending | descending vs ascending |")
+    print("|---:|---:|---|---|---|---:|---:|")
+    for sz in sorted({r["size_mb"] for r in rows}):
+        for hold in sorted({r["hold_mb"] for r in rows}):
+            v = {t: [r["ns_min"] for r in rows if r["size_mb"] == sz and r["hold_mb"] == hold and r["touch"] == t]
+                 for t in ("asc", "rand", "desc")}
+            m = {t: st.median(x) for t, x in v.items()}
+            cell = lambda t: f"{m[t]:.2f} ({min(v[t]):.2f}-{max(v[t]):.2f})"
+            print(f"| {sz:g} MB | {int(hold)} MB | {cell('asc')} | {cell('rand')} | {cell('desc')} | "
+                  f"{100 * (m['rand'] / m['asc'] - 1):+.1f}% | {100 * (m['desc'] / m['asc'] - 1):+.1f}% |")
+    print()
+
+
+def exp_l2():
+    sets = (("N80 (kvm-arm.mode=protected, kernel 6.6.0-79, root)", tagged_rows(os.path.join(DEV, "expL2-n80.log"), "L2")),
+            ("D80F3 workstation (no host stage-2, kernel 7.0.0-34, unprivileged)", tagged_rows(os.path.join(D80, "expL2-d80f3.log"), "L2")))
+    if not any(rows for _, rows in sets):
+        return
+    print("## Exp L2: the same frames in sorted, reversed and shuffled virtual order, pages taken from transparent huge pages\n")
+    print("thplayout: the pool is faulted in as 2 MiB huge pages, then every 4 KiB page is moved into a new range that starts "
+          "one page after a 2 MiB boundary (4 KiB page-table entries, no contiguous-PTE folding).  sorted = the order of the "
+          "pool, i.e. ascending physical address inside every 2 MiB block; aligned = sorted without the one-page offset.  "
+          "Sequential chase, chain written once; ns = median of the processes (min-max), cycles = 4 x ns / L1 reference.\n")
+    for title, rows in sets:
+        if not rows:
+            continue
+        bad = sum(1 for r in rows if r["thp_kb"] != r["size_mb"] * 1024)
+        print(f"### {title}\n")
+        print(f"{len(rows)} lines; lines whose pool was not fully backed by huge pages: {bad}.\n")
+        has_pfn = any(isinstance(r.get("contig_frac"), float) for r in rows)
+        has_pmu = any(isinstance(r.get("ev2d"), float) for r in rows)
+        print("| loop form | stride | size | sorted: ns | cycles | shuffled: ns | cycles | shuffled vs sorted | extra cycles per page crossing | "
+              "reversed vs sorted | aligned vs sorted |"
+              + (" adjacency: sorted / reversed (descending) / shuffled |" if has_pfn else "")
+              + (" page walks per access: sorted / shuffled / aligned | L2 refills: sorted / shuffled |" if has_pmu else ""))
+        print("|---|---:|---:|---|---:|---|---:|---:|---:|---:|---:|" + ("---|" if has_pfn else "") + ("---|---|" if has_pmu else ""))
+        for ch, stv, sz in sorted({(r["chase"], r["stride"], r["size_mb"]) for r in rows}):
+            v = collections.defaultdict(list)
+            for r in rows:
+                if (r["chase"], r["stride"], r["size_mb"]) == (ch, stv, sz):
+                    v[r["layout"]].append(r)
+            med = lambda lay, key: st.median(r[key] for r in v[lay])
+            rng = lambda lay: f"{med(lay, 'ns_min'):.2f} ({min(r['ns_min'] for r in v[lay]):.2f}-{max(r['ns_min'] for r in v[lay]):.2f}), {len(v[lay])}"
+            rel = lambda lay: f"{100 * (med(lay, 'ns_min') / med('sorted', 'ns_min') - 1):+.1f}%" if v.get(lay) else ""
+            line = (f"| {ch} | {stv:g} | {sz:g} MB | {rng('sorted')} | {med('sorted', 'cyc_est'):.2f} | {rng('shuffled')} | "
+                    f"{med('shuffled', 'cyc_est'):.2f} | {rel('shuffled')} | "
+                    f"{(med('shuffled', 'cyc_est') - med('sorted', 'cyc_est')) * 4096 / stv:+.0f} | {rel('reversed')} | {rel('aligned')} |")
+            if has_pfn:
+                line += (f" {med('sorted', 'contig_frac'):.3f} / "
+                         + (f"{med('reversed', 'rcontig_frac'):.3f}" if v.get("reversed") else "-")
+                         + f" / {med('shuffled', 'contig_frac'):.3f} |")
+            if has_pmu:
+                line += (f" {med('sorted', 'ev2d'):.4f} / {med('shuffled', 'ev2d'):.4f} / "
+                         + (f"{med('aligned', 'ev2d'):.4f}" if v.get("aligned") else "-")
+                         + f" | {med('sorted', 'ev17'):.3f} / {med('shuffled', 'ev17'):.3f} |")
+            print(line)
+        print()
+
+
 def main():
     exp_r()
     exp_bg()
@@ -1212,6 +1342,9 @@ def main():
     exp_n2()
     exp_n3()
     exp_n4()
+    exp_n5()
+    exp_t2()
+    exp_l2()
     exp_g1()
     exp_g2()
     exp_h("expG4", "Exp G4: lmbench's own lat_mem_rd in three interconnect states")
