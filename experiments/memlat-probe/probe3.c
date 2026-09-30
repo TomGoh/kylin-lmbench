@@ -9,9 +9,15 @@
  * probe.c and probe2.c build the chain once and then only read.  The
  * difference matters when a frequency governor reacts to bus traffic.
  *
- * usage: probe3 <seq|rand> <size_mb> <stride> <maxlen_mb> <events,hex,...> <rebuild 0|1> [seed]
+ * usage: probe3 <seq|rand|tlb> <size_mb> <stride> <maxlen_mb> <events,hex,...> <rebuild 0|1> [seed]
  *   CHASE_UNROLL=1 in the environment: time lmbench's own loop body (100 load
  *   instructions in a row) instead of one load instruction in a loop.
+ *   tlb: a chase that goes to another page on every hop and uses only <stride>
+ *   cache lines of each page (1..64), so that the data stay in the caches and
+ *   the time per hop is dominated by address translation.  Needs neither root
+ *   nor the PMU: the line ends with l1_ns=, the time per hop of a chase inside
+ *   the L1 cache (4 cycles on FTC862) taken in the same process, and cyc_est=,
+ *   the main result expressed in those cycles.
  *
  * The buffer always uses 4 KiB pages (MADV_NOHUGEPAGE).  Prints one key=value
  * line.  Fields beyond those of probe.c:
@@ -162,7 +168,7 @@ static int cmp_u64(const void *a, const void *b)
 	return (x > y) - (x < y);
 }
 
-static int rnd;
+static int rnd, tlbm;
 static char *addr;
 static size_t len, stride, npages, nwords;
 static size_t *pages, *words;
@@ -172,6 +178,22 @@ static char **build_chain(void)
 {
 	size_t k, j;
 
+	if (tlbm) {
+		/*
+		 * pages[] is a random order of the pages of the working set; stride
+		 * rounds; in round j page k is touched at cache line (37k + 17j) mod 64
+		 */
+		size_t L = stride;
+
+		for (j = 0; j < L; j++)
+			for (k = 0; k < npages; k++) {
+				size_t nj = k + 1 < npages ? j : (j + 1) % L, nk = (k + 1) % npages;
+
+				*(char **)(addr + pages[k] + ((37 * k + 17 * j) % 64) * 64) =
+					addr + pages[nk] + ((37 * nk + 17 * nj) % 64) * 64;
+			}
+		return (char **)(addr + pages[0]);
+	}
 	if (!rnd) {
 		/* stride_initialize */
 		for (k = stride; k < len; k += stride)
@@ -218,6 +240,7 @@ int main(int argc, char **argv)
 		return 2;
 	}
 	rnd = !strcmp(argv[1], "rand");
+	tlbm = !strcmp(argv[1], "tlb");
 	len = (size_t)(atof(argv[2]) * 1024 * 1024);
 	stride = strtoul(argv[3], NULL, 0);
 	maxlen = (size_t)(atof(argv[4]) * 1024 * 1024);
@@ -233,7 +256,7 @@ int main(int argc, char **argv)
 	len -= len % PAGE;
 	npages = len / PAGE;
 	nmpages = maxlen / PAGE;
-	if (!npages || npages > nmpages || !stride) {
+	if (!npages || npages > nmpages || !stride || (tlbm && stride > 64)) {
 		fprintf(stderr, "bad size\n");
 		return 2;
 	}
@@ -246,6 +269,11 @@ int main(int argc, char **argv)
 	madvise(raw, maxlen + 2 * PAGE, MADV_NOHUGEPAGE);
 	addr = raw;
 
+	if (tlbm) {
+		pages = permutation(npages, PAGE, seed);
+		if (!pages)
+			return 1;
+	}
 	if (rnd) {
 		pages = permutation(nmpages, PAGE, seed);
 		nwords = PAGE / stride;
@@ -254,7 +282,7 @@ int main(int argc, char **argv)
 			return 1;
 	}
 	p = build_chain();
-	cycle = len / stride;
+	cycle = tlbm ? npages * stride : len / stride;
 
 	/* physical frame introspection (needs CAP_SYS_ADMIN, otherwise PFN reads 0) */
 	{
@@ -265,7 +293,7 @@ int main(int argc, char **argv)
 		if (pm >= 0 && pfn) {
 			for (k = 0; k < npages; k++) {
 				uint64_t e = 0;
-				uint64_t va = (uint64_t)(addr + (rnd ? pages[k] : k * PAGE));
+				uint64_t va = (uint64_t)(addr + (rnd || tlbm ? pages[k] : k * PAGE));
 
 				if (pread(pm, &e, 8, (va / PAGE) * 8) == 8 && (e >> 63)) {
 					pfn[k] = e & ((1ULL << 55) - 1);
@@ -276,7 +304,7 @@ int main(int argc, char **argv)
 			close(pm);
 		}
 		if (have == npages) {
-			if (!rnd)
+			if (!rnd && !tlbm)
 				for (k = 0; k + 1 < npages; k++) {
 					if (pfn[k + 1] == pfn[k] + 1)
 						contig++;
@@ -348,7 +376,7 @@ int main(int argc, char **argv)
 	qsort(sorted, REPS, sizeof(double), cmp_d);
 
 	printf("mode=%s chase=%s rebuild=%d size_mb=%.3f stride=%zu pages=%zu seed=%u hops=%.0f ns_min=%.3f ns_med=%.3f ns_max=%.3f",
-	       rnd ? "rand" : "seq", unroll ? "unrolled" : "loop", rebuild, len / 1048576.0, stride, npages, seed, total_hops,
+	       tlbm ? "tlb" : rnd ? "rand" : "seq", unroll ? "unrolled" : "loop", rebuild, len / 1048576.0, stride, npages, seed, total_hops,
 	       sorted[0], sorted[REPS / 2], sorted[REPS - 1]);
 	for (i = 0; i < nev; i++) {
 		if (fd[i] < 0) {
@@ -369,6 +397,26 @@ int main(int argc, char **argv)
 		printf(" noc0=%ld noc=", noc0);
 		for (i = 0; i < REPS; i++)
 			printf("%s%ld", i ? "," : "", noc[i]);
+	}
+	/* reference in the same process: a chase inside the L1 cache (4 cycles per hop on FTC862) */
+	{
+		static char l1buf[24576];
+		size_t n = sizeof(l1buf) / 256;
+		char **q = (char **)l1buf;
+		double best = 1e30;
+
+		for (k = 0; k < n; k++)
+			*(char **)(l1buf + k * 256) = l1buf + ((k + 1) % n) * 256;
+		q = chase(q, 1000000);
+		for (i = 0; i < 7; i++) {
+			t0 = now_ns();
+			q = chase(q, 5000000);
+			t1 = now_ns();
+			if ((t1 - t0) / 5000000 < best)
+				best = (t1 - t0) / 5000000;
+		}
+		printf(" l1_ns=%.4f cyc_est=%.3f", best, 4.0 * sorted[0] / best);
+		p = q ? p : NULL;
 	}
 	printf(" sink=%p\n", (void *)p);
 	return 0;
