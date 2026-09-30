@@ -1,0 +1,11 @@
+mapping ffff67800000-ffffa7800000 rw-s size_mb=1024 name='/memfd:crosvm_guest (deleted)' present_pages=65261 (254 MB)
+  slot=0x82 phys=0x2080000000 pages=1369 (5 MB) distinct_2mb_regions=80 of 512
+  slot=0x83 phys=0x20c0000000 pages=26743 (104 MB) distinct_2mb_regions=165 of 512
+  slot=0x84 phys=0x2100000000 pages=36972 (144 MB) distinct_2mb_regions=96 of 512
+  slot=0x85 phys=0x2140000000 pages=104 (0 MB) distinct_2mb_regions=12 of 512
+  slot=0x86 phys=0x2180000000 pages=18 (0 MB) distinct_2mb_regions=9 of 512
+  slot=0x87 phys=0x21c0000000 pages=8 (0 MB) distinct_2mb_regions=7 of 512
+  slot=0x88 phys=0x2200000000 pages=5 (0 MB) distinct_2mb_regions=4 of 512
+  slot=0x89 phys=0x2240000000 pages=36 (0 MB) distinct_2mb_regions=15 of 512
+  slot=0x8a phys=0x2280000000 pages=6 (0 MB) distinct_2mb_regions=3 of 512
+wrote 391 region numbers to guest-regions-x.txt
