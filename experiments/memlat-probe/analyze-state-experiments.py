@@ -44,6 +44,8 @@
           (expH5.log, ../memlat-d80f3-20260930/expH5-d80f3.log)
   Exp H6  lmbench's own random-access test on sorted and shuffled pages
           (expH6.log)
+  Two-factor check  the N90 non-quiesced ("fast state") run against the low
+          level of the quiesced runs, next to the N80 layout ratios of H4/H5
   Exp G1-G4  the interconnect-frequency experiments, if their logs exist
           (expG1.log, expG2.log, expG3.log, expG4-*.log)
 
@@ -1665,6 +1667,49 @@ def exp_h6():
     print()
 
 
+def two_factor():
+    """N90: fast-state run over quiesced low level, divided by the N80 layout ratio, per stride and size."""
+    sw = layout_stride_sweeps(os.path.join(DEV, "expH5.log"))
+    for x in layout_sweeps(os.path.join(DEV, "expH4.log")):
+        sw.append({"rep": x["rep"], "layout": x["layout"], "rows": {(256, k): v for k, v in x["rows"].items()}})
+    if not sw:
+        return
+    host = n90("lat_mem_rd_load")
+    print("## Two-factor check: is the N90 non-quiesced run 'scattered pages on a faster platform'?\n")
+    print("Per stride and size: low = median of the low level of the four quiesced N90 host boots (40 values, values more than "
+          "12% above the median of the lower half left out); fast-state = median of the ten iterations of the non-quiesced "
+          "nVHE boot; layout ratio = shuffled / sorted with lmbench's own program on the N80 (H4, H5).  If the buffers of the "
+          "non-quiesced run were physically scattered and those of the low level physically contiguous, then "
+          "(fast-state / low) / (layout ratio) is what the platform state alone does.\n")
+    sizes = (3.0, 4.0, 6.0, 8.0, 12.0, 16.0, 24.0, 32.0, 48.0, 64.0)
+    res = {}
+    for stv in (64, 128, 256, 512, 1024):
+        for sz in sizes:
+            pool = sorted(sum((host[c][(stv, sz)] for c in ("kvmoff", "nvhe", "vhe", "pkvm")), []))
+            thr = 1.12 * st.median(pool[:len(pool) // 2])
+            lo = st.median([x for x in pool if x <= thr])
+            fs = st.median(host["nvhe-noisy"][(stv, sz)])
+            a = [x["rows"][(stv, sz)] for x in sw if x["layout"] == "sorted" and (stv, sz) in x["rows"]]
+            b = [x["rows"][(stv, sz)] for x in sw if x["layout"] == "shuffled8" and (stv, sz) in x["rows"]]
+            res[(stv, sz)] = (lo, fs, fs / lo, st.median(b) / st.median(a))
+    for label, idx in (("N90: fast-state / low", 2), ("N80: layout ratio (shuffled / sorted)", 3), ("quotient of the two", None)):
+        print(f"### {label}\n")
+        print("| stride | " + " | ".join(f"{sz:g} MB" for sz in sizes) + " |")
+        print("|---:|" + "---:|" * len(sizes))
+        for stv in (64, 128, 256, 512, 1024):
+            cells = []
+            for sz in sizes:
+                r = res[(stv, sz)]
+                cells.append(f"{r[idx]:.3f}" if idx is not None else f"{r[2] / r[3]:.3f}")
+            print(f"| {stv} | " + " | ".join(cells) + " |")
+        print()
+    q = [res[(stv, sz)][2] / res[(stv, sz)][3] for stv in (64, 128, 256, 512, 1024) for sz in sizes if sz >= 6.0]
+    r = [res[(stv, sz)][2] for stv in (64, 128, 256, 512, 1024) for sz in sizes if sz >= 6.0]
+    print(f"From 6 MB upward (40 cells): fast-state / low ranges over {min(r):.3f}-{max(r):.3f} (median {st.median(r):.3f}, "
+          f"coefficient of variation {100 * st.pstdev(r) / st.mean(r):.1f}%); the quotient ranges over {min(q):.3f}-{max(q):.3f} "
+          f"(median {st.median(q):.3f}, coefficient of variation {100 * st.pstdev(q) / st.mean(q):.1f}%).\n")
+
+
 def main():
     exp_r()
     exp_bg()
@@ -1690,6 +1735,7 @@ def main():
     exp_h4()
     exp_h5()
     exp_h6()
+    two_factor()
     exp_g1()
     exp_g2()
     exp_h("expG4", "Exp G4: lmbench's own lat_mem_rd in three interconnect states")
