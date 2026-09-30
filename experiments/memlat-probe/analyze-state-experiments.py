@@ -6,6 +6,8 @@
   Exp BG  the headline points with memory traffic from other cores (expBG.log)
   Exp H   lmbench's own lat_mem_rd, repeated sweeps, buffer on 4 KiB pages
           (expH-rand.log, expH-seq256.log, expH-seqall.log, expH-noc-samples.log)
+  Exp S   random chase on pages from one 1 GiB physical slot at a time
+          (expS.log, iomem-n80.txt)
   Exp G1-G4  the interconnect-frequency experiments, if their logs exist
           (expG1.log, expG2.log, expG3.log, expG4-*.log)
 
@@ -376,10 +378,76 @@ def exp_g2():
     print()
 
 
+def exp_s():
+    path = os.path.join(DEV, "expS.log")
+    if not os.path.exists(path):
+        return
+    # System RAM ranges and reserved sub-ranges of the N80 (root view of /proc/iomem)
+    ram, resv = [], []
+    iomem = os.path.join(DEV, "iomem-n80.txt")
+    if os.path.exists(iomem):
+        with open(iomem) as fh:
+            for line in fh:
+                m = re.match(r"(\s*)([0-9a-f]+)-([0-9a-f]+) : (.+)", line)
+                if not m:
+                    continue
+                lo, hi, what = int(m.group(2), 16), int(m.group(3), 16) + 1, m.group(4)
+                if not m.group(1) and what == "System RAM":
+                    ram.append((lo, hi))
+                elif m.group(1):
+                    resv.append((lo, hi, what))
+
+    def cover(slot, ranges):
+        lo, hi = slot << 30, (slot + 1) << 30
+        return sum(max(0, min(hi, b) - max(lo, a)) for a, b in ranges)
+
+    runs = collections.OrderedDict()
+    cur = None
+    with open(path) as fh:
+        for line in fh:
+            if line.startswith("## "):
+                d = kv(line)
+                cur = (int(d["rep"]), int(d["size_mb"]), d["pick"])
+                runs[cur] = []
+            elif line.startswith("slot=") and cur is not None:
+                d = kv(line)
+                d["_slot"] = int(str(line.split()[0].split("=")[1]), 16)
+                runs[cur].append(d)
+    print("## Exp S: random chase on pages taken from one 1 GiB physical slot at a time; interconnect pinned at 1800 MHz\n")
+    print("Each slot is measured twice per run: pass 2 uses the same data pages after moving them to a new virtual range "
+          "(new page-table pages).  ns = median of 5 full cycles.  'RAM in slot' and 'kernel or reserved inside' come from "
+          "/proc/iomem; a slot that is not entirely ordinary RAM cannot be one 1 GiB stage-2 block.\n")
+    for (size, pick) in sorted({(k[1], k[2]) for k in runs}):
+        keys = [k for k in runs if k[1] == size and k[2] == pick]
+        print(f"### {size} MB per slot, pages picked: {'lowest addresses of the slot' if pick == 'low' else 'spread evenly over the slot'}, "
+              f"{len(keys)} run(s)\n")
+        print("| slot (physical base) | RAM in slot | kernel or reserved inside | runs x passes | ns: median (min-max) | cycles | "
+              "page walks per access | L1 refills | L2 refills | L3 refills | adjacency | distinct 2 MiB regions |")
+        print("|---|---:|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|")
+        slots = sorted({d["_slot"] for k in keys for d in runs[k]})
+        for s in slots:
+            rs = [d for k in keys for d in runs[k] if d["_slot"] == s]
+            ns = [d["ns_med"] for d in rs]
+            ramc = cover(s, ram) / (1 << 30) if ram else float("nan")
+            rv = cover(s, [(a, b) for a, b, _ in resv]) / (1 << 20) if resv else float("nan")
+            m = lambda key: st.median(d[key] for d in rs)
+            print(f"| 0x{s << 30:x} | {100 * ramc:.0f}% | {rv:.0f} MB | {len(rs)} | {st.median(ns):.1f} ({min(ns):.1f}-{max(ns):.1f}) | "
+                  f"{m('ev11'):.1f} | {m('ev2d'):.3f} | {m('ev3'):.3f} | {m('ev17'):.3f} | {m('ev2a'):.3f} | {m('contig_frac'):.2f} | "
+                  f"{m('mb2_regions'):.0f} |")
+        # pass 1 against pass 2
+        d1 = [d["ns_med"] for k in keys for d in runs[k] if d["pass"] == 1]
+        d2 = [d["ns_med"] for k in keys for d in runs[k] if d["pass"] == 2]
+        if len(d1) == len(d2) and d1:
+            diff = [b - a for a, b in zip(d1, d2)]
+            print(f"\nPass 2 minus pass 1 over all slots and runs: median {st.median(diff):+.2f} ns, "
+                  f"range {min(diff):+.2f} to {max(diff):+.2f} ns (n = {len(diff)}).\n")
+
+
 def main():
     exp_r()
     exp_bg()
     exp_h()
+    exp_s()
     exp_g1()
     exp_g2()
     exp_h("expG4", "Exp G4: lmbench's own lat_mem_rd in three interconnect states")

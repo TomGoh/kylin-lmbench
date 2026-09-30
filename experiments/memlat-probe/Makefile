@@ -1,7 +1,7 @@
 CC ?= gcc
 CFLAGS ?= -O2 -Wall
 
-PROGS := probe probe2 layout frames
+PROGS := probe probe2 probe3 layout frames frames2 bgload nocsample nothp
 
 all: $(PROGS)
 
@@ -9,6 +9,6 @@ all: $(PROGS)
 	$(CC) $(CFLAGS) -o $@ $<
 
 clean:
-	rm -f $(PROGS)
+	rm -f $(PROGS) lat_mem_rd bw_mem
 
 .PHONY: all clean

@@ -19,9 +19,16 @@
  * same pages to a second fresh range and measures again (pass 2: same data
  * frames, newly allocated page-table pages).
  *
- * usage: frames2 <size_mb> <pool_mb> <events,hex,...> [seed] [pick low|even]
+ * usage: frames2 <size_mb> <pool_mb> <events,hex,...> [seed] [pick low|even] [regions file]
  *   pick even: take every k-th pool page of the slot instead of the lowest ones
- * Needs CAP_SYS_ADMIN (PFNs from /proc/self/pagemap).  One line per slot and pass.
+ *   regions file: one hexadecimal 2 MiB region number (PFN >> 9) per line, as
+ *     written by vm-frames.py for the memory of a running VM.  With it, every
+ *     slot is measured separately for pool pages that share a 2 MiB region
+ *     with the VM (class=shared) and for pool pages that do not (class=clear).
+ *     Pages given to a protected VM are taken out of the host stage-2 map one
+ *     4 KiB page at a time, so the host pages of a shared region are mapped
+ *     with 4 KiB stage-2 leaves, the others with 2 MiB or 1 GiB blocks.
+ * Needs CAP_SYS_ADMIN (PFNs from /proc/self/pagemap).  One line per slot, class and pass.
  */
 #define _GNU_SOURCE
 #include <errno.h>
@@ -139,6 +146,43 @@ static size_t *words_initialize(size_t max, size_t scale)
 static int nev, fd[MAXEV];
 static uint64_t evcfg[MAXEV];
 
+static uint64_t *shared_reg;	/* sorted 2 MiB region numbers that hold VM pages */
+static size_t nshared;
+
+static int cmp_u64(const void *a, const void *b)
+{
+	uint64_t x = *(const uint64_t *)a, y = *(const uint64_t *)b;
+
+	return (x > y) - (x < y);
+}
+
+static int is_shared(uint64_t pfn)
+{
+	uint64_t key = pfn >> 9;
+
+	return nshared && bsearch(&key, shared_reg, nshared, sizeof(uint64_t), cmp_u64) != NULL;
+}
+
+static void load_regions(const char *path)
+{
+	FILE *f = fopen(path, "r");
+	size_t cap = 1024;
+	unsigned long long v;
+
+	if (!f) {
+		perror(path);
+		exit(1);
+	}
+	shared_reg = malloc(cap * sizeof(uint64_t));
+	while (fscanf(f, "%llx", &v) == 1) {
+		if (nshared == cap)
+			shared_reg = realloc(shared_reg, (cap *= 2) * sizeof(uint64_t));
+		shared_reg[nshared++] = v;
+	}
+	fclose(f);
+	qsort(shared_reg, nshared, sizeof(uint64_t), cmp_u64);
+}
+
 /* lmbench thrash_initialize with len == maxlen over dst, then the timed chase; prints the fields */
 static void measure(char *dst, size_t npages, size_t *pages, size_t *words)
 {
@@ -214,7 +258,7 @@ int main(int argc, char **argv)
 	unsigned seed;
 
 	if (argc < 4) {
-		fprintf(stderr, "usage: %s <size_mb> <pool_mb> <events> [seed] [pick low|even]\n", argv[0]);
+		fprintf(stderr, "usage: %s <size_mb> <pool_mb> <events> [seed] [pick low|even] [regions file]\n", argv[0]);
 		return 2;
 	}
 	len = (size_t)(atof(argv[1]) * 1024 * 1024);
@@ -222,6 +266,8 @@ int main(int argc, char **argv)
 	evs = strdup(argv[3]);
 	seed = argc > 4 ? strtoul(argv[4], NULL, 0) : 1;
 	even = argc > 5 && !strcmp(argv[5], "even");
+	if (argc > 6)
+		load_regions(argv[6]);
 	for (tok = strtok(evs, ","); tok && nev < MAXEV; tok = strtok(NULL, ","))
 		evcfg[nev++] = strtoull(tok, NULL, 16);
 	npages = len / PAGE;
@@ -267,54 +313,67 @@ int main(int argc, char **argv)
 	printf("\n");
 
 	for (s = 0; s < npool; s = e) {
-		size_t n, contig = 0, mb2 = 0;
-		uint64_t prev = 0;
-		char *dst, *dst2;
-		int pass;
+		int cls, ncls = nshared ? 2 : 1;
 
 		for (e = s + 1; e < npool && (fr[e].pfn >> 18) == (fr[s].pfn >> 18); e++)
 			;
-		n = e - s;
-		if (n < npages)
-			continue;
-		for (k = 0; k < npages; k++)
-			sel[k] = fr[s + (even ? k * n / npages : k)];
+		/* class 0: all pages of the slot (no regions file) or pages in regions without VM pages; class 1: shared */
+		for (cls = 0; cls < ncls; cls++) {
+			size_t n = 0, contig = 0, mb2 = 0;
+			size_t *cand = malloc((e - s) * sizeof(size_t));
+			uint64_t prev = 0;
+			char *dst, *dst2;
+			int pass;
 
-		dst = mmap(NULL, len, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
-		dst2 = mmap(NULL, len, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
-		if (dst == MAP_FAILED || dst2 == MAP_FAILED) {
-			perror("mmap dst");
-			return 1;
-		}
-		for (k = 0; k < npages; k++)
-			if (mremap(pool + sel[k].idx * PAGE, PAGE, PAGE, MREMAP_MAYMOVE | MREMAP_FIXED, dst + k * PAGE) == MAP_FAILED) {
-				perror("mremap");
+			/* the pool pages of this slot that belong to the class, in ascending PFN order */
+			for (k = s; k < e; k++)
+				if (!nshared || is_shared(fr[k].pfn) == cls)
+					cand[n++] = k;
+			if (n < npages) {
+				free(cand);
+				continue;
+			}
+			for (k = 0; k < npages; k++)
+				sel[k] = fr[cand[even ? k * n / npages : k]];
+			free(cand);
+
+			dst = mmap(NULL, len, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
+			dst2 = mmap(NULL, len, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
+			if (dst == MAP_FAILED || dst2 == MAP_FAILED) {
+				perror("mmap dst");
 				return 1;
 			}
-		for (k = 0; k < npages; k++) {
-			uint64_t f = pfn_of(pm, dst + k * PAGE);
+			for (k = 0; k < npages; k++)
+				if (mremap(pool + sel[k].idx * PAGE, PAGE, PAGE, MREMAP_MAYMOVE | MREMAP_FIXED, dst + k * PAGE) == MAP_FAILED) {
+					perror("mremap");
+					return 1;
+				}
+			for (k = 0; k < npages; k++) {
+				uint64_t f = pfn_of(pm, dst + k * PAGE);
 
-			if (k && f == prev + 1) contig++;
-			if (!k || (f >> 9) != (prev >> 9)) mb2++;
-			prev = f;
-		}
-		for (pass = 1; pass <= 2; pass++) {
-			char *d = pass == 1 ? dst : dst2;
+				if (k && f == prev + 1) contig++;
+				if (!k || (f >> 9) != (prev >> 9)) mb2++;
+				prev = f;
+			}
+			for (pass = 1; pass <= 2; pass++) {
+				char *d = pass == 1 ? dst : dst2;
 
-			if (pass == 2)
-				for (k = 0; k < npages; k++)
-					if (mremap(dst + k * PAGE, PAGE, PAGE, MREMAP_MAYMOVE | MREMAP_FIXED, dst2 + k * PAGE) == MAP_FAILED) {
-						perror("mremap 2");
-						return 1;
-					}
-			printf("slot=0x%llx phys=0x%llx frames_in_slot=%zu pass=%d size_mb=%.0f pfn_min=0x%llx pfn_max=0x%llx contig_frac=%.4f mb2_regions=%zu",
-			       (unsigned long long)(sel[0].pfn >> 18), (unsigned long long)((sel[0].pfn >> 18) << 30), n, pass,
-			       len / 1048576.0, (unsigned long long)sel[0].pfn, (unsigned long long)sel[npages - 1].pfn,
-			       (double)contig / (npages - 1), mb2);
-			measure(d, npages, pages, words);
+				if (pass == 2)
+					for (k = 0; k < npages; k++)
+						if (mremap(dst + k * PAGE, PAGE, PAGE, MREMAP_MAYMOVE | MREMAP_FIXED, dst2 + k * PAGE) == MAP_FAILED) {
+							perror("mremap 2");
+							return 1;
+						}
+				printf("slot=0x%llx phys=0x%llx class=%s frames_in_class=%zu pass=%d size_mb=%.0f pfn_min=0x%llx pfn_max=0x%llx contig_frac=%.4f mb2_regions=%zu",
+				       (unsigned long long)(sel[0].pfn >> 18), (unsigned long long)((sel[0].pfn >> 18) << 30),
+				       !nshared ? "all" : cls ? "shared" : "clear", n, pass,
+				       len / 1048576.0, (unsigned long long)sel[0].pfn, (unsigned long long)sel[npages - 1].pfn,
+				       (double)contig / (npages - 1), mb2);
+				measure(d, npages, pages, words);
+			}
+			munmap(dst, len);
+			munmap(dst2, len);
 		}
-		munmap(dst, len);
-		munmap(dst2, len);
 	}
 	return 0;
 }

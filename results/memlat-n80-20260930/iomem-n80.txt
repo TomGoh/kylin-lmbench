@@ -1,0 +1,45 @@
+# N80 physical memory map as root sees it (/proc/iomem, lines for System RAM, kernel and reserved ranges), read 2026-09-30 19:00, read-only.
+# The unprivileged view in hw-survey-n80.txt shows only the top-level System RAM lines.
+80000000-8402ffff : reserved
+84030000-eff4ffff : System RAM
+  d7a10000-d9c1ffff : Kernel code
+  d9c20000-da2cffff : reserved
+  da2d0000-daadffff : Kernel data
+  dab93000-dda12fff : reserved
+  e0200000-ec1fffff : reserved
+  ec3c0000-ec3c0fff : reserved
+  ed433000-ed510fff : reserved
+  ed6b3000-ed6b3fff : reserved
+  eda63000-eda63fff : reserved
+eff50000-effeffff : reserved
+efff0000-f75effff : System RAM
+  f3800000-f73fffff : Crash kernel
+f75f0000-fbeeffff : reserved
+fbef0000-fbffffff : System RAM
+  fbff0000-fbffefff : reserved
+2000000000-209fffffff : reserved
+20a0000000-237fffffff : System RAM
+  20a021e000-20a021efff : reserved
+  20a0250000-20a025ffff : reserved
+  20a0260000-20a026ffff : reserved
+  20a0270000-20a027ffff : reserved
+  20a0280000-20a028ffff : reserved
+  20a0290000-20a029ffff : reserved
+  20a02a0000-20a02affff : reserved
+  20a02b0000-20a02bffff : reserved
+  20a02c0000-20a02cffff : reserved
+  20a02d0000-20a02dffff : reserved
+  2368f40000-237fdfffff : reserved
+  237feab000-237feabfff : reserved
+  237feac000-237ffd3fff : reserved
+  237ffd5000-237ffdafff : reserved
+  237ffdb000-237ffdbfff : reserved
+  237ffdc000-237fffffff : reserved
+
+# related boot-log lines
+[    0.000000] kvm [0]: Reserved 86 MiB at 0x237a800000
+[    0.000000] cma: Reserved 128 MiB at 0x00000000e4200000 on node -1
+[    0.000000] crashkernel reserved: 0x00000000f3800000 - 0x00000000f7400000 (60 MB)
+[    0.212352] kvm [1]: IPA Size Limit: 40 bits
+[    0.217013] PVMFW: pkvm_firmware_mem allocated from /chosen/pvmfw
+[    0.251620] kvm [1]: Protected nVHE mode initialized successfully

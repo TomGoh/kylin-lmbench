@@ -4,3 +4,13 @@
 # run2 done 2026-09-30T16:51:37+08:00 loadavg=1.20 1.01 0.79
 # run3 start 2026-09-30T16:56:22+08:00 loadavg=0.23 0.54 0.64 memfree_kb=1906000
 # run3 done 2026-09-30T16:57:35+08:00 loadavg=0.96 0.70 0.69
+# run6 start 2026-09-30T18:35:16+08:00 uid=0 noc_gov=performance noc_freq=1800000 loadavg=0.76 0.38 0.24 thp=[always] madvise never cpu0_freq=1900000 memfree_kb=960612
+# run6 R done 2026-09-30T18:40:15+08:00 noc_gov=performance noc_freq=1800000 loadavg=1.20 0.93 0.53
+# run6 BG done 2026-09-30T18:43:17+08:00 noc_gov=performance noc_freq=1800000 loadavg=2.67 1.60 0.85
+# run6 stopped by hand 2026-09-30T18:44:00+08:00 after experiments R and BG; its lmbench part is replaced by run9 (buffer on 4 KiB pages)
+# run9 start 2026-09-30T18:44:00+08:00 uid=1000 gov=performance noc=1800000 thp=[always] madvise never cpu0_freq=1900000 loadavg=1.94 1.56 0.88 memfree_kb=896308
+# run9 first start discarded 2026-09-30T18:44:38+08:00: a leftover lmbench process of run6 was still running on cpu0
+# run9 start 2026-09-30T18:44:38+08:00 uid=1000 gov=performance noc=1800000 thp=[always] madvise never cpu0_freq=1900000 loadavg=2.09 1.64 0.93 memfree_kb=955632
+# run9 done 2026-09-30T19:13:39+08:00 gov=performance noc=1800000 loadavg=1.21 1.21 1.17
+# run10 start 2026-09-30T19:14:25+08:00 uid=0 noc_gov=performance noc_freq=1800000 loadavg=0.63 1.06 1.11 memfree_kb=959440 memavail_kb=7175868
+# run10 done 2026-09-30T19:20:03+08:00 noc_gov=performance noc_freq=1800000 loadavg=1.23 1.19 1.16 memfree_kb=3789564 memavail_kb=6739856
