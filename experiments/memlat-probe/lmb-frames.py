@@ -15,9 +15,12 @@ anonymous mapping a moment after it appeared and writes one line per child:
 
 The line is matched to lmbench's output line by its time and size.
 
-usage: lmb-frames.py <output file> [command name, default lat_mem_rd]
+usage: lmb-frames.py <output file> [command name, default lat_mem_rd] [dump file]
 Runs until killed.  Needs root (frame numbers from /proc/<pid>/pagemap).
 Pin it to a core other than the one the benchmark uses.
+With a dump file, the frame numbers of every buffer are appended to it as
+well, one line per child: "pid=<pid> t=<time> pfns=<hex>,<hex>,..." in
+virtual order, so that one can see which frames consecutive children share.
 """
 import os
 import sys
@@ -104,6 +107,7 @@ def describe(f):
 def main():
     out = open(sys.argv[1], "a", buffering=1)
     name = sys.argv[2] if len(sys.argv) > 2 else "lat_mem_rd"
+    dump = open(sys.argv[3], "a", buffering=1) if len(sys.argv) > 3 else None
     seen = {}       # pid -> time first seen
     done = set()
     while True:
@@ -131,7 +135,10 @@ def main():
             g = frames(pid, *m)
             if g is None or len(g) != len(f):
                 continue
-            out.write(f"t={time.time():.3f} pid={pid} {describe(g)}\n")
+            now2 = time.time()
+            out.write(f"t={now2:.3f} pid={pid} {describe(g)}\n")
+            if dump:
+                dump.write(f"pid={pid} t={now2:.3f} pfns=" + ",".join(f"{x:x}" for x in g) + "\n")
             done.add(pid)
         for pid in [p for p in seen if not os.path.exists(f"/proc/{p}")]:
             del seen[pid]
