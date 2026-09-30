@@ -44,6 +44,8 @@
           (expH5.log, ../memlat-d80f3-20260930/expH5-d80f3.log)
   Exp H6  lmbench's own random-access test on sorted and shuffled pages
           (expH6.log)
+  Exp H7  which frames the successive children of lat_mem_rd share
+          (expH7.log, expH7-pfns.log)
   Two-factor check  the N90 non-quiesced ("fast state") run against the low
           level of the quiesced runs, next to the N80 layout ratios of H4/H5
   Exp G1-G4  the interconnect-frequency experiments, if their logs exist
@@ -1667,6 +1669,70 @@ def exp_h6():
     print()
 
 
+def exp_h7():
+    path = os.path.join(DEV, "expH7.log")
+    dump = os.path.join(DEV, "expH7-pfns.log")
+    if not os.path.exists(path) or not os.path.exists(dump):
+        return
+    sweeps = []
+    with open(path) as fh:
+        for line in fh:
+            if line.startswith("## rep="):
+                d = kv(line)
+                m = re.search(r"Normal:count=(\d+),high=(\d+)", line)
+                sweeps.append({"rep": int(d["rep"]), "hold": int(d["hold_mb"]), "t0": d["start"], "kids": [],
+                               "pcp": (int(m.group(1)), int(m.group(2))) if m else None, "lm": {}})
+            elif sweeps and not line.startswith("#"):
+                p = line.split()
+                if len(p) == 3:
+                    try:
+                        sweeps[-1]["lm"][float(p[1])] = float(p[2])
+                    except ValueError:
+                        pass
+    with open(dump) as fh:
+        for line in fh:
+            m = re.match(r"pid=(\d+) t=([\d.]+) pfns=(.*)", line)
+            if not m:
+                continue
+            t = float(m.group(2))
+            f = [int(x, 16) for x in m.group(3).split(",") if x]
+            owner = [x for x in sweeps if x["t0"] <= t]
+            if owner:
+                owner[-1]["kids"].append(f)
+
+    def nruns(f):
+        return 1 + sum(1 for a, b in zip(f, f[1:]) if not (b == a + 1 or b + 1 == a))
+
+    print("## Exp H7: which frames the successive children of lmbench's lat_mem_rd get (stride 256)\n")
+    print("lmb-frames.py stored the frame numbers of every child's buffer.  Per sweep and child: runs = maximal runs of physically "
+          "adjacent pages; 'from the previous child' = share of this child's frames that were in the buffer of the child before "
+          "it (if a child gets back all frames of its predecessor this equals the ratio of the two sizes, 0.60 to 0.75); "
+          "new = frames not used by any earlier child of the sweep; per-CPU list = count and high of cpu0 in zone Normal at the "
+          "start of the sweep (/proc/zoneinfo).\n")
+    prev8 = None
+    for s in sweeps:
+        pc = f"{s['pcp'][0]} pages, high {s['pcp'][1]}" if s["pcp"] else "n/a"
+        print(f"### sweep {sweeps.index(s) + 1}: {s['hold']} MB held back; per-CPU list at the start: {pc}\n")
+        print("| pages of the buffer | runs | distinct 2 MiB regions | from the previous child | size ratio | new frames | runs among the new frames | lmbench ns |")
+        print("|---:|---:|---:|---:|---:|---:|---:|---:|")
+        seen, prev = set(), None
+        for f in s["kids"]:
+            fs = set(f)
+            if len(f) >= 1000:
+                new = [x for x in f if x not in seen]
+                sz = (len(f) - 1) * 4096 / 1048576
+                lm = [v for k, v in s["lm"].items() if abs(k - sz) < 0.01]
+                print(f"| {len(f)} | {nruns(f)} | {len({x >> 9 for x in f})} | {len(fs & set(prev)) / len(f):.2f} | "
+                      f"{len(prev) / len(f):.2f} | {len(new)} | {nruns(new) if new else 0} | {lm[0] if lm else float('nan'):.2f} |")
+                if len(f) == 2049:
+                    if prev8 is not None:
+                        print(f"| | | | | | | frames in common with the 8 MB child of the previous sweep: {len(fs & prev8) / len(f):.2f} | |")
+                    prev8 = fs
+            seen |= fs
+            prev = f
+        print()
+
+
 def two_factor():
     """N90: fast-state run over quiesced low level, divided by the N80 layout ratio, per stride and size."""
     sw = layout_stride_sweeps(os.path.join(DEV, "expH5.log"))
@@ -1735,6 +1801,7 @@ def main():
     exp_h4()
     exp_h5()
     exp_h6()
+    exp_h7()
     two_factor()
     exp_g1()
     exp_g2()

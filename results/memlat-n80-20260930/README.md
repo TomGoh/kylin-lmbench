@@ -21,7 +21,7 @@
 | 启动方式 | `kvm-arm.mode=protected`，`CONFIG_X1_RMS=y`，日志显示 `Protected nVHE mode initialized successfully` |
 | 缓存 | L1d 64K 4 路；L2 512K 8 路，每核私有；L3 8M 16 路 8192 组，8 核共享 |
 | 页大小 | 4 KiB；系统 THP 设置为 `always`，测量程序对缓冲区使用 `MADV_NOHUGEPAGE`。内核带连续页表项折叠（`CONFIG_ARM64_CONTPTE=y`）和多种尺寸的透明大页，2 MiB 以外的尺寸都是 `never`（`thp-contpte-n80.txt`） |
-| 页分配器 | cpu0 的每 CPU 空闲页链表上限约 1600 页，合 6.3 MB（`pagealloc-n80.txt` 里存档的读数是 1592；稍早一次读到 1655，没有存档） |
+| 页分配器 | cpu0 的每 CPU 空闲页链表（Normal 区）的上限由内核自动调节：空闲时读到 1592（`pagealloc-n80.txt`）、1781，连续分配释放之后读到 13444–18028（`expH7.log` 各次运行开头） |
 | 绑核与频率 | 全部绑定 cpu0，最高 1.9 GHz，调速器 `performance` |
 | 互连调频 | `nocfreq` 策略为 `performance`，频率 1800 MHz，本次没有改动。开机后最初约 16.5 秒是驱动默认的按流量调频，之后被改成 `performance`。是谁改的没有查明：只有桌面电源管理程序的二进制里有 devfreq 路径，但它的策略表里没有 `performance` 这一项；`pvm-manage` 和 crosvm 的二进制里没有 devfreq 字样 |
 | 背景负载 | 桌面会话在运行，没有做服务屏蔽，各批次起止时记录的 1 分钟负载在 0.2–2.7 之间（`meta.log`）；后台有一个空闲的保护虚拟机（见上） |
@@ -72,6 +72,8 @@
 | `expH3.log` `expH3-frames.log` | 夜里：同上，另用 `lmb-frames.py` 读出 lmbench 每个子进程自己的缓冲区的物理布局（后一个文件，每个子进程一行） | `run26-lmbench-own-frames.sh` |
 | `expH4.log` `expH4-shim.log` | 夜里：未改动的 `lat_mem_rd`（步长 256）加载 `layoutshim.so`，缓冲区按物理顺序、每 8 MB 内打乱、整体打乱三种布局，以及不加载的原样运行；后一个文件是动态库记下的每个缓冲区的实际连续度 | `run27-lmbench-layout-shim.sh` |
 | `expH5.log` `expH5-shim.log` | 夜里：同上，步长 16、32、64、128、512、1024，物理顺序和每 8 MB 内打乱各两遍 | `run28-lmbench-layout-strides.sh` |
+| `expH6.log` `expH6-shim.log` | 夜里：lmbench 的随机访问测试（`lat_mem_rd -t`）在物理顺序、整体打乱和原样运行三种情况下各两遍 | `run29-lmbench-layout-random.sh` |
+| `expH7.log` `expH7-frames.log` `expH7-pfns.log` | 夜里：lmbench 原样运行四次（不占内存、占住 2560 MB 各两次），`expH7-pfns.log` 是每个子进程缓冲区的全部物理页号（十六进制，按虚拟地址顺序），`expH7.log` 每次运行开头记有各区各类型的空闲块数和 cpu0 每 CPU 链表的页数、上限 | `run31-lmbench-frame-identity.sh` |
 | `pagealloc-n80.txt` | 页分配器的状态：各阶、各迁移类型的空闲块数，每 CPU 空闲页链表的上限（只读查看，23:00 前后） | |
 | `thp-contpte-n80.txt` | 内核配置里与大页、连续页表项有关的选项，透明大页各个开关的取值，启动参数（只读查看） | |
 | `binaries-n80.txt` | 设备上各程序源文件和二进制的校验和、编译器版本（22:10 记录；`.pre-*` 是某个实验之前在用的版本） | |

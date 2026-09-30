@@ -960,6 +960,69 @@ N80, protected mode, interconnect at 1800 MHz.  sorted and shuffled (over the wh
 | 48 MB | 153.46 (153.01-153.92) | 153.50 (153.40-153.60) | 154.28 (154.15-154.40) | 1.000 | 1.005 | 182.44 | 149.10 | 0.817 |
 | 64 MB | 154.84 (154.35-155.32) | 154.59 (154.45-154.72) | 154.35 (154.30-154.41) | 0.998 | 0.997 | 185.05 | 150.12 | 0.811 |
 
+## Exp H7: which frames the successive children of lmbench's lat_mem_rd get (stride 256)
+
+lmb-frames.py stored the frame numbers of every child's buffer.  Per sweep and child: runs = maximal runs of physically adjacent pages; 'from the previous child' = share of this child's frames that were in the buffer of the child before it (if a child gets back all frames of its predecessor this equals the ratio of the two sizes, 0.60 to 0.75); new = frames not used by any earlier child of the sweep; per-CPU list = count and high of cpu0 in zone Normal at the start of the sweep (/proc/zoneinfo).
+
+### sweep 1: 0 MB held back; per-CPU list at the start: 637 pages, high 1781
+
+| pages of the buffer | runs | distinct 2 MiB regions | from the previous child | size ratio | new frames | runs among the new frames | lmbench ns |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1025 | 1023 | 419 | 0.74 | 0.75 | 258 | 257 | 5.01 |
+| 1537 | 1535 | 517 | 0.64 | 0.67 | 527 | 527 | 7.65 |
+| 2049 | 2047 | 588 | 0.74 | 0.75 | 513 | 513 | 10.36 |
+| 3073 | 2929 | 662 | 0.66 | 0.67 | 1019 | 878 | 11.33 |
+| 4097 | 3441 | 673 | 0.75 | 0.75 | 1026 | 514 | 11.30 |
+| 6145 | 4477 | 715 | 0.66 | 0.67 | 2064 | 1033 | 10.86 |
+| 8193 | 5503 | 744 | 0.75 | 0.75 | 2048 | 1025 | 11.21 |
+| 12289 | 7170 | 781 | 0.67 | 0.67 | 4076 | 1657 | 10.67 |
+| 16385 | 8154 | 805 | 0.75 | 0.75 | 4096 | 972 | 10.87 |
+
+### sweep 2: 2560 MB held back; per-CPU list at the start: 17146 pages, high 17279
+
+| pages of the buffer | runs | distinct 2 MiB regions | from the previous child | size ratio | new frames | runs among the new frames | lmbench ns |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1025 | 263 | 148 | 0.74 | 0.75 | 256 | 65 | 4.89 |
+| 1537 | 712 | 344 | 0.65 | 0.67 | 513 | 439 | 7.46 |
+| 2049 | 2033 | 590 | 0.18 | 0.75 | 1655 | 1655 | 10.29 |
+| | | | | | | frames in common with the 8 MB child of the previous sweep: 0.60 | |
+| 3073 | 2891 | 661 | 0.66 | 0.67 | 945 | 793 | 11.29 |
+| 4097 | 3405 | 692 | 0.75 | 0.75 | 1024 | 513 | 11.29 |
+| 6145 | 4438 | 728 | 0.66 | 0.67 | 2048 | 1022 | 11.04 |
+| 8193 | 5432 | 759 | 0.74 | 0.75 | 2113 | 1057 | 11.18 |
+| 12289 | 7006 | 800 | 0.67 | 0.67 | 3437 | 1409 | 10.91 |
+| 16385 | 8233 | 847 | 0.75 | 0.75 | 3686 | 1159 | 10.79 |
+
+### sweep 3: 0 MB held back; per-CPU list at the start: 17336 pages, high 18028
+
+| pages of the buffer | runs | distinct 2 MiB regions | from the previous child | size ratio | new frames | runs among the new frames | lmbench ns |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1025 | 190 | 77 | 0.74 | 0.75 | 258 | 55 | 4.87 |
+| 1537 | 622 | 292 | 0.65 | 0.67 | 512 | 429 | 7.26 |
+| 2049 | 2028 | 593 | 0.15 | 0.75 | 1707 | 1701 | 10.44 |
+| | | | | | | frames in common with the 8 MB child of the previous sweep: 0.55 | |
+| 3073 | 2879 | 659 | 0.66 | 0.67 | 988 | 827 | 11.33 |
+| 4097 | 3393 | 687 | 0.75 | 0.75 | 1024 | 513 | 11.34 |
+| 6145 | 4426 | 732 | 0.66 | 0.67 | 2076 | 1039 | 11.21 |
+| 8193 | 5448 | 757 | 0.75 | 0.75 | 2048 | 1022 | 11.23 |
+| 12289 | 7162 | 791 | 0.67 | 0.67 | 3922 | 1669 | 11.23 |
+| 16385 | 8579 | 850 | 0.75 | 0.75 | 3826 | 1355 | 11.10 |
+
+### sweep 4: 2560 MB held back; per-CPU list at the start: 13382 pages, high 13444
+
+| pages of the buffer | runs | distinct 2 MiB regions | from the previous child | size ratio | new frames | runs among the new frames | lmbench ns |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1025 | 300 | 165 | 0.74 | 0.75 | 256 | 65 | 4.89 |
+| 1537 | 772 | 389 | 0.65 | 0.67 | 513 | 464 | 7.47 |
+| 2049 | 1634 | 558 | 0.47 | 0.75 | 1052 | 1052 | 10.26 |
+| | | | | | | frames in common with the 8 MB child of the previous sweep: 0.63 | |
+| 3073 | 2551 | 633 | 0.66 | 0.67 | 986 | 896 | 11.12 |
+| 4097 | 3232 | 654 | 0.62 | 0.75 | 1538 | 801 | 11.06 |
+| 6145 | 4266 | 702 | 0.66 | 0.67 | 2048 | 1024 | 11.09 |
+| 8193 | 5291 | 741 | 0.75 | 0.75 | 2054 | 1028 | 10.99 |
+| 12289 | 6422 | 809 | 0.67 | 0.67 | 3330 | 939 | 10.91 |
+| 16385 | 6515 | 820 | 0.75 | 0.75 | 4096 | 73 | 10.71 |
+
 ## Two-factor check: is the N90 non-quiesced run 'scattered pages on a faster platform'?
 
 Per stride and size: low = median of the low level of the four quiesced N90 host boots (40 values, values more than 12% above the median of the lower half left out); fast-state = median of the ten iterations of the non-quiesced nVHE boot; layout ratio = shuffled / sorted with lmbench's own program on the N80 (H4, H5).  If the buffers of the non-quiesced run were physically scattered and those of the low level physically contiguous, then (fast-state / low) / (layout ratio) is what the platform state alone does.
