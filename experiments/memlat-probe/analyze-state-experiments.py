@@ -39,6 +39,9 @@
   Exp H4  lmbench's own lat_mem_rd on a buffer whose physical layout is set
           by a preloaded library, on the N80 and on the workstation
           (expH4.log, expH4-shim.log, ../memlat-d80f3-20260930/expH4-d80f3.log)
+  Exp H5  the same for the other strides of the paper's command, next to
+          the two levels of the N90 host data per stride
+          (expH5.log, ../memlat-d80f3-20260930/expH5-d80f3.log)
   Exp G1-G4  the interconnect-frequency experiments, if their logs exist
           (expG1.log, expG2.log, expG3.log, expG4-*.log)
 
@@ -1561,6 +1564,81 @@ def exp_h4():
                           for rep in sorted({x["rep"] for x in sw})) + ".\n")
 
 
+def layout_stride_sweeps(path):
+    """Sweeps of run28: -> list of {rep, layout, rows: {(stride, size_mb): ns}}."""
+    if not os.path.exists(path):
+        return []
+    out = []
+    cur = None
+    stride = None
+    with open(path) as fh:
+        for line in fh:
+            line = line.rstrip("\n")
+            if line.startswith("## rep="):
+                d = kv(line)
+                cur = {"rep": int(d["rep"]), "layout": d["layout"], "noc": d.get("noc"), "gov": d.get("gov"), "rows": {}}
+                out.append(cur)
+                stride = None
+            elif line.startswith("##") or cur is None:
+                continue
+            else:
+                p = line.split()
+                if len(p) >= 2 and p[1].startswith('"stride='):
+                    stride = int(p[1].split("=")[1])
+                elif len(p) == 3 and stride is not None:
+                    try:
+                        cur["rows"][(stride, float(p[1]))] = float(p[2])
+                    except ValueError:
+                        pass
+    return out
+
+
+def n90_levels(stride, size):
+    """The N90 quiesced hosts at one point: (low median, n low, high median or None, n high) with the 12% rule."""
+    host = n90("lat_mem_rd_load")
+    pool = sorted(sum((host[c][(stride, float(size))] for c in ("kvmoff", "nvhe", "vhe", "pkvm")), []))
+    thr = 1.12 * st.median(pool[:len(pool) // 2])
+    lo = [x for x in pool if x <= thr]
+    hi = [x for x in pool if x > thr]
+    return st.median(lo), len(lo), (st.median(hi) if hi else None), len(hi)
+
+
+def exp_h5():
+    sets = (("N80 (kvm-arm.mode=protected, kernel 6.6.0-79, root)", os.path.join(DEV, "expH5.log"), os.path.join(DEV, "expH4.log")),
+            ("D80F3 workstation (no host stage-2, kernel 7.0.0-34, unprivileged)", os.path.join(D80, "expH5-d80f3.log"),
+             os.path.join(D80, "expH4-d80f3.log")))
+    if not any(os.path.exists(a) for _, a, _ in sets):
+        return
+    print("## Exp H5: lmbench's own lat_mem_rd on sorted and on shuffled pages, every stride of the paper's command\n")
+    print("As H4 (layoutshim.so; shuffled = random order within every 8 MB, the same frames as sorted).  Strides 16, 32, 64, "
+          "128, 512, 1024 from run28 (two repetitions per layout), stride 256 from H4 (four).  ns = lmbench's own figure, "
+          "median of the repetitions.  The N90 columns are the two levels of the four quiesced host boots of June 2026 at the "
+          "same point (40 values; high = more than 12% above the median of the lower half).\n")
+    for title, path, h4 in sets:
+        sw = layout_stride_sweeps(path)
+        if not sw:
+            continue
+        for x in layout_sweeps(h4):
+            if x["layout"] in ("sorted", "shuffled8"):
+                sw.append({"rep": x["rep"], "layout": x["layout"], "rows": {(256, k): v for k, v in x["rows"].items()}})
+        print(f"### {title}\n")
+        for size in (8.0, 12.0, 6.0, 4.0, 64.0):
+            print(f"{size:g} MB:\n")
+            print("| stride | sorted: ns (min-max), n | shuffled: ns (min-max), n | shuffled - sorted | shuffled / sorted | "
+                  "N90: low level, n | N90: high level, n | N90: high / low |")
+            print("|---:|---|---|---:|---:|---|---|---:|")
+            for stv in (16, 32, 64, 128, 256, 512, 1024):
+                a = [x["rows"][(stv, size)] for x in sw if x["layout"] == "sorted" and (stv, size) in x["rows"]]
+                b = [x["rows"][(stv, size)] for x in sw if x["layout"] == "shuffled8" and (stv, size) in x["rows"]]
+                if not a or not b:
+                    continue
+                lo, nlo, hi, nhi = n90_levels(stv, size)
+                print(f"| {stv} | {st.median(a):.3f} ({min(a):.3f}-{max(a):.3f}), {len(a)} | {st.median(b):.3f} ({min(b):.3f}-{max(b):.3f}), {len(b)} | "
+                      f"{st.median(b) - st.median(a):+.3f} | {st.median(b) / st.median(a):.3f} | {lo:.3f}, {nlo} | "
+                      + (f"{hi:.3f}, {nhi} | {hi / lo:.3f} |" if hi else f"none, {nhi} | |"))
+            print()
+
+
 def main():
     exp_r()
     exp_bg()
@@ -1584,6 +1662,7 @@ def main():
     exp_h2()
     exp_h3()
     exp_h4()
+    exp_h5()
     exp_g1()
     exp_g2()
     exp_h("expG4", "Exp G4: lmbench's own lat_mem_rd in three interconnect states")

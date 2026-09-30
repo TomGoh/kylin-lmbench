@@ -1,0 +1,41 @@
+# N80 2026-09-30T23:26:50+08:00: huge-page and contiguous-PTE facts (read only)
+## uname -r
+6.6.0-79-generic
+## /boot/config-6.6.0-79-generic, selected options
+CONFIG_PGTABLE_LEVELS=4
+CONFIG_ARM64_4K_PAGES=y
+CONFIG_ARM64_VA_BITS=48
+CONFIG_ARM64_PA_BITS=48
+CONFIG_ARM64_CONTPTE=y
+CONFIG_KVM=y
+# CONFIG_NVHE_EL2_DEBUG is not set
+CONFIG_PKVM_MODULE_PATH=""
+CONFIG_X1_RMS=y
+CONFIG_TRANSPARENT_HUGEPAGE=y
+CONFIG_TRANSPARENT_HUGEPAGE_ALWAYS=y
+# CONFIG_TRANSPARENT_HUGEPAGE_MADVISE is not set
+# CONFIG_READ_ONLY_THP_FOR_FS is not set
+# CONFIG_PKVM_SMC_FILTER is not set
+# CONFIG_PTDUMP_DEBUGFS is not set
+## /sys/kernel/mm/transparent_hugepage
+enabled: [always] madvise never
+defrag: always defer defer+madvise [madvise] never
+shmem_enabled: always within_size advise [never] deny force
+use_zero_page: 1
+hpage_pmd_size: 2097152
+hugepages-1024kB/enabled: always inherit madvise [never]
+hugepages-128kB/enabled: always inherit madvise [never]
+hugepages-16kB/enabled: always inherit madvise [never]
+hugepages-2048kB/enabled: always [inherit] madvise never
+hugepages-256kB/enabled: always inherit madvise [never]
+hugepages-32kB/enabled: always inherit madvise [never]
+hugepages-512kB/enabled: always inherit madvise [never]
+hugepages-64kB/enabled: always inherit madvise [never]
+hugepages-8kB/enabled: 
+## khugepaged
+defrag: 1
+pages_to_scan: 4096
+scan_sleep_millisecs: 10000
+max_ptes_none: 511
+## /proc/cmdline
+BOOT_IMAGE=/ostree/kylin-c249244cc6dc9f9e567ac1b243a682759cf00cfd49ec1412d3cce63ce632701b/vmlinuz-6.6.0-79-generic root=UUID=061ec519-7fc8-48a7-b8df-6ed1512a8ac7 rw ostree=/ostree/boot.0/kylin/c249244cc6dc9f9e567ac1b243a682759cf00cfd49ec1412d3cce63ce632701b/0 quiet splash loglevel=0 systemd.unified_cgroup_hierarchy=1 psi=1 kvm-arm.mode=protected crash_kexec_post_notifiers=1 panic_print=0x382 resume=UUID=e83c2aec-3997-479d-b917-738fdc310796 security=box lsm=ksaf,bpf audit=1
