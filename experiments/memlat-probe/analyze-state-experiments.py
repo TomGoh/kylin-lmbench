@@ -1,0 +1,389 @@
+#!/usr/bin/env python3
+"""Tabulate the N80 platform-state experiments of the evening of 2026-09-30.
+
+  Exp R   sequential stride 256, chain built once versus rewritten before
+          every interval as lmbench does             (expR.log)
+  Exp BG  the headline points with memory traffic from other cores (expBG.log)
+  Exp H   lmbench's own lat_mem_rd, repeated sweeps, buffer on 4 KiB pages
+          (expH-rand.log, expH-seq256.log, expH-seqall.log, expH-noc-samples.log)
+  Exp G1-G4  the interconnect-frequency experiments, if their logs exist
+          (expG1.log, expG2.log, expG3.log, expG4-*.log)
+
+The N90 host data of June are printed next to Exp H for comparison; they come
+from results/n90-day3-host and are a different machine.
+
+Standard library only.  Usage:  python3 analyze-state-experiments.py [repo_root]
+"""
+import collections
+import csv
+import math
+import os
+import re
+import statistics as st
+import sys
+
+ROOT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(__file__), "..", "..")
+DEV = os.path.join(ROOT, "results", "memlat-n80-20260930")
+HOST = os.path.join(ROOT, "results", "n90-day3-host")
+
+
+def kv(line):
+    d = {}
+    for k, v in re.findall(r"(\w+)=([^\s]+)", line):
+        v = re.sub(r"\(mux[\d.]+\)", "", v)
+        try:
+            d[k] = float(v)
+        except ValueError:
+            d[k] = v
+    return d
+
+
+def probe_rows(name):
+    path = os.path.join(DEV, name)
+    if not os.path.exists(path):
+        return []
+    out = []
+    with open(path) as fh:
+        for line in fh:
+            if "ns_min=" in line:
+                out.append(kv(line))
+    return out
+
+
+def ranks(v):
+    order = sorted(range(len(v)), key=lambda i: v[i])
+    r = [0.0] * len(v)
+    i = 0
+    while i < len(order):
+        j = i
+        while j + 1 < len(order) and v[order[j + 1]] == v[order[i]]:
+            j += 1
+        for k in range(i, j + 1):
+            r[order[k]] = (i + j) / 2 + 1
+        i = j + 1
+    return r
+
+
+def pearson(x, y):
+    if len(x) < 3:
+        return float("nan")
+    mx, my = st.mean(x), st.mean(y)
+    sx = math.sqrt(sum((a - mx) ** 2 for a in x))
+    sy = math.sqrt(sum((b - my) ** 2 for b in y))
+    if sx == 0 or sy == 0:
+        return float("nan")
+    return sum((a - mx) * (b - my) for a, b in zip(x, y)) / (sx * sy)
+
+
+def spearman(x, y):
+    return pearson(ranks(x), ranks(y))
+
+
+def largest_gap(v):
+    """Largest gap between neighbouring sorted values, relative to the lower one."""
+    s = sorted(v)
+    best = (0.0, s[0], s[0])
+    for a, b in zip(s, s[1:]):
+        if (b - a) / a > best[0]:
+            best = ((b - a) / a, a, b)
+    return best
+
+
+def lmbench_sweeps(name):
+    """-> list of (header dict, {stride: {size_mb: ns}})"""
+    path = os.path.join(DEV, name)
+    if not os.path.exists(path):
+        return []
+    sweeps = []
+    cur = None
+    stride = None
+    with open(path) as fh:
+        for line in fh:
+            line = line.rstrip("\n")
+            if line.startswith("## "):
+                cur = (kv(line), collections.OrderedDict())
+                sweeps.append(cur)
+                stride = None
+                continue
+            if cur is None:
+                continue
+            parts = line.split()
+            if len(parts) >= 2 and parts[1].startswith('"stride='):
+                stride = int(parts[1].split("=")[1])
+                cur[1][stride] = collections.OrderedDict()
+            elif len(parts) == 3 and stride is not None:
+                try:
+                    cur[1][stride][float(parts[1])] = float(parts[2])
+                except ValueError:
+                    pass
+    return sweeps
+
+
+def n90(bench):
+    files = {"kvmoff": "n90-kvmoff-noLSM-full-cpu0.csv", "nvhe": "n90-nvhe-noLSM-full-cpu0.csv",
+             "vhe": "n90-vhe-noLSM-full-cpu0.csv", "pkvm": "n90-pkvm-noLSM-try2-cpu0.csv",
+             "nvhe-noisy": "n90-nvhe-noisy-full-cpu0.csv"}
+    out = {}
+    for cfg, name in files.items():
+        d = collections.defaultdict(list)
+        with open(os.path.join(HOST, name)) as fh:
+            for r in csv.DictReader(fh):
+                if r["bench"] == bench:
+                    m = re.match(r"stride(\d+)_sz([\d.]+)MB", r["variant"])
+                    d[(int(m.group(1)), float(m.group(2)))].append(float(r["value"]))
+        out[cfg] = d
+    return out
+
+
+def exp_r():
+    rows = probe_rows("expR.log")
+    if not rows:
+        return
+    print("## Exp R: sequential stride 256, fresh process per point, 20 laps; interconnect pinned at 1800 MHz\n")
+    print("rebuild 0 = chain built once; rebuild 1 = chain rewritten before every timed interval, as lmbench does.  "
+          "ns = minimum of 11 intervals.  adjacency = fraction of virtually adjacent pages that are also physically "
+          "adjacent, in either direction.\n")
+    print("| size | rebuild | n | min | median | max | max / min | CV | largest gap between neighbouring values | "
+          "median adjacency | L3 refills per access | page walks per access |")
+    print("|---:|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|---:|")
+    by = collections.defaultdict(list)
+    for r in rows:
+        by[(r["size_mb"], int(r["rebuild"]))].append(r)
+    for k in sorted(by):
+        rs = by[k]
+        v = [r["ns_min"] for r in rs]
+        g = largest_gap(v)
+        adj = [r["contig_frac"] + r["rcontig_frac"] for r in rs]
+        print(f"| {k[0]:g} MB | {k[1]} | {len(v)} | {min(v):.2f} | {st.median(v):.2f} | {max(v):.2f} | {max(v) / min(v):.3f} | "
+              f"{100 * st.pstdev(v) / st.mean(v):.1f}% | {100 * g[0]:.1f}% ({g[1]:.2f} to {g[2]:.2f}) | {st.median(adj):.3f} | "
+              f"{st.median(r['ev2a'] for r in rs):.3f} | {st.median(r['ev2d'] for r in rs):.4f} |")
+    print("\nRank correlation of the latency with the physical layout (both rebuild settings pooled):\n")
+    print("| size | n | rho(ns, adjacency) | rho(ns, distinct 2 MiB regions) | adjacency range | ns range |")
+    print("|---:|---:|---:|---:|---|---|")
+    for sz in sorted({k[0] for k in by}):
+        rs = by[(sz, 0)] + by[(sz, 1)]
+        ns = [r["ns_min"] for r in rs]
+        adj = [r["contig_frac"] + r["rcontig_frac"] for r in rs]
+        mb = [r["mb2_regions"] for r in rs]
+        print(f"| {sz:g} MB | {len(rs)} | {spearman(ns, adj):+.2f} | {spearman(ns, mb):+.2f} | {min(adj):.2f}-{max(adj):.2f} | "
+              f"{min(ns):.2f}-{max(ns):.2f} |")
+    # consecutive processes reuse the frames the previous one freed, in reverse order
+    sw = 0
+    pairs = 0
+    seq = [r for r in rows]
+    for a, b in zip(seq, seq[1:]):
+        if a["size_mb"] == b["size_mb"]:
+            pairs += 1
+            if abs(a["contig_frac"] - b["rcontig_frac"]) < 0.02 and abs(a["rcontig_frac"] - b["contig_frac"]) < 0.02:
+                sw += 1
+    print(f"\nFrame reuse: in {sw} of {pairs} pairs of consecutive processes at the same size, the ascending adjacency of "
+          "one equals the descending adjacency of the next within 0.02, i.e. the second process received the frames the "
+          "first one had just freed, in reverse order.\n")
+
+
+def exp_bg():
+    path = os.path.join(DEV, "expBG.log")
+    if not os.path.exists(path):
+        return
+    by = collections.defaultdict(list)
+    with open(path) as fh:
+        for line in fh:
+            if "ns_min=" in line:
+                d = kv(line)
+                by[(d["mode"], d["size_mb"], d["bg"])].append(d)
+    print("## Exp BG: memory traffic from other cores; interconnect pinned at 1800 MHz\n")
+    print("Background: none; r1 = one other core reading 256 MB in a loop; w1 = one other core writing; "
+          "w2 = two other cores writing.  Median of the runs (ns per access, minimum of 11 intervals), change against none.\n")
+    print("| test on cpu0 | none | r1 | w1 | w2 |")
+    print("|---|---:|---:|---:|---:|")
+    for mode, sz in (("seq", 4.0), ("seq", 8.0), ("seq", 64.0), ("rand", 8.0), ("rand", 64.0)):
+        base = st.median(r["ns_min"] for r in by[(mode, sz, "none")])
+        cells = []
+        for bg in ("none", "r1", "w1", "w2"):
+            v = [r["ns_min"] for r in by[(mode, sz, bg)]]
+            m = st.median(v)
+            cells.append(f"{m:.2f}" if bg == "none" else f"{m:.2f} ({100 * (m / base - 1):+.0f}%)")
+        label = ("sequential stride 256" if mode == "seq" else "random") + f", {sz:g} MB"
+        print(f"| {label} | " + " | ".join(cells) + " |")
+    print()
+
+
+def noc_samples(name):
+    path = os.path.join(DEV, name)
+    if not os.path.exists(path):
+        return []
+    out = []
+    with open(path) as fh:
+        for line in fh:
+            p = line.split()
+            if len(p) == 2:
+                out.append((float(p[0]), int(p[1])))
+    return out
+
+
+def exp_h(prefix="expH", title="Exp H: lmbench's own lat_mem_rd on the N80, interconnect pinned at 1800 MHz"):
+    rand = lmbench_sweeps(prefix + "-rand.log")
+    seq = lmbench_sweeps(prefix + "-seq256.log")
+    seqall = lmbench_sweeps(prefix + "-seqall.log")
+    if not (rand or seq or seqall):
+        return
+    print(f"## {title}\n")
+    samples = noc_samples(prefix + "-noc-samples.log")
+    if samples:
+        c = collections.Counter(f for _, f in samples)
+        print("Interconnect frequency samples during these runs (value: count): " +
+              ", ".join(f"{k}: {v}" for k, v in sorted(c.items())) + "\n")
+    labels = []
+    for s in rand + seq + seqall:
+        lab = s[0].get("thp", s[0].get("state", "?"))
+        if lab not in labels:
+            labels.append(lab)
+    host_rand = n90("lat_mem_rd_rand")
+    host_seq = n90("lat_mem_rd_load")
+    sizes = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64]
+
+    if rand:
+        print("### Random access (lat_mem_rd -t -P 1 64 16), ns per access\n")
+        head = "| size |"
+        sep = "|---:|"
+        for lab in labels:
+            n = sum(1 for s in rand if s[0].get("thp", s[0].get("state")) == lab)
+            if n:
+                head += f" N80 {lab}: median of {n} sweeps (range) |"
+                sep += "---:|"
+        head += " N90 host, fast state (non-quiesced nVHE) | N90 host, quiesced nVHE | N90 host, quiesced protected |"
+        sep += "---:|---:|---:|"
+        print(head)
+        print(sep)
+        for sz in sizes:
+            line = f"| {sz} MB |"
+            for lab in labels:
+                v = [s[1][16][float(sz)] for s in rand
+                     if s[0].get("thp", s[0].get("state")) == lab and 16 in s[1] and float(sz) in s[1][16]]
+                if any(s[0].get("thp", s[0].get("state")) == lab for s in rand):
+                    line += f" {st.median(v):.1f} ({min(v):.1f}-{max(v):.1f}) |" if v else " n/a |"
+            line += (f" {st.median(host_rand['nvhe-noisy'][(16, float(sz))]):.1f} |"
+                     f" {st.median(host_rand['nvhe'][(16, float(sz))]):.1f} |"
+                     f" {st.median(host_rand['pkvm'][(16, float(sz))]):.1f} |")
+            print(line)
+        print("\nThe N80 was in protected mode with its core at 1.9 GHz; the N90 core ran at 1.8 GHz. "
+              "Core-bound parts differ by 5.6% for that reason alone.\n")
+
+    allseq = []
+    for s in seq + seqall:
+        if 256 in s[1]:
+            allseq.append(s)
+    if allseq:
+        print("### Sequential access, stride 256 (lat_mem_rd -P 1 64 256 and the stride-256 part of the full command), ns per access\n")
+        print("'high' = more than 12% above the median of the lower half of the values of that row, the rule used for the N90 data.\n")
+        print("| buffer pages | size | n | min | median | max | max / min | CV | largest gap between neighbouring values | high | "
+              "N90 quiesced hosts: high of 40 | N90 quiesced hosts: min-max |")
+        print("|---|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|---|")
+        for lab in labels:
+            for sz in (4, 6, 8, 12, 16, 24, 32, 48, 64):
+                v = [s[1][256][float(sz)] for s in allseq
+                     if s[0].get("thp", s[0].get("state")) == lab and float(sz) in s[1][256]]
+                if not v:
+                    continue
+                low = sorted(v)[:max(1, len(v) // 2)]
+                thr = 1.12 * st.median(low)
+                g = largest_gap(v)
+                pool = sorted(sum((host_seq[c][(256, float(sz))] for c in ("kvmoff", "nvhe", "vhe", "pkvm")), []))
+                pthr = 1.12 * st.median(pool[:len(pool) // 2])
+                cv = 100 * st.pstdev(v) / st.mean(v) if len(v) > 1 else 0.0
+                print(f"| {lab} | {sz} MB | {len(v)} | {min(v):.2f} | {st.median(v):.2f} | {max(v):.2f} | {max(v) / min(v):.3f} | "
+                      f"{cv:.1f}% | {100 * g[0]:.1f}% ({g[1]:.2f} to {g[2]:.2f}) | {sum(x > thr for x in v)}/{len(v)} | "
+                      f"{sum(x > pthr for x in pool)}/40 | {pool[0]:.2f}-{pool[-1]:.2f} |")
+        v8 = [s[1][256][8.0] for s in allseq if s[0].get("thp", s[0].get("state")) == labels[0] and 8.0 in s[1][256]]
+        if v8:
+            print(f"\n8 MB values in the order taken ({labels[0]}): " + " ".join(f"{x:.2f}" for x in v8))
+        print()
+
+    if seqall:
+        print("### Sequential access at 8 MB for every stride (full command), ns per access\n")
+        print("| stride | " + " | ".join(f"sweep {i + 1}" for i in range(len(seqall))) + " |")
+        print("|---:|" + "---:|" * len(seqall))
+        for stv in (16, 32, 64, 128, 256, 512, 1024):
+            print(f"| {stv} | " + " | ".join(f"{s[1].get(stv, {}).get(8.0, float('nan')):.2f}" for s in seqall) + " |")
+        print()
+
+
+def exp_g1():
+    path = os.path.join(DEV, "expG1.log")
+    if not os.path.exists(path):
+        return
+    rows = []
+    bw = []
+    with open(path) as fh:
+        for line in fh:
+            d = kv(line)
+            if "ns_min" in d:
+                rows.append(d)
+            elif "mb_per_s" in d:
+                bw.append(d)
+    print("## Exp G1: interconnect pinned at fixed frequencies\n")
+    freqs = sorted({int(r["set"]) for r in rows}, reverse=True)
+    for mode, stride, title in (("rand", 16, "Random access, ns per access (median over seeds and passes)"),
+                                ("seq", 256, "Sequential stride 256, ns per access (median)")):
+        print(f"### {title}\n")
+        print("| size | " + " | ".join(f"{f // 1000} MHz" for f in freqs) + f" | {freqs[-1] // 1000} MHz / {freqs[0] // 1000} MHz |")
+        print("|---:|" + "---:|" * (len(freqs) + 1))
+        for sz in sorted({r["size_mb"] for r in rows if r["mode"] == mode and r["stride"] == stride and r["rebuild"] == 0}):
+            cells = []
+            for f in freqs:
+                v = [r["ns_min"] for r in rows if r["mode"] == mode and r["stride"] == stride and r["rebuild"] == 0
+                     and r["size_mb"] == sz and int(r["set"]) == f]
+                cells.append(st.median(v) if v else float("nan"))
+            print(f"| {sz:g} MB | " + " | ".join(f"{c:.2f}" for c in cells) + f" | {cells[-1] / cells[0]:.3f} |")
+        print()
+    if bw:
+        print("### Streaming rate over 256 MB, MB/s\n")
+        print("| | " + " | ".join(f"{f // 1000} MHz" for f in freqs) + " |")
+        print("|---|" + "---:|" * len(freqs))
+        for m in ("r", "w"):
+            print(f"| {'read' if m == 'r' else 'write'} | " +
+                  " | ".join(f"{st.median([b['mb_per_s'] for b in bw if b['mode'] == m and int(b['set']) == f]):.0f}" for f in freqs) + " |")
+        print()
+
+
+def exp_g2():
+    path = os.path.join(DEV, "expG2.log")
+    if not os.path.exists(path):
+        return
+    rows = []
+    with open(path) as fh:
+        for line in fh:
+            d = kv(line)
+            if "ns_min" in d:
+                d["_noc"] = [int(x) for x in str(d.get("noc", "")).split(",") if x.strip("-").isdigit()]
+                d["_reps"] = [float(x) for x in str(d.get("reps", "")).split(",") if x]
+                rows.append(d)
+    print("## Exp G2: one governor after another, chain rewritten before every interval\n")
+    print("| governor | test | size | rebuild | n | min | median | max | max / min | interconnect frequency after the intervals (MHz: count) | "
+          "rho(interval time, frequency) over all intervals |")
+    print("|---|---|---:|---:|---:|---:|---:|---:|---:|---|---:|")
+    keys = collections.OrderedDict()
+    for r in rows:
+        keys.setdefault((r["gov"], r["mode"], r["size_mb"], int(r["rebuild"])), []).append(r)
+    for k, rs in keys.items():
+        v = [r["ns_min"] for r in rs]
+        c = collections.Counter(f // 1000 for r in rs for f in r["_noc"])
+        t = [x for r in rs for x in r["_reps"]]
+        f = [x for r in rs for x in r["_noc"]]
+        rho = f"{spearman(t, f):+.2f}" if len(t) == len(f) and len(set(f)) > 1 else "n/a"
+        print(f"| {k[0]} | {k[1]} | {k[2]:g} MB | {k[3]} | {len(v)} | {min(v):.2f} | {st.median(v):.2f} | {max(v):.2f} | "
+              f"{max(v) / min(v):.3f} | {', '.join(f'{a}: {b}' for a, b in sorted(c.items()))} | {rho} |")
+    print()
+
+
+def main():
+    exp_r()
+    exp_bg()
+    exp_h()
+    exp_g1()
+    exp_g2()
+    exp_h("expG4", "Exp G4: lmbench's own lat_mem_rd in three interconnect states")
+
+
+if __name__ == "__main__":
+    main()
