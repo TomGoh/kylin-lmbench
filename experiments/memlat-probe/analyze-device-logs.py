@@ -154,6 +154,10 @@ def main():
         print(f"| {s:g} MB | {len(rs)} | {st.mean(ns):.2f} | {min(ns):.2f} | {max(ns):.2f} | {100 * st.pstdev(ns) / st.mean(ns):.1f}% | "
               f"{spearman(ns, c):+.2f} | {spearman(ns, t):+.2f} | {spearman(ns, l3):+.2f} | "
               f"{pearson(resid(ns, t), resid(c, t)):+.2f} | {pearson(resid(ns, c), resid(t, c)):+.2f} | {min(l3):.3f}-{max(l3):.3f} |")
+    const = [f"{s:g} MB" for s in sorted(by) if len({r["thrash_pages_frac"] for r in by[s]}) == 1]
+    if const:
+        print("\nAt " + ", ".join(const) + " the colour overflow fraction is the same in every run, so 'partial r given colour' "
+              "there is the plain Pearson correlation of latency with contiguity.")
     rs = sorted(by[8.0], key=lambda r: r["contig_frac"])
     x = [r["contig_frac"] for r in rs]
     y = [r["ns_med"] for r in rs]

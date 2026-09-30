@@ -49,6 +49,8 @@
 | 16 MB | 30 | 9.98 | 8.58 | 11.82 | 6.4% | -0.88 | -0.45 | +0.16 | -0.77 | -0.05 | 0.893-0.993 |
 | 64 MB | 30 | 10.29 | 8.37 | 11.57 | 4.9% | -0.84 | +nan | -0.21 | -0.80 | +nan | 0.983-1.001 |
 
+At 64 MB the colour overflow fraction is the same in every run, so 'partial r given colour' there is the plain Pearson correlation of latency with contiguity.
+
 8 MB: least-squares fit ns = 9.57 -4.32 x contiguity, Pearson r = -0.852.
 
 | contiguity | ns per access | L3 refills per access | colour overflow fraction |

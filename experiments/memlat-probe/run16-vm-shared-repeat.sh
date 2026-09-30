@@ -1,8 +1,10 @@
 #!/bin/sh
 # Exp V3: repetitions of the shared-versus-clear size sweep (Exp V2), which had
 # one set of shared pages and two passes per size from 6 MB upward.  Three more
-# page sets per size (other seeds, a new pool each time), and the physically
-# contiguous pick at three sizes.
+# repetitions per size (a new pool each time; the seed only changes the order
+# of the chase), and the physically contiguous pick at three sizes.  The shared
+# pages all come from the same population of about 50 thousand pool pages in
+# one GiB slot, so the repetitions are re-draws from it, not independent sets.
 # Root (pagemap PFNs), cpu0.  Changes no system setting.  About 30 minutes.
 #
 #   sudo sh run16-vm-shared-repeat.sh [pid of the VMM]
