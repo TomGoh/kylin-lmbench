@@ -552,6 +552,70 @@ def exp_v2():
     print()
 
 
+def exp_v3():
+    """Exp V2 and its repetitions (Exp V3): one line per size, one value per page set (run)."""
+    runs = []
+    for name, tag in (("expV2.log", "V2"), ("expV3.log", "V3")):
+        path = os.path.join(DEV, name)
+        if not os.path.exists(path):
+            continue
+        hdr = None
+        with open(path) as fh:
+            for line in fh:
+                if line.startswith("## "):
+                    hdr = kv(line)
+                    hdr["_rows"] = []
+                    hdr["_tag"] = tag
+                    hdr.setdefault("seed", 31.0)
+                    runs.append(hdr)
+                elif line.startswith("slot=") and hdr is not None:
+                    d = kv(line)
+                    d["_slot"] = int(str(line.split()[0].split("=")[1]), 16)
+                    hdr["_rows"].append(d)
+    if not any(r["_tag"] == "V3" for r in runs):
+        return
+    print("## Exp V3: the shared-against-clear comparison repeated with other page sets\n")
+    print("One page set of class shared per run (two passes); class clear from every slot of the same run.  "
+          "extra = median of the shared set minus the median of class clear in the same run; 'same slot' uses only the "
+          "clear set taken from the slot the shared set comes from.  Runs: V2 (seed 31) and V3 (seeds 41, 43, 47).\n")
+    m = lambda rs, key: st.median(r[key] for r in rs)
+    for pick in ("even", "low"):
+        sel = [r for r in runs if r["pick"] == pick]
+        if not sel:
+            continue
+        print(f"### Pages picked: {'spread evenly over the pool pages of the slot' if pick == 'even' else 'lowest addresses (physically contiguous)'}\n")
+        print("| size | runs | extra ns per run | median (min-max) | relative | same slot: extra ns per run | extra cycles per run | "
+              "page walks per access: clear / shared | extra L2 refills per run | distinct 2 MiB regions of the shared set |")
+        print("|---:|---:|---|---|---:|---|---|---|---|---|")
+        for sz in sorted({r["size_mb"] for r in sel}):
+            ex, exs, cyc, l2, reg, wc, ws, rel = [], [], [], [], [], [], [], []
+            for r in sel:
+                if r["size_mb"] != sz:
+                    continue
+                sh = [x for x in r["_rows"] if x["class"] == "shared"]
+                cl = [x for x in r["_rows"] if x["class"] == "clear"]
+                if not sh or not cl:
+                    continue
+                slot = sh[0]["_slot"]
+                sh = [x for x in sh if x["_slot"] == slot]
+                same = [x for x in cl if x["_slot"] == slot]
+                ex.append(m(sh, "ns_med") - m(cl, "ns_med"))
+                rel.append(100 * (m(sh, "ns_med") / m(cl, "ns_med") - 1))
+                if same:
+                    exs.append(m(sh, "ns_med") - m(same, "ns_med"))
+                cyc.append(m(sh, "ev11") - m(cl, "ev11"))
+                l2.append(m(sh, "ev17") - m(cl, "ev17"))
+                reg.append(sh[0]["mb2_regions"])
+                wc.append(m(cl, "ev2d"))
+                ws.append(m(sh, "ev2d"))
+            if not ex:
+                continue
+            print(f"| {sz:g} MB | {len(ex)} | {', '.join(f'{x:+.1f}' for x in ex)} | {st.median(ex):+.1f} ({min(ex):+.1f} to {max(ex):+.1f}) | "
+                  f"{st.median(rel):+.1f}% | {', '.join(f'{x:+.1f}' for x in exs)} | {', '.join(f'{x:+.1f}' for x in cyc)} | "
+                  f"{st.median(wc):.3f} / {st.median(ws):.3f} | {', '.join(f'{x:+.2f}' for x in l2)} | {', '.join(f'{x:.0f}' for x in reg)} |")
+        print()
+
+
 def exp_w():
     path = os.path.join(DEV, "expW.log")
     if not os.path.exists(path):
@@ -758,6 +822,7 @@ def main():
     exp_s()
     exp_v()
     exp_v2()
+    exp_v3()
     exp_w()
     exp_x()
     exp_y()

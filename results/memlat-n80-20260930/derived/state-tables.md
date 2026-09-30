@@ -271,6 +271,34 @@ Per size: class clear over all slots (median and range of the per-set medians, t
 | 48 MB | 12288 | 1.000 / 1.000 | 155.2 (153.7-157.4), 22 | 168.6 (168.5-168.7), 2, 0x20c0000000 | +13.4 | +25.6 | 25.6 | 1.108 / 1.930 | +0.822 |
 | 64 MB | 16384 | 1.000 / 1.000 | 156.0 (154.9-158.3), 22 | 169.3 (169.3-169.4), 2, 0x20c0000000 | +13.4 | +25.5 | 25.5 | 1.161 / 1.970 | +0.809 |
 
+## Exp V3: the shared-against-clear comparison repeated with other page sets
+
+One page set of class shared per run (two passes); class clear from every slot of the same run.  extra = median of the shared set minus the median of class clear in the same run; 'same slot' uses only the clear set taken from the slot the shared set comes from.  Runs: V2 (seed 31) and V3 (seeds 41, 43, 47).
+
+### Pages picked: spread evenly over the pool pages of the slot
+
+| size | runs | extra ns per run | median (min-max) | relative | same slot: extra ns per run | extra cycles per run | page walks per access: clear / shared | extra L2 refills per run | distinct 2 MiB regions of the shared set |
+|---:|---:|---|---|---:|---|---|---|---|---|
+| 2 MB | 1 | -0.1 | -0.1 (-0.1 to -0.1) | -0.3% | +0.3 | -0.1 | 0.000 / 0.000 | +0.00 | 4 |
+| 3 MB | 1 | -0.1 | -0.1 (-0.1 to -0.1) | -0.5% | -0.2 | +0.1 | 0.000 / 0.000 | -0.00 | 4 |
+| 4 MB | 1 | -0.1 | -0.1 (-0.1 to -0.1) | -0.4% | -0.7 | -0.4 | 0.000 / 0.000 | +0.00 | 4 |
+| 6 MB | 4 | +5.8, +5.2, +10.7, +7.2 | +6.5 (+5.2 to +10.7) | +9.9% | +6.6, +8.3, +5.7, +10.5 | +9.9, +10.7, +21.4, +11.9 | 0.939 / 0.881 | +0.08, +0.07, +0.07, +0.08 | 131, 133, 133, 133 |
+| 8 MB | 4 | +8.2, +8.2, +8.5, +12.8 | +8.4 (+8.2 to +12.8) | +8.5% | +8.0, +8.0, +6.2, +12.6 | +15.2, +18.2, +16.0, +25.0 | 0.994 / 0.991 | +0.17, +0.18, +0.18, +0.17 | 132, 134, 133, 132 |
+| 12 MB | 4 | +9.4, +11.1, +17.6, +10.7 | +10.9 (+9.4 to +17.6) | +8.3% | +6.5, +9.5, +15.3, +9.7 | +18.2, +19.8, +30.4, +20.5 | 1.000 / 1.000 | +0.37, +0.37, +0.35, +0.37 | 133, 134, 132, 134 |
+| 16 MB | 4 | +18.4, +10.9, +18.7, +19.5 | +18.6 (+10.9 to +19.5) | +13.0% | +18.3, +12.4, +16.6, +20.2 | +34.5, +20.8, +33.9, +35.7 | 1.000 / 1.000 | +0.56, +0.56, +0.55, +0.55 | 134, 135, 134, 134 |
+| 24 MB | 4 | +19.6, +17.9, +19.4, +19.5 | +19.5 (+17.9 to +19.6) | +13.1% | +20.0, +17.1, +19.2, +19.6 | +35.8, +34.1, +35.6, +37.0 | 1.000 / 1.000 | +0.92, +0.89, +0.87, +0.88 | 135, 135, 134, 134 |
+| 32 MB | 4 | +14.2, +14.7, +14.1, +16.7 | +14.4 (+14.1 to +16.7) | +9.5% | +15.8, +14.9, +14.6, +16.6 | +28.1, +27.4, +27.6, +32.1 | 1.000 / 1.000 | +0.83, +0.84, +0.84, +0.83 | 135, 135, 136, 136 |
+| 48 MB | 4 | +13.4, +14.7, +14.1, +13.8 | +14.0 (+13.4 to +14.7) | +9.0% | +13.6, +14.9, +14.5, +14.2 | +25.6, +27.5, +26.7, +26.2 | 1.000 / 1.000 | +0.82, +0.81, +0.78, +0.81 | 135, 136, 136, 136 |
+| 64 MB | 4 | +13.4, +17.1, +13.4, +13.1 | +13.4 (+13.1 to +17.1) | +8.6% | +13.6, +17.4, +13.9, +13.3 | +25.5, +33.0, +25.2, +24.9 | 1.000 / 1.000 | +0.81, +0.82, +0.81, +0.79 | 135, 135, 137, 137 |
+
+### Pages picked: lowest addresses (physically contiguous)
+
+| size | runs | extra ns per run | median (min-max) | relative | same slot: extra ns per run | extra cycles per run | page walks per access: clear / shared | extra L2 refills per run | distinct 2 MiB regions of the shared set |
+|---:|---:|---|---|---:|---|---|---|---|---|
+| 16 MB | 1 | +2.3 | +2.3 (+2.3 to +2.3) | +1.6% | +1.3 | +3.2 | 0.992 / 0.809 | +0.03 | 10 |
+| 32 MB | 1 | +6.5 | +6.5 (+6.5 to +6.5) | +4.3% | +7.0 | +12.7 | 0.996 / 0.982 | +0.11 | 18 |
+| 64 MB | 1 | +7.7 | +7.7 (+7.7 to +7.7) | +4.9% | +7.9 | +14.6 | 0.998 / 0.993 | +0.28 | 34 |
+
 ## Exp W: sequential chase (stride 256) over the same kind of page set in sorted and in shuffled virtual order, by page class
 
 sorted = virtual order follows ascending physical address; shuffled = the same selection rule, pages mapped in a random virtual order.  clear = stage-2 block mappings; shared = 4 KiB stage-2 leaves (2 MiB regions shared with the VM).  ns = median over sets (slots) and the two passes.
