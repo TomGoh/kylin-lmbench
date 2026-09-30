@@ -23,6 +23,8 @@
  *                     of n MB of the pool, so that the first n MB of the
  *                     buffer use the same frames as with sorted, in another
  *                     order.  Default: the whole buffer is one chunk.
+ *   SHUFFLE_HEAD_MB=<n>  with shuffled: permute only the pages of the first
+ *                     n MB; the rest stays in the order of the pool
  *   SHIM_SEED=<n>     seed of the permutation (default 1)
  *   SHIM_LOG=<file>   append one line per buffer: process id, layout, how
  *                     much of the pool was backed by huge pages, and (root
@@ -85,7 +87,7 @@ static uint64_t pfn_of(int pm, const void *va)
 	return e & ((1ULL << 55) - 1);
 }
 
-static void log_layout(const char *path, const char *layout, size_t chunk, long thp, size_t npages)
+static void log_layout(const char *path, const char *layout, size_t chunk, size_t head, long thp, size_t npages)
 {
 	static const size_t cut[] = { 1024, 2048, 4096, 0 };
 	FILE *f = fopen(path, "a");
@@ -94,7 +96,7 @@ static void log_layout(const char *path, const char *layout, size_t chunk, long 
 
 	if (!f)
 		return;
-	fprintf(f, "pid=%d layout=%s shuffle_pages=%zu pages=%zu thp_kb=%ld", (int)getpid(), layout, chunk, npages, thp);
+	fprintf(f, "pid=%d layout=%s shuffle_pages=%zu head_pages=%zu pages=%zu thp_kb=%ld", (int)getpid(), layout, chunk, head, npages, thp);
 	for (i = 0; i < sizeof(cut) / sizeof(cut[0]); i++) {
 		size_t n = cut[i] && cut[i] < npages ? cut[i] : npages, asc = 0, desc = 0, have = 0;
 		uint64_t prev = 0;
@@ -124,7 +126,7 @@ static void log_layout(const char *path, const char *layout, size_t chunk, long 
 static void *build(size_t want)
 {
 	const char *layout = getenv("LAYOUT") ? getenv("LAYOUT") : "sorted";
-	size_t len = (want + HPAGE - 1) & ~(HPAGE - 1), npages = len / PAGE, k, chunk;
+	size_t len = (want + HPAGE - 1) & ~(HPAGE - 1), npages = len / PAGE, k, chunk, head;
 	unsigned seed = getenv("SHIM_SEED") ? strtoul(getenv("SHIM_SEED"), NULL, 0) : 1;
 	char *raw, *pool, *map, *dst;
 	size_t *src;	/* src[k]: pool page that goes to position k */
@@ -145,7 +147,7 @@ static void *build(size_t want)
 	src = __libc_malloc(npages * sizeof(size_t));
 	for (k = 0; k < npages; k++)
 		src[k] = k;
-	chunk = npages;
+	chunk = head = npages;
 	if (!strcmp(layout, "reversed")) {
 		for (k = 0; k < npages; k++)
 			src[k] = npages - 1 - k;
@@ -154,11 +156,15 @@ static void *build(size_t want)
 
 		if (getenv("SHUFFLE_MB") && atof(getenv("SHUFFLE_MB")) > 0)
 			chunk = (size_t)(atof(getenv("SHUFFLE_MB")) * 1048576) / PAGE;
-		if (chunk > npages)
-			chunk = npages;
+		if (getenv("SHUFFLE_HEAD_MB") && atof(getenv("SHUFFLE_HEAD_MB")) > 0)
+			head = (size_t)(atof(getenv("SHUFFLE_HEAD_MB")) * 1048576) / PAGE;
+		if (head > npages)
+			head = npages;
+		if (chunk > head)
+			chunk = head;
 		srand(seed);
-		for (c = 0; c < npages; c += chunk) {
-			size_t n = npages - c < chunk ? npages - c : chunk;
+		for (c = 0; c < head; c += chunk) {
+			size_t n = head - c < chunk ? head - c : chunk;
 
 			for (k = n - 1; k > 0; k--) {
 				size_t r = (((size_t)rand() << 15) ^ (size_t)rand()) % (k + 1), v = src[c + r];
@@ -182,7 +188,7 @@ static void *build(size_t want)
 	region = dst;
 	region_len = len;
 	if (getenv("SHIM_LOG"))
-		log_layout(getenv("SHIM_LOG"), layout, chunk, thp, npages);
+		log_layout(getenv("SHIM_LOG"), layout, chunk, head, thp, npages);
 	return dst;
 }
 

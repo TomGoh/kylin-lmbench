@@ -462,6 +462,54 @@ def section_persistence(data):
     row("8 MB, strides 128-1024", "8 MB, same stride, next iteration (about ten minutes later)", strata)
 
 
+def section_after_high(data):
+    print("\n## 9. What the next sizes read right after a high 8 MB point\n")
+    print("Same sweeps as section 8 (strides 64-1024, four quiesced boots, ten iterations each: 200 sweeps).  Every value "
+          "is divided by the median of the lower half of the 40 values of its stride and size.  The sweeps are split by "
+          "whether their 8 MB point was high (more than 1.12).  If a high 8 MB point came from the frames of that child's "
+          "buffer and the next child took the same frames back (as every 12 MB child did on the N80, Exp H7), two thirds "
+          "of the 12 MB buffer and half of the 16 MB buffer would be those frames.\n")
+    strides = (64, 128, 256, 512, 1024)
+
+    def rel(stride, size):
+        allv = sorted(x for c in CFGS for x in data[c][("lat_mem_rd_load", stride, size)])
+        low = median(allv[:len(allv) // 2])
+        return {c: [x / low for x in data[c][("lat_mem_rd_load", stride, size)]] for c in CFGS}
+
+    def quart(v):
+        v = sorted(v)
+        return f"{v[len(v) // 4]:.3f} / {median(v):.3f} / {v[(3 * len(v)) // 4]:.3f}"
+
+    print("| size | 8 MB point of the sweep | sweeps | quartiles of value / low level | within 0.97-1.04 | 1.04-1.12 | above 1.12 | above 1.20 |")
+    print("|---:|---|---:|---|---:|---:|---:|---:|")
+    hist = {}
+    for size in (12.0, 16.0, 24.0, 32.0):
+        groups = {"high": [], "low": []}
+        for s in strides:
+            r8, rn = rel(s, 8.0), rel(s, size)
+            for c in CFGS:
+                for a, b in zip(r8[c], rn[c]):
+                    groups["high" if a > 1.12 else "low"].append(b)
+        for name in ("high", "low"):
+            v = groups[name]
+            print(f"| {size:g} MB | {name} | {len(v)} | {quart(v)} | {sum(1 for x in v if 0.97 <= x <= 1.04)} | "
+                  f"{sum(1 for x in v if 1.04 < x <= 1.12)} | {sum(1 for x in v if x > 1.12)} | {sum(1 for x in v if x > 1.20)} |")
+        hist[size] = groups["high"]
+    print("\n12 MB value / low level in the sweeps whose 8 MB point was high, by stride (count: median, number above 1.12):\n")
+    for s in strides:
+        r8, rn = rel(s, 8.0), rel(s, 12.0)
+        v = [b for c in CFGS for a, b in zip(r8[c], rn[c]) if a > 1.12]
+        print(f"- stride {s}: {len(v)}: {median(v):.3f}, {sum(1 for x in v if x > 1.12)}")
+    print("\nHistogram of the 12 MB value / low level after a high 8 MB point (bins of 0.04):\n")
+    print("```")
+    lo = 0.94
+    while lo < 1.30:
+        n = sum(1 for x in hist[12.0] if lo <= x < lo + 0.04)
+        print(f"{lo:.2f}-{lo + 0.04:.2f} {'#' * n} {n}")
+        lo += 0.04
+    print("```")
+
+
 def main():
     data = {cfg: load_csv(name) for cfg, name in FILES.items()}
     noisy = load_csv(NOISY)
@@ -472,6 +520,7 @@ def main():
     section_sequential(data)
     section_state(data, noisy)
     section_persistence(data)
+    section_after_high(data)
 
 
 if __name__ == "__main__":
