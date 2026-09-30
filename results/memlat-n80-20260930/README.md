@@ -8,7 +8,7 @@
 下午和傍晚的全部测量期间它都在运行，当晚 19:20 才注意到。它的内存是 memfd，宿主机上是 4 KiB 页（`shmem_enabled` 为 `never`）。
 它占用的内存页散布在几个 1 GiB 物理区间里，这些页所在的 2 MiB 区间，宿主机二级页表被拆成了 4 KiB 的表项；
 取自这些区间的宿主机页做随机访问更慢（实验 S、V）。用到这批数据时要带上这个条件。
-论文图 7 的 N90 宿主机数据采集时 `pvm-manage` 是被屏蔽的，没有虚拟机在运行。
+论文图 7 的 N90 宿主机数据，按采集流程是在 `pvm-manage` 被屏蔽、没有虚拟机运行时采集的；这一点只有流程为据，结果文件里没有进程列表。
 
 ## 机器与状态
 
@@ -52,9 +52,10 @@
 | `expH-noc-samples.log` | 上一项运行期间每 100 ms 一次的互连频率（全部是 1800000） | 同上 |
 | `expS.log` | 傍晚：按 1 GiB 物理区间分别取页做随机访问 | `run10-slots.sh` |
 | `expV.log` `vm-frames-n80.txt` | 傍晚：同一个 GiB 里，与保护虚拟机共用 2 MiB 区间的页和不共用的页分别做随机访问；后一个文件是虚拟机内存的物理分布 | `run11-vm-shared.sh` |
-| `expV2.log` | 傍晚：上一项在 2–64 MB 各做一遍 | `run12-vm-shared-sizes.sh` |
+| `expV2.log` `vm-frames-n80-run12.txt` `guest-regions.txt` | 傍晚：上一项在 2–64 MB 各做一遍；后两个文件是当时虚拟机内存的物理分布和由它得到的 2 MiB 区间清单（`expV2`、`expW` 用的就是这份；`expV` 用的是五分钟前生成的一份，区间数相同，已被覆盖） | `run12-vm-shared-sizes.sh` |
+| `expV3.log` `vm-frames-v3.txt` `guest-regions-v3.txt` | 晚上：上一项换三个种子各重复一遍（6–64 MB），另加取物理连续页的三个大小 | `run16-vm-shared-repeat.sh` |
 | `expW.log` | 傍晚：顺序访问，同类页按物理顺序和随机顺序映射，两类页各一遍 | `run13-vm-shared-seq.sh` |
-| `expX1.log` `expX2.log` `expX3.log` `vm-frames-x.txt` | 晚上：被计时的循环两种写法的对比（`probe3`，24 KiB–64 MB）；用 lmbench 的写法重复 `expW`；同一时段 lmbench 原版 3 遍；当时虚拟机内存的物理分布 | `run14-loop-form.sh` |
+| `expX1.log` `expX2.log` `expX3.log` `vm-frames-x.txt` `guest-regions-x.txt` | 晚上：被计时的循环两种写法的对比（`probe3`，24 KiB–64 MB）；用 lmbench 的写法重复 `expW`；同一时段 lmbench 原版 3 遍；当时虚拟机内存的物理分布 | `run14-loop-form.sh` |
 | `expY.log` | 晚上：8 MB、lmbench 的写法，步长 64–1024，同一批相邻的页按物理顺序和随机顺序各测一遍 | `run15-layout-strides.sh` |
 | `iomem-n80.txt` | root 视角的物理内存布局（内核、保留区、监视器内存池的位置） | |
 | `vm-process-n80.txt` | 后台那个虚拟机的进程和完整命令行（带 `--protected-vm`），以及 `shmem_enabled` 的取值 | |
@@ -63,7 +64,7 @@
 | `hw-survey-n80.txt` | 硬件、内核配置、PMU 事件、KVM 启动日志 | |
 | `devfreq-survey-n80.txt` | 互连和 GPU 调频设备的状态、可选策略，以及桌面电源管理服务的策略表（只读查看） | |
 | `derived/device-tables.md` | 下午各实验（A、B、C、D、L、T、F）的汇总表 | `experiments/memlat-probe/analyze-device-logs.py` |
-| `derived/state-tables.md` | 傍晚和晚上各实验（R、BG、H、S、V、V2、W、X、Y）的汇总表 | `experiments/memlat-probe/analyze-state-experiments.py` |
+| `derived/state-tables.md` | 傍晚和晚上各实验（R、BG、H、S、V、V2、V3、W、X、Y）的汇总表 | `experiments/memlat-probe/analyze-state-experiments.py` |
 | `derived/host-n90-tables.md` | N90 宿主机四模式数据的对应分析 | `experiments/memlat-probe/analyze-host-memlat.py` |
 | `derived/guest-n90-tables.md` | N90 上 x-kernel **客户机内**数据的对应分析（图 8 的数据，不是宿主机数据） | `experiments/memlat-probe/analyze-guest-memlat.py` |
 

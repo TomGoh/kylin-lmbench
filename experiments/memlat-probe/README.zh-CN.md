@@ -97,6 +97,7 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 | `run13-vm-shared-seq.sh` | `expW` | 顺序访问：同一批页按物理顺序和随机顺序映射，shared 和 clear 两类各一遍 |
 | `run14-loop-form.sh` | `expX1` `expX2` `expX3` `vm-frames-x.txt` | 被计时的循环两种写法的对比（`probe3`）；用 lmbench 的写法重复上一项；同一时段 lmbench 原版 3 遍作参照 |
 | `run15-layout-strides.sh` | `expY` | 8 MB、lmbench 的写法，步长 64–1024 各测一遍页顺序的影响 |
+| `run16-vm-shared-repeat.sh` | `expV3` | `run12` 换三个种子各重复一遍，另加取物理连续页的三个大小 |
 
 **不改系统设置、但还没有执行的：**
 
@@ -123,7 +124,7 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 python3 analyze-host-memlat.py        # N90 宿主机四模式数据：论文三个数字、逐轮值、检验、增量曲线、以一次开机为单位的比较
 python3 analyze-guest-memlat.py       # N90 上 x-kernel 客户机内的数据（图 8），与宿主机数据分开
 python3 analyze-device-logs.py        # N80 下午的实验 A、B、C、D、L、T、F
-python3 analyze-state-experiments.py  # N80 傍晚的实验 R、BG、H、S、V、V2、W、X、Y，以及 G1–G4（日志存在时）
+python3 analyze-state-experiments.py  # N80 傍晚的实验 R、BG、H、S、V、V2、V3、W、X、Y，以及 G1–G4（日志存在时）
 python3 analyze-mode-compare.py modecmp-none-* modecmp-protected-*   # run5 的输出目录，第一个是对照基准
 ```
 
