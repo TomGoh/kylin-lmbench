@@ -1,0 +1,135 @@
+# Frequency-scaling (devfreq) state of the measurement machine, read-only survey, 2026-09-30T17:24:12+08:00
+# Nothing was changed. The governor shown here was in effect during all experiments of this directory, as far as can be told (see the note on trans_stat).
+
+## devfreq devices
+lrwxrwxrwx 1 root root 0 Sep 30 16:22 nocfreq -> ../../devices/platform/PHYT0047:00/devfreq/nocfreq
+lrwxrwxrwx 1 root root 0 Sep 30 17:17 PHYT0048:00 -> ../../devices/platform/PHYT0048:00/devfreq/PHYT0048:00
+
+### PHYT0048:00
+name: PHYT0048:00
+governor: performance
+cur_freq: 800000
+min_freq: 200000
+max_freq: 800000
+available_frequencies: 200000 400000 600000 800000
+available_governors: userspace powersave performance stable_ondemand simple_ondemand
+trans_stat:
+     From  :   To
+           :    200000    400000    600000    800000   time(ms)
+     200000:         0         0         0         1     27712
+     400000:         0         0         0         0         0
+     600000:         0         0         0         0         0
+*    800000:         1         0         0         0       120
+Total transition : 2
+
+### nocfreq
+name: nocfreq
+governor: performance
+cur_freq: 1800000
+min_freq: 600000
+max_freq: 1800000
+available_frequencies: 1800000 1450000 1300000 1200000 1000000 950000 900000 650000 600000
+available_governors: userspace powersave performance stable_ondemand simple_ondemand
+trans_stat:
+     From  :   To
+           :   1800000   1450000   1300000   1200000   1000000    950000    900000    650000    600000   time(ms)
+*   1800000:         0         0         2         3         1         0        11         1         3      2740
+    1450000:         0         0         0         0         0         0         0         0         0         0
+    1300000:         1         0         0         0         0         0         1         0         0       212
+    1200000:         0         0         0         0         0         0         1         1         1       420
+    1000000:         1         0         0         0         0         0         0         0         0       208
+     950000:         0         0         0         0         0         0         0         0         0         0
+     900000:         6         0         0         0         0         0         0         2         5      2844
+     650000:         3         0         0         0         0         0         0         0         1       640
+     600000:        10         0         0         0         0         0         0         0         0      9408
+Total transition : 54
+
+## ACPI ids of the devfreq devices
+PHYT0048:00: /sys/devices/platform/PHYT0048:00 hid=PHYT0048 driver=ftg340
+nocfreq: /sys/devices/platform/PHYT0047:00 hid=PHYT0047 driver=phytium_nocfreq
+
+## kernel config
+# CONFIG_DEVFREQ_THERMAL is not set
+CONFIG_PM_DEVFREQ=y
+# DEVFREQ Governors
+CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND=y
+CONFIG_DEVFREQ_GOV_STABLE_ONDEMAND=y
+CONFIG_DEVFREQ_GOV_PERFORMANCE=y
+CONFIG_DEVFREQ_GOV_POWERSAVE=y
+CONFIG_DEVFREQ_GOV_USERSPACE=y
+CONFIG_DEVFREQ_GOV_PASSIVE=y
+# DEVFREQ Drivers
+CONFIG_ARM_PHYTIUM_NOC_DEVFREQ=m
+CONFIG_ARM_PHYTIUM_DMU_DEVFREQ=m
+CONFIG_PM_DEVFREQ_EVENT=y
+
+## loaded devfreq modules
+phytium_noc            20480  0
+
+## desktop power manager (package ukui-power-manager)
+   2833 root     /usr/libexec/upowerd
+   5926 root     /usr/bin/ukui-powermanagement-service
+  13877 kylin    /usr/bin/ukui-power-manager-tray
+  13898 kylin    /usr/bin/ukui-powermanagement
+  13901 kylin    /usr/bin/ukui-upower
+
+## its devfreq policy table: /usr/share/ukui/ukui-power-manager/upm-hardware-global.conf, sections [devFreqMax] and [devfreqPolicy]
+[devFreqMax]
+defaultBalanceDevfreqMax=default
+defaultPerformanceDevfreqMax=default
+defaultPowersaveDevfreqMax=default
+idleBalanceDevfreqMax=default
+idlePerformanceDevfreqMax=default
+idlePowersaveDevfreqMax=default
+longidleBalanceMaxDevfreqMax=default
+longidlePerformanceDevfreqMax=default
+longidlePowersaveDevfreqMax=default
+meetingBalanceDevfreqMax=default
+meetingPerformanceDevfreqMax=default
+meetingPowersaveDevfreqMax=default
+officeExcelBalanceDevfreqMax=default
+officeExcelPerformanceDevfreqMax=default
+officeExcelPowersaveDevfreqMax=default
+officePptBalanceDevfreqMax=default
+officePptPerformanceDevfreqMax=default
+officePptPowersaveDevfreqMax=default
+officeWordBalanceDevfreqMax=default
+officeWordPerformanceDevfreqMax=default
+officeWordPowersaveDevfreqMax=default
+videoBalanceDevfreqMax=default
+videoPerformanceDevfreqMax=default
+videoPowersaveDevfreqMax=default
+
+[devfreqPolicy]
+defaultBalanceDevfreqPolicy=simple_ondemand
+defaultPerformanceDevfreqPolicy=simple_ondemand
+defaultPowersaveDevfreqPolicy=simple_ondemand
+idleBalanceDevfreqPolicy=powersave
+idlePerformanceDevfreqPolicy=powersave
+idlePowersaveDevfreqPolicy=powersave
+longidleBalanceDevfreqPolicy=powersave
+longidlePerformanceDevfreqPolicy=powersave
+longidlePowersaveDevfreqPolicy=powersave
+meetingBalanceDevfreqPolicy=powersave
+meetingPerformanceDevfreqPolicy=powersave
+meetingPowersaveDevfreqPolicy=powersave
+officeExcelBalanceDevfreqPolicy=powersave
+officeExcelPerformanceDevfreqPolicy=powersave
+officeExcelPowersaveDevfreqPolicy=powersave
+officePptBalanceDevfreqPolicy=powersave
+officePptPerformanceDevfreqPolicy=powersave
+officePptPowersaveDevfreqPolicy=powersave
+officeWordBalanceDevfreqPolicy=powersave
+officeWordPerformanceDevfreqPolicy=powersave
+officeWordPowersaveDevfreqPolicy=powersave
+videoBalanceDevfreqPolicy=powersave
+videoPerformanceDevfreqPolicy=powersave
+videoPowersaveDevfreqPolicy=powersave
+
+
+## power supply
+AC: type=Mains online=1 status=
+BAT1: type=Battery online= status=Charging
+
+## uptime
+ 17:24:12 up  1:02,  2 users,  load average: 0.37, 0.24, 0.28

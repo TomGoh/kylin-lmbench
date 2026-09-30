@@ -101,3 +101,40 @@ pkvm (10 runs) against the 30 pooled runs of the three baselines, Monte-Carlo pe
 | 256 | 0.0625 | 10.357 | 10.241 | 10.781 | 10.345 | +0.046 | +0.7 |
 | 512 | 0.1250 | 9.573 | 9.517 | 9.926 | 9.789 | +0.244 | +2.0 |
 | 1024 | 0.2500 | 10.473 | 10.518 | 11.066 | 10.899 | +0.404 | +1.6 |
+
+## 5. Quiesced nVHE host versus the non-quiesced nVHE host (both without host stage-2)
+
+The non-quiesced run (results/n90-day3-host/n90-nvhe-noisy-full-*) was taken with desktop and background services running. Same machine, same kernel, same KVM mode.
+
+| size | random: quiesced | random: non-quiesced | change | seq stride 256: quiesced | seq stride 256: non-quiesced | change |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 MB | 19.48 | 19.05 | -2.2% | 4.44 | 4.47 | +0.7% |
+| 2 MB | 20.75 | 21.10 | +1.7% | 4.70 | 4.74 | +0.9% |
+| 3 MB | 36.63 | 26.41 | -27.9% | 5.31 | 4.92 | -7.5% |
+| 4 MB | 47.69 | 30.80 | -35.4% | 5.48 | 5.07 | -7.5% |
+| 6 MB | 67.35 | 48.61 | -27.8% | 8.22 | 7.46 | -9.2% |
+| 8 MB | 112.60 | 83.90 | -25.5% | 11.41 | 10.32 | -9.6% |
+| 12 MB | 154.81 | 121.82 | -21.3% | 10.86 | 11.34 | +4.4% |
+| 16 MB | 168.56 | 134.23 | -20.4% | 10.69 | 11.47 | +7.2% |
+| 32 MB | 180.78 | 146.20 | -19.1% | 10.50 | 11.17 | +6.4% |
+| 64 MB | 185.05 | 150.12 | -18.9% | 10.24 | 11.11 | +8.5% |
+
+Sequential stride 256 at 8 MB, per iteration (ns):
+
+- quiesced nvhe: 10.30 12.43 12.62 9.98 9.93 12.27 12.35 10.55 12.31 10.02
+- non-quiesced nvhe: 10.81 10.34 10.34 10.31 10.27 10.26 10.33 10.28 10.10 10.33
+
+## 6. Single runs of the quiesced data sets that are more than 4% faster than their median (random access)
+
+| size | kvmoff | nvhe | vhe | pkvm | total of 40 |
+|---:|---:|---:|---:|---:|---:|
+| 3 MB | 0 | 0 | 0 | 0 | 0 |
+| 4 MB | 0 | 0 | 0 | 0 | 0 |
+| 6 MB | 0 | 0 | 0 | 0 | 0 |
+| 8 MB | 0 | 0 | 0 | 0 | 0 |
+| 12 MB | 1 | 0 | 0 | 0 | 1 |
+| 16 MB | 3 | 0 | 1 | 0 | 4 |
+| 24 MB | 2 | 0 | 1 | 1 | 4 |
+| 32 MB | 4 | 1 | 0 | 1 | 6 |
+| 48 MB | 3 | 3 | 1 | 1 | 8 |
+| 64 MB | 3 | 3 | 3 | 2 | 11 |

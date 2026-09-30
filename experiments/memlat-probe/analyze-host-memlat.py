@@ -10,7 +10,11 @@ and prints, as Markdown:
      modes, and significance tests of pkvm vs kvmoff;
   3. the random-access curve: pkvm minus baseline (ns) per working-set size,
      with a bootstrap confidence interval;
-  4. the sequential curve at 64 MB per stride (page crossings per access).
+  4. the sequential curve at 64 MB per stride (page crossings per access);
+  5. the quiesced nVHE run next to the non-quiesced ("noisy") nVHE run that the
+     repository keeps as a counter-example: the platform has a second state
+     in which memory latency is very different, independent of the KVM mode;
+  6. how often single runs of the quiesced data sets fall into that state.
 
 Standard library only.  Usage:  python3 analyze-host-memlat.py [repo_root]
 """
@@ -197,6 +201,49 @@ def main():
         d = md["pkvm"] - ref
         print(f"| {s} | {s / 4096:.4f} | {md['kvmoff']:.3f} | {md['nvhe']:.3f} | {md['vhe']:.3f} | {md['pkvm']:.3f} | "
               f"{d:+.3f} | {d / (s / 4096):+.1f} |")
+
+
+    section_state(data)
+
+
+def section_state(data):
+    noisy = collections.defaultdict(dict)
+    with open(os.path.join(RES, "n90-nvhe-noisy-full-cpu0.csv")) as fh:
+        for r in csv.DictReader(fh):
+            if r["bench"] not in ("lat_mem_rd_load", "lat_mem_rd_rand"):
+                continue
+            m = re.match(r"stride(\d+)_sz([\d.]+)MB", r["variant"])
+            noisy[(r["bench"], int(m.group(1)), float(m.group(2)))][int(r["iter"])] = float(r["value"])
+
+    def nv(key):
+        return [noisy[key][i] for i in sorted(noisy[key])]
+
+    print("\n## 5. Quiesced nVHE host versus the non-quiesced nVHE host (both without host stage-2)\n")
+    print("The non-quiesced run (results/n90-day3-host/n90-nvhe-noisy-full-*) was taken with desktop and "
+          "background services running. Same machine, same kernel, same KVM mode.\n")
+    print("| size | random: quiesced | random: non-quiesced | change | seq stride 256: quiesced | seq stride 256: non-quiesced | change |")
+    print("|---:|---:|---:|---:|---:|---:|---:|")
+    for s in (1.0, 2.0, 3.0, 4.0, 6.0, 8.0, 12.0, 16.0, 32.0, 64.0):
+        ra = st.median(vals(data, "nvhe", ("lat_mem_rd_rand", 16, s)))
+        rb = st.median(nv(("lat_mem_rd_rand", 16, s)))
+        sa = st.median(vals(data, "nvhe", ("lat_mem_rd_load", 256, s)))
+        sb = st.median(nv(("lat_mem_rd_load", 256, s)))
+        print(f"| {s:g} MB | {ra:.2f} | {rb:.2f} | {100 * (rb / ra - 1):+.1f}% | {sa:.2f} | {sb:.2f} | {100 * (sb / sa - 1):+.1f}% |")
+    print("\nSequential stride 256 at 8 MB, per iteration (ns):\n")
+    print("- quiesced nvhe: " + " ".join(f"{x:.2f}" for x in vals(data, "nvhe", ("lat_mem_rd_load", 256, 8.0))))
+    print("- non-quiesced nvhe: " + " ".join(f"{x:.2f}" for x in nv(("lat_mem_rd_load", 256, 8.0))))
+
+    print("\n## 6. Single runs of the quiesced data sets that are more than 4% faster than their median (random access)\n")
+    print("| size | kvmoff | nvhe | vhe | pkvm | total of 40 |")
+    print("|---:|---:|---:|---:|---:|---:|")
+    for s in (3.0, 4.0, 6.0, 8.0, 12.0, 16.0, 24.0, 32.0, 48.0, 64.0):
+        key = ("lat_mem_rd_rand", 16, s)
+        counts = []
+        for c in CFGS:
+            v = vals(data, c, key)
+            md = st.median(v)
+            counts.append(sum(1 for x in v if x < 0.96 * md))
+        print(f"| {s:g} MB | " + " | ".join(str(c) for c in counts) + f" | {sum(counts)} |")
 
 
 if __name__ == "__main__":

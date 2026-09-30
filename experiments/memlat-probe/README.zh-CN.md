@@ -70,6 +70,7 @@ sudo taskset -c 0 ./frames 64 16 1024 11,2d,2a,17,5,13 compact
 | `run_all.sh` | `expA` `expC` `expD` `expB` | 随机访问大小扫描、2 MiB 大页对照、顺序访问步长扫描、8 MB 附近重复 30 轮 |
 | `run2.sh` | `expL` `expT` | 同一组物理页换顺序、首次触页顺序 |
 | `run3.sh` | `expF` | 按物理位置挑选页集合后做随机访问 |
+| `run4-noc-governor.sh` | （未执行） | 把互连调频固定在几个频率、再切回自动调频，各测一遍。**会修改系统设置**，2026-09-30 没有执行 |
 
 ## 分析脚本
 
@@ -91,6 +92,7 @@ N80 上只测了 protected 一种模式。要在论文平台上拿到同机证�
 
 ## 对系统的影响
 
-- 只在用户态运行，不加载内核模块，不改任何系统设置。
+- `run_all.sh`、`run2.sh`、`run3.sh` 只在用户态运行，不加载内核模块，不改任何系统设置。
+- `run4-noc-governor.sh` 是例外：它会临时改写 `/sys/class/devfreq/nocfreq/governor`，退出时恢复。
 - `layout` 和 `frames` 会分配一个较大的内存池（192 MB 和 1 GiB），运行结束即释放。
 - 以 root 运行只是为了读物理页号。

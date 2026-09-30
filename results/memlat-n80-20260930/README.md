@@ -14,6 +14,7 @@
 | 缓存 | L1d 64K 4 路；L2 512K 8 路，每核私有；L3 8M 16 路 8192 组，8 核共享 |
 | 页大小 | 4 KiB；系统 THP 设置为 `always`，测量程序对缓冲区使用 `MADV_NOHUGEPAGE` |
 | 绑核与频率 | 全部绑定 cpu0，最高 1.9 GHz，调速器 `performance` |
+| 互连调频 | `nocfreq` 策略为 `performance`，频率 1800 MHz（桌面电源管理服务设置的，本次没有改动） |
 | 背景负载 | 桌面会话在运行，负载 0.3–1.2，没有做服务屏蔽 |
 
 完整的硬件和软件信息见 `hw-survey-n80.txt`。
@@ -39,6 +40,7 @@
 | `expL-smoke.log` `expF-smoke.log` | 上面两个实验在写成脚本之前的第一次手工试跑；`expL-smoke.log` 里物理连续度达到 0.99 | 命令记在文件开头 |
 | `meta.log` | 各批次的起止时间和系统负载 | |
 | `hw-survey-n80.txt` | 硬件、内核配置、PMU 事件、KVM 启动日志 | |
+| `devfreq-survey-n80.txt` | 互连和 GPU 调频设备的状态、可选策略，以及桌面电源管理服务的策略表（只读查看） | |
 | `derived/device-tables.md` | 上述日志的汇总表 | `experiments/memlat-probe/analyze-device-logs.py` |
 | `derived/host-n90-tables.md` | N90 宿主机四模式数据的对应分析 | `experiments/memlat-probe/analyze-host-memlat.py` |
 | `derived/guest-n90-tables.md` | N90 上 x-kernel **客户机内**数据的对应分析（图 8 的数据，不是宿主机数据） | `experiments/memlat-probe/analyze-guest-memlat.py` |
