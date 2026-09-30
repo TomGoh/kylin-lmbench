@@ -22,6 +22,7 @@
  * The buffer always uses 4 KiB pages (MADV_NOHUGEPAGE).  Prints one key=value
  * line.  Fields beyond those of probe.c:
  *   chase=    loop or unrolled (see CHASE_UNROLL)
+ *   slots=    (root only) pages of the working set per 1 GiB physical slot
  *   rebuild=  1: the chain is rewritten before every interval, as lmbench does
  *   reps=     the 11 interval times in the order they were taken (ns per hop)
  *   noc0=     /sys/class/devfreq/nocfreq/cur_freq before the first interval
@@ -319,6 +320,17 @@ int main(int argc, char **argv)
 			printf("pfn=ok contig_frac=%.4f rcontig_frac=%.4f gb_regions=%zu mb2_regions=%zu ",
 			       npages > 1 ? (double)contig / (npages - 1) : 0.0,
 			       npages > 1 ? (double)rcontig / (npages - 1) : 0.0, gb_regions, mb2_regions);
+			/* pages of the working set per 1 GiB physical slot (pfn[] is sorted here) */
+			printf("slots=");
+			for (k = 0; k < npages; ) {
+				size_t e = k;
+
+				while (e < npages && (pfn[e] >> 18) == (pfn[k] >> 18))
+					e++;
+				printf("%s0x%llx:%zu", k ? "," : "", (unsigned long long)(pfn[k] >> 18), e - k);
+				k = e;
+			}
+			printf(" ");
 		} else {
 			printf("pfn=na ");
 		}
