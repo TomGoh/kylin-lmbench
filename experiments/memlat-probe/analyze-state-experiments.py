@@ -8,6 +8,8 @@
           (expH-rand.log, expH-seq256.log, expH-seqall.log, expH-noc-samples.log)
   Exp S   random chase on pages from one 1 GiB physical slot at a time
           (expS.log, iomem-n80.txt)
+  Exp V   the same, separately for pages that share a 2 MiB region with the
+          running protected VM and pages that do not (expV.log, vm-frames-n80.txt)
   Exp G1-G4  the interconnect-frequency experiments, if their logs exist
           (expG1.log, expG2.log, expG3.log, expG4-*.log)
 
@@ -443,11 +445,79 @@ def exp_s():
                   f"range {min(diff):+.2f} to {max(diff):+.2f} ns (n = {len(diff)}).\n")
 
 
+def exp_v():
+    path = os.path.join(DEV, "expV.log")
+    if not os.path.exists(path):
+        return
+    runs = collections.OrderedDict()
+    cur = None
+    with open(path) as fh:
+        for line in fh:
+            if line.startswith("## "):
+                d = kv(line)
+                cur = (int(d["rep"]), int(d["size_mb"]), d["pick"])
+                runs[cur] = []
+            elif line.startswith("slot=") and cur is not None:
+                d = kv(line)
+                d["_slot"] = int(str(line.split()[0].split("=")[1]), 16)
+                runs[cur].append(d)
+    print("## Exp V: host pages that share a 2 MiB region with the memory of the running protected VM, against pages that do not\n")
+    vmf = os.path.join(DEV, "vm-frames-n80.txt")
+    if os.path.exists(vmf):
+        print("Where the VM's memory sits (vm-frames-n80.txt):\n")
+        print("```")
+        with open(vmf) as fh:
+            for line in fh:
+                if line.startswith(("mapping", "  slot", "wrote")):
+                    print(line.rstrip()[:160])
+        print("```\n")
+    print("class shared = the page lies in a 2 MiB region that also holds VM pages (host stage-2 split to 4 KiB there); "
+          "class clear = it does not.  Same process, same GiB slot, same way of picking pages.  "
+          "ns = median of 5 full cycles; two passes per set.\n")
+    for (size, pick) in sorted({(k[1], k[2]) for k in runs}):
+        keys = [k for k in runs if k[1] == size and k[2] == pick]
+        print(f"### {size} MB per set, pages picked: {'lowest addresses' if pick == 'low' else 'spread evenly'}, {len(keys)} run(s)\n")
+        print("| slot (physical base) | class | measurements | ns: median (min-max) | cycles | page walks per access | L1 refills | "
+              "L2 refills | L3 refills | distinct 2 MiB regions | shared minus clear: ns | cycles | L2 refills |")
+        print("|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
+        slots = sorted({d["_slot"] for k in keys for d in runs[k]})
+        diffs = []
+        for s in slots:
+            stat = {}
+            for cls in ("clear", "shared"):
+                rs = [d for k in keys for d in runs[k] if d["_slot"] == s and d["class"] == cls]
+                if rs:
+                    stat[cls] = rs
+            for cls in ("clear", "shared"):
+                if cls not in stat:
+                    continue
+                rs = stat[cls]
+                ns = [d["ns_med"] for d in rs]
+                m = lambda key, rr=rs: st.median(d[key] for d in rr)
+                tail = " | | |"
+                if cls == "shared" and "clear" in stat:
+                    c = stat["clear"]
+                    mc = lambda key: st.median(d[key] for d in c)
+                    tail = f" {m('ns_med') - mc('ns_med'):+.1f} | {m('ev11') - mc('ev11'):+.1f} | {m('ev17') - mc('ev17'):+.3f} |"
+                    diffs.append((s, m('ns_med') - mc('ns_med'), m('ev11') - mc('ev11'), m('ev17') - mc('ev17'), m('ev3') - mc('ev3')))
+                print(f"| 0x{s << 30:x} | {cls} | {len(rs)} | {st.median(ns):.1f} ({min(ns):.1f}-{max(ns):.1f}) | {m('ev11'):.1f} | "
+                      f"{m('ev2d'):.3f} | {m('ev3'):.3f} | {m('ev17'):.3f} | {m('ev2a'):.3f} | {m('mb2_regions'):.0f} |{tail}")
+        clear_all = [d["ns_med"] for k in keys for d in runs[k] if d["class"] == "clear"]
+        if clear_all:
+            print(f"\nclass clear over all slots: {min(clear_all):.1f}-{max(clear_all):.1f} ns, median {st.median(clear_all):.1f} ns "
+                  f"(n = {len(clear_all)}).")
+        if diffs:
+            print("shared minus clear, per slot: " + "; ".join(f"0x{s << 30:x}: {a:+.1f} ns, {b:+.1f} cycles, {c:+.3f} L2 refills, {e:+.3f} L1 refills"
+                                                                 for s, a, b, c, e in diffs) + ".")
+        print()
+
+
 def main():
     exp_r()
     exp_bg()
     exp_h()
     exp_s()
+    exp_v()
     exp_g1()
     exp_g2()
     exp_h("expG4", "Exp G4: lmbench's own lat_mem_rd in three interconnect states")

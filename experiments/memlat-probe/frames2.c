@@ -216,6 +216,12 @@ static void measure(char *dst, size_t npages, size_t *pages, size_t *words)
 
 	hops = npages * nwords;		/* one full cycle */
 	p = chase(p, hops);		/* warm up */
+	/* small working sets: as many whole cycles as fit in about 100 ms */
+	t0 = now_ns();
+	p = chase(p, hops);
+	t1 = now_ns();
+	if (t1 - t0 < 100e6)
+		hops *= (size_t)(100e6 / (t1 - t0)) + 1;
 	for (i = 0; i < nev; i++)
 		if (fd[i] >= 0) {
 			ioctl(fd[i], PERF_EVENT_IOC_RESET, 0);
