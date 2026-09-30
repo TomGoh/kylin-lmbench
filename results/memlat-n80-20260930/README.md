@@ -36,10 +36,12 @@
 | `expL.log` | 同一组物理页按物理升序、随机、物理降序排列后的顺序访问延迟 | `run2.sh` |
 | `expT.log` | 首次触页顺序分别为默认、随机、降序时的顺序访问延迟 | `run2.sh` |
 | `expF.log` | 按物理位置挑选页集合后的 64 MB 随机访问延迟 | `run3.sh` |
+| `expL-smoke.log` `expF-smoke.log` | 上面两个实验在写成脚本之前的第一次手工试跑；`expL-smoke.log` 里物理连续度达到 0.99 | 命令记在文件开头 |
 | `meta.log` | 各批次的起止时间和系统负载 | |
 | `hw-survey-n80.txt` | 硬件、内核配置、PMU 事件、KVM 启动日志 | |
 | `derived/device-tables.md` | 上述日志的汇总表 | `experiments/memlat-probe/analyze-device-logs.py` |
 | `derived/host-n90-tables.md` | N90 宿主机四模式数据的对应分析 | `experiments/memlat-probe/analyze-host-memlat.py` |
+| `derived/guest-n90-tables.md` | N90 上 x-kernel **客户机内**数据的对应分析（图 8 的数据，不是宿主机数据） | `experiments/memlat-probe/analyze-guest-memlat.py` |
 
 ## 日志字段
 

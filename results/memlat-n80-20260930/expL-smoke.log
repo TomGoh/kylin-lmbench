@@ -1,0 +1,8 @@
+## first trial of the layout experiment, run by hand before run2.sh (2026-09-30, about 16:47, N80F3, root, cpu0)
+## command: taskset -c 0 ./layout 8 256 96 11,2a,17,2d,5,13 sorted,shuffled,reversed,sorted,shuffled 1
+# pool_pages=24576 runs_in_pool=17760 longest_run=256 selected=2048 pfn_min=0x20e23c0 pfn_max=0x235e17d
+layout=sorted size_mb=8.000 stride=256 pages=2048 contig_frac=0.9878 rcontig_frac=0.0000 color_max=19 thrash_pages_frac=0.4580 ns_min=7.995 ns_med=8.007 ns_max=8.118 ev11=15.208335 ev2a=0.758155 ev17=0.277343 ev2d=0.045721 ev5=0.062283 ev13=1.000009 sink=0xffff846e8400
+layout=shuffled size_mb=8.000 stride=256 pages=2048 contig_frac=0.0005 rcontig_frac=0.0000 color_max=19 thrash_pages_frac=0.4580 ns_min=9.611 ns_med=9.627 ns_max=9.675 ev11=18.260997 ev2a=0.773643 ev17=0.257770 ev2d=0.052480 ev5=0.062501 ev13=1.000007 sink=0xffff83c44700
+layout=reversed size_mb=8.000 stride=256 pages=2048 contig_frac=0.0000 rcontig_frac=0.9878 color_max=19 thrash_pages_frac=0.4580 ns_min=8.180 ns_med=8.202 ns_max=8.234 ev11=15.557149 ev2a=0.755024 ev17=0.266917 ev2d=0.054496 ev5=0.062501 ev13=1.000006 sink=0xffff83987700
+layout=sorted size_mb=8.000 stride=256 pages=2048 contig_frac=0.9878 rcontig_frac=0.0000 color_max=19 thrash_pages_frac=0.4580 ns_min=7.968 ns_med=7.978 ns_max=8.026 ev11=15.141562 ev2a=0.756025 ev17=0.277496 ev2d=0.046813 ev5=0.062391 ev13=1.000006 sink=0xffff84807300
+layout=shuffled size_mb=8.000 stride=256 pages=2048 contig_frac=0.0000 rcontig_frac=0.0000 color_max=19 thrash_pages_frac=0.4580 ns_min=9.624 ns_med=9.630 ns_max=9.654 ev11=18.262541 ev2a=0.772081 ev17=0.257451 ev2d=0.052696 ev5=0.062501 ev13=1.000007 sink=0xffff83a9d700

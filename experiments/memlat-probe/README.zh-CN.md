@@ -76,6 +76,7 @@ sudo taskset -c 0 ./frames 64 16 1024 11,2d,2a,17,5,13 compact
 ```bash
 python3 analyze-host-memlat.py     # N90 宿主机四模式数据：论文三个数字、逐轮值、显著性检验、增量曲线
 python3 analyze-device-logs.py     # N80 日志：各实验的汇总表
+python3 analyze-guest-memlat.py    # N90 上 x-kernel 客户机内的数据（图 8），与宿主机数据分开
 ```
 
 两个脚本只用 Python 标准库，输出是 Markdown 表格。2026-09-30 的输出存在

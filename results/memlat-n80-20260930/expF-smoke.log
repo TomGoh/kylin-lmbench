@@ -1,0 +1,4 @@
+## first trial of the frames experiment, run by hand before run3.sh (2026-09-30, about 16:55, N80F3, root, cpu0)
+## commands: taskset -c 0 ./frames 64 16 1024 11,2d,2a,17,5,13 compact 5 ; same with scatter
+policy=compact size_mb=64.000 stride=16 pages=16384 pool_pages=262144 pfn_min=0x20da827 pfn_max=0x23329da span_mb=9602 contig_frac=0.9987 gb_regions=3 mb2_regions=47 ns_min=158.261 ns_med=158.318 ns_max=158.441 ev11=300.310626 ev2d=0.999153 ev2a=1.000380 ev17=1.223281 ev5=0.999161 ev13=1.000079 sink=0xffff4ffa43b0
+policy=scatter size_mb=64.000 stride=16 pages=16384 pool_pages=262144 pfn_min=0x20ad800 pfn_max=0x2368edc span_mb=11191 contig_frac=0.0000 gb_regions=12 mb2_regions=2059 ns_min=160.887 ns_med=161.141 ns_max=161.462 ev11=305.638534 ev2d=1.000009 ev2a=0.995199 ev17=1.417517 ev5=1.000010 ev13=1.000078 sink=0xffff3d1a43b0
