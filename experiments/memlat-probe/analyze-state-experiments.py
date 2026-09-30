@@ -1441,23 +1441,27 @@ def exp_h3():
           "adjacency = fraction of virtually adjacent pages of the child's buffer that are physically adjacent (ascending / "
           "descending); runs = maximal runs of physically adjacent pages.  A child is matched to the lmbench output line of the "
           "same size that was printed after the child was sampled.\n")
-    pts = collections.defaultdict(list)     # size -> list of (hold, rep, ns, asc, desc, runs, regions)
+    pts = collections.defaultdict(list)     # size -> list of (hold, rep, ns, asc, desc, runs, regions, longest run, pages)
     for x in sw:
         for sz, (t, ns) in x["rows"].items():
-            # the child of this size: sampled before the line was printed, and the latest such
-            cand = [f for f in fr if abs(f["size_mb"] - sz) < 0.003 and f["t"] <= t]
+            # the child of this size (its buffer holds one page more than the size: malloc's header page):
+            # sampled before the line was printed, and the latest such
+            cand = [f for f in fr if abs(f["size_mb"] - sz) < 0.01 and f["t"] <= t]
             if not cand:
                 continue
             f = max(cand, key=lambda c: c["t"])
             if t - f["t"] > 3.0:
                 continue
-            pts[sz].append((x["hold"], x["rep"], ns, f["contig_frac"], f["rcontig_frac"], f["runs"], f["mb2_regions"]))
-    print("### The 8 MB point, every sweep\n")
-    print("| rep | held back | lmbench ns | adjacency of its buffer: asc / desc | runs | longest possible = 1 | 2 MiB regions |")
-    print("|---:|---:|---:|---|---:|---|---:|")
-    for hold, rep, ns, a, d, runs, reg in sorted(pts.get(8.0, []), key=lambda p: (p[1], p[0])):
-        print(f"| {rep} | {hold} MB | {ns:.2f} | {a:.3f} / {d:.3f} | {runs:.0f} | | {reg:.0f} |")
-    print("\n### By size: latency against the adjacency of lmbench's own buffer\n")
+            pts[sz].append((x["hold"], x["rep"], ns, f["contig_frac"], f["rcontig_frac"], f["runs"], f["mb2_regions"],
+                            f["longest_run"], f["pages"]))
+    for size in (8.0, 16.0, 64.0):
+        print(f"### The {size:g} MB point, every sweep\n")
+        print("| rep | held back | lmbench ns | adjacency of its buffer: asc / desc | runs of adjacent pages | longest run (pages) | 2 MiB regions |")
+        print("|---:|---:|---:|---|---:|---:|---:|")
+        for hold, rep, ns, a, d, runs, reg, longest, _ in sorted(pts.get(size, []), key=lambda p: (p[1], p[0])):
+            print(f"| {rep} | {hold} MB | {ns:.2f} | {a:.3f} / {d:.3f} | {runs:.0f} | {longest:.0f} | {reg:.0f} |")
+        print()
+    print("### By size: latency against the adjacency of lmbench's own buffer\n")
     print("| size | sweeps matched | total adjacency (min-max) | ns (min-max) | Spearman rho(ns, total adjacency) | "
           "sweeps with adjacency >= 0.8: n, median ns | sweeps with adjacency <= 0.3: n, median ns | ratio |")
     print("|---:|---:|---|---|---:|---|---|---:|")

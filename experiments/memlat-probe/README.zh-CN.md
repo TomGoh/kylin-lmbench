@@ -2,7 +2,8 @@
 
 本目录是 2026-09-30 调查"pKVM 宿主机内存访问延迟"时写的测量工具和分析脚本。
 调查的来龙去脉见 [docs/memlat/](../../docs/memlat/README.md)，原始日志见
-[results/memlat-n80-20260930/](../../results/memlat-n80-20260930/)。
+[results/memlat-n80-20260930/](../../results/memlat-n80-20260930/)（N80，protected 启动）和
+[results/memlat-d80f3-20260930/](../../results/memlat-d80f3-20260930/)（同型号核的工作站，宿主机没有二级翻译，不用 root）。
 
 这些程序**全部跑在宿主机 Linux 上**，不在虚拟机里面跑，也不启动虚拟机。
 （2026-09-30 在 N80 上测量时，后台有一个开机自启动的保护虚拟机在运行；`vm-frames.py` 和 `frames2` 的分类模式就是为了量它对宿主机的影响。）
@@ -12,17 +13,33 @@
 | 程序 | 回答的问题 |
 | --- | --- |
 | `probe.c` / `probe2.c` | 按 lmbench `lat_mem_rd` 的两种访问方式（顺序、随机）跑指针追逐，同时读硬件计数器：每次访问发生多少次页表遍历、多少次缓存回填。以 root 运行时还会读出缓冲区每一页的物理页号 |
-| `probe3.c` | 同上，另外可以像 lmbench 那样在每个计时区间之前重写一遍指针链（`rebuild=1`），并在每个计时区间前后读一次片上互连的频率；11 个区间的时间按先后全部打印 |
+| `probe3.c` | 同上，另外可以像 lmbench 那样在每个计时区间之前重写一遍指针链（`rebuild=1`），并在每个计时区间前后读一次片上互连的频率；11 个区间的时间按先后全部打印。还有一种只量地址翻译的方式（`tlb`，见下），不需要 root 也不需要硬件计数器，可以拿到没有启用 pKVM 的机器上跑 |
 | `layout.c` | **同一组物理页**按不同的虚拟顺序排列（物理升序、物理降序、随机），顺序访问延迟会不会变 |
 | `frames.c` | 物理页集中在一处还是分散在各处，随机访问延迟会不会变 |
-| `frames2.c` | 同一个进程里，按物理地址所在的 1 GiB 区间逐个取页做随机访问；每个区间测两遍（第二遍把同一批页搬到新的虚拟地址）。给它一份"虚拟机内存占了哪些 2 MiB 区间"的清单时，每个区间再分成与虚拟机共用 2 MiB 区间的页（shared）和不共用的页（clear）两类分别测。除了 lmbench 的随机、顺序两种访问方式，还有一种只量地址翻译的方式（`tlb<L>`：每一跳换一页，每页只用 L 条缓存行，数据留在缓存里） |
+| `frames2.c` | 同一个进程里，按物理地址所在的 1 GiB 区间逐个取页做随机访问；每个区间测两遍（第二遍把同一批页搬到新的虚拟地址）。给它一份"虚拟机内存占了哪些 2 MiB 区间"的清单时，每个区间再分成与虚拟机共用 2 MiB 区间的页（shared）和不共用的页（clear）两类分别测。除了 lmbench 的随机、顺序两种访问方式，还有一种只量地址翻译的方式（`tlb<L>`：每一跳换一页，每页只用 L 条缓存行，数据留在缓存里）。第 9 个参数 `<区间 A>:<区间 B>:<百分比>` 时只测一组页，按给定比例取自两个区间 |
+| `thplayout.c` | `layout.c` 的不用 root 的版本：先让缓冲区以 2 MiB 透明大页分配（每 2 MiB 是一块物理上连续的内存），再用 `mremap` 把每个 4 KiB 页逐个搬到新的虚拟地址区间，按物理顺序、逆序或随机顺序排列。物理页的相对位置由构造方式决定，不需要读物理页号，所以可以在没有 root 的机器上做"同一批页换顺序"的实验 |
 | `vm-frames.py` | 只读：读出正在运行的虚拟机的内存落在哪些 1 GiB、2 MiB 物理区间里，并写出上面那份清单 |
+| `lmb-frames.py` | 只读：盯住 lmbench `lat_mem_rd` 的每个子进程，读出它那块缓冲区的物理页号，记下连续度、连续段的个数等。lmbench 自己不报告这些 |
 | `bgload.c` | 在另一个核上连续读或写一块内存，制造背景内存流量 |
 | `nocsample.c` | 每隔固定时间记录一次片上互连频率，不 fork |
 | `nothp.c` | 对一个进程及其子进程关掉透明大页（`prctl`），不改系统设置。用来让 lmbench 的 `malloc` 缓冲区使用 4 KiB 页 |
 
 `probe.c` 是第一版，`probe2.c` 增加了"首次触页顺序"选项和反向连续度指标，`probe3.c` 是为平台状态实验写的。
 三个都保留，是因为各自产生了一部分已存档的日志。
+
+### 只量地址翻译的访问方式
+
+`frames2 ... tlb<L>` 和 `probe3 tlb <大小> <每页行数> ...`：每一跳换一页，每页只用 L 条缓存行，数据量很小、留在一二级缓存里，
+页数决定每一跳要不要做页表遍历（这个核上 1024 页不需要，2048 页起几乎每跳都要）。用它量的是核自己做一次页表遍历花多少个周期，与内存通路的状态无关。
+
+- 干净的配置是 2048 页 × 1 行（每跳 0.9–1.0 次遍历，二级缓存回填接近零）和对照用的 1024 页 × 2 行（同样 2048 条数据行，不需要遍历）。
+  "一次遍历的周期数"=（前者的周期数 − 后者的周期数）÷ 每跳的遍历次数。
+- **`probe3` 的 4096 页 × 1 行不可靠。** `probe3` 的页是在写链表时第一次被触到的，顺序就是链表的顺序，而链表第 k 个位置用的是页内第 (37k mod 64) 条缓存行；
+  内核连续发出的物理页号如果也是连续的，数据行就挤进少数几个二级缓存组里，每跳出现 0.1–0.8 次二级缓存回填（实验 N2、N4）。
+  环境变量 `TLB_PREFAULT=1` 让它先按地址顺序把页触一遍，可以消除这个问题；以 root 运行时 `l2over=` 给出按实际物理页号算出来的拥挤程度。
+  `frames2` 没有这个问题。链表顺序触页时 2048 × 1 偶尔也会中招（实验 N5 的 24 个进程里有 2 个），看 `ev17` 就能认出来。
+- `probe3` 每行末尾的 `l1_ns=` 是同一进程里一级缓存内的指针追逐（这个核上每跳 4 个周期），`cyc_est=` 是用它把纳秒换算成的周期数，读不到硬件计数器时用。
+- 以 root 运行时 `probe3` 还打印 `slots=`（缓冲区的页在各 1 GiB 物理区间的分布）；给了 `REGIONS=<文件>`（`vm-frames.py` 写出的清单）时打印 `shared_frac=`（落在虚拟机所在 2 MiB 区间里的页的份额）。
 
 ## 访问方式与 lmbench 的对应关系
 
@@ -40,7 +57,8 @@
 - 缓冲区用 `mmap` 直接分配并 `madvise(MADV_NOHUGEPAGE)`，相当于 lmbench 在 THP=never 下的 `malloc`。
 - `probe`、`probe2` 只在开头建一次指针链，之后只读；lmbench 在**每个计时区间之前**都把指针链重写一遍。
   只看稳态延迟时两者一样；涉及按总线流量调频的策略时不一样，那时用 `probe3` 的 `rebuild=1`。
-- 计时用 `clock_gettime(CLOCK_MONOTONIC)`，11 次重复，每次约 0.1 秒，同时给出最小值和中位数。lmbench 报告的是最小值。
+- 计时用 `clock_gettime(CLOCK_MONOTONIC)`。`probe`、`probe2`、`probe3`、`layout`、`thplayout` 是 11 次重复，每次约 0.1 秒，同时给出最小值和中位数；
+  `frames2` 是 5 次重复（每次至少走完整个环一圈），表里用的是中位数。lmbench 报告的是最小值。
 - **被计时的循环写法不同，顺序访问的绝对值因此不同。** 这里默认是循环里一条取数指令；lmbench 的 `benchmark_loads` 是连续 100 条取数指令
   （`HUNDRED` 宏）。同一状态下，默认写法测到的顺序访问比 lmbench 原版低 4%–9%（1 MB 以上），随机访问和一级缓存内的访问没有差别。
   `probe3`、`frames2` 在环境变量 `CHASE_UNROLL=1` 时改用 lmbench 的写法，这时与 lmbench 原版相差不超过 2.2%（实验 X）。
@@ -71,7 +89,7 @@ sysfs 里没有具名的 `dtlb_walk` 事件，所以用 `l2d_tlb_refill` 代表�
 ## 编译
 
 ```bash
-make                         # probe probe2 probe3 layout frames frames2 bgload nocsample nothp
+make                         # probe probe2 probe3 layout thplayout frames frames2 bgload nocsample nothp
 sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 ```
 
@@ -99,6 +117,15 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 | `run15-layout-strides.sh` | `expY` | 8 MB、lmbench 的写法，步长 64–1024 各测一遍页顺序的影响 |
 | `run16-vm-shared-repeat.sh` | `expV3` | `run12` 换三个种子各重复一遍，另加取物理连续页的三个大小 |
 | `run17-translation-only.sh` | `expZ` | 只量地址翻译的访问方式，按 GiB 区间和页的类别分别测，六种配置 × 三个种子 |
+| `run18-translation-noroot.sh` | `expN-n80`；工作站上 `expN-d80f3` | 同一种访问方式用 `probe3` 做，不用 root。N80 和没有二级翻译的工作站各跑一遍 |
+| `run19-slot-mix.sh` | `expN2` | 上一项以 root 运行并打印页在各 GiB 区间的分布；每次重复之前让另一个进程占住一块内存，使拿到的物理页不同 |
+| `run20-slot-mix-controlled.sh` | `expN3` | `frames2` 按固定比例从两个 GiB 区间取页（一个应当仍是 1 GiB 块，一个是 2 MiB 块） |
+| `run21-prefault.sh` | `expN4-n80`；工作站上 `expN4-d80f3` | `probe3` 按链表顺序触页和先按地址顺序触页的对比 |
+| `run22-page-classes.sh` | `expN5` | `probe3` 的缓冲区里三类页各占多少，与每次遍历的代价对照 |
+| `run23-touch-order-noroot.sh` | 工作站上 `expT2` | 不用 root：首次触页顺序（升序、随机、降序）对顺序访问的影响。读不到物理页号，没有结论 |
+| `run24-thp-layout-noroot.sh` | `expL2-n80`；工作站上 `expL2-d80f3` | `thplayout`：同一批页按物理顺序、逆序、随机顺序排列后的顺序访问延迟。N80（以 root 运行，可核对连续度）和工作站各跑一遍 |
+| `run25-lmbench-layout.sh` | `expH2` | lmbench 原版 `lat_mem_rd`，每次运行之前让另一个进程占住 0–2560 MB 内存；前后各跑一次 `probe3` 看当时拿到的页的连续度 |
+| `run26-lmbench-own-frames.sh` | `expH3` `expH3-frames` | 同上，另用 `lmb-frames.py` 读出 lmbench 每个子进程自己的缓冲区的物理布局 |
 
 **不改系统设置、但还没有执行的：**
 
@@ -125,7 +152,7 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 python3 analyze-host-memlat.py        # N90 宿主机四模式数据：论文三个数字、逐轮值、检验、增量曲线、以一次开机为单位的比较
 python3 analyze-guest-memlat.py       # N90 上 x-kernel 客户机内的数据（图 8），与宿主机数据分开
 python3 analyze-device-logs.py        # N80 下午的实验 A、B、C、D、L、T、F
-python3 analyze-state-experiments.py  # N80 傍晚的实验 R、BG、H、S、V、V2、V3、W、X、Y、Z，以及 G1–G4（日志存在时）
+python3 analyze-state-experiments.py  # N80 傍晚和夜里的实验 R、BG、H、S、V、V2、V3、W、X、Y、Z、N–N5、L2、H2、H3（含工作站的 N、N4、T2、L2），以及 G1–G4（日志存在时）
 python3 analyze-mode-compare.py modecmp-none-* modecmp-protected-*   # run5 的输出目录，第一个是对照基准
 ```
 
@@ -173,5 +200,7 @@ python3 analyze-mode-compare.py modecmp-none-* modecmp-nvhe-* modecmp-vhe-* mode
 - "不改任何系统设置"的那些脚本只在用户态运行，不加载内核模块，不写任何 sysfs 或 procfs 文件。
 - `layout`、`frames`、`frames2` 会分配一个较大的内存池（192 MB、1 GiB、3 GiB），运行结束即释放；
   内存紧张的机器上会挤掉一部分页缓存。
+- `run19`、`run21`（带 `hold` 参数时）、`run22`、`run23`、`run25`、`run26` 会让一个暂停的进程占住最多 2.5 GiB 内存若干秒到几十秒，结束时杀掉。
+- `lmb-frames.py`、`vm-frames.py` 只读 `/proc/<pid>/maps` 和 `/proc/<pid>/pagemap`。
 - `run6` 的背景流量实验会让另外一到两个核满负荷读写内存约一分钟。
 - 以 root 运行只是为了读物理页号。

@@ -1,0 +1,92 @@
+## start 2026-09-30T22:19:06+08:00 cpu=0 uid=1000 kernel=7.0.0-34-generic kvm_arm_mode=unset thp=madvise governor=ondemand max_khz=2500000 loadavg=5.63
+## rep=1 hold_mb=0 free blocks by order (zone Normal): 96 74927 7905 6009 4238 1549 2270 911 293 1006 82 3 0 0 
+T2 cpu=0 rep=1 hold_mb=0 pfn=na mode=seq touch=asc size_mb=8.000 stride=256 pages=2048 thp=0 seed=1 hops=338242201 ns_min=4.140 ns_med=4.811 ns_max=5.703 ev11=na ev2d=na ev17=na sink=0xf7c578773900
+T2 cpu=0 rep=1 hold_mb=0 pfn=na mode=seq touch=rand size_mb=8.000 stride=256 pages=2048 thp=0 seed=1 hops=322780205 ns_min=4.528 ns_med=5.187 ns_max=6.039 ev11=na ev2d=na ev17=na sink=0xe5a74d3fcd00
+T2 cpu=0 rep=1 hold_mb=0 pfn=na mode=seq touch=desc size_mb=8.000 stride=256 pages=2048 thp=0 seed=1 hops=181481388 ns_min=4.617 ns_med=5.546 ns_max=6.528 ev11=na ev2d=na ev17=na sink=0xfd873aff4c00
+T2 cpu=0 rep=1 hold_mb=0 pfn=na mode=seq touch=asc size_mb=16.000 stride=256 pages=4096 thp=0 seed=1 hops=176133507 ns_min=7.554 ns_med=7.573 ns_max=7.690 ev11=na ev2d=na ev17=na sink=0xe8d1876d2300
+T2 cpu=0 rep=1 hold_mb=0 pfn=na mode=seq touch=rand size_mb=16.000 stride=256 pages=4096 thp=0 seed=1 hops=174612042 ns_min=7.565 ns_med=7.735 ns_max=7.990 ev11=na ev2d=na ev17=na sink=0xf031a68cea00
+T2 cpu=0 rep=1 hold_mb=0 pfn=na mode=seq touch=desc size_mb=16.000 stride=256 pages=4096 thp=0 seed=1 hops=174415461 ns_min=7.573 ns_med=7.661 ns_max=7.738 ev11=na ev2d=na ev17=na sink=0xeffdcbad0500
+T2 cpu=0 rep=1 hold_mb=0 pfn=na mode=seq touch=asc size_mb=64.000 stride=256 pages=16384 thp=0 seed=1 hops=179766587 ns_min=7.331 ns_med=7.356 ns_max=7.717 ev11=na ev2d=na ev17=na sink=0xed6cae1cdb00
+T2 cpu=0 rep=1 hold_mb=0 pfn=na mode=seq touch=rand size_mb=64.000 stride=256 pages=16384 thp=0 seed=1 hops=173455150 ns_min=7.564 ns_med=7.625 ns_max=7.824 ev11=na ev2d=na ev17=na sink=0xf0125463ce00
+T2 cpu=0 rep=1 hold_mb=0 pfn=na mode=seq touch=desc size_mb=64.000 stride=256 pages=16384 thp=0 seed=1 hops=170638820 ns_min=7.502 ns_med=7.656 ns_max=7.753 ev11=na ev2d=na ev17=na sink=0xecbddd888400
+## rep=1 hold_mb=1024 free blocks by order (zone Normal): 4 1249 1151 4 426 1531 2270 911 293 1007 82 3 0 0 
+T2 cpu=0 rep=1 hold_mb=1024 pfn=na mode=seq touch=asc size_mb=8.000 stride=256 pages=2048 thp=0 seed=1 hops=221550703 ns_min=4.702 ns_med=4.813 ns_max=5.535 ev11=na ev2d=na ev17=na sink=0xf7470ffb0f00
+T2 cpu=0 rep=1 hold_mb=1024 pfn=na mode=seq touch=rand size_mb=8.000 stride=256 pages=2048 thp=0 seed=1 hops=263965306 ns_min=4.292 ns_med=4.503 ns_max=4.948 ev11=na ev2d=na ev17=na sink=0xec5a65321a00
+T2 cpu=0 rep=1 hold_mb=1024 pfn=na mode=seq touch=desc size_mb=8.000 stride=256 pages=2048 thp=0 seed=1 hops=326793335 ns_min=4.271 ns_med=4.409 ns_max=4.520 ev11=na ev2d=na ev17=na sink=0xe1c001471700
+T2 cpu=0 rep=1 hold_mb=1024 pfn=na mode=seq touch=asc size_mb=16.000 stride=256 pages=4096 thp=0 seed=1 hops=176583539 ns_min=7.578 ns_med=7.872 ns_max=8.302 ev11=na ev2d=na ev17=na sink=0xf5ad73001300
+T2 cpu=0 rep=1 hold_mb=1024 pfn=na mode=seq touch=rand size_mb=16.000 stride=256 pages=4096 thp=0 seed=1 hops=174823407 ns_min=7.637 ns_med=7.783 ns_max=8.106 ev11=na ev2d=na ev17=na sink=0xf597d1928f00
+T2 cpu=0 rep=1 hold_mb=1024 pfn=na mode=seq touch=desc size_mb=16.000 stride=256 pages=4096 thp=0 seed=1 hops=175273307 ns_min=7.586 ns_med=7.637 ns_max=7.724 ev11=na ev2d=na ev17=na sink=0xe7dcb072fb00
+T2 cpu=0 rep=1 hold_mb=1024 pfn=na mode=seq touch=asc size_mb=64.000 stride=256 pages=16384 thp=0 seed=1 hops=175225380 ns_min=7.421 ns_med=7.572 ns_max=7.665 ev11=na ev2d=na ev17=na sink=0xe811ed8ec400
+T2 cpu=0 rep=1 hold_mb=1024 pfn=na mode=seq touch=rand size_mb=64.000 stride=256 pages=16384 thp=0 seed=1 hops=179433298 ns_min=7.524 ns_med=7.634 ns_max=8.480 ev11=na ev2d=na ev17=na sink=0xea8f6dcdf200
+T2 cpu=0 rep=1 hold_mb=1024 pfn=na mode=seq touch=desc size_mb=64.000 stride=256 pages=16384 thp=0 seed=1 hops=178544014 ns_min=7.584 ns_med=7.680 ns_max=7.725 ev11=na ev2d=na ev17=na sink=0xe5bcbf0d2e00
+## rep=1 hold_mb=2048 free blocks by order (zone Normal): 6 1250 1152 3 352 21 15 692 293 1016 83 3 0 0 
+T2 cpu=0 rep=1 hold_mb=2048 pfn=na mode=seq touch=asc size_mb=8.000 stride=256 pages=2048 thp=0 seed=1 hops=236201823 ns_min=4.345 ns_med=4.809 ns_max=5.337 ev11=na ev2d=na ev17=na sink=0xfc2824ffff00
+T2 cpu=0 rep=1 hold_mb=2048 pfn=na mode=seq touch=rand size_mb=8.000 stride=256 pages=2048 thp=0 seed=1 hops=197042274 ns_min=4.647 ns_med=5.444 ns_max=7.583 ev11=na ev2d=na ev17=na sink=0xecdad0630200
+T2 cpu=0 rep=1 hold_mb=2048 pfn=na mode=seq touch=desc size_mb=8.000 stride=256 pages=2048 thp=0 seed=1 hops=206077179 ns_min=4.605 ns_med=5.133 ns_max=6.306 ev11=na ev2d=na ev17=na sink=0xf0048cb49b00
+T2 cpu=0 rep=1 hold_mb=2048 pfn=na mode=seq touch=asc size_mb=16.000 stride=256 pages=4096 thp=0 seed=1 hops=176925309 ns_min=7.538 ns_med=7.598 ns_max=7.721 ev11=na ev2d=na ev17=na sink=0xf22dc4c51d00
+T2 cpu=0 rep=1 hold_mb=2048 pfn=na mode=seq touch=rand size_mb=16.000 stride=256 pages=4096 thp=0 seed=1 hops=161828161 ns_min=7.547 ns_med=7.621 ns_max=7.998 ev11=na ev2d=na ev17=na sink=0xe9febee2e100
+T2 cpu=0 rep=1 hold_mb=2048 pfn=na mode=seq touch=desc size_mb=16.000 stride=256 pages=4096 thp=0 seed=1 hops=175219308 ns_min=7.553 ns_med=7.708 ns_max=8.148 ev11=na ev2d=na ev17=na sink=0xf39fcba20c00
+T2 cpu=0 rep=1 hold_mb=2048 pfn=na mode=seq touch=asc size_mb=64.000 stride=256 pages=16384 thp=0 seed=1 hops=132788051 ns_min=7.491 ns_med=7.514 ns_max=8.015 ev11=na ev2d=na ev17=na sink=0xe9f14e01f300
+T2 cpu=0 rep=1 hold_mb=2048 pfn=na mode=seq touch=rand size_mb=64.000 stride=256 pages=16384 thp=0 seed=1 hops=177976865 ns_min=7.586 ns_med=7.689 ns_max=7.965 ev11=na ev2d=na ev17=na sink=0xe96e2c1ec100
+T2 cpu=0 rep=1 hold_mb=2048 pfn=na mode=seq touch=desc size_mb=64.000 stride=256 pages=16384 thp=0 seed=1 hops=177140920 ns_min=7.539 ns_med=7.643 ns_max=7.926 ev11=na ev2d=na ev17=na sink=0xe5ed54245800
+## rep=2 hold_mb=0 free blocks by order (zone Normal): 42088 69243 8003 5994 4163 1534 2260 720 293 1009 81 3 0 0 
+T2 cpu=0 rep=2 hold_mb=0 pfn=na mode=seq touch=asc size_mb=8.000 stride=256 pages=2048 thp=0 seed=2 hops=214111744 ns_min=4.387 ns_med=4.711 ns_max=5.301 ev11=na ev2d=na ev17=na sink=0xea47013ca000
+T2 cpu=0 rep=2 hold_mb=0 pfn=na mode=seq touch=rand size_mb=8.000 stride=256 pages=2048 thp=0 seed=2 hops=257395336 ns_min=4.580 ns_med=4.844 ns_max=5.613 ev11=na ev2d=na ev17=na sink=0xf106f89d2800
+T2 cpu=0 rep=2 hold_mb=0 pfn=na mode=seq touch=desc size_mb=8.000 stride=256 pages=2048 thp=0 seed=2 hops=298369005 ns_min=4.748 ns_med=4.908 ns_max=5.763 ev11=na ev2d=na ev17=na sink=0xe5c9f5c58d00
+T2 cpu=0 rep=2 hold_mb=0 pfn=na mode=seq touch=asc size_mb=16.000 stride=256 pages=4096 thp=0 seed=2 hops=172795282 ns_min=7.527 ns_med=7.591 ns_max=7.933 ev11=na ev2d=na ev17=na sink=0xe9fb86bc3200
+T2 cpu=0 rep=2 hold_mb=0 pfn=na mode=seq touch=rand size_mb=16.000 stride=256 pages=4096 thp=0 seed=2 hops=173040406 ns_min=7.564 ns_med=7.622 ns_max=7.916 ev11=na ev2d=na ev17=na sink=0xe6e8b882b600
+T2 cpu=0 rep=2 hold_mb=0 pfn=na mode=seq touch=desc size_mb=16.000 stride=256 pages=4096 thp=0 seed=2 hops=176086977 ns_min=7.530 ns_med=7.615 ns_max=7.666 ev11=na ev2d=na ev17=na sink=0xe4ee6c656100
+T2 cpu=0 rep=2 hold_mb=0 pfn=na mode=seq touch=asc size_mb=64.000 stride=256 pages=16384 thp=0 seed=2 hops=177653476 ns_min=7.508 ns_med=7.774 ns_max=8.165 ev11=na ev2d=na ev17=na sink=0xe9ea09fc8400
+T2 cpu=0 rep=2 hold_mb=0 pfn=na mode=seq touch=rand size_mb=64.000 stride=256 pages=16384 thp=0 seed=2 hops=177437117 ns_min=7.522 ns_med=7.644 ns_max=7.864 ev11=na ev2d=na ev17=na sink=0xedd7931d5d00
+T2 cpu=0 rep=2 hold_mb=0 pfn=na mode=seq touch=desc size_mb=64.000 stride=256 pages=16384 thp=0 seed=2 hops=167139423 ns_min=7.518 ns_med=7.612 ns_max=7.685 ev11=na ev2d=na ev17=na sink=0xe51b41c0ff00
+## rep=2 hold_mb=1024 free blocks by order (zone Normal): 1979 1256 1157 5 3338 1559 2264 797 293 1010 82 3 0 0 
+T2 cpu=0 rep=2 hold_mb=1024 pfn=na mode=seq touch=asc size_mb=8.000 stride=256 pages=2048 thp=0 seed=2 hops=213253854 ns_min=4.095 ns_med=5.447 ns_max=7.427 ev11=na ev2d=na ev17=na sink=0xf8a4cdbf7e00
+T2 cpu=0 rep=2 hold_mb=1024 pfn=na mode=seq touch=rand size_mb=8.000 stride=256 pages=2048 thp=0 seed=2 hops=229668186 ns_min=4.104 ns_med=4.586 ns_max=5.565 ev11=na ev2d=na ev17=na sink=0xe8c56470fa00
+T2 cpu=0 rep=2 hold_mb=1024 pfn=na mode=seq touch=desc size_mb=8.000 stride=256 pages=2048 thp=0 seed=2 hops=251502383 ns_min=4.336 ns_med=4.733 ns_max=5.580 ev11=na ev2d=na ev17=na sink=0xf4c00fc1cf00
+T2 cpu=0 rep=2 hold_mb=1024 pfn=na mode=seq touch=asc size_mb=16.000 stride=256 pages=4096 thp=0 seed=2 hops=178575892 ns_min=7.477 ns_med=7.539 ns_max=7.654 ev11=na ev2d=na ev17=na sink=0xf77aefb0b400
+T2 cpu=0 rep=2 hold_mb=1024 pfn=na mode=seq touch=rand size_mb=16.000 stride=256 pages=4096 thp=0 seed=2 hops=177894332 ns_min=7.522 ns_med=7.562 ns_max=7.869 ev11=na ev2d=na ev17=na sink=0xf0e74c245c00
+T2 cpu=0 rep=2 hold_mb=1024 pfn=na mode=seq touch=desc size_mb=16.000 stride=256 pages=4096 thp=0 seed=2 hops=178035891 ns_min=7.543 ns_med=7.578 ns_max=7.695 ev11=na ev2d=na ev17=na sink=0xf5e811d85300
+T2 cpu=0 rep=2 hold_mb=1024 pfn=na mode=seq touch=asc size_mb=64.000 stride=256 pages=16384 thp=0 seed=2 hops=177886181 ns_min=7.553 ns_med=7.623 ns_max=7.663 ev11=na ev2d=na ev17=na sink=0xf0857bd28500
+T2 cpu=0 rep=2 hold_mb=1024 pfn=na mode=seq touch=rand size_mb=64.000 stride=256 pages=16384 thp=0 seed=2 hops=171871029 ns_min=7.492 ns_med=7.534 ns_max=7.596 ev11=na ev2d=na ev17=na sink=0xfba4b48ad500
+T2 cpu=0 rep=2 hold_mb=1024 pfn=na mode=seq touch=desc size_mb=64.000 stride=256 pages=16384 thp=0 seed=2 hops=173639059 ns_min=7.537 ns_med=7.584 ns_max=7.692 ev11=na ev2d=na ev17=na sink=0xe4d04f4f3300
+## rep=2 hold_mb=2048 free blocks by order (zone Normal): 5 1248 1153 11 384 11 8 666 293 1010 82 3 0 0 
+T2 cpu=0 rep=2 hold_mb=2048 pfn=na mode=seq touch=asc size_mb=8.000 stride=256 pages=2048 thp=0 seed=2 hops=275765534 ns_min=5.276 ns_med=5.510 ns_max=6.790 ev11=na ev2d=na ev17=na sink=0xe9676892be00
+T2 cpu=0 rep=2 hold_mb=2048 pfn=na mode=seq touch=rand size_mb=8.000 stride=256 pages=2048 thp=0 seed=2 hops=178355353 ns_min=4.562 ns_med=5.197 ns_max=5.780 ev11=na ev2d=na ev17=na sink=0xfde318663900
+T2 cpu=0 rep=2 hold_mb=2048 pfn=na mode=seq touch=desc size_mb=8.000 stride=256 pages=2048 thp=0 seed=2 hops=226429731 ns_min=4.411 ns_med=4.804 ns_max=5.347 ev11=na ev2d=na ev17=na sink=0xe55f15bfc300
+T2 cpu=0 rep=2 hold_mb=2048 pfn=na mode=seq touch=asc size_mb=16.000 stride=256 pages=4096 thp=0 seed=2 hops=176338206 ns_min=7.521 ns_med=7.590 ns_max=7.728 ev11=na ev2d=na ev17=na sink=0xf9f750a6be00
+T2 cpu=0 rep=2 hold_mb=2048 pfn=na mode=seq touch=rand size_mb=16.000 stride=256 pages=4096 thp=0 seed=2 hops=154626802 ns_min=7.544 ns_med=7.648 ns_max=7.728 ev11=na ev2d=na ev17=na sink=0xfc7d3c649200
+T2 cpu=0 rep=2 hold_mb=2048 pfn=na mode=seq touch=desc size_mb=16.000 stride=256 pages=4096 thp=0 seed=2 hops=169893834 ns_min=7.544 ns_med=7.641 ns_max=7.721 ev11=na ev2d=na ev17=na sink=0xe1c854416a00
+T2 cpu=0 rep=2 hold_mb=2048 pfn=na mode=seq touch=asc size_mb=64.000 stride=256 pages=16384 thp=0 seed=2 hops=161059668 ns_min=7.556 ns_med=7.627 ns_max=7.854 ev11=na ev2d=na ev17=na sink=0xf1c64bb5f400
+T2 cpu=0 rep=2 hold_mb=2048 pfn=na mode=seq touch=rand size_mb=64.000 stride=256 pages=16384 thp=0 seed=2 hops=177264626 ns_min=7.472 ns_med=7.538 ns_max=7.621 ev11=na ev2d=na ev17=na sink=0xe3f734609200
+T2 cpu=0 rep=2 hold_mb=2048 pfn=na mode=seq touch=desc size_mb=64.000 stride=256 pages=16384 thp=0 seed=2 hops=177806178 ns_min=7.463 ns_med=7.505 ns_max=7.719 ev11=na ev2d=na ev17=na sink=0xe2862c5a0200
+## rep=3 hold_mb=0 free blocks by order (zone Normal): 35020 71703 8345 6259 4212 1579 2271 664 293 1009 81 4 0 0 
+T2 cpu=0 rep=3 hold_mb=0 pfn=na mode=seq touch=asc size_mb=8.000 stride=256 pages=2048 thp=0 seed=3 hops=233294600 ns_min=5.359 ns_med=5.511 ns_max=5.923 ev11=na ev2d=na ev17=na sink=0xe1ebaf1da800
+T2 cpu=0 rep=3 hold_mb=0 pfn=na mode=seq touch=rand size_mb=8.000 stride=256 pages=2048 thp=0 seed=3 hops=278826009 ns_min=4.515 ns_med=5.363 ns_max=5.607 ev11=na ev2d=na ev17=na sink=0xf35d805ab900
+T2 cpu=0 rep=3 hold_mb=0 pfn=na mode=seq touch=desc size_mb=8.000 stride=256 pages=2048 thp=0 seed=3 hops=256266989 ns_min=4.936 ns_med=5.363 ns_max=5.759 ev11=na ev2d=na ev17=na sink=0xe86388f58d00
+T2 cpu=0 rep=3 hold_mb=0 pfn=na mode=seq touch=asc size_mb=16.000 stride=256 pages=4096 thp=0 seed=3 hops=168946657 ns_min=7.505 ns_med=7.572 ns_max=7.701 ev11=na ev2d=na ev17=na sink=0xe5e596d18100
+T2 cpu=0 rep=3 hold_mb=0 pfn=na mode=seq touch=rand size_mb=16.000 stride=256 pages=4096 thp=0 seed=3 hops=178264306 ns_min=7.479 ns_med=7.536 ns_max=7.619 ev11=na ev2d=na ev17=na sink=0xe8e18e0c9200
+T2 cpu=0 rep=3 hold_mb=0 pfn=na mode=seq touch=desc size_mb=16.000 stride=256 pages=4096 thp=0 seed=3 hops=161161121 ns_min=7.445 ns_med=7.631 ns_max=7.736 ev11=na ev2d=na ev17=na sink=0xf9be84f04100
+T2 cpu=0 rep=3 hold_mb=0 pfn=na mode=seq touch=asc size_mb=64.000 stride=256 pages=16384 thp=0 seed=3 hops=174161867 ns_min=7.472 ns_med=7.621 ns_max=7.690 ev11=na ev2d=na ev17=na sink=0xed3e2cb86b00
+T2 cpu=0 rep=3 hold_mb=0 pfn=na mode=seq touch=rand size_mb=64.000 stride=256 pages=16384 thp=0 seed=3 hops=176716408 ns_min=7.573 ns_med=7.637 ns_max=7.694 ev11=na ev2d=na ev17=na sink=0xfafba80e1800
+T2 cpu=0 rep=3 hold_mb=0 pfn=na mode=seq touch=desc size_mb=64.000 stride=256 pages=16384 thp=0 seed=3 hops=174712362 ns_min=7.456 ns_med=7.545 ns_max=7.790 ev11=na ev2d=na ev17=na sink=0xf5f3f774ca00
+## rep=3 hold_mb=1024 free blocks by order (zone Normal): 1 1218 1152 5 3718 1593 2290 806 293 1011 81 3 0 0 
+T2 cpu=0 rep=3 hold_mb=1024 pfn=na mode=seq touch=asc size_mb=8.000 stride=256 pages=2048 thp=0 seed=3 hops=261114260 ns_min=4.426 ns_med=5.164 ns_max=5.869 ev11=na ev2d=na ev17=na sink=0xf689285c3400
+T2 cpu=0 rep=3 hold_mb=1024 pfn=na mode=seq touch=rand size_mb=8.000 stride=256 pages=2048 thp=0 seed=3 hops=194408973 ns_min=4.012 ns_med=4.286 ns_max=5.611 ev11=na ev2d=na ev17=na sink=0xfa04fe87ad00
+T2 cpu=0 rep=3 hold_mb=1024 pfn=na mode=seq touch=desc size_mb=8.000 stride=256 pages=2048 thp=0 seed=3 hops=181302913 ns_min=4.873 ns_med=5.392 ns_max=5.897 ev11=na ev2d=na ev17=na sink=0xffd5b8892100
+T2 cpu=0 rep=3 hold_mb=1024 pfn=na mode=seq touch=asc size_mb=16.000 stride=256 pages=4096 thp=0 seed=3 hops=174774358 ns_min=7.527 ns_med=7.563 ns_max=7.721 ev11=na ev2d=na ev17=na sink=0xf4c15822f600
+T2 cpu=0 rep=3 hold_mb=1024 pfn=na mode=seq touch=rand size_mb=16.000 stride=256 pages=4096 thp=0 seed=3 hops=176586850 ns_min=7.506 ns_med=7.605 ns_max=7.702 ev11=na ev2d=na ev17=na sink=0xfc7c07130200
+T2 cpu=0 rep=3 hold_mb=1024 pfn=na mode=seq touch=desc size_mb=16.000 stride=256 pages=4096 thp=0 seed=3 hops=174208298 ns_min=7.579 ns_med=7.631 ns_max=7.703 ev11=na ev2d=na ev17=na sink=0xf6b93b93ca00
+T2 cpu=0 rep=3 hold_mb=1024 pfn=na mode=seq touch=asc size_mb=64.000 stride=256 pages=16384 thp=0 seed=3 hops=165793749 ns_min=7.373 ns_med=7.485 ns_max=7.563 ev11=na ev2d=na ev17=na sink=0xebdecd167500
+T2 cpu=0 rep=3 hold_mb=1024 pfn=na mode=seq touch=rand size_mb=64.000 stride=256 pages=16384 thp=0 seed=3 hops=177429010 ns_min=7.465 ns_med=7.573 ns_max=7.768 ev11=na ev2d=na ev17=na sink=0xef3f28d6b200
+T2 cpu=0 rep=3 hold_mb=1024 pfn=na mode=seq touch=desc size_mb=64.000 stride=256 pages=16384 thp=0 seed=3 hops=174964768 ns_min=7.524 ns_med=7.583 ns_max=7.734 ev11=na ev2d=na ev17=na sink=0xff4faedec000
+## rep=3 hold_mb=2048 free blocks by order (zone Normal): 698 1235 1160 3 352 10 8 736 293 1011 82 3 0 0 
+T2 cpu=0 rep=3 hold_mb=2048 pfn=na mode=seq touch=asc size_mb=8.000 stride=256 pages=2048 thp=0 seed=3 hops=251655822 ns_min=4.563 ns_med=4.859 ns_max=5.638 ev11=na ev2d=na ev17=na sink=0xff6214ed2e00
+T2 cpu=0 rep=3 hold_mb=2048 pfn=na mode=seq touch=rand size_mb=8.000 stride=256 pages=2048 thp=0 seed=3 hops=332761077 ns_min=4.198 ns_med=4.546 ns_max=5.109 ev11=na ev2d=na ev17=na sink=0xe00a22dd9500
+T2 cpu=0 rep=3 hold_mb=2048 pfn=na mode=seq touch=desc size_mb=8.000 stride=256 pages=2048 thp=0 seed=3 hops=253823790 ns_min=4.369 ns_med=4.799 ns_max=5.065 ev11=na ev2d=na ev17=na sink=0xe8dd2a55ce00
+T2 cpu=0 rep=3 hold_mb=2048 pfn=na mode=seq touch=asc size_mb=16.000 stride=256 pages=4096 thp=0 seed=3 hops=176273218 ns_min=7.546 ns_med=7.581 ns_max=7.645 ev11=na ev2d=na ev17=na sink=0xf50c3e3de200
+T2 cpu=0 rep=3 hold_mb=2048 pfn=na mode=seq touch=rand size_mb=16.000 stride=256 pages=4096 thp=0 seed=3 hops=173988342 ns_min=7.507 ns_med=7.582 ns_max=7.657 ev11=na ev2d=na ev17=na sink=0xf61e1e269600
+T2 cpu=0 rep=3 hold_mb=2048 pfn=na mode=seq touch=desc size_mb=16.000 stride=256 pages=4096 thp=0 seed=3 hops=176585431 ns_min=7.516 ns_med=7.553 ns_max=7.635 ev11=na ev2d=na ev17=na sink=0xed2114197700
+T2 cpu=0 rep=3 hold_mb=2048 pfn=na mode=seq touch=asc size_mb=64.000 stride=256 pages=16384 thp=0 seed=3 hops=177740552 ns_min=7.282 ns_med=7.374 ns_max=7.441 ev11=na ev2d=na ev17=na sink=0xf81cf1e5a800
+T2 cpu=0 rep=3 hold_mb=2048 pfn=na mode=seq touch=rand size_mb=64.000 stride=256 pages=16384 thp=0 seed=3 hops=178675992 ns_min=7.518 ns_med=7.600 ns_max=7.839 ev11=na ev2d=na ev17=na sink=0xf8b25cf3b800
+T2 cpu=0 rep=3 hold_mb=2048 pfn=na mode=seq touch=desc size_mb=64.000 stride=256 pages=16384 thp=0 seed=3 hops=175539474 ns_min=7.487 ns_med=7.554 ns_max=7.846 ev11=na ev2d=na ev17=na sink=0xe0b901d6b200
+## done 2026-09-30T22:20:59+08:00 loadavg=7.12

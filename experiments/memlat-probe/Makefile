@@ -1,7 +1,7 @@
 CC ?= gcc
 CFLAGS ?= -O2 -Wall
 
-PROGS := probe probe2 probe3 layout frames frames2 bgload nocsample nothp
+PROGS := probe probe2 probe3 layout thplayout frames frames2 bgload nocsample nothp
 
 all: $(PROGS)
 
