@@ -21,7 +21,7 @@
 | 启动方式 | `kvm-arm.mode=protected`，`CONFIG_X1_RMS=y`，日志显示 `Protected nVHE mode initialized successfully` |
 | 缓存 | L1d 64K 4 路；L2 512K 8 路，每核私有；L3 8M 16 路 8192 组，8 核共享 |
 | 页大小 | 4 KiB；系统 THP 设置为 `always`，测量程序对缓冲区使用 `MADV_NOHUGEPAGE`。内核带连续页表项折叠（`CONFIG_ARM64_CONTPTE=y`）和多种尺寸的透明大页，2 MiB 以外的尺寸都是 `never`（`thp-contpte-n80.txt`） |
-| 页分配器 | cpu0 的每 CPU 空闲页链表上限约 1600 页（`pagealloc-n80.txt`，23:00 前后读到 1592 和 1655），约 6.3 MB |
+| 页分配器 | cpu0 的每 CPU 空闲页链表上限约 1600 页，合 6.3 MB（`pagealloc-n80.txt` 里存档的读数是 1592；稍早一次读到 1655，没有存档） |
 | 绑核与频率 | 全部绑定 cpu0，最高 1.9 GHz，调速器 `performance` |
 | 互连调频 | `nocfreq` 策略为 `performance`，频率 1800 MHz，本次没有改动。开机后最初约 16.5 秒是驱动默认的按流量调频，之后被改成 `performance`。是谁改的没有查明：只有桌面电源管理程序的二进制里有 devfreq 路径，但它的策略表里没有 `performance` 这一项；`pvm-manage` 和 crosvm 的二进制里没有 devfreq 字样 |
 | 背景负载 | 桌面会话在运行，没有做服务屏蔽，各批次起止时记录的 1 分钟负载在 0.2–2.7 之间（`meta.log`）；后台有一个空闲的保护虚拟机（见上） |
