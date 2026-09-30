@@ -15,7 +15,7 @@
 | `probe3.c` | 同上，另外可以像 lmbench 那样在每个计时区间之前重写一遍指针链（`rebuild=1`），并在每个计时区间前后读一次片上互连的频率；11 个区间的时间按先后全部打印 |
 | `layout.c` | **同一组物理页**按不同的虚拟顺序排列（物理升序、物理降序、随机），顺序访问延迟会不会变 |
 | `frames.c` | 物理页集中在一处还是分散在各处，随机访问延迟会不会变 |
-| `frames2.c` | 同一个进程里，按物理地址所在的 1 GiB 区间逐个取页做随机访问；每个区间测两遍（第二遍把同一批页搬到新的虚拟地址）。给它一份"虚拟机内存占了哪些 2 MiB 区间"的清单时，每个区间再分成与虚拟机共用 2 MiB 区间的页（shared）和不共用的页（clear）两类分别测 |
+| `frames2.c` | 同一个进程里，按物理地址所在的 1 GiB 区间逐个取页做随机访问；每个区间测两遍（第二遍把同一批页搬到新的虚拟地址）。给它一份"虚拟机内存占了哪些 2 MiB 区间"的清单时，每个区间再分成与虚拟机共用 2 MiB 区间的页（shared）和不共用的页（clear）两类分别测。除了 lmbench 的随机、顺序两种访问方式，还有一种只量地址翻译的方式（`tlb<L>`：每一跳换一页，每页只用 L 条缓存行，数据留在缓存里） |
 | `vm-frames.py` | 只读：读出正在运行的虚拟机的内存落在哪些 1 GiB、2 MiB 物理区间里，并写出上面那份清单 |
 | `bgload.c` | 在另一个核上连续读或写一块内存，制造背景内存流量 |
 | `nocsample.c` | 每隔固定时间记录一次片上互连频率，不 fork |
@@ -98,6 +98,7 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 | `run14-loop-form.sh` | `expX1` `expX2` `expX3` `vm-frames-x.txt` | 被计时的循环两种写法的对比（`probe3`）；用 lmbench 的写法重复上一项；同一时段 lmbench 原版 3 遍作参照 |
 | `run15-layout-strides.sh` | `expY` | 8 MB、lmbench 的写法，步长 64–1024 各测一遍页顺序的影响 |
 | `run16-vm-shared-repeat.sh` | `expV3` | `run12` 换三个种子各重复一遍，另加取物理连续页的三个大小 |
+| `run17-translation-only.sh` | `expZ` | 只量地址翻译的访问方式，按 GiB 区间和页的类别分别测，六种配置 × 三个种子 |
 
 **不改系统设置、但还没有执行的：**
 
@@ -124,7 +125,7 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 python3 analyze-host-memlat.py        # N90 宿主机四模式数据：论文三个数字、逐轮值、检验、增量曲线、以一次开机为单位的比较
 python3 analyze-guest-memlat.py       # N90 上 x-kernel 客户机内的数据（图 8），与宿主机数据分开
 python3 analyze-device-logs.py        # N80 下午的实验 A、B、C、D、L、T、F
-python3 analyze-state-experiments.py  # N80 傍晚的实验 R、BG、H、S、V、V2、V3、W、X、Y，以及 G1–G4（日志存在时）
+python3 analyze-state-experiments.py  # N80 傍晚的实验 R、BG、H、S、V、V2、V3、W、X、Y、Z，以及 G1–G4（日志存在时）
 python3 analyze-mode-compare.py modecmp-none-* modecmp-protected-*   # run5 的输出目录，第一个是对照基准
 ```
 
@@ -145,7 +146,7 @@ sudo sh run5-mode-compare.sh
 python3 analyze-mode-compare.py modecmp-none-* modecmp-nvhe-* modecmp-vhe-* modecmp-protected-*
 ```
 
-`run5-mode-compare.sh` 做三组测量，并在开始和结束时各记录一次平台状态
+`run5-mode-compare.sh` 做四组测量，并在开始和结束时各记录一次平台状态
 （启动参数、内核配置里的 `CONFIG_X1_RMS`、THP 全部开关、CPU 频率、各 devfreq 设备的调频策略与频率、
 正在运行的服务）。每跑一个点的前后还各读一次互连频率，写在该点日志行的开头。
 
@@ -154,6 +155,7 @@ python3 analyze-mode-compare.py modecmp-none-* modecmp-nvhe-* modecmp-vhe-* mode
 | `rand.log` | 随机访问，14 个大小 × 5 个随机种子 | 各模式每次访问的页表遍历次数、缓存回填次数是否相同；相同的话，protected 每次遍历多花多少个周期 |
 | `seq.log` | 64 MB 顺序访问，6 种步长 × 5 次 | 顺序访问时每次跨页多花多少 |
 | `llc.log` | 步长 256、4–64 MB，每个点一个新进程，重复 30 轮 | 8 MB 附近的两个取值跟物理页连续度走，还是跟互连频率走 |
+| `tlb.log` | 只量地址翻译的访问方式（`frames2` 的 `tlb<L>`），按 GiB 区间，5 种配置 × 3 个种子 | 一次页表遍历在各启动方式下各花多少个周期。数据不出缓存，不受内存通路状态影响，是四张表里最干净的一张。protected 下还能看出 1 GiB 块的区间与 2 MiB 块的区间之间的差别；非 protected 下各区间不应有差别 |
 
 判读方法：
 

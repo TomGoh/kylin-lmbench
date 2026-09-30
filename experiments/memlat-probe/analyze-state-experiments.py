@@ -10,6 +10,13 @@
           (expS.log, iomem-n80.txt)
   Exp V   the same, separately for pages that share a 2 MiB region with the
           running protected VM and pages that do not (expV.log, vm-frames-n80.txt)
+  Exp V2, V3  the same at working sets from 2 to 64 MB, four page sets per size
+          (expV2.log, expV3.log)
+  Exp W   sequential chase over sorted and shuffled page sets, by class (expW.log)
+  Exp X   the form of the timed loop: one load in a loop against lmbench's 100
+          loads in a row (expX1.log, expX2.log, expX3.log)
+  Exp Y   the layout effect at 8 MB for every stride (expY.log)
+  Exp Z   a chase dominated by address translation (expZ.log)
   Exp G1-G4  the interconnect-frequency experiments, if their logs exist
           (expG1.log, expG2.log, expG3.log, expG4-*.log)
 
@@ -616,6 +623,106 @@ def exp_v3():
         print()
 
 
+# GiB slots (PFN >> 18) that held no VM page, no memory-region boundary and no hypervisor pool on
+# 2026-09-30, i.e. the only ones that could still be mapped by one 1 GiB host stage-2 block
+GB_CANDIDATES = (0x8b, 0x8c)
+
+
+def exp_slots():
+    """Slot effect in the random chase: the two 1 GiB-candidate slots against the other slots."""
+    runs = collections.defaultdict(list)
+    for name in ("expS.log", "expV.log", "expV2.log", "expV3.log"):
+        path = os.path.join(DEV, name)
+        if not os.path.exists(path):
+            continue
+        hdr = None
+        n = 0
+        with open(path) as fh:
+            for line in fh:
+                if line.startswith("## "):
+                    hdr = kv(line)
+                    n += 1
+                elif line.startswith("slot=") and hdr is not None:
+                    d = kv(line)
+                    if d.get("class") == "shared":
+                        continue
+                    d["_slot"] = int(str(line.split()[0].split("=")[1]), 16)
+                    runs[(name, n, hdr.get("pick", "low"), d["size_mb"])].append(d)
+    if not runs:
+        return
+    print("## Slot effect in the random chase: the two GiB slots that can still be 1 GiB stage-2 blocks against the others\n")
+    print("Slots 0x22c0000000 and 0x2300000000 hold no VM page, no memory-region boundary and no hypervisor pool; every other "
+          "slot is mapped by 2 MiB blocks at most (kernel source plus vm-frames-n80.txt; the stage-2 table itself was not read).  "
+          "Per run: median over these two slots minus median over the other slots, class clear (or all).  Logs: expS, expV, expV2, expV3.\n")
+    print("| size | pages picked | runs | difference per run (ns) | median ns | median cycles | median L2 refills | page walks per access |")
+    print("|---:|---|---:|---|---:|---:|---:|---:|")
+    m = lambda rs, key: st.median(r[key] for r in rs)
+    for pick in ("even", "low"):
+        for sz in sorted({k[3] for k in runs if k[2] == pick}):
+            dn, dc, dl, w = [], [], [], []
+            for k, rows in sorted(runs.items(), key=lambda kv_: str(kv_[0])):
+                if k[2] != pick or k[3] != sz:
+                    continue
+                a = [r for r in rows if r["_slot"] in GB_CANDIDATES]
+                b = [r for r in rows if r["_slot"] not in GB_CANDIDATES]
+                if not a or not b:
+                    continue
+                dn.append(m(a, "ns_med") - m(b, "ns_med"))
+                dc.append(m(a, "ev11") - m(b, "ev11"))
+                dl.append(m(a, "ev17") - m(b, "ev17"))
+                w.append(m(b, "ev2d"))
+            if dn:
+                print(f"| {sz:g} MB | {'spread evenly' if pick == 'even' else 'lowest addresses'} | {len(dn)} | "
+                      f"{' '.join(f'{x:+.1f}' for x in dn)} | {st.median(dn):+.2f} | {st.median(dc):+.2f} | {st.median(dl):+.3f} | {st.median(w):.3f} |")
+    print()
+
+
+def exp_z():
+    rows = frames2_rows("expZ.log")
+    if not rows:
+        return
+    print("## Exp Z: a chase dominated by address translation (frames2 tlb<L>: another page on every hop, L cache lines per page)\n")
+    print("cycles = user-mode CPU cycles per hop (median of the per-set medians, two passes per set).  '2 MiB slots' are all "
+          "slots except 0x22c0000000 and 0x2300000000, the two that can still be 1 GiB stage-2 blocks.  shared = pages in "
+          "2 MiB regions that also hold pages of the running VM (4 KiB stage-2 leaves).\n")
+    cfgs = sorted({(r["_size"], r["stride"]) for r in rows}, key=lambda c: (c[0] * 256 * c[1], c[0]))
+    m = lambda rs, key: st.median(r[key] for r in rs)
+    print("| pages x lines per page | lines | class clear, 2 MiB slots: cycles (ns) | page walks | L2 refills | "
+          "1 GiB-candidate slots minus 2 MiB slots, per run: cycles | median | class shared minus clear, per run: cycles | median | "
+          "extra L2 refills of class shared |")
+    print("|---|---:|---|---:|---:|---|---:|---|---:|---:|")
+    base = {}
+    for size, lines in cfgs:
+        sel = [r for r in rows if r["_size"] == size and r["stride"] == lines]
+        seeds = sorted({r["seed_"] for r in sel}) if "seed_" in sel[0] else [None]
+        dg, ds, dl = [], [], []
+        for seed in seeds:
+            run = [r for r in sel if r.get("seed_") == seed]
+            clear = [r for r in run if r["class"] in ("clear", "all")]
+            two = [r for r in clear if r["_slot"] not in GB_CANDIDATES]
+            one = [r for r in clear if r["_slot"] in GB_CANDIDATES]
+            sh = [r for r in run if r["class"] == "shared"]
+            if two and one:
+                dg.append(m(one, "ev11") - m(two, "ev11"))
+            if two and sh:
+                ds.append(m(sh, "ev11") - m(two, "ev11"))
+                dl.append(m(sh, "ev17") - m(two, "ev17"))
+        two = [r for r in sel if r["class"] in ("clear", "all") and r["_slot"] not in GB_CANDIDATES]
+        base[(size, lines)] = m(two, "ev11")
+        print(f"| {int(size * 256)} x {lines:g} | {int(size * 256 * lines)} | {m(two, 'ev11'):.2f} ({m(two, 'ns_med'):.2f}) | "
+              f"{m(two, 'ev2d'):.3f} | {m(two, 'ev17'):.3f} | {' '.join(f'{x:+.2f}' for x in dg)} | "
+              + (f"{st.median(dg):+.2f}" if dg else "") + f" | {' '.join(f'{x:+.1f}' for x in ds)} | "
+              + (f"{st.median(ds):+.1f}" if ds else "") + " | " + (f"{st.median(dl):+.3f}" if dl else "") + " |")
+    ref = base.get((4.0, 4.0))
+    if ref is not None:
+        print("\nCost of one page walk with a block-mapped stage-2 (class clear, 2 MiB slots): cycles per hop minus the "
+              f"no-walk reference (1024 pages x 4 lines, {ref:.2f} cycles), for configurations with the same 4096 lines of data:\n")
+        for size, lines in cfgs:
+            if int(size * 256 * lines) == 4096 and (size, lines) != (4.0, 4.0):
+                print(f"- {int(size * 256)} pages x {lines:g} lines: {base[(size, lines)] - ref:+.1f} cycles per hop")
+    print()
+
+
 def exp_w():
     path = os.path.join(DEV, "expW.log")
     if not os.path.exists(path):
@@ -689,6 +796,7 @@ def frames2_rows(name):
                 d["_slot"] = int(str(line.split()[0].split("=")[1]), 16)
                 d["_size"] = hdr["size_mb"]
                 d["_pick"] = hdr["pick"]
+                d["seed_"] = hdr.get("seed", hdr.get("rep"))
                 d.setdefault("chase", "loop")
                 rows.append(d)
     return rows
@@ -823,9 +931,11 @@ def main():
     exp_v()
     exp_v2()
     exp_v3()
+    exp_slots()
     exp_w()
     exp_x()
     exp_y()
+    exp_z()
     exp_g1()
     exp_g2()
     exp_h("expG4", "Exp G4: lmbench's own lat_mem_rd in three interconnect states")

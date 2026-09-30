@@ -299,6 +299,27 @@ One page set of class shared per run (two passes); class clear from every slot o
 | 32 MB | 1 | +6.5 | +6.5 (+6.5 to +6.5) | +4.3% | +7.0 | +12.7 | 0.996 / 0.982 | +0.11 | 18 |
 | 64 MB | 1 | +7.7 | +7.7 (+7.7 to +7.7) | +4.9% | +7.9 | +14.6 | 0.998 / 0.993 | +0.28 | 34 |
 
+## Slot effect in the random chase: the two GiB slots that can still be 1 GiB stage-2 blocks against the others
+
+Slots 0x22c0000000 and 0x2300000000 hold no VM page, no memory-region boundary and no hypervisor pool; every other slot is mapped by 2 MiB blocks at most (kernel source plus vm-frames-n80.txt; the stage-2 table itself was not read).  Per run: median over these two slots minus median over the other slots, class clear (or all).  Logs: expS, expV, expV2, expV3.
+
+| size | pages picked | runs | difference per run (ns) | median ns | median cycles | median L2 refills | page walks per access |
+|---:|---|---:|---|---:|---:|---:|---:|
+| 2 MB | spread evenly | 1 | +1.1 | +1.06 | +2.11 | -0.000 | 0.000 |
+| 3 MB | spread evenly | 1 | -0.1 | -0.11 | -0.43 | +0.000 | 0.000 |
+| 4 MB | spread evenly | 1 | -0.2 | -0.22 | -0.55 | -0.000 | 0.000 |
+| 6 MB | spread evenly | 4 | +2.7 +1.2 -0.3 -1.3 | +0.45 | +2.40 | +0.000 | 0.943 |
+| 8 MB | spread evenly | 4 | +0.7 +1.0 -1.9 +0.7 | +0.70 | +0.62 | -0.000 | 0.995 |
+| 12 MB | spread evenly | 4 | +2.7 +1.9 +2.4 +2.3 | +2.35 | +4.80 | -0.001 | 1.000 |
+| 16 MB | spread evenly | 5 | +1.4 +1.9 +2.8 +1.7 +2.9 | +1.95 | +3.91 | -0.001 | 1.000 |
+| 24 MB | spread evenly | 4 | +1.7 +3.3 +2.5 +0.7 | +2.11 | +3.98 | -0.004 | 1.000 |
+| 32 MB | spread evenly | 8 | +1.9 +1.7 +2.0 +2.3 +0.1 +2.7 +1.8 +1.6 | +1.82 | +3.47 | -0.002 | 1.000 |
+| 48 MB | spread evenly | 4 | +2.2 +1.7 +1.3 +2.1 | +1.89 | +3.21 | +0.006 | 1.000 |
+| 64 MB | spread evenly | 4 | +2.0 +1.4 +2.0 +2.2 | +2.03 | +3.85 | +0.007 | 1.000 |
+| 16 MB | lowest addresses | 1 | +1.4 | +1.37 | +1.39 | +0.005 | 0.992 |
+| 32 MB | lowest addresses | 5 | +9.0 +1.5 +2.2 +1.9 +1.7 | +1.94 | +3.66 | -0.004 | 0.996 |
+| 64 MB | lowest addresses | 2 | +1.8 +2.0 | +1.90 | +3.76 | +0.007 | 0.998 |
+
 ## Exp W: sequential chase (stride 256) over the same kind of page set in sorted and in shuffled virtual order, by page class
 
 sorted = virtual order follows ascending physical address; shuffled = the same selection rule, pages mapped in a random virtual order.  clear = stage-2 block mappings; shared = 4 KiB stage-2 leaves (2 MiB regions shared with the VM).  ns = median over sets (slots) and the two passes.
@@ -400,4 +421,22 @@ sorted = virtual order follows ascending physical address; shuffled = the same p
 | 256 | 16 | 12 | 9.00 (8.84-9.24) | 10.59 (10.51-10.65) | +1.59 | +17.7% | +25.5 | 0.0489 / 0.0539 | 0.251 / 0.247 | 0.784 / 0.799 |
 | 512 | 8 | 12 | 8.50 (8.29-8.70) | 10.04 (10.00-10.08) | +1.54 | +18.1% | +12.3 | 0.0866 / 0.0965 | 0.206 / 0.278 | 0.785 / 0.811 |
 | 1024 | 4 | 12 | 9.33 (9.24-9.46) | 10.86 (10.82-11.09) | +1.53 | +16.4% | +6.1 | 0.1338 / 0.1380 | 0.152 / 0.312 | 0.795 / 0.819 |
+
+## Exp Z: a chase dominated by address translation (frames2 tlb<L>: another page on every hop, L cache lines per page)
+
+cycles = user-mode CPU cycles per hop (median of the per-set medians, two passes per set).  '2 MiB slots' are all slots except 0x22c0000000 and 0x2300000000, the two that can still be 1 GiB stage-2 blocks.  shared = pages in 2 MiB regions that also hold pages of the running VM (4 KiB stage-2 leaves).
+
+| pages x lines per page | lines | class clear, 2 MiB slots: cycles (ns) | page walks | L2 refills | 1 GiB-candidate slots minus 2 MiB slots, per run: cycles | median | class shared minus clear, per run: cycles | median | extra L2 refills of class shared |
+|---|---:|---|---:|---:|---|---:|---|---:|---:|
+| 2048 x 1 | 2048 | 37.01 (19.48) | 0.960 | 0.001 | +3.59 +3.50 +3.61 | +3.59 | +9.9 +9.3 +9.5 | +9.5 | +0.052 |
+| 1024 x 4 | 4096 | 14.48 (7.63) | 0.000 | 0.019 | -0.10 -0.03 +0.01 | -0.03 | +0.0 -0.1 -0.1 | -0.1 | -0.004 |
+| 2048 x 2 | 4096 | 37.75 (19.87) | 0.940 | 0.051 | +3.42 +3.46 +3.56 | +3.46 | +12.7 +13.0 +13.3 | +13.0 | +0.217 |
+| 4096 x 1 | 4096 | 39.08 (20.58) | 0.998 | 0.061 | +3.92 +3.95 +3.88 | +3.92 | +24.4 +24.3 +24.8 | +24.4 | +0.743 |
+| 8192 x 1 | 8192 | 49.18 (25.88) | 1.013 | 0.525 | +3.98 +4.04 +3.92 | +3.98 | +37.2 +36.5 +36.8 | +36.8 | +1.295 |
+| 16384 x 1 | 16384 | 61.68 (32.49) | 1.015 | 1.110 | +3.98 +3.93 +3.94 | +3.94 | +28.4 +28.0 +28.0 | +28.0 | +0.871 |
+
+Cost of one page walk with a block-mapped stage-2 (class clear, 2 MiB slots): cycles per hop minus the no-walk reference (1024 pages x 4 lines, 14.48 cycles), for configurations with the same 4096 lines of data:
+
+- 2048 pages x 2 lines: +23.3 cycles per hop
+- 4096 pages x 1 lines: +24.6 cycles per hop
 

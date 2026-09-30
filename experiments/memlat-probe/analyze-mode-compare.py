@@ -18,6 +18,8 @@ The first directory is the reference.  The question each table answers:
   llc       how the sequential points around the L3 size vary from one fresh
             process to the next, and whether that follows physical contiguity
             or the interconnect frequency
+  tlb       what one page walk costs in each mode, from a chase whose data stay
+            in the L1/L2 caches (frames2 tlb<L>), and whether GiB slots differ
 
 Standard library only.  Output is Markdown.
 """
@@ -148,6 +150,7 @@ def main():
             "rand": rows(os.path.join(d, "rand.log")),
             "seq": rows(os.path.join(d, "seq.log")),
             "llc": rows(os.path.join(d, "llc.log")),
+            "tlb": rows(os.path.join(d, "tlb.log")),
         }
     ref = names[0]
 
@@ -246,6 +249,54 @@ def main():
             print(f"| {n} | {s:g} MB | {len(ns)} | {min(ns):.2f} | {st.median(ns):.2f} | {max(ns):.2f} | {max(ns) / min(ns):.3f} | "
                   f"{sum(x > mid for x in ns)}/{len(ns)} | {rho(c)} | {rho(l3)} | {rho(f)} | "
                   f"{', '.join(f'{k}: {v}' for k, v in sorted(fc.items())) or 'n/a'} |")
+
+    section_tlb(names, data, ref)
+
+
+def section_tlb(names, data, ref):
+    if not any(data[n]["tlb"] for n in names):
+        return
+    print(f"\n## Translation-only chase (another page on every hop, few cache lines per page): reference = {ref}\n")
+    print("Cycles per hop, median over GiB slots, passes and seeds.  The first configuration needs no page walk and is the "
+          "reference within each mode; 'walk cost' = cycles minus that reference.  The difference of the walk cost between "
+          "two modes is what the stage-2 translation adds to a TLB miss, free of memory-system state.\n")
+    cfgs = sorted({(r["size_mb"], r["stride"]) for n in names for r in data[n]["tlb"]}, key=lambda c: (c[0] * c[1], c[0]))
+    head = "| pages x lines per page |"
+    sep = "|---|"
+    for n in names:
+        head += f" {n}: cycles | walks | L2 refills | walk cost |"
+        sep += "---:|---:|---:|---:|"
+        if n != ref:
+            head += " walk cost minus reference |"
+            sep += "---:|"
+    print(head)
+    print(sep)
+    nowalk = {}
+    for n in names:
+        rs = [r for r in data[n]["tlb"] if (r["size_mb"], r["stride"]) == (4.0, 4.0)]
+        nowalk[n] = med(rs, "ev11")
+    for size, lines in cfgs:
+        line = f"| {int(size * 256)} x {lines:g} |"
+        cost = {}
+        for n in names:
+            rs = [r for r in data[n]["tlb"] if (r["size_mb"], r["stride"]) == (size, lines)]
+            cost[n] = med(rs, "ev11") - nowalk[n]
+            line += f" {med(rs, 'ev11'):.2f} | {med(rs, 'ev2d'):.3f} | {med(rs, 'ev17'):.3f} | {cost[n]:+.2f} |"
+            if n != ref:
+                line += f" {cost[n] - cost[ref]:+.2f} |"
+        print(line)
+    print("\nPer GiB slot, 4096 pages x 1 line (cycles per hop, median over passes and seeds).  Under a host stage-2 "
+          "map, slots mapped by one 1 GiB block were about 4 cycles slower than slots mapped by 2 MiB blocks on the N80; "
+          "without a host stage-2 no slot should differ.\n")
+    slots = sorted({r["slot"] for n in names for r in data[n]["tlb"] if (r["size_mb"], r["stride"]) == (16.0, 1.0)}, key=str)
+    print("| slot | " + " | ".join(names) + " |")
+    print("|---|" + "---:|" * len(names))
+    for s in slots:
+        cells = []
+        for n in names:
+            rs = [r for r in data[n]["tlb"] if (r["size_mb"], r["stride"]) == (16.0, 1.0) and r["slot"] == s]
+            cells.append(f"{med(rs, 'ev11'):.2f}" if rs else "")
+        print(f"| {s} | " + " | ".join(cells) + " |")
 
 
 if __name__ == "__main__":

@@ -57,6 +57,7 @@
 | `expW.log` | 傍晚：顺序访问，同类页按物理顺序和随机顺序映射，两类页各一遍 | `run13-vm-shared-seq.sh` |
 | `expX1.log` `expX2.log` `expX3.log` `vm-frames-x.txt` `guest-regions-x.txt` | 晚上：被计时的循环两种写法的对比（`probe3`，24 KiB–64 MB）；用 lmbench 的写法重复 `expW`；同一时段 lmbench 原版 3 遍；当时虚拟机内存的物理分布 | `run14-loop-form.sh` |
 | `expY.log` | 晚上：8 MB、lmbench 的写法，步长 64–1024，同一批相邻的页按物理顺序和随机顺序各测一遍 | `run15-layout-strides.sh` |
+| `expZ.log` `vm-frames-z.txt` `guest-regions-z.txt` | 晚上：只量地址翻译的访问方式（每一跳换一页，每页只用 1–4 条缓存行），按 GiB 区间和页的类别分别测 | `run17-translation-only.sh` |
 | `iomem-n80.txt` | root 视角的物理内存布局（内核、保留区、监视器内存池的位置） | |
 | `vm-process-n80.txt` | 后台那个虚拟机的进程和完整命令行（带 `--protected-vm`），以及 `shmem_enabled` 的取值 | |
 | `expL-smoke.log` `expF-smoke.log` | 上面两个实验在写成脚本之前的第一次手工试跑；`expL-smoke.log` 里物理连续度达到 0.99 | 命令记在文件开头 |
@@ -64,7 +65,7 @@
 | `hw-survey-n80.txt` | 硬件、内核配置、PMU 事件、KVM 启动日志 | |
 | `devfreq-survey-n80.txt` | 互连和 GPU 调频设备的状态、可选策略，以及桌面电源管理服务的策略表（只读查看） | |
 | `derived/device-tables.md` | 下午各实验（A、B、C、D、L、T、F）的汇总表 | `experiments/memlat-probe/analyze-device-logs.py` |
-| `derived/state-tables.md` | 傍晚和晚上各实验（R、BG、H、S、V、V2、V3、W、X、Y）的汇总表 | `experiments/memlat-probe/analyze-state-experiments.py` |
+| `derived/state-tables.md` | 傍晚和晚上各实验（R、BG、H、S、V、V2、V3、W、X、Y、Z）的汇总表，以及各 GiB 区间之间的比较 | `experiments/memlat-probe/analyze-state-experiments.py` |
 | `derived/host-n90-tables.md` | N90 宿主机四模式数据的对应分析 | `experiments/memlat-probe/analyze-host-memlat.py` |
 | `derived/guest-n90-tables.md` | N90 上 x-kernel **客户机内**数据的对应分析（图 8 的数据，不是宿主机数据） | `experiments/memlat-probe/analyze-guest-memlat.py` |
 
@@ -84,7 +85,7 @@
   `noc0`、`noc` 是第一个区间之前和每个区间之后读到的互连频率。
 - `slot`、`phys`（`frames2`）：页所在的 1 GiB 物理区间的编号和起始物理地址。`class=shared` 表示页所在的 2 MiB 区间里也有保护虚拟机的页，
   `class=clear` 表示没有，`class=all` 表示没有分类。`pass=2` 是把同一批页搬到新的虚拟地址之后再测的一遍。
-  `mode`、`order`：随机访问还是顺序访问，页按物理升序还是随机顺序映射。
+  `mode`、`order`：随机访问（`rand`）、顺序访问（`seq`）还是只量地址翻译的方式（`tlb`，这时 `stride` 是每页用的缓存行数）；页按物理升序还是随机顺序映射。
   `chase`（`probe3`、`frames2`，实验 X 起）：`loop` 是循环里一条取数指令，`unrolled` 是 lmbench 的连续 100 条取数指令。
   没有这个字段的日志都是 `loop`；这种写法测到的顺序访问比 lmbench 原版低 4%–9%。
   `expS.log`、`expV.log`、`expV2.log` 里的 `contig_frac` 只算物理升序相邻；`expW.log` 里两个方向都算，并多一个 `va_region_changes`

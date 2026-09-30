@@ -18,6 +18,9 @@
 #   rand.log   random chase (lmbench -t, stride 16), 14 sizes x 5 seeds
 #   seq.log    sequential chase over 64 MB, 6 strides x 5 repetitions
 #   llc.log    sequential stride 256 at 4..64 MB, fresh process per point, 30 laps
+#   tlb.log    translation-only chase (frames2 tlb<L>) per GiB slot, 5 configurations x 3 seeds;
+#              the most direct measure of what a page walk costs in each boot mode, because the
+#              data stay in the L1/L2 caches (needs ./frames2 and root)
 cd "$(dirname "$0")" || exit 1
 [ -x ./probe ] || { echo "build ./probe first (make)" >&2; exit 1; }
 CPU=${CPU:-0}
@@ -72,6 +75,8 @@ state() {
   echo
   echo "## power-management processes"
   ps -eo pid,user,comm 2>/dev/null | grep -iE 'power|upower|tlp|thermal' | grep -v grep
+  echo "## virtual machines"
+  ps -eo pid,user,lstart,comm,args 2>/dev/null | grep -E 'crosvm|qemu|pvm-manage' | grep -v grep
 }
 
 noc() { cat $NOC/cur_freq 2>/dev/null || echo na; }
@@ -103,6 +108,19 @@ for lap in $(seq 1 30); do
     one llc.log seq $sz 256 64 0 $E
   done
 done
+
+# translation-only chase: another page on every hop, few cache lines per page
+if [ -x ./frames2 ] && [ "$(id -u)" = 0 ]; then
+  for seed in 51 53 57; do
+    for cfg in "4 tlb4" "8 tlb2" "16 tlb1" "8 tlb1" "32 tlb1"; do
+      set -- $cfg
+      echo "## size_mb=$1 pick=even mode=$2 seed=$seed noc=$(noc) $(date -Is)" >> "$OUT/tlb.log"
+      taskset -c "$CPU" ./frames2 $1 2048 11,2d,17,2a,3,5 $seed even - $2 >> "$OUT/tlb.log" 2>&1
+    done
+  done
+else
+  echo "tlb.log skipped: needs ./frames2 and root" >&2
+fi
 
 state > "$OUT/state-after.txt" 2>&1
 echo "done: $OUT"
