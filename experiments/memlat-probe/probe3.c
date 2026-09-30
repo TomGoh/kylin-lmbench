@@ -18,11 +18,20 @@
  *   nor the PMU: the line ends with l1_ns=, the time per hop of a chase inside
  *   the L1 cache (4 cycles on FTC862) taken in the same process, and cyc_est=,
  *   the main result expressed in those cycles.
+ *   TLB_PREFAULT=1 in the environment (tlb mode): touch the pages of the
+ *   working set in ascending virtual order before the chain is written.
+ *   Without it the pages are first touched in the order of the chain, so a
+ *   kernel that hands out physically consecutive frames makes the frame
+ *   number a function of the position in the chain, as the cache line used
+ *   within the page already is; the lines then crowd into few L2 sets.
  *
  * The buffer always uses 4 KiB pages (MADV_NOHUGEPAGE).  Prints one key=value
  * line.  Fields beyond those of probe.c:
  *   chase=    loop or unrolled (see CHASE_UNROLL)
  *   slots=    (root only) pages of the working set per 1 GiB physical slot
+ *   l2over=   (root only, tlb mode) share of the data lines that lie in an L2
+ *             set holding more than 8 of them (L2 of FTC862: 1024 sets, 8 ways)
+ *   prefault= (tlb mode) 1 if TLB_PREFAULT was set
  *   rebuild=  1: the chain is rewritten before every interval, as lmbench does
  *   reps=     the 11 interval times in the order they were taken (ns per hop)
  *   noc0=     /sys/class/devfreq/nocfreq/cur_freq before the first interval
@@ -228,7 +237,7 @@ static char **build_chain(void)
 
 int main(int argc, char **argv)
 {
-	int rebuild, nev = 0, fd[MAXEV], i, pm;
+	int rebuild, nev = 0, fd[MAXEV], i, pm, prefault = 0;
 	size_t maxlen, nmpages, k, hops, cycle;
 	uint64_t evcfg[MAXEV], cnt[MAXEV][3];
 	char *raw, **p, *tok, *evs;
@@ -274,6 +283,10 @@ int main(int argc, char **argv)
 		pages = permutation(npages, PAGE, seed);
 		if (!pages)
 			return 1;
+		prefault = getenv("TLB_PREFAULT") && atoi(getenv("TLB_PREFAULT"));
+		if (prefault)
+			for (k = 0; k < npages; k++)
+				addr[k * PAGE] = 1;
 	}
 	if (rnd) {
 		pages = permutation(nmpages, PAGE, seed);
@@ -305,6 +318,19 @@ int main(int argc, char **argv)
 			close(pm);
 		}
 		if (have == npages) {
+			if (tlbm) {
+				/* pfn[k] is the frame of the k-th page of the chain: data lines per L2 set */
+				static unsigned short occ[1024];
+				size_t j, over = 0;
+
+				for (j = 0; j < stride; j++)
+					for (k = 0; k < npages; k++)
+						occ[((pfn[k] << 6) + (37 * k + 17 * j) % 64) & 1023]++;
+				for (j = 0; j < 1024; j++)
+					if (occ[j] > 8)
+						over += occ[j];
+				printf("l2over=%.4f ", (double)over / (npages * stride));
+			}
 			if (!rnd && !tlbm)
 				for (k = 0; k + 1 < npages; k++) {
 					if (pfn[k + 1] == pfn[k] + 1)
@@ -387,6 +413,8 @@ int main(int argc, char **argv)
 	memcpy(sorted, rep, sizeof(rep));
 	qsort(sorted, REPS, sizeof(double), cmp_d);
 
+	if (tlbm)
+		printf("prefault=%d ", prefault);
 	printf("mode=%s chase=%s rebuild=%d size_mb=%.3f stride=%zu pages=%zu seed=%u hops=%.0f ns_min=%.3f ns_med=%.3f ns_max=%.3f",
 	       tlbm ? "tlb" : rnd ? "rand" : "seq", unroll ? "unrolled" : "loop", rebuild, len / 1048576.0, stride, npages, seed, total_hops,
 	       sorted[0], sorted[REPS / 2], sorted[REPS - 1]);

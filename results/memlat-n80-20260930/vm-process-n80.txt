@@ -8,3 +8,16 @@ crosvm --extended-status --log-level info,disk=warn run --name pvm --disable-san
 
 # /sys/kernel/mm/transparent_hugepage/shmem_enabled (2026-09-30 20:08): always within_size advise [never] deny force
 # guest memory is a memfd (shmem) mapping, so it is backed by 4 KiB pages
+
+# CPU time of the VM's threads, 2026-09-30 21:47 +08:00 (ps -L -o pid,tid,comm,time,etime)
+    PID     TID COMMAND             TIME     ELAPSED
+   2341    2341 pvm             00:00:00    05:25:55
+   2341    2733 vhost-2341      00:00:00    05:25:54
+   2341    2735 device_control  00:00:00    05:25:54
+   2341    2736 crosvm_vcpu0    00:00:59    05:25:54
+   2341    2773 crosvm_vcpu1    00:00:29    05:25:54
+   2341    2776 irq_handler_thr 00:00:00    05:25:54
+   2341    2777 vm_memory_handl 00:00:00    05:25:54
+   2341    3646 virtio_blk      00:00:00    05:25:54
+   2341    4411 virtio_blk      00:00:00    05:25:53
+   2341    4420 vhost_vsock     00:00:00    05:25:53

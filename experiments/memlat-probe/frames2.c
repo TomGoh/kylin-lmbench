@@ -19,7 +19,7 @@
  * same pages to a second fresh range and measures again (pass 2: same data
  * frames, newly allocated page-table pages).
  *
- * usage: frames2 <size_mb> <pool_mb> <events,hex,...> [seed] [pick low|even] [regions file|-] [mode] [order]
+ * usage: frames2 <size_mb> <pool_mb> <events,hex,...> [seed] [pick low|even] [regions file|-] [mode] [order] [mix]
  *   pick even: take every k-th pool page of the slot instead of the lowest ones
  *   mode: rand (default, lmbench -t pattern), seq<stride>, e.g. seq256 (lmbench
  *     sequential pattern with that stride), or tlb<L>, e.g. tlb1: a chase that
@@ -38,6 +38,11 @@
  *     Pages given to a protected VM are taken out of the host stage-2 map one
  *     4 KiB page at a time, so the host pages of a shared region are mapped
  *     with 4 KiB stage-2 leaves, the others with 2 MiB or 1 GiB blocks.
+ *   mix: <slot A>:<slot B>:<percent>, slot numbers in hexadecimal (PFN >> 18),
+ *     e.g. 0x8b:0x88:25.  Instead of one set per slot, measures a single set
+ *     with that percentage of its pages taken from slot A and the rest from
+ *     slot B (pages of class clear when a regions file is given); the output
+ *     line then starts with mix= instead of slot=.
  *   CHASE_UNROLL=1 in the environment: time lmbench's own loop body (100 load
  *     instructions in a row) instead of one load instruction in a loop; the
  *     output line then ends with chase=unrolled.
@@ -324,18 +329,77 @@ timed:
 	fflush(stdout);
 }
 
+static char *pool;
+static int pm, shuffled;
+static size_t *vord, *pages, *words;
+
+/*
+ * Map the npages selected frames (ascending PFN order) into a fresh range,
+ * measure, move them to a second fresh range, measure again.  head is the
+ * start of the output line (which pages these are).
+ */
+static int run_set(const char *head, struct fr *sel, size_t npages, size_t n)
+{
+	size_t len = npages * PAGE, k, contig = 0, mb2 = 0, vachg = 0;
+	uint64_t prev = 0;
+	char *dst, *dst2;
+	int pass;
+
+	dst = mmap(NULL, len, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
+	dst2 = mmap(NULL, len, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
+	if (dst == MAP_FAILED || dst2 == MAP_FAILED) {
+		perror("mmap dst");
+		return 1;
+	}
+	for (k = 0; k < npages; k++)
+		if (mremap(pool + sel[k].idx * PAGE, PAGE, PAGE, MREMAP_MAYMOVE | MREMAP_FIXED, dst + vord[k] * PAGE) == MAP_FAILED) {
+			perror("mremap");
+			return 1;
+		}
+	/* distinct 2 MiB regions of the set (sel[] is in ascending PFN order) */
+	for (k = 0; k < npages; k++)
+		if (!k || (sel[k].pfn >> 9) != (sel[k - 1].pfn >> 9))
+			mb2++;
+	/* in virtual order: physically adjacent neighbours (either direction), and changes of 2 MiB region */
+	for (k = 0; k < npages; k++) {
+		uint64_t f = pfn_of(pm, dst + k * PAGE);
+
+		if (k && (f == prev + 1 || f + 1 == prev)) contig++;
+		if (k && (f >> 9) != (prev >> 9)) vachg++;
+		prev = f;
+	}
+	for (pass = 1; pass <= 2; pass++) {
+		char *d = pass == 1 ? dst : dst2;
+
+		if (pass == 2)
+			for (k = 0; k < npages; k++)
+				if (mremap(dst + k * PAGE, PAGE, PAGE, MREMAP_MAYMOVE | MREMAP_FIXED, dst2 + k * PAGE) == MAP_FAILED) {
+					perror("mremap 2");
+					return 1;
+				}
+		printf("%s mode=%s stride=%zu order=%s frames_in_class=%zu pass=%d size_mb=%.0f pfn_min=0x%llx pfn_max=0x%llx contig_frac=%.4f mb2_regions=%zu va_region_changes=%zu",
+		       head, tlb_lines ? "tlb" : seq_stride ? "seq" : "rand",
+		       tlb_lines ? tlb_lines : seq_stride ? seq_stride : STRIDE, shuffled ? "shuffled" : "sorted", n, pass,
+		       len / 1048576.0, (unsigned long long)sel[0].pfn, (unsigned long long)sel[npages - 1].pfn,
+		       (double)contig / (npages - 1), mb2, vachg);
+		measure(d, npages, pages, words);
+	}
+	munmap(dst, len);
+	munmap(dst2, len);
+	return 0;
+}
+
 int main(int argc, char **argv)
 {
 	size_t len, pool_len, npages, npool, k, s, e;
-	int i, pm, even, shuffled;
-	size_t *vord;
-	char *pool, *tok, *evs;
+	int i, even, mix_pct = -1;
+	unsigned long long mix_a = 0, mix_b = 0;
+	char *tok, *evs, head[128];
 	struct fr *fr, *sel;
-	size_t *pages, *words;
 	unsigned seed;
 
 	if (argc < 4) {
-		fprintf(stderr, "usage: %s <size_mb> <pool_mb> <events> [seed] [pick low|even] [regions file|-] [rand|seq<stride>|tlb<lines>] [sorted|shuffled]\n", argv[0]);
+		fprintf(stderr, "usage: %s <size_mb> <pool_mb> <events> [seed] [pick low|even] [regions file|-] [rand|seq<stride>|tlb<lines>] [sorted|shuffled] [<slot a>:<slot b>:<percent of a>]\n", argv[0]);
 		return 2;
 	}
 	len = (size_t)(atof(argv[1]) * 1024 * 1024);
@@ -353,6 +417,10 @@ int main(int argc, char **argv)
 			return 2;
 	}
 	shuffled = argc > 8 && !strcmp(argv[8], "shuffled");
+	if (argc > 9 && sscanf(argv[9], "%llx:%llx:%d", &mix_a, &mix_b, &mix_pct) != 3)
+		return 2;
+	if (argc > 9 && (mix_pct < 0 || mix_pct > 100))
+		return 2;
 	unroll = getenv("CHASE_UNROLL") && atoi(getenv("CHASE_UNROLL"));
 	for (tok = strtok(evs, ","); tok && nev < MAXEV; tok = strtok(NULL, ","))
 		evcfg[nev++] = strtoull(tok, NULL, 16);
@@ -411,6 +479,34 @@ int main(int argc, char **argv)
 	}
 	printf("\n");
 
+	if (mix_pct >= 0) {
+		/* one set: want[0] pages of slot A and want[1] pages of slot B, each taken the way the per-slot sets are */
+		unsigned long long slot[2] = { mix_a, mix_b };
+		size_t want[2], n[2] = { 0, 0 }, *cand[2];
+		int t;
+
+		want[0] = (npages * mix_pct + 50) / 100;
+		want[1] = npages - want[0];
+		for (t = 0; t < 2; t++) {
+			cand[t] = malloc(npool * sizeof(size_t));
+			for (k = 0; k < npool; k++)
+				if ((fr[k].pfn >> 18) == slot[t] && !is_shared(fr[k].pfn))
+					cand[t][n[t]++] = k;
+			if (n[t] < want[t]) {
+				fprintf(stderr, "mix: slot 0x%llx has %zu pool pages, %zu needed\n", slot[t], n[t], want[t]);
+				return 1;
+			}
+		}
+		for (k = 0; k < want[0]; k++)
+			sel[k] = fr[cand[0][even ? k * n[0] / want[0] : k]];
+		for (k = 0; k < want[1]; k++)
+			sel[want[0] + k] = fr[cand[1][even ? k * n[1] / want[1] : k]];
+		qsort(sel, npages, sizeof(*sel), cmp_fr);
+		snprintf(head, sizeof(head), "mix=0x%llx:0x%llx pct_a=%d n_a=%zu n_b=%zu class=%s",
+			 mix_a, mix_b, mix_pct, want[0], want[1], nshared ? "clear" : "all");
+		return run_set(head, sel, npages, n[0] + n[1]);
+	}
+
 	for (s = 0; s < npool; s = e) {
 		int cls, ncls = nshared ? 2 : 1;
 
@@ -418,11 +514,8 @@ int main(int argc, char **argv)
 			;
 		/* class 0: all pages of the slot (no regions file) or pages in regions without VM pages; class 1: shared */
 		for (cls = 0; cls < ncls; cls++) {
-			size_t n = 0, contig = 0, mb2 = 0, vachg = 0;
+			size_t n = 0;
 			size_t *cand = malloc((e - s) * sizeof(size_t));
-			uint64_t prev = 0;
-			char *dst, *dst2;
-			int pass;
 
 			/* the pool pages of this slot that belong to the class, in ascending PFN order */
 			for (k = s; k < e; k++)
@@ -436,48 +529,11 @@ int main(int argc, char **argv)
 				sel[k] = fr[cand[even ? k * n / npages : k]];
 			free(cand);
 
-			dst = mmap(NULL, len, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
-			dst2 = mmap(NULL, len, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
-			if (dst == MAP_FAILED || dst2 == MAP_FAILED) {
-				perror("mmap dst");
+			snprintf(head, sizeof(head), "slot=0x%llx phys=0x%llx class=%s",
+				 (unsigned long long)(sel[0].pfn >> 18), (unsigned long long)((sel[0].pfn >> 18) << 30),
+				 !nshared ? "all" : cls ? "shared" : "clear");
+			if (run_set(head, sel, npages, n))
 				return 1;
-			}
-			for (k = 0; k < npages; k++)
-				if (mremap(pool + sel[k].idx * PAGE, PAGE, PAGE, MREMAP_MAYMOVE | MREMAP_FIXED, dst + vord[k] * PAGE) == MAP_FAILED) {
-					perror("mremap");
-					return 1;
-				}
-			/* distinct 2 MiB regions of the set (sel[] is in ascending PFN order) */
-			for (k = 0; k < npages; k++)
-				if (!k || (sel[k].pfn >> 9) != (sel[k - 1].pfn >> 9))
-					mb2++;
-			/* in virtual order: physically adjacent neighbours (either direction), and changes of 2 MiB region */
-			for (k = 0; k < npages; k++) {
-				uint64_t f = pfn_of(pm, dst + k * PAGE);
-
-				if (k && (f == prev + 1 || f + 1 == prev)) contig++;
-				if (k && (f >> 9) != (prev >> 9)) vachg++;
-				prev = f;
-			}
-			for (pass = 1; pass <= 2; pass++) {
-				char *d = pass == 1 ? dst : dst2;
-
-				if (pass == 2)
-					for (k = 0; k < npages; k++)
-						if (mremap(dst + k * PAGE, PAGE, PAGE, MREMAP_MAYMOVE | MREMAP_FIXED, dst2 + k * PAGE) == MAP_FAILED) {
-							perror("mremap 2");
-							return 1;
-						}
-				printf("slot=0x%llx phys=0x%llx class=%s mode=%s stride=%zu order=%s frames_in_class=%zu pass=%d size_mb=%.0f pfn_min=0x%llx pfn_max=0x%llx contig_frac=%.4f mb2_regions=%zu va_region_changes=%zu",
-				       (unsigned long long)(sel[0].pfn >> 18), (unsigned long long)((sel[0].pfn >> 18) << 30),
-				       !nshared ? "all" : cls ? "shared" : "clear", tlb_lines ? "tlb" : seq_stride ? "seq" : "rand",
-				       tlb_lines ? tlb_lines : seq_stride ? seq_stride : STRIDE, shuffled ? "shuffled" : "sorted", n, pass,
-				       len / 1048576.0, (unsigned long long)sel[0].pfn, (unsigned long long)sel[npages - 1].pfn,
-				       (double)contig / (npages - 1), mb2, vachg);
-				measure(d, npages, pages, words);
-			}
-			munmap(dst, len);
-			munmap(dst2, len);
 		}
 	}
 	return 0;
