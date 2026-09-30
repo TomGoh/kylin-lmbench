@@ -42,6 +42,8 @@
   Exp H5  the same for the other strides of the paper's command, next to
           the two levels of the N90 host data per stride
           (expH5.log, ../memlat-d80f3-20260930/expH5-d80f3.log)
+  Exp H6  lmbench's own random-access test on sorted and shuffled pages
+          (expH6.log)
   Exp G1-G4  the interconnect-frequency experiments, if their logs exist
           (expG1.log, expG2.log, expG3.log, expG4-*.log)
 
@@ -1639,6 +1641,30 @@ def exp_h5():
             print()
 
 
+def exp_h6():
+    sw = layout_stride_sweeps(os.path.join(DEV, "expH6.log"))
+    if not sw:
+        return
+    host = n90("lat_mem_rd_rand")
+    print("## Exp H6: lmbench's own random-access test (lat_mem_rd -t -P 1 64 16) on a buffer whose physical layout is set\n")
+    print("N80, protected mode, interconnect at 1800 MHz.  sorted and shuffled (over the whole buffer) use layoutshim.so; natural "
+          "= without the library, under nothp.  ns = lmbench's own figure, median of the repetitions (min-max).  The last two "
+          "columns are the N90 host medians of June 2026 in its two platform states (nVHE, quiesced and non-quiesced).\n")
+    names = ("sorted", "shuffled", "natural")
+    print("| size | " + " | ".join(names) + " | shuffled / sorted | natural / sorted | N90 quiesced | N90 fast state | fast / quiesced |")
+    print("|---:|" + "---|" * len(names) + "---:|---:|---:|---:|---:|")
+    for sz in (1.0, 2.0, 3.0, 4.0, 6.0, 8.0, 12.0, 16.0, 24.0, 32.0, 48.0, 64.0):
+        v = {n: [x["rows"][(16, sz)] for x in sw if x["layout"] == n and (16, sz) in x["rows"]] for n in names}
+        if not v["sorted"]:
+            continue
+        cell = lambda n: f"{st.median(v[n]):.2f} ({min(v[n]):.2f}-{max(v[n]):.2f})" if v[n] else ""
+        rat = lambda n: f"{st.median(v[n]) / st.median(v['sorted']):.3f}" if v[n] else ""
+        q = st.median(host["nvhe"][(16, sz)])
+        f = st.median(host["nvhe-noisy"][(16, sz)])
+        print(f"| {sz:g} MB | " + " | ".join(cell(n) for n in names) + f" | {rat('shuffled')} | {rat('natural')} | {q:.2f} | {f:.2f} | {f / q:.3f} |")
+    print()
+
+
 def main():
     exp_r()
     exp_bg()
@@ -1663,6 +1689,7 @@ def main():
     exp_h3()
     exp_h4()
     exp_h5()
+    exp_h6()
     exp_g1()
     exp_g2()
     exp_h("expG4", "Exp G4: lmbench's own lat_mem_rd in three interconnect states")
