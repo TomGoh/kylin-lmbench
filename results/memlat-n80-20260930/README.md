@@ -45,11 +45,21 @@
 | `expL.log` | 同一组物理页按物理升序、随机、物理降序排列后的顺序访问延迟 | `run2.sh` |
 | `expT.log` | 首次触页顺序分别为默认、随机、降序时的顺序访问延迟 | `run2.sh` |
 | `expF.log` | 按物理位置挑选页集合后的 64 MB 随机访问延迟 | `run3.sh` |
+| `expR.log` | 傍晚：顺序访问步长 256，4–64 MB，每个点一个新进程 20 轮；指针链只建一次与每个计时区间前重写各一遍 | `run6-current-state.sh` |
+| `expBG.log` | 傍晚：别的核上有内存流量时，cpu0 上几个关键点的延迟 | 同上 |
+| `expH-rand.log` `expH-seq256.log` `expH-seqall.log` | 傍晚：lmbench 原版 `lat_mem_rd` 重复多遍（随机 5 遍、步长 256 顺序 16 遍、七种步长 2 遍；缓冲区 4 KiB 页），另有系统 THP 设置下的对照。每行前面是该行输出的时刻 | `run9-lmbench-current-state.sh` |
+| `expH-noc-samples.log` | 上一项运行期间每 100 ms 一次的互连频率（全部是 1800000） | 同上 |
+| `expS.log` | 傍晚：按 1 GiB 物理区间分别取页做随机访问 | `run10-slots.sh` |
+| `expV.log` `vm-frames-n80.txt` | 傍晚：同一个 GiB 里，与保护虚拟机共用 2 MiB 区间的页和不共用的页分别做随机访问；后一个文件是虚拟机内存的物理分布 | `run11-vm-shared.sh` |
+| `expV2.log` | 傍晚：上一项在 2–64 MB 各做一遍 | `run12-vm-shared-sizes.sh` |
+| `expW.log` | 傍晚：顺序访问，同类页按物理顺序和随机顺序映射，两类页各一遍 | `run13-vm-shared-seq.sh` |
+| `iomem-n80.txt` | root 视角的物理内存布局（内核、保留区、监视器内存池的位置） | |
 | `expL-smoke.log` `expF-smoke.log` | 上面两个实验在写成脚本之前的第一次手工试跑；`expL-smoke.log` 里物理连续度达到 0.99 | 命令记在文件开头 |
 | `meta.log` | 各批次的起止时间和系统负载 | |
 | `hw-survey-n80.txt` | 硬件、内核配置、PMU 事件、KVM 启动日志 | |
 | `devfreq-survey-n80.txt` | 互连和 GPU 调频设备的状态、可选策略，以及桌面电源管理服务的策略表（只读查看） | |
-| `derived/device-tables.md` | 上述日志的汇总表 | `experiments/memlat-probe/analyze-device-logs.py` |
+| `derived/device-tables.md` | 下午各实验（A、B、C、D、L、T、F）的汇总表 | `experiments/memlat-probe/analyze-device-logs.py` |
+| `derived/state-tables.md` | 傍晚各实验（R、BG、H、S、V、V2、W）的汇总表 | `experiments/memlat-probe/analyze-state-experiments.py` |
 | `derived/host-n90-tables.md` | N90 宿主机四模式数据的对应分析 | `experiments/memlat-probe/analyze-host-memlat.py` |
 | `derived/guest-n90-tables.md` | N90 上 x-kernel **客户机内**数据的对应分析（图 8 的数据，不是宿主机数据） | `experiments/memlat-probe/analyze-guest-memlat.py` |
 
@@ -65,3 +75,10 @@
   `thrash_pages_frac` 是落在"超过 16 页的颜色"里的页所占比例。
 - `gb_regions` `mb2_regions`：缓冲区的物理页分布在多少个不同的 1 GiB、2 MiB 物理区间里。
 - `pfn=na`：没有以 root 运行，读不到物理页号。
+- `rebuild`（`probe3`）：1 表示每个计时区间之前把指针链重写一遍，lmbench 就是这样做的。`reps` 是 11 个计时区间按先后的每跳耗时，
+  `noc0`、`noc` 是第一个区间之前和每个区间之后读到的互连频率。
+- `slot`、`phys`（`frames2`）：页所在的 1 GiB 物理区间的编号和起始物理地址。`class=shared` 表示页所在的 2 MiB 区间里也有保护虚拟机的页，
+  `class=clear` 表示没有，`class=all` 表示没有分类。`pass=2` 是把同一批页搬到新的虚拟地址之后再测的一遍。
+  `mode`、`order`：随机访问还是顺序访问，页按物理升序还是随机顺序映射。
+  `expS.log`、`expV.log`、`expV2.log` 里的 `contig_frac` 只算物理升序相邻；`expW.log` 里两个方向都算，并多一个 `va_region_changes`
+  （按虚拟地址顺序走一遍，相邻两页不在同一个 2 MiB 物理区间的次数）。

@@ -528,28 +528,84 @@ def exp_v2():
                 d["_size"] = size
                 rows.append(d)
     print("## Exp V2: shared against clear at working-set sizes from 2 MB to 64 MB\n")
-    print("For each size: the median over all slots and both passes of class clear, and class shared in every slot that has "
-          "enough shared pages.  extra = shared minus clear of the same slot.\n")
-    print("| size | pages | clear, all slots: ns | cycles | page walks per access | L1 refills | L2 refills | slot | shared: ns | cycles | "
-          "page walks | L1 refills | L2 refills | L3 refills | extra ns | extra cycles | extra cycles per walk | extra L1 refills | extra L2 refills |")
-    print("|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
+    print("Per size: class clear over all slots (median and range of the per-set medians, two passes per set) and class shared "
+          "over the slots that have enough shared pages.  extra = shared median minus clear median.  Below 6 MB the chase "
+          "needs no page walks; there the spread of class clear across slots (different L3 placement) is the noise level.\n")
+    print("| size | pages | page walks per access: clear / shared | clear: ns median (min-max), n | shared: ns median (min-max), n, slots | "
+          "extra ns | extra cycles | extra cycles per walk | L2 refills: clear / shared | extra L2 refills |")
+    print("|---:|---:|---|---|---|---:|---:|---:|---|---:|")
+    m = lambda rs, key: st.median(r[key] for r in rs)
     for sz in sorted({r["_size"] for r in rows}):
         clear = [r for r in rows if r["_size"] == sz and r["class"] == "clear"]
-        m = lambda rs, key: st.median(r[key] for r in rs)
-        head = (f"| {sz:g} MB | {int(sz * 256)} | {m(clear, 'ns_med'):.1f} | {m(clear, 'ev11'):.1f} | {m(clear, 'ev2d'):.3f} | "
-                f"{m(clear, 'ev3'):.3f} | {m(clear, 'ev17'):.3f} |")
-        slots = sorted({r["_slot"] for r in rows if r["_size"] == sz and r["class"] == "shared"})
-        if not slots:
-            print(head + " none | | | | | | | | | | | |")
-        for s in slots:
-            sh = [r for r in rows if r["_size"] == sz and r["class"] == "shared" and r["_slot"] == s]
-            cl = [r for r in clear if r["_slot"] == s] or clear
-            dc = m(sh, 'ev11') - m(cl, 'ev11')
-            w = m(sh, 'ev2d')
-            per = f"{dc / w:.1f}" if w > 0.02 else "n/a"
-            print(head + f" 0x{s << 30:x} | {m(sh, 'ns_med'):.1f} | {m(sh, 'ev11'):.1f} | {w:.3f} | {m(sh, 'ev3'):.3f} | "
-                  f"{m(sh, 'ev17'):.3f} | {m(sh, 'ev2a'):.3f} | {m(sh, 'ns_med') - m(cl, 'ns_med'):+.1f} | {dc:+.1f} | {per} | "
-                  f"{m(sh, 'ev3') - m(cl, 'ev3'):+.3f} | {m(sh, 'ev17') - m(cl, 'ev17'):+.3f} |")
+        sh = [r for r in rows if r["_size"] == sz and r["class"] == "shared"]
+        if not clear or not sh:
+            continue
+        cn = [r["ns_med"] for r in clear]
+        sn = [r["ns_med"] for r in sh]
+        slots = ", ".join(f"0x{s << 30:x}" for s in sorted({r["_slot"] for r in sh}))
+        dc = m(sh, "ev11") - m(clear, "ev11")
+        w = m(sh, "ev2d")
+        per = f"{dc / w:.1f}" if w > 0.02 else "no walks"
+        print(f"| {sz:g} MB | {int(sz * 256)} | {m(clear, 'ev2d'):.3f} / {w:.3f} | {st.median(cn):.1f} ({min(cn):.1f}-{max(cn):.1f}), {len(cn)} | "
+              f"{st.median(sn):.1f} ({min(sn):.1f}-{max(sn):.1f}), {len(sn)}, {slots} | {st.median(sn) - st.median(cn):+.1f} | {dc:+.1f} | {per} | "
+              f"{m(clear, 'ev17'):.3f} / {m(sh, 'ev17'):.3f} | {m(sh, 'ev17') - m(clear, 'ev17'):+.3f} |")
+    print()
+
+
+def exp_w():
+    path = os.path.join(DEV, "expW.log")
+    if not os.path.exists(path):
+        return
+    rows = []
+    hdr = None
+    with open(path) as fh:
+        for line in fh:
+            if line.startswith("## "):
+                hdr = kv(line)
+            elif line.startswith("slot=") and hdr is not None:
+                d = kv(line)
+                d["_slot"] = int(str(line.split()[0].split("=")[1]), 16)
+                d["_size"] = hdr["size_mb"]
+                d["_pick"] = hdr["pick"]
+                rows.append(d)
+    print("## Exp W: sequential chase (stride 256) over the same kind of page set in sorted and in shuffled virtual order, by page class\n")
+    print("sorted = virtual order follows ascending physical address; shuffled = the same selection rule, pages mapped in a random "
+          "virtual order.  clear = stage-2 block mappings; shared = 4 KiB stage-2 leaves (2 MiB regions shared with the VM).  "
+          "ns = median over sets (slots) and the two passes.\n")
+    print("| size | pages picked | class | slots | sorted: ns (min-max) | shuffled: ns (min-max) | shuffled vs sorted | "
+          "page walks per access: sorted / shuffled | L2 refills: sorted / shuffled | adjacency when sorted |")
+    print("|---:|---|---|---:|---|---|---:|---|---|---:|")
+    m = lambda rs, key: st.median(r[key] for r in rs)
+    for sz in sorted({r["_size"] for r in rows}):
+        for pick in ("low", "even"):
+            for cls in ("clear", "shared"):
+                so = [r for r in rows if r["_size"] == sz and r["_pick"] == pick and r["class"] == cls and r["order"] == "sorted"]
+                sh = [r for r in rows if r["_size"] == sz and r["_pick"] == pick and r["class"] == cls and r["order"] == "shuffled"]
+                if not so or not sh:
+                    continue
+                a = [r["ns_med"] for r in so]
+                b = [r["ns_med"] for r in sh]
+                nslots = len({r["_slot"] for r in so})
+                print(f"| {sz:g} MB | {'lowest addresses' if pick == 'low' else 'spread evenly'} | {cls} | {nslots} | "
+                      f"{st.median(a):.2f} ({min(a):.2f}-{max(a):.2f}) | {st.median(b):.2f} ({min(b):.2f}-{max(b):.2f}) | "
+                      f"{100 * (st.median(b) / st.median(a) - 1):+.1f}% | {m(so, 'ev2d'):.4f} / {m(sh, 'ev2d'):.4f} | "
+                      f"{m(so, 'ev17'):.3f} / {m(sh, 'ev17'):.3f} | {m(so, 'contig_frac'):.2f} |")
+    # the same slot for both classes, where shared exists
+    print("\nSame slot, both classes (slot 0x20c0000000 where available):\n")
+    print("| size | pages picked | order | clear: ns | shared: ns | shared vs clear |")
+    print("|---:|---|---|---:|---:|---:|")
+    for sz in sorted({r["_size"] for r in rows}):
+        for pick in ("low", "even"):
+            for order in ("sorted", "shuffled"):
+                slots = {r["_slot"] for r in rows if r["_size"] == sz and r["_pick"] == pick and r["class"] == "shared" and r["order"] == order}
+                for s in sorted(slots):
+                    c = [r["ns_med"] for r in rows if r["_size"] == sz and r["_pick"] == pick and r["class"] == "clear"
+                         and r["order"] == order and r["_slot"] == s]
+                    h = [r["ns_med"] for r in rows if r["_size"] == sz and r["_pick"] == pick and r["class"] == "shared"
+                         and r["order"] == order and r["_slot"] == s]
+                    if c and h:
+                        print(f"| {sz:g} MB | {'lowest addresses' if pick == 'low' else 'spread evenly'} | {order} | {st.median(c):.2f} | "
+                              f"{st.median(h):.2f} | {100 * (st.median(h) / st.median(c) - 1):+.1f}% |")
     print()
 
 
@@ -560,6 +616,7 @@ def main():
     exp_s()
     exp_v()
     exp_v2()
+    exp_w()
     exp_g1()
     exp_g2()
     exp_h("expG4", "Exp G4: lmbench's own lat_mem_rd in three interconnect states")
