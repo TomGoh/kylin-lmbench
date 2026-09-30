@@ -17,6 +17,13 @@
           loads in a row (expX1.log, expX2.log, expX3.log)
   Exp Y   the layout effect at 8 MB for every stride (expY.log)
   Exp Z   a chase dominated by address translation (expZ.log)
+  Exp N   the same chase as an unprivileged program, on the N80 and on a
+          workstation with the same cores that has no host stage-2
+          (expN-n80.log, ../memlat-d80f3-20260930/expN-d80f3.log)
+  Exp N2  the same as root with other frames each time (expN2.log)
+  Exp N3  page sets that mix two GiB slots in a fixed proportion (expN3.log)
+  Exp N4  pages first touched in chain order or in ascending virtual order
+          (expN4-n80.log, ../memlat-d80f3-20260930/expN4-d80f3.log)
   Exp G1-G4  the interconnect-frequency experiments, if their logs exist
           (expG1.log, expG2.log, expG3.log, expG4-*.log)
 
@@ -36,6 +43,7 @@ import sys
 ROOT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(__file__), "..", "..")
 DEV = os.path.join(ROOT, "results", "memlat-n80-20260930")
 HOST = os.path.join(ROOT, "results", "n90-day3-host")
+D80 = os.path.join(ROOT, "results", "memlat-d80f3-20260930")
 
 
 def kv(line):
@@ -923,6 +931,270 @@ def exp_y():
     print()
 
 
+def ols2(x1, x2, y):
+    """Least squares y = a + b1 x1 + b2 x2 -> (a, b1, b2, se(b1), se(b2), R^2)."""
+    n = len(y)
+    m1, m2, my = st.mean(x1), st.mean(x2), st.mean(y)
+    s11 = sum((a - m1) ** 2 for a in x1)
+    s22 = sum((a - m2) ** 2 for a in x2)
+    s12 = sum((a - m1) * (b - m2) for a, b in zip(x1, x2))
+    s1y = sum((a - m1) * (c - my) for a, c in zip(x1, y))
+    s2y = sum((a - m2) * (c - my) for a, c in zip(x2, y))
+    det = s11 * s22 - s12 ** 2
+    b1 = (s1y * s22 - s2y * s12) / det
+    b2 = (s2y * s11 - s1y * s12) / det
+    a = my - b1 * m1 - b2 * m2
+    sse = sum((c - (a + b1 * u + b2 * v)) ** 2 for u, v, c in zip(x1, x2, y))
+    sst = sum((c - my) ** 2 for c in y)
+    s2 = sse / (n - 3)
+    return a, b1, b2, math.sqrt(s2 * s22 / det), math.sqrt(s2 * s11 / det), 1 - sse / sst
+
+
+def ols1(x, y):
+    """Least squares y = a + b x -> (a, b, se(b))."""
+    n = len(y)
+    mx, my = st.mean(x), st.mean(y)
+    sxx = sum((a - mx) ** 2 for a in x)
+    b = sum((a - mx) * (c - my) for a, c in zip(x, y)) / sxx
+    a = my - b * mx
+    sse = sum((c - (a + b * u)) ** 2 for u, c in zip(x, y))
+    return a, b, math.sqrt(sse / (n - 2) / sxx)
+
+
+def tagged_rows(path, tag):
+    """Lines 'TAG key=value ...' of a probe3 log; slots= is split into the shares used below."""
+    if not os.path.exists(path):
+        return []
+    out = []
+    with open(path) as fh:
+        for line in fh:
+            if not line.startswith(tag + " ") or "ns_min=" not in line:
+                continue
+            d = kv(line)
+            if isinstance(d.get("slots"), str):
+                slots = {int(a, 16): int(b) for a, b in (x.split(":") for x in d["slots"].split(","))}
+                n = sum(slots.values())
+                d["_cand"] = sum(slots.get(c, 0) for c in GB_CANDIDATES) / n
+                d["_vmslot"] = slots.get(0x83, 0) / n
+            out.append(d)
+    return out
+
+
+def cfg_label(r):
+    return f"{int(r['pages'])} x {int(r['stride'])}"
+
+
+def exp_n():
+    a = tagged_rows(os.path.join(DEV, "expN-n80.log"), "N")
+    b = tagged_rows(os.path.join(D80, "expN-d80f3.log"), "N")
+    a = [r for r in a if r["mode"] == "tlb"]
+    b = [r for r in b if r["mode"] == "tlb"]
+    if not a or not b:
+        return
+    print("## Exp N: the translation-only chase as an unprivileged program, with and without a host stage-2\n")
+    print("Same source (probe3 tlb) on the N80 (kvm-arm.mode=protected, kernel 6.6.0-79) and on a D80F3 workstation with the same "
+          "cores (KVM in VHE mode, no host stage-2, kernel 7.0.0-34).  cycles = 4 x ns / (ns per hop of a chase inside the L1 cache, "
+          "taken in the same process); the PMU columns exist for the N80 only.  Median over the processes (min-max).  "
+          "Pages are first touched in chain order here; see Exp N4 for what that does to the 4096 x 1 row.\n")
+    print("| pages x lines per page | data lines | N80: cycles | N80 PMU: cycles | page walks per hop | L2 refills per hop (min-max) | "
+          "D80F3: cycles | per CPU | N80 - D80F3 |")
+    print("|---|---:|---|---:|---:|---|---|---|---:|")
+    cfgs = sorted({(r["pages"], r["stride"]) for r in a}, key=lambda c: (c[0] * c[1], c[0]))
+    for pg, ln in cfgs:
+        x = [r for r in a if (r["pages"], r["stride"]) == (pg, ln)]
+        y = [r for r in b if (r["pages"], r["stride"]) == (pg, ln)]
+        if not x or not y:
+            continue
+        ca = [r["cyc_est"] for r in x]
+        cb = [r["cyc_est"] for r in y]
+        per = " ".join(f"{st.median(r['cyc_est'] for r in y if r['cpu'] == c):.2f}" for c in sorted({r["cpu"] for r in y}))
+        l2 = [r["ev17"] for r in x]
+        print(f"| {int(pg)} x {int(ln)} | {int(pg * ln)} | {st.median(ca):.2f} ({min(ca):.2f}-{max(ca):.2f}), {len(ca)} | "
+              f"{st.median(r['ev11'] for r in x):.2f} | {st.median(r['ev2d'] for r in x):.3f} | {st.median(l2):.3f} ({min(l2):.3f}-{max(l2):.3f}) | "
+              f"{st.median(cb):.2f} ({min(cb):.2f}-{max(cb):.2f}), {len(cb)} | {per} | {st.median(ca) - st.median(cb):+.2f} |")
+    print()
+
+
+def exp_n2():
+    rows = tagged_rows(os.path.join(DEV, "expN2.log"), "N2")
+    if not rows:
+        return
+    print("## Exp N2: the same chase as root, with other frames in every repetition\n")
+    print("Before each repetition a stopped process holds back (repetition - 1) x 192 MB, so the probe gets other frames.  "
+          "share = share of the pages of the working set in the two 1 GiB-candidate slots (0x22c0000000, 0x2300000000); "
+          "regions = distinct 2 MiB regions of the working set.  One process per cell.\n")
+    cfgs = sorted({(r["pages"], r["stride"]) for r in rows}, key=lambda c: (-c[0] * c[1], -c[0]))
+    print("| rep | held back | " + " | ".join(f"{int(p)} x {int(l)}: share | regions | cycles | walks | L2 refills" for p, l in cfgs) + " |")
+    print("|---:|---:|" + "---:|" * (5 * len(cfgs)))
+    for rep in sorted({r["rep"] for r in rows}):
+        cells = []
+        for pg, ln in cfgs:
+            r = [x for x in rows if x["rep"] == rep and (x["pages"], x["stride"]) == (pg, ln)][0]
+            cells.append(f"{r['_cand']:.3f} | {int(r['mb2_regions'])} | {r['ev11']:.2f} | {r['ev2d']:.3f} | {r['ev17']:.3f}")
+        hold = [x for x in rows if x["rep"] == rep][0]["hold_mb"]
+        print(f"| {int(rep)} | {int(hold)} MB | " + " | ".join(cells) + " |")
+    print("\nPer configuration, over the 12 repetitions:\n")
+    print("| pages x lines | cycles (min-max) | r(cycles, share) | r(cycles, regions) | r(share, regions) | r(cycles, L2 refills) | "
+          "cycles = a + b x share + c x regions/100: a | b (s.e.) | c (s.e.) | R^2 |")
+    print("|---|---|---:|---:|---:|---:|---:|---|---|---:|")
+    for pg, ln in cfgs:
+        sel = [x for x in rows if (x["pages"], x["stride"]) == (pg, ln)]
+        y = [x["ev11"] for x in sel]
+        f = [x["_cand"] for x in sel]
+        g = [x["mb2_regions"] / 100 for x in sel]
+        a0, b1, b2, se1, se2, r2 = ols2(f, g, y)
+        print(f"| {int(pg)} x {int(ln)} | {min(y):.2f}-{max(y):.2f} | {pearson(y, f):+.2f} | {pearson(y, g):+.2f} | {pearson(f, g):+.2f} | "
+              f"{pearson(y, [x['ev17'] for x in sel]):+.2f} | {a0:.2f} | {b1:+.2f} ({se1:.2f}) | {b2:+.2f} ({se2:.2f}) | {r2:.2f} |")
+    print()
+
+
+def exp_n3():
+    path = os.path.join(DEV, "expN3.log")
+    if not os.path.exists(path):
+        return
+    rows = []
+    hdr = None
+    with open(path) as fh:
+        for line in fh:
+            if line.startswith("## "):
+                hdr = kv(line)
+            elif line.startswith("mix=") and hdr is not None:
+                d = kv(line)
+                d["_pair"] = str(line.split()[0].split("=")[1])
+                d["_seed"] = hdr["seed"]
+                rows.append(d)
+    if not rows:
+        return
+    print("## Exp N3: page sets that mix two GiB slots in a fixed proportion (frames2, 2048 pages x 1 line, class clear)\n")
+    print("A = a slot that can still be a 1 GiB stage-2 block, B = a slot mapped with 2 MiB blocks.  cycles = median over the "
+          "three repetitions of the mean of the two passes (min-max of the repetitions).  'minus 0%' is taken within each repetition.\n")
+    m = lambda rs, key: st.median(r[key] for r in rs)
+
+    def per_seed(pair, pct, size, key="ev11"):
+        out = []
+        for seed in sorted({r["_seed"] for r in rows}):
+            v = [r[key] for r in rows if r["_pair"] == pair and r["pct_a"] == pct and r["size_mb"] == size and r["_seed"] == seed]
+            if v:
+                out.append(st.mean(v))
+        return out
+
+    print("| A : B | share of A | cycles (min-max) | minus 0%, per repetition | median | linear between the 0% and 100% medians | "
+          "page walks per hop | L2 refills per hop | 2 MiB regions |")
+    print("|---|---:|---|---|---:|---:|---:|---:|---:|")
+    main_pairs = [p for p in ("0x8b:0x88", "0x8c:0x89") if any(r["_pair"] == p for r in rows)]
+    for pair in main_pairs:
+        base = per_seed(pair, 0.0, 8.0)
+        top = per_seed(pair, 100.0, 8.0)
+        for pct in sorted({r["pct_a"] for r in rows if r["_pair"] == pair and r["size_mb"] == 8.0}):
+            v = per_seed(pair, pct, 8.0)
+            d = [a - b for a, b in zip(v, base)]
+            sel = [r for r in rows if r["_pair"] == pair and r["pct_a"] == pct and r["size_mb"] == 8.0]
+            lin = (st.median(top) - st.median(base)) * pct / 100
+            print(f"| {pair} | {pct:g}% | {st.median(v):.2f} ({min(v):.2f}-{max(v):.2f}) | {' '.join(f'{x:+.2f}' for x in d)} | "
+                  f"{st.median(d):+.2f} | {lin:+.2f} | {m(sel, 'ev2d'):.3f} | {m(sel, 'ev17'):.4f} | {m(sel, 'mb2_regions'):.0f} |")
+    x, y = [], []
+    for pair in main_pairs:
+        for seed in sorted({r["_seed"] for r in rows}):
+            for pct in sorted({r["pct_a"] for r in rows if r["_pair"] == pair and r["size_mb"] == 8.0}):
+                v = [r["ev11"] for r in rows if r["_pair"] == pair and r["pct_a"] == pct and r["size_mb"] == 8.0 and r["_seed"] == seed]
+                if v:
+                    x.append(pct / 100)
+                    y.append(st.mean(v))
+    a0, b, se = ols1(x, y)
+    a2, b1, b2, se1, se2, r2 = ols2(x, [v * v for v in x], y)
+    print(f"\nStraight line through the {len(x)} points of the two pairs: cycles = {a0:.2f} + {b:.2f} (s.e. {se:.2f}) x share.  "
+          f"With a quadratic term added: {b1:+.2f} (s.e. {se1:.2f}) x share {b2:+.2f} (s.e. {se2:.2f}) x share^2.\n")
+    print("Controls and the no-walk configuration:\n")
+    print("| set | configuration | cycles per repetition | median | page walks per hop |")
+    print("|---|---|---|---:|---:|")
+    for pair, label in (("0x8b:0x8c", "two 1 GiB-candidate slots, half each"), ("0x88:0x89", "two 2 MiB slots, half each")):
+        v = per_seed(pair, 50.0, 8.0)
+        if v:
+            sel = [r for r in rows if r["_pair"] == pair and r["size_mb"] == 8.0]
+            print(f"| {label} | 2048 x 1 | {' '.join(f'{c:.2f}' for c in v)} | {st.median(v):.2f} | {m(sel, 'ev2d'):.3f} |")
+    for pct in sorted({r["pct_a"] for r in rows if r["size_mb"] == 4.0}):
+        v = per_seed("0x8b:0x88", pct, 4.0)
+        sel = [r for r in rows if r["_pair"] == "0x8b:0x88" and r["size_mb"] == 4.0 and r["pct_a"] == pct]
+        print(f"| 0x8b:0x88, {pct:g}% of A | 1024 x 4 (no walks) | {' '.join(f'{c:.2f}' for c in v)} | {st.median(v):.2f} | {m(sel, 'ev2d'):.3f} |")
+    print()
+
+
+def exp_n4():
+    a = tagged_rows(os.path.join(DEV, "expN4-n80.log"), "N4")
+    b = tagged_rows(os.path.join(D80, "expN4-d80f3.log"), "N4")
+    if not a:
+        return
+    print("## Exp N4: pages first touched in chain order (as in Exp N and N2) or in ascending virtual order (TLB_PREFAULT=1)\n")
+    print("N80 as root with memory held back as in N2, 8 repetitions, one process per cell.  l2over = share of the data lines "
+          "that lie in an L2 set holding more than 8 of them, computed from the frame numbers before the timed part.\n")
+    cfgs = sorted({(r["pages"], r["stride"]) for r in a}, key=lambda c: (c[0] * c[1] > 4096, c[0], c[1]))
+    print("### N80: 4096 x 1, per repetition\n")
+    print("| rep | held back | chain order: l2over | L2 refills per hop | cycles | ascending order: l2over | L2 refills per hop | cycles |")
+    print("|---:|---:|---:|---:|---:|---:|---:|---:|")
+    sel = [r for r in a if (r["pages"], r["stride"]) == (4096.0, 1.0)]
+    for rep in sorted({r["rep"] for r in sel}):
+        c = [r for r in sel if r["rep"] == rep and r["prefault"] == 0][0]
+        p = [r for r in sel if r["rep"] == rep and r["prefault"] == 1][0]
+        print(f"| {int(rep)} | {int(c['hold_mb'])} MB | {c['l2over']:.3f} | {c['ev17']:.3f} | {c['ev11']:.2f} | "
+              f"{p['l2over']:.3f} | {p['ev17']:.3f} | {p['ev11']:.2f} |")
+    c0 = [r for r in sel if r["prefault"] == 0]
+    print(f"\nChain order, 4096 x 1: r(L2 refills, l2over) = {pearson([r['ev17'] for r in c0], [r['l2over'] for r in c0]):+.3f}, "
+          f"r(cycles, L2 refills) = {pearson([r['ev11'] for r in c0], [r['ev17'] for r in c0]):+.3f} over {len(c0)} repetitions.\n")
+    print("### N80: all configurations\n")
+    print("| pages x lines | data lines | chain order: cycles (min-max) | page walks per hop | L2 refills per hop | "
+          "ascending order: cycles (min-max) | page walks per hop | L2 refills per hop | difference of the medians: cycles | walks |")
+    print("|---|---:|---|---:|---:|---|---:|---:|---:|---:|")
+    for pg, ln in cfgs:
+        x = [r for r in a if (r["pages"], r["stride"]) == (pg, ln) and r["prefault"] == 0]
+        y = [r for r in a if (r["pages"], r["stride"]) == (pg, ln) and r["prefault"] == 1]
+        cx = [r["ev11"] for r in x]
+        cy = [r["ev11"] for r in y]
+        mm = lambda rs, key: st.median(r[key] for r in rs)
+        print(f"| {int(pg)} x {int(ln)} | {int(pg * ln)} | {st.median(cx):.2f} ({min(cx):.2f}-{max(cx):.2f}) | {mm(x, 'ev2d'):.3f} | {mm(x, 'ev17'):.3f} | "
+              f"{st.median(cy):.2f} ({min(cy):.2f}-{max(cy):.2f}) | {mm(y, 'ev2d'):.3f} | {mm(y, 'ev17'):.3f} | "
+              f"{st.median(cy) - st.median(cx):+.2f} | {mm(y, 'ev2d') - mm(x, 'ev2d'):+.3f} |")
+    # cost of one page walk: (cycles - no-walk reference with the same number of data lines) / walks per hop
+    ref = {}
+    for pf in (0.0, 1.0):
+        v = [r["ev11"] for r in a if (r["pages"], r["stride"]) == (1024.0, 2.0) and r["prefault"] == pf]
+        if v:
+            ref[pf] = st.median(v)
+    w = [r for r in a if (r["pages"], r["stride"]) == (2048.0, 1.0)]
+    if ref and w:
+        print("\n### N80: 2048 x 1, cycles per page walk = (cycles - cycles of 1024 x 2) / page walks per hop\n")
+        print("| rep | chain order: share in the two candidate slots | regions | cycles | walks | cycles per walk | "
+              "ascending order: share | regions | cycles | walks | cycles per walk |")
+        print("|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
+        pw = {0.0: [], 1.0: []}
+        for rep in sorted({r["rep"] for r in w}):
+            cells = []
+            for pf in (0.0, 1.0):
+                r = [x for x in w if x["rep"] == rep and x["prefault"] == pf][0]
+                c = (r["ev11"] - ref[pf]) / r["ev2d"]
+                pw[pf].append((r["_cand"], c))
+                cells.append(f"{r['_cand']:.3f} | {int(r['mb2_regions'])} | {r['ev11']:.2f} | {r['ev2d']:.3f} | {c:.2f}")
+            print(f"| {int(rep)} | " + " | ".join(cells) + " |")
+        allp = pw[0.0] + pw[1.0]
+        a0, b0, se0 = ols1([p[0] for p in allp], [p[1] for p in allp])
+        print(f"\nCycles per walk against the share of pages in the two candidate slots, both orders ({len(allp)} processes): "
+              f"{a0:.2f} + {b0:.2f} (s.e. {se0:.2f}) x share; r = {pearson([p[0] for p in allp], [p[1] for p in allp]):+.2f}.\n")
+    if b:
+        print("### D80F3 (no host stage-2, unprivileged, no PMU): cycles from the L1 reference\n")
+        print("| pages x lines | chain order: cycles (min-max), n | ascending order: cycles (min-max), n | difference of the medians | "
+              "N80 ascending order - D80F3 ascending order |")
+        print("|---|---|---|---:|---:|")
+        for pg, ln in cfgs:
+            x = [r["cyc_est"] for r in b if (r["pages"], r["stride"]) == (pg, ln) and r["prefault"] == 0]
+            y = [r["cyc_est"] for r in b if (r["pages"], r["stride"]) == (pg, ln) and r["prefault"] == 1]
+            n80 = [r["cyc_est"] for r in a if (r["pages"], r["stride"]) == (pg, ln) and r["prefault"] == 1]
+            if not x or not y:
+                continue
+            print(f"| {int(pg)} x {int(ln)} | {st.median(x):.2f} ({min(x):.2f}-{max(x):.2f}), {len(x)} | "
+                  f"{st.median(y):.2f} ({min(y):.2f}-{max(y):.2f}), {len(y)} | {st.median(y) - st.median(x):+.2f} | "
+                  f"{st.median(n80) - st.median(y):+.2f} |")
+    print()
+
+
 def main():
     exp_r()
     exp_bg()
@@ -936,6 +1208,10 @@ def main():
     exp_x()
     exp_y()
     exp_z()
+    exp_n()
+    exp_n2()
+    exp_n3()
+    exp_n4()
     exp_g1()
     exp_g2()
     exp_h("expG4", "Exp G4: lmbench's own lat_mem_rd in three interconnect states")

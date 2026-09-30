@@ -32,6 +32,10 @@
  *   l2over=   (root only, tlb mode) share of the data lines that lie in an L2
  *             set holding more than 8 of them (L2 of FTC862: 1024 sets, 8 ways)
  *   prefault= (tlb mode) 1 if TLB_PREFAULT was set
+ *   shared_frac= (root only, REGIONS=<file> in the environment) share of the
+ *             pages of the working set whose 2 MiB region is listed in the
+ *             file (one hexadecimal PFN >> 9 per line, as vm-frames.py writes
+ *             for the memory of a running VM)
  *   rebuild=  1: the chain is rewritten before every interval, as lmbench does
  *   reps=     the 11 interval times in the order they were taken (ns per hop)
  *   noc0=     /sys/class/devfreq/nocfreq/cur_freq before the first interval
@@ -179,6 +183,30 @@ static int cmp_u64(const void *a, const void *b)
 }
 
 static int rnd, tlbm;
+
+/* sorted 2 MiB region numbers from the file named by REGIONS, if any */
+static uint64_t *shared_reg;
+static size_t nshared;
+
+static void load_regions(const char *path)
+{
+	FILE *f = fopen(path, "r");
+	size_t cap = 1024;
+	unsigned long long v;
+
+	if (!f) {
+		perror(path);
+		exit(1);
+	}
+	shared_reg = malloc(cap * sizeof(uint64_t));
+	while (fscanf(f, "%llx", &v) == 1) {
+		if (nshared == cap)
+			shared_reg = realloc(shared_reg, (cap *= 2) * sizeof(uint64_t));
+		shared_reg[nshared++] = v;
+	}
+	fclose(f);
+	qsort(shared_reg, nshared, sizeof(uint64_t), cmp_u64);
+}
 static char *addr;
 static size_t len, stride, npages, nwords;
 static size_t *pages, *words;
@@ -260,6 +288,8 @@ int main(int argc, char **argv)
 	if (!seed)
 		seed = (unsigned)getpid();
 	unroll = getenv("CHASE_UNROLL") && atoi(getenv("CHASE_UNROLL"));
+	if (getenv("REGIONS"))
+		load_regions(getenv("REGIONS"));
 	for (tok = strtok(evs, ","); tok && nev < MAXEV; tok = strtok(NULL, ","))
 		evcfg[nev++] = strtoull(tok, NULL, 16);
 
@@ -330,6 +360,17 @@ int main(int argc, char **argv)
 					if (occ[j] > 8)
 						over += occ[j];
 				printf("l2over=%.4f ", (double)over / (npages * stride));
+			}
+			if (nshared) {
+				size_t in = 0;
+
+				for (k = 0; k < npages; k++) {
+					uint64_t key = pfn[k] >> 9;
+
+					if (bsearch(&key, shared_reg, nshared, sizeof(uint64_t), cmp_u64))
+						in++;
+				}
+				printf("shared_frac=%.4f ", (double)in / npages);
 			}
 			if (!rnd && !tlbm)
 				for (k = 0; k + 1 < npages; k++) {
