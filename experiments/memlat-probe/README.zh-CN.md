@@ -20,6 +20,7 @@
 | `thplayout.c` | `layout.c` 的不用 root 的版本：先让缓冲区以 2 MiB 透明大页分配（每 2 MiB 是一块物理上连续的内存），再用 `mremap` 把每个 4 KiB 页逐个搬到新的虚拟地址区间，按物理顺序、逆序或随机顺序排列。物理页的相对位置由构造方式决定，不需要读物理页号，所以可以在没有 root 的机器上做"同一批页换顺序"的实验 |
 | `vm-frames.py` | 只读：读出正在运行的虚拟机的内存落在哪些 1 GiB、2 MiB 物理区间里，并写出上面那份清单 |
 | `lmb-frames.py` | 只读：盯住 lmbench `lat_mem_rd` 的每个子进程，读出它那块缓冲区的物理页号，记下连续度、连续段的个数等。lmbench 自己不报告这些 |
+| `layoutshim.c` | 编译成动态库，用 `LD_PRELOAD` 加载到未改动的程序上，只接管它 32 MB 以上的那一次 `malloc`（lmbench 的缓冲区）：像 `thplayout` 那样从 2 MiB 大页里取出 4 KiB 页，按物理顺序、逆序或随机顺序排好再交给程序。被计时的代码完全是原程序的 |
 | `bgload.c` | 在另一个核上连续读或写一块内存，制造背景内存流量 |
 | `nocsample.c` | 每隔固定时间记录一次片上互连频率，不 fork |
 | `nothp.c` | 对一个进程及其子进程关掉透明大页（`prctl`），不改系统设置。用来让 lmbench 的 `malloc` 缓冲区使用 4 KiB 页 |
@@ -90,6 +91,7 @@ sysfs 里没有具名的 `dtlb_walk` 事件，所以用 `l2d_tlb_refill` 代表�
 
 ```bash
 make                         # probe probe2 probe3 layout thplayout frames frames2 bgload nocsample nothp
+gcc -O2 -Wall -shared -fPIC -o layoutshim.so layoutshim.c
 sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 ```
 
@@ -132,6 +134,10 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 | 脚本 | 产生的日志 | 内容 |
 | --- | --- | --- |
 | `run5-mode-compare.sh` | `modecmp-<模式>-<时间>/` | 同一台机器换启动模式各跑一遍的对照测量，见下文。需要改启动参数并重启 |
+| `run30-n90-two-levels.sh` | `twolevels-<模式>-<时间>/` | 为 N90 准备：论文的原命令跑若干遍，同时记下每个数据点的缓冲区物理布局（`lmb-frames.py`）和互连频率（`nocsample`），以及前后的机器状态。用来判断 8 MB 的两个水平跟着哪一个走。每遍约 5.5 分钟 |
+| `run29-lmbench-layout-random.sh` | `expH6` | （已在 N80 上执行）lmbench 的随机访问测试在两种布局下的对比 |
+| `run28-lmbench-layout-strides.sh` | `expH5` | （已在 N80 和工作站上执行）`run27` 换成论文命令的其余六个步长 |
+| `run27-lmbench-layout-shim.sh` | `expH4` | （已在 N80 和工作站上执行）未改动的 `lat_mem_rd` 加载 `layoutshim.so`，缓冲区按物理顺序或打乱排列 |
 
 **运行期间临时修改片上互连调频策略的（没有执行）：**
 
