@@ -1,0 +1,184 @@
+# Hardware / software survey of the measurement machine (read-only), collected 2026-09-30T17:01:56+08:00
+
+## DMI
+sys_vendor: Great Wall
+product_name: 长城N80F3
+product_version: V1.0
+board_name: GWMNDC1GE1B
+bios_version: 长城BIOS V3.0
+bios_date: 06/09/2026
+
+## OS / kernel
+NAME="Kylin"
+VERSION="银河麒麟桌面操作系统V11 SP1"
+Linux kylin-pc 6.6.0-79-generic #93-KYLINOS SMP Wed Sep  2 10:32:34 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux
+
+## Kernel command line
+BOOT_IMAGE=/ostree/kylin-c249244cc6dc9f9e567ac1b243a682759cf00cfd49ec1412d3cce63ce632701b/vmlinuz-6.6.0-79-generic root=UUID=061ec519-7fc8-48a7-b8df-6ed1512a8ac7 rw ostree=/ostree/boot.0/kylin/c249244cc6dc9f9e567ac1b243a682759cf00cfd49ec1412d3cce63ce632701b/0 quiet splash loglevel=0 systemd.unified_cgroup_hierarchy=1 psi=1 kvm-arm.mode=protected crash_kexec_post_notifiers=1 panic_print=0x382 resume=UUID=e83c2aec-3997-479d-b917-738fdc310796 security=box lsm=ksaf,bpf audit=1
+
+## lscpu
+Architecture:                            aarch64
+CPU op-mode(s):                          32-bit, 64-bit
+Byte Order:                              Little Endian
+CPU(s):                                  8
+On-line CPU(s) list:                     0-7
+Vendor ID:                               Phytium
+BIOS Vendor ID:                          PHYTIUM LTD
+Model name:                              FTC862
+BIOS Model name:                         Phytium-D3000M EN8-C Great Wall CPU @ 2.9GHz
+BIOS CPU family:                         280
+Model:                                   0
+Thread(s) per core:                      1
+Core(s) per socket:                      8
+Socket(s):                               1
+Stepping:                                0x0
+Frequency boost:                         disabled
+CPU(s) scaling MHz:                      100%
+CPU max MHz:                             2900.0000
+CPU min MHz:                             600.0000
+BogoMIPS:                                100.00
+Flags:                                   fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop sha3 sm3 sm4 asimddp sha512
+L1d cache:                               512 KiB (8 instances)
+L1i cache:                               512 KiB (8 instances)
+L2 cache:                                4 MiB (8 instances)
+L3 cache:                                8 MiB (1 instance)
+NUMA node(s):                            1
+NUMA node0 CPU(s):                       0-7
+
+## lscpu -C
+NAME ONE-SIZE ALL-SIZE WAYS TYPE        LEVEL SETS PHY-LINE COHERENCY-SIZE
+L1d       64K     512K    4 Data            1  256                      64
+L1i       64K     512K    4 Instruction     1  256                      64
+L2       512K       4M    8 Unified         2 1024                      64
+L3         8M       8M   16 Unified         3 8192                      64
+
+## per-CPU MIDR / capacity / max frequency / governor / cluster
+cpu0 midr=0x00000000700f8620 cap=670 max=1900000 cur=1900000 gov=performance cluster_cpus=0-3
+cpu1 midr=0x00000000700f8620 cap=670 max=1900000 cur=1900000 gov=performance cluster_cpus=0-3
+cpu2 midr=0x00000000700f8620 cap=670 max=1900000 cur=1900000 gov=performance cluster_cpus=0-3
+cpu3 midr=0x00000000700f8620 cap=1024 max=2900000 cur=2900000 gov=performance cluster_cpus=0-3
+cpu4 midr=0x00000000700f8620 cap=670 max=1900000 cur=1900000 gov=performance cluster_cpus=4-7
+cpu5 midr=0x00000000700f8620 cap=670 max=1900000 cur=1900000 gov=performance cluster_cpus=4-7
+cpu6 midr=0x00000000700f8620 cap=670 max=1900000 cur=1900000 gov=performance cluster_cpus=4-7
+cpu7 midr=0x00000000700f8620 cap=1024 max=2900000 cur=2900000 gov=performance cluster_cpus=4-7
+
+## cache geometry (sysfs, cpu0; identical on all cpus except shared_cpu_list of private levels)
+index0: L1 Data size=64K line=64 sets=256 ways=4 shared_cpu_list=0
+index1: L1 Instruction size=64K line=64 sets=256 ways=4 shared_cpu_list=0
+index2: L2 Unified size=512K line=64 sets=1024 ways=8 shared_cpu_list=0
+index3: L3 Unified size=8192K line=64 sets=8192 ways=16 shared_cpu_list=0-7
+
+## memory
+MemTotal:       13401132 kB
+MemFree:         1905252 kB
+MemAvailable:    7159556 kB
+AnonHugePages:   3989504 kB
+HugePages_Total:       0
+Hugepagesize:       2048 kB
+pagesize=4096
+THP enabled: [always] madvise never
+THP defrag: always defer defer+madvise [madvise] never
+ASLR: 2
+
+## DIMMs (dmidecode -t memory, identifiers removed)
+	Maximum Capacity: 64 GB
+	Number Of Devices: 2
+	Total Width: 40 bits
+	Data Width: 32 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM 0
+	Bank Locator: BANK 0
+	Type: Reserved
+	Speed: 7500 MT/s
+	Manufacturer: Hynix
+	Part Number: CGL5X64GDQA026L
+	Rank: 2
+	Configured Memory Speed: 6400 MT/s
+	Memory Technology: DRAM
+	Total Width: 40 bits
+	Data Width: 32 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM 1
+	Bank Locator: BANK 8
+	Type: Reserved
+	Speed: 7500 MT/s
+	Manufacturer: Hynix
+	Part Number: CGL5X64GDQA026L
+	Rank: 2
+	Configured Memory Speed: 6400 MT/s
+	Memory Technology: DRAM
+
+## physical memory map (/proc/iomem System RAM)
+84030000-eff4ffff : System RAM
+efff0000-f75effff : System RAM
+fbef0000-fbffffff : System RAM
+20a0000000-237fffffff : System RAM
+
+## PMU
+perf_event_paranoid=2
+/sys/bus/event_source/devices/armv8_pmuv3_0 cpus=0-7
+  br_mis_pred: event=0x0010
+  br_mis_pred_retired: event=0x0022
+  br_pred: event=0x0012
+  br_retired: event=0x0021
+  bus_access: event=0x0019
+  bus_cycles: event=0x001d
+  cid_write_retired: event=0x000b
+  cpu_cycles: event=0x0011
+  exc_return: event=0x000a
+  exc_taken: event=0x0009
+  inst_retired: event=0x0008
+  inst_spec: event=0x001b
+  l1d_cache: event=0x0004
+  l1d_cache_refill: event=0x0003
+  l1d_cache_wb: event=0x0015
+  l1d_tlb: event=0x0025
+  l1d_tlb_refill: event=0x0005
+  l1i_cache: event=0x0014
+  l1i_cache_refill: event=0x0001
+  l1i_tlb: event=0x0026
+  l1i_tlb_refill: event=0x0002
+  l2d_cache: event=0x0016
+  l2d_cache_allocate: event=0x0020
+  l2d_cache_refill: event=0x0017
+  l2d_cache_wb: event=0x0018
+  l2d_tlb: event=0x002f
+  l2d_tlb_refill: event=0x002d
+  l3d_cache: event=0x002b
+  l3d_cache_allocate: event=0x0029
+  l3d_cache_refill: event=0x002a
+  l3d_cache_wb: event=0x002c
+  mem_access: event=0x0013
+  memory_error: event=0x001a
+  stall_backend: event=0x0024
+  stall_frontend: event=0x0023
+  ttbr_write_retired: event=0x001c
+
+## KVM boot messages
+[    0.000000] kvm [0]: Reserved 86 MiB at 0x237a800000
+[    0.060908] CPU features: detected: Protected KVM
+[    0.212296] kvm [1]: nv: 477 coarse grained trap handlers
+[    0.212352] kvm [1]: IPA Size Limit: 40 bits
+[    0.217013] PVMFW: pkvm_firmware_mem allocated from /chosen/pvmfw
+[    0.251410] kvm [1]: GICv3: no GICV resource entry
+[    0.251416] kvm [1]: disabling GICv2 emulation
+[    0.251514] kvm [1]: GIC system register CPU interface enabled
+[    0.251526] kvm [1]: vgic interrupt IRQ11
+[    0.251620] kvm [1]: Protected nVHE mode initialized successfully
+
+## kernel config excerpts
+CONFIG_ARM64_CONT_PTE_SHIFT=4
+CONFIG_PGTABLE_LEVELS=4
+CONFIG_ARM64_4K_PAGES=y
+CONFIG_ARM64_VA_BITS=48
+CONFIG_ARM64_PA_BITS=48
+CONFIG_HZ=250
+CONFIG_KVM=y
+CONFIG_X1_RMS=y
+CONFIG_TRANSPARENT_HUGEPAGE=y
+CONFIG_TRANSPARENT_HUGEPAGE_ALWAYS=y
+
+## ID registers of interest (from /proc/cpuinfo features)
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop sha3 sm3 sm4 asimddp sha512
