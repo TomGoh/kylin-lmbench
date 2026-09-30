@@ -1,0 +1,7 @@
+# N80, 2026-09-30 19:56 +08:00: the VM that has been running since boot (ps -eo pid,user,lstart,etime,rss,comm,args)
+   2307 root     Wed Sep 30 16:21:55 2026    03:35:13 10808 sudo            sudo pvm-manage run --protected-vm -- --cpus 2 --mem size=1024 --block disk.img --vsock 103 kernel.bin
+   2335 root     Wed Sep 30 16:21:55 2026    03:35:13  1048 pvm-manage      pvm-manage run --protected-vm -- --cpus 2 --mem size=1024 --block disk.img --vsock 103 kernel.bin
+   2341 root     Wed Sep 30 16:21:55 2026    03:35:13 271000 pvm            crosvm --extended-status --log-level info,disk=warn run --name pvm --disable-sandbox --no-balloon --no-usb --no-pmu --socket /tmp/pvm.socket --pci mem=[start=0x70000000,size=0x2000000],cam=[start=0x72000000,size=0x1000000] --protected-vm --block path=/proc/self/fd/8,ro=false,lock=false --device-tree-overlay=/proc/self/fd/3 --cpus 2 --mem size=1024 --block disk.img --vsock 103 kernel.bin
+
+# /proc/2341/cmdline
+crosvm --extended-status --log-level info,disk=warn run --name pvm --disable-sandbox --no-balloon --no-usb --no-pmu --socket /tmp/pvm.socket --pci mem=[start=0x70000000,size=0x2000000],cam=[start=0x72000000,size=0x1000000] --protected-vm --block path=/proc/self/fd/8,ro=false,lock=false --device-tree-overlay=/proc/self/fd/3 --cpus 2 --mem size=1024 --block disk.img --vsock 103 kernel.bin 
