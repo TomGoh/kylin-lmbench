@@ -41,6 +41,10 @@
 - `probe`、`probe2` 只在开头建一次指针链，之后只读；lmbench 在**每个计时区间之前**都把指针链重写一遍。
   只看稳态延迟时两者一样；涉及按总线流量调频的策略时不一样，那时用 `probe3` 的 `rebuild=1`。
 - 计时用 `clock_gettime(CLOCK_MONOTONIC)`，11 次重复，每次约 0.1 秒，同时给出最小值和中位数。lmbench 报告的是最小值。
+- **被计时的循环写法不同，顺序访问的绝对值因此不同。** 这里默认是循环里一条取数指令；lmbench 的 `benchmark_loads` 是连续 100 条取数指令
+  （`HUNDRED` 宏）。同一状态下，默认写法测到的顺序访问比 lmbench 原版低 4%–9%（1 MB 以上），随机访问和一级缓存内的访问没有差别。
+  `probe3`、`frames2` 在环境变量 `CHASE_UNROLL=1` 时改用 lmbench 的写法，这时与 lmbench 原版相差不超过 2.2%（实验 X）。
+  输出行里的 `chase=loop` 或 `chase=unrolled` 标明用的是哪一种。2026-09-30 实验 X 之前的日志都是默认写法。
 - 每次调用是一个独立进程，对应 lmbench 每个（步长，大小）点 fork 一个子进程。
 
 要与论文的数字直接对照时，用 lmbench 原版的 `lat_mem_rd`：`build-lmbench-tools.sh` 从 `../../src` 单独编译出
@@ -90,6 +94,9 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 | `run10-slots.sh` | `expS` | 按 1 GiB 物理区间分别做随机访问 |
 | `run11-vm-shared.sh` | `expV` `vm-frames-n80.txt` | 同一个 1 GiB 区间里，与保护虚拟机共用 2 MiB 区间的页和不共用的页分别做随机访问 |
 | `run12-vm-shared-sizes.sh` | `expV2` | 上一项在 2–64 MB 各个工作集大小上各做一遍 |
+| `run13-vm-shared-seq.sh` | `expW` | 顺序访问：同一批页按物理顺序和随机顺序映射，shared 和 clear 两类各一遍 |
+| `run14-loop-form.sh` | `expX1` `expX2` `expX3` `vm-frames-x.txt` | 被计时的循环两种写法的对比（`probe3`）；用 lmbench 的写法重复上一项；同一时段 lmbench 原版 3 遍作参照 |
+| `run15-layout-strides.sh` | `expY` | 8 MB、lmbench 的写法，步长 64–1024 各测一遍页顺序的影响 |
 
 **不改系统设置、但还没有执行的：**
 
@@ -113,10 +120,10 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 ## 分析脚本
 
 ```bash
-python3 analyze-host-memlat.py        # N90 宿主机四模式数据：论文三个数字、逐轮值、显著性检验、增量曲线
+python3 analyze-host-memlat.py        # N90 宿主机四模式数据：论文三个数字、逐轮值、检验、增量曲线、以一次开机为单位的比较
 python3 analyze-guest-memlat.py       # N90 上 x-kernel 客户机内的数据（图 8），与宿主机数据分开
 python3 analyze-device-logs.py        # N80 下午的实验 A、B、C、D、L、T、F
-python3 analyze-state-experiments.py  # N80 傍晚的实验 R、BG、H、S、V、V2，以及 G1–G4（日志存在时）
+python3 analyze-state-experiments.py  # N80 傍晚的实验 R、BG、H、S、V、V2、W、X、Y，以及 G1–G4（日志存在时）
 python3 analyze-mode-compare.py modecmp-none-* modecmp-protected-*   # run5 的输出目录，第一个是对照基准
 ```
 

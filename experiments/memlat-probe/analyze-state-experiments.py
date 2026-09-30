@@ -609,6 +609,148 @@ def exp_w():
     print()
 
 
+def frames2_rows(name):
+    """frames2 output lines, each with the fields of the '## ' header line that precedes it."""
+    path = os.path.join(DEV, name)
+    if not os.path.exists(path):
+        return []
+    rows = []
+    hdr = None
+    with open(path) as fh:
+        for line in fh:
+            if line.startswith("## "):
+                hdr = kv(line)
+            elif line.startswith("slot=") and hdr is not None:
+                d = kv(line)
+                d["_slot"] = int(str(line.split()[0].split("=")[1]), 16)
+                d["_size"] = hdr["size_mb"]
+                d["_pick"] = hdr["pick"]
+                d.setdefault("chase", "loop")
+                rows.append(d)
+    return rows
+
+
+def exp_x():
+    rows = probe_rows("expX1.log")
+    ref = lmbench_sweeps("expX3.log")
+    if not rows:
+        return
+    print("## Exp X: the form of the timed loop (one load instruction in a loop against lmbench's 100 loads in a row)\n")
+    print("X1 = probe3, fresh process per point, chain rewritten before every interval; ns = minimum of 11 intervals, "
+          "median over the processes.  X3 = lmbench's own lat_mem_rd in the same session (3 sweeps, 4 KiB pages).  "
+          "adjacency = fraction of virtually adjacent pages that are physically adjacent, in either direction.\n")
+    print("### Sequential, stride 256\n")
+    print("| size | n | loop: ns (min-max) | unrolled: ns (min-max) | lmbench's own: ns (min-max) | unrolled / loop | "
+          "unrolled / lmbench | loop / lmbench | cycles: loop / unrolled | median adjacency |")
+    print("|---:|---:|---|---|---|---:|---:|---:|---|---:|")
+    sizes = sorted({r["size_mb"] for r in rows if r["mode"] == "seq"})
+    lm = collections.defaultdict(list)
+    for _, per_stride in ref:
+        for sz, ns in per_stride.get(256, {}).items():
+            lm[sz].append(ns)
+
+    def near(sz):
+        # lmbench prints sizes with 5 decimals (0.02344), probe3 with 3 (0.023)
+        for k in lm:
+            if abs(k - sz) <= 0.001:
+                return lm[k]
+        return []
+    for sz in sizes:
+        lo = [r for r in rows if r["mode"] == "seq" and r["size_mb"] == sz and r["chase"] == "loop"]
+        un = [r for r in rows if r["mode"] == "seq" and r["size_mb"] == sz and r["chase"] == "unrolled"]
+        a = [r["ns_min"] for r in lo]
+        b = [r["ns_min"] for r in un]
+        c = near(sz)
+        adj = st.median(r["contig_frac"] + r["rcontig_frac"] for r in lo + un)
+        label = f"{sz:g} MB" if sz >= 0.1 else f"{sz * 1024:.0f} KiB"
+        print(f"| {label} | {len(a)} + {len(b)} | {st.median(a):.3f} ({min(a):.3f}-{max(a):.3f}) | "
+              f"{st.median(b):.3f} ({min(b):.3f}-{max(b):.3f}) | "
+              + (f"{st.median(c):.3f} ({min(c):.3f}-{max(c):.3f})" if c else "") + " | "
+              f"{st.median(b) / st.median(a):.3f} | " + (f"{st.median(b) / st.median(c):.3f}" if c else "") + " | "
+              + (f"{st.median(a) / st.median(c):.3f}" if c else "")
+              + f" | {st.median(r['ev11'] for r in lo):.2f} / {st.median(r['ev11'] for r in un):.2f} | {adj:.2f} |")
+    print("\n### Random (lmbench -t pattern, stride 16)\n")
+    print("| size | seeds | loop: ns (min-max) | unrolled: ns (min-max) | unrolled / loop |")
+    print("|---:|---:|---|---|---:|")
+    for sz in sorted({r["size_mb"] for r in rows if r["mode"] == "rand"}):
+        a = [r["ns_min"] for r in rows if r["mode"] == "rand" and r["size_mb"] == sz and r["chase"] == "loop"]
+        b = [r["ns_min"] for r in rows if r["mode"] == "rand" and r["size_mb"] == sz and r["chase"] == "unrolled"]
+        print(f"| {sz:g} MB | {len(a)} | {st.median(a):.2f} ({min(a):.2f}-{max(a):.2f}) | "
+              f"{st.median(b):.2f} ({min(b):.2f}-{max(b):.2f}) | {st.median(b) / st.median(a):.3f} |")
+
+    h = [per_stride for hd, per_stride in lmbench_sweeps("expH-seq256.log") if hd.get("thp") == "off"]
+    rr = probe_rows("expR.log")
+    if h and ref:
+        print("\n### lmbench's own lat_mem_rd, stride 256: Exp H (about 18:00) against Exp X3 (20:00), same platform state\n")
+        print("Between the two the free memory of the machine became fragmented (hours of experiments that shuffle "
+              "and free gigabytes of pages).  The adjacency column is what probe3, which allocates in the same "
+              "way, recorded at about the same time (Exp R for the earlier, Exp X1 for the later session).\n")
+        print("| size | Exp H: ns, median of the sweeps | adjacency then (Exp R) | Exp X3: ns, median of 3 | adjacency now (Exp X1) | change |")
+        print("|---:|---:|---:|---:|---:|---:|")
+        for sz in (4.0, 6.0, 8.0, 12.0, 16.0, 64.0):
+            a = [s[256][sz] for s in h if sz in s.get(256, {})]
+            c = near(sz)
+            ra = [r["contig_frac"] + r["rcontig_frac"] for r in rr if r["size_mb"] == sz]
+            xa = [r["contig_frac"] + r["rcontig_frac"] for r in rows if r["mode"] == "seq" and r["size_mb"] == sz]
+            if a and c:
+                print(f"| {sz:g} MB | {st.median(a):.2f} | {st.median(ra):.2f} | {st.median(c):.2f} | {st.median(xa):.2f} | "
+                      f"{100 * (st.median(c) / st.median(a) - 1):+.1f}% |")
+
+    x2 = frames2_rows("expX2.log")
+    if x2:
+        print("\n### X2: the same pages in sorted and in shuffled virtual order (as Exp W), sequential stride 256, by loop form\n")
+        print("ns = median of 5 full cycles, median over slots and the two passes.  adjacent pages = lowest addresses of the "
+              "slot; non-adjacent pages = spread evenly over the slot's pool pages.\n")
+        print("| size | loop form | class | slots | adjacent pages, sorted: ns (min-max) | same pages, shuffled: ns (min-max) | "
+              "shuffled vs sorted | non-adjacent pages, sorted / shuffled: ns | adjacency of the sorted adjacent set |")
+        print("|---:|---|---|---:|---|---|---:|---|---:|")
+        for sz in sorted({r["_size"] for r in x2}):
+            for chase in ("loop", "unrolled"):
+                for cls in ("clear", "shared"):
+                    def sel(pick, order):
+                        return [r for r in x2 if r["_size"] == sz and r["chase"] == chase and r["class"] == cls
+                                and r["_pick"] == pick and r["order"] == order]
+                    so, sh = sel("low", "sorted"), sel("low", "shuffled")
+                    if not so or not sh:
+                        continue
+                    a = [r["ns_med"] for r in so]
+                    b = [r["ns_med"] for r in sh]
+                    es, eh = sel("even", "sorted"), sel("even", "shuffled")
+                    ev = (f"{st.median(r['ns_med'] for r in es):.2f} / {st.median(r['ns_med'] for r in eh):.2f}"
+                          if es and eh else "")
+                    print(f"| {sz:g} MB | {chase} | {cls} | {len({r['_slot'] for r in so})} | "
+                          f"{st.median(a):.2f} ({min(a):.2f}-{max(a):.2f}) | {st.median(b):.2f} ({min(b):.2f}-{max(b):.2f}) | "
+                          f"{100 * (st.median(b) / st.median(a) - 1):+.1f}% | {ev} | {st.median(r['contig_frac'] for r in so):.2f} |")
+    print()
+
+
+def exp_y():
+    rows = frames2_rows("expY.log")
+    if not rows:
+        return
+    print("## Exp Y: the layout effect at 8 MB for every stride (frames2, lmbench's loop form, physically adjacent pages)\n")
+    print("sorted = virtual order follows ascending physical address; shuffled = the same pages in a random virtual "
+          "order.  ns = median of 5 full cycles, median over slots and the two passes.\n")
+    print("| stride | accesses per page | slots | sorted: ns (min-max) | shuffled: ns (min-max) | shuffled - sorted (ns) | "
+          "shuffled vs sorted | per page crossing (ns) | page walks per access: sorted / shuffled | "
+          "L2 refills: sorted / shuffled | L3 refills: sorted / shuffled |")
+    print("|---:|---:|---:|---|---|---:|---:|---:|---|---|---|")
+    m = lambda rs, key: st.median(r[key] for r in rs)
+    for stride in sorted({r["stride"] for r in rows}):
+        so = [r for r in rows if r["stride"] == stride and r["order"] == "sorted"]
+        sh = [r for r in rows if r["stride"] == stride and r["order"] == "shuffled"]
+        if not so or not sh:
+            continue
+        a = [r["ns_med"] for r in so]
+        b = [r["ns_med"] for r in sh]
+        d = st.median(b) - st.median(a)
+        print(f"| {stride:g} | {4096 / stride:g} | {len({r['_slot'] for r in so})} | {st.median(a):.2f} ({min(a):.2f}-{max(a):.2f}) | "
+              f"{st.median(b):.2f} ({min(b):.2f}-{max(b):.2f}) | {d:+.2f} | {100 * (st.median(b) / st.median(a) - 1):+.1f}% | "
+              f"{d * 4096 / stride:+.1f} | {m(so, 'ev2d'):.4f} / {m(sh, 'ev2d'):.4f} | {m(so, 'ev17'):.3f} / {m(sh, 'ev17'):.3f} | "
+              f"{m(so, 'ev2a'):.3f} / {m(sh, 'ev2a'):.3f} |")
+    print()
+
+
 def main():
     exp_r()
     exp_bg()
@@ -617,6 +759,8 @@ def main():
     exp_v()
     exp_v2()
     exp_w()
+    exp_x()
+    exp_y()
     exp_g1()
     exp_g2()
     exp_h("expG4", "Exp G4: lmbench's own lat_mem_rd in three interconnect states")

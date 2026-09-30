@@ -307,3 +307,69 @@ Same slot, both classes (slot 0x20c0000000 where available):
 | 64 MB | spread evenly | sorted | 9.14 | 9.92 | +8.6% |
 | 64 MB | spread evenly | shuffled | 10.65 | 10.74 | +0.8% |
 
+## Exp X: the form of the timed loop (one load instruction in a loop against lmbench's 100 loads in a row)
+
+X1 = probe3, fresh process per point, chain rewritten before every interval; ns = minimum of 11 intervals, median over the processes.  X3 = lmbench's own lat_mem_rd in the same session (3 sweeps, 4 KiB pages).  adjacency = fraction of virtually adjacent pages that are physically adjacent, in either direction.
+
+### Sequential, stride 256
+
+| size | n | loop: ns (min-max) | unrolled: ns (min-max) | lmbench's own: ns (min-max) | unrolled / loop | unrolled / lmbench | loop / lmbench | cycles: loop / unrolled | median adjacency |
+|---:|---:|---|---|---|---:|---:|---:|---|---:|
+| 24 KiB | 8 + 8 | 2.107 (2.107-2.108) | 2.107 (2.107-2.107) | 2.107 (2.107-2.107) | 1.000 | 1.000 | 1.000 | 4.00 / 4.00 | 0.00 |
+| 0.5 MB | 8 + 8 | 3.772 (3.697-3.816) | 3.848 (3.790-3.878) | 3.805 (3.765-3.835) | 1.020 | 1.011 | 0.991 | 7.18 / 7.34 | 0.00 |
+| 1 MB | 8 + 8 | 4.127 (4.122-4.131) | 4.277 (4.261-4.289) | 4.257 (4.252-4.260) | 1.036 | 1.005 | 0.969 | 7.85 / 8.14 | 0.00 |
+| 2 MB | 8 + 8 | 4.317 (4.309-4.322) | 4.522 (4.508-4.529) | 4.512 (4.506-4.517) | 1.048 | 1.002 | 0.957 | 8.20 / 8.60 | 0.00 |
+| 4 MB | 8 + 8 | 4.506 (4.448-4.639) | 4.939 (4.887-4.990) | 4.857 (4.854-4.904) | 1.096 | 1.017 | 0.928 | 8.59 / 9.42 | 0.00 |
+| 6 MB | 8 + 8 | 7.308 (7.130-7.416) | 7.793 (7.632-7.852) | 7.623 (7.546-7.794) | 1.066 | 1.022 | 0.959 | 13.96 / 14.85 | 0.00 |
+| 8 MB | 8 + 8 | 9.532 (9.485-9.564) | 10.352 (10.333-10.448) | 10.445 (10.359-10.494) | 1.086 | 0.991 | 0.913 | 18.11 / 19.68 | 0.00 |
+| 12 MB | 8 + 8 | 10.408 (10.394-10.442) | 11.414 (11.362-11.461) | 11.451 (11.434-11.516) | 1.097 | 0.997 | 0.909 | 19.77 / 21.66 | 0.00 |
+| 16 MB | 8 + 8 | 10.546 (10.516-10.582) | 11.507 (11.485-11.595) | 11.591 (11.489-11.736) | 1.091 | 0.993 | 0.910 | 20.01 / 21.84 | 0.00 |
+| 64 MB | 8 + 8 | 10.648 (10.612-10.672) | 11.585 (11.456-11.627) | 11.636 (11.556-11.695) | 1.088 | 0.996 | 0.915 | 20.21 / 21.98 | 0.00 |
+
+### Random (lmbench -t pattern, stride 16)
+
+| size | seeds | loop: ns (min-max) | unrolled: ns (min-max) | unrolled / loop |
+|---:|---:|---|---|---:|
+| 8 MB | 3 | 101.34 (100.62-102.82) | 99.23 (98.72-100.54) | 0.979 |
+| 64 MB | 3 | 158.08 (157.75-158.10) | 158.10 (157.94-158.46) | 1.000 |
+
+### lmbench's own lat_mem_rd, stride 256: Exp H (about 18:00) against Exp X3 (20:00), same platform state
+
+Between the two the free memory of the machine became fragmented (hours of experiments that shuffle and free gigabytes of pages).  The adjacency column is what probe3, which allocates in the same way, recorded at about the same time (Exp R for the earlier, Exp X1 for the later session).
+
+| size | Exp H: ns, median of the sweeps | adjacency then (Exp R) | Exp X3: ns, median of 3 | adjacency now (Exp X1) | change |
+|---:|---:|---:|---:|---:|---:|
+| 4 MB | 4.83 | 0.50 | 4.86 | 0.00 | +0.6% |
+| 6 MB | 7.70 | 0.36 | 7.62 | 0.00 | -1.0% |
+| 8 MB | 10.39 | 0.27 | 10.45 | 0.00 | +0.5% |
+| 12 MB | 11.24 | 0.34 | 11.45 | 0.00 | +1.9% |
+| 16 MB | 11.23 | 0.46 | 11.59 | 0.00 | +3.2% |
+| 64 MB | 10.27 | 0.86 | 11.64 | 0.00 | +13.3% |
+
+### X2: the same pages in sorted and in shuffled virtual order (as Exp W), sequential stride 256, by loop form
+
+ns = median of 5 full cycles, median over slots and the two passes.  adjacent pages = lowest addresses of the slot; non-adjacent pages = spread evenly over the slot's pool pages.
+
+| size | loop form | class | slots | adjacent pages, sorted: ns (min-max) | same pages, shuffled: ns (min-max) | shuffled vs sorted | non-adjacent pages, sorted / shuffled: ns | adjacency of the sorted adjacent set |
+|---:|---|---|---:|---|---|---:|---|---:|
+| 8 MB | loop | clear | 12 | 8.22 (8.00-8.49) | 9.66 (9.58-9.69) | +17.5% | 9.62 / 9.58 | 0.91 |
+| 8 MB | loop | shared | 1 | 8.09 (8.08-8.10) | 9.68 (9.68-9.68) | +19.6% | 9.65 / 9.63 | 0.96 |
+| 8 MB | unrolled | clear | 12 | 9.03 (8.81-9.32) | 10.56 (10.42-10.72) | +17.0% | 10.45 / 10.48 | 0.91 |
+| 8 MB | unrolled | shared | 1 | 8.94 (8.93-8.95) | 10.59 (10.59-10.60) | +18.5% | 10.55 / 10.67 | 0.96 |
+| 16 MB | unrolled | clear | 12 | 9.45 (9.09-9.72) | 11.32 (11.29-11.39) | +19.8% | 11.50 / 11.61 | 0.90 |
+| 16 MB | unrolled | shared | 1 | 9.45 (9.26-9.64) | 11.31 (11.30-11.31) | +19.6% | 11.72 / 11.61 | 0.97 |
+| 64 MB | unrolled | clear | 11 | 9.31 (9.12-9.71) | 11.60 (11.54-11.73) | +24.6% | 11.13 / 11.55 | 0.94 |
+| 64 MB | unrolled | shared | 1 | 9.20 (9.20-9.21) | 11.69 (11.64-11.74) | +27.0% | 10.80 / 11.61 | 0.98 |
+
+## Exp Y: the layout effect at 8 MB for every stride (frames2, lmbench's loop form, physically adjacent pages)
+
+sorted = virtual order follows ascending physical address; shuffled = the same pages in a random virtual order.  ns = median of 5 full cycles, median over slots and the two passes.
+
+| stride | accesses per page | slots | sorted: ns (min-max) | shuffled: ns (min-max) | shuffled - sorted (ns) | shuffled vs sorted | per page crossing (ns) | page walks per access: sorted / shuffled | L2 refills: sorted / shuffled | L3 refills: sorted / shuffled |
+|---:|---:|---:|---|---|---:|---:|---:|---|---|---|
+| 64 | 64 | 12 | 3.61 (3.54-3.74) | 4.33 (4.30-4.35) | +0.72 | +19.9% | +46.1 | 0.0120 / 0.0148 | 0.151 / 0.174 | 0.766 / 0.773 |
+| 128 | 32 | 12 | 8.09 (7.98-8.29) | 9.65 (9.56-9.69) | +1.56 | +19.3% | +50.0 | 0.0248 / 0.0301 | 0.267 / 0.241 | 0.773 / 0.778 |
+| 256 | 16 | 12 | 9.00 (8.84-9.24) | 10.59 (10.51-10.65) | +1.59 | +17.7% | +25.5 | 0.0489 / 0.0539 | 0.251 / 0.247 | 0.784 / 0.799 |
+| 512 | 8 | 12 | 8.50 (8.29-8.70) | 10.04 (10.00-10.08) | +1.54 | +18.1% | +12.3 | 0.0866 / 0.0965 | 0.206 / 0.278 | 0.785 / 0.811 |
+| 1024 | 4 | 12 | 9.33 (9.24-9.46) | 10.86 (10.82-11.09) | +1.53 | +16.4% | +6.1 | 0.1338 / 0.1380 | 0.152 / 0.312 | 0.795 / 0.819 |
+
