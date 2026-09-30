@@ -94,7 +94,10 @@
 
 - `ns_min` `ns_med` `ns_max`：重复计时中每跳耗时的最小值、中位数、最大值。`probe`、`probe2`、`probe3`、`layout`、`thplayout` 是 11 次重复，
   `frames2`（实验 S、V、V2、V3、W、X2、Y、Z、N3）是 5 次；`frames2` 的表用中位数，其余用最小值。
-  `frames2` 的一个进程会打印多行（每个 GiB 区间、每类页、每一遍各一行）；其余程序一个进程一行。
+  `frames2` 的一个进程会打印多行（每个 GiB 区间、每类页、每一遍各一行）；`layout`、`thplayout` 的一个进程对每种排列各打印一行
+  （`run24` 里每个进程是 sorted、shuffled、reversed、sorted、shuffled、aligned 六行，所以每个大小的 sorted、shuffled 各有 6 个值，来自 3 个进程）；
+  其余程序一个进程一行。
+- `probe3` 的 `tlb` 方式里 `contig_frac`、`rcontig_frac` 恒为 0（程序只在顺序访问方式下统计相邻度），不代表物理页不相邻；那里能看布局的只有 `l2over`、`mb2_regions`、`slots`。
   `frames2` 在这一天里改过几次（加分类、加顺序访问、加 lmbench 的循环写法、加只量地址翻译的方式、加两个区间按比例混合），
   各日志是当时的版本产生的；字段只增不改。
 - `evXX`：PMU 事件 `0xXX` 在每一跳上的平均次数。事件代码见 `experiments/memlat-probe/README.zh-CN.md`。
