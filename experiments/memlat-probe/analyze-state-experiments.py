@@ -36,6 +36,9 @@
           H2 with probe3 before and after every sweep, H3 with the layout of
           lmbench's own buffers read from /proc/<pid>/pagemap
           (expH2.log, expH3.log, expH3-frames.log)
+  Exp H4  lmbench's own lat_mem_rd on a buffer whose physical layout is set
+          by a preloaded library, on the N80 and on the workstation
+          (expH4.log, expH4-shim.log, ../memlat-d80f3-20260930/expH4-d80f3.log)
   Exp G1-G4  the interconnect-frequency experiments, if their logs exist
           (expG1.log, expG2.log, expG3.log, expG4-*.log)
 
@@ -1480,6 +1483,84 @@ def exp_h3():
     print()
 
 
+def layout_sweeps(path):
+    """Sweeps of run27: -> list of {rep, layout, noc, rows: {size_mb: ns}}."""
+    if not os.path.exists(path):
+        return []
+    out = []
+    cur = None
+    with open(path) as fh:
+        for line in fh:
+            line = line.rstrip("\n")
+            if line.startswith("## rep="):
+                d = kv(line)
+                cur = {"rep": int(d["rep"]), "layout": d["layout"], "noc": d.get("noc"), "gov": d.get("gov"), "rows": {}}
+                out.append(cur)
+            elif line.startswith("##"):
+                continue
+            elif cur is not None:
+                p = line.split()
+                if len(p) == 3:
+                    try:
+                        cur["rows"][float(p[1])] = float(p[2])
+                    except ValueError:
+                        pass
+    return out
+
+
+def exp_h4():
+    sets = (("N80 (kvm-arm.mode=protected, kernel 6.6.0-79, root)", os.path.join(DEV, "expH4.log"), os.path.join(DEV, "expH4-shim.log")),
+            ("D80F3 workstation (no host stage-2, kernel 7.0.0-34, unprivileged)", os.path.join(D80, "expH4-d80f3.log"),
+             os.path.join(D80, "expH4-d80f3-shim.log")))
+    if not any(os.path.exists(a) for _, a, _ in sets):
+        return
+    print("## Exp H4: lmbench's own lat_mem_rd (stride 256) on a buffer whose physical layout is set\n")
+    print("The unmodified lat_mem_rd binary with layoutshim.so preloaded: its 64 MB buffer consists of 4 KiB pages taken from "
+          "2 MiB huge pages, in physical order (sorted), in random order within every 8 MB (shuffled8: the first 8 MB use the "
+          "same frames as sorted), or in random order over the whole buffer (shuffled).  natural = without the library, under "
+          "nothp, as in Exp H.  ns = lmbench's own figure; median over the repetitions (min-max).\n")
+    names = ("sorted", "shuffled8", "shuffled", "natural")
+    for title, path, shim in sets:
+        sw = layout_sweeps(path)
+        if not sw:
+            continue
+        print(f"### {title}\n")
+        noc = sorted({f"{x['gov']} {x['noc']:.0f}" for x in sw if isinstance(x.get("noc"), float)})
+        if noc:
+            print("Interconnect at the start of every sweep: " + ", ".join(noc) + ".\n")
+        if os.path.exists(shim):
+            rows = []
+            with open(shim) as fh:
+                for line in fh:
+                    if line.startswith("pid="):
+                        rows.append(dict(re.findall(r"(\w+)=([^\s]+)", line)))
+            if rows:
+                ok = sum(1 for r in rows if int(r["thp_kb"]) == int(r["pages"]) * 4)
+                print(f"Buffers built by the library: {len(rows)}; fully backed by huge pages before being taken apart: {ok}.")
+                for lay, chunk in (("sorted", None), ("shuffled", "2048"), ("shuffled", "other")):
+                    sel = [r for r in rows if r["layout"] == lay and (chunk is None or (r["shuffle_pages"] == "2048") == (chunk == "2048"))]
+                    vals = [tuple(float(v) for v in r["adj2048"].split("/")) for r in sel if r.get("adj2048", "na") != "na"]
+                    if vals:
+                        label = lay if chunk is None else ("shuffled8" if chunk == "2048" else "shuffled")
+                        print(f"Adjacency of the first 2048 pages, {label}: ascending {min(v[0] for v in vals):.4f}-{max(v[0] for v in vals):.4f}, "
+                              f"descending {min(v[1] for v in vals):.4f}-{max(v[1] for v in vals):.4f} ({len(vals)} buffers).")
+                print()
+        sizes = (2.0, 4.0, 6.0, 8.0, 12.0, 16.0, 24.0, 32.0, 48.0, 64.0)
+        print("| size | " + " | ".join(names) + " | shuffled8 / sorted | shuffled / sorted | natural / sorted |")
+        print("|---:|" + "---|" * len(names) + "---:|---:|---:|")
+        for sz in sizes:
+            v = {n: [x["rows"][sz] for x in sw if x["layout"] == n and sz in x["rows"]] for n in names}
+            if not v["sorted"]:
+                continue
+            cell = lambda n: f"{st.median(v[n]):.2f} ({min(v[n]):.2f}-{max(v[n]):.2f})" if v[n] else ""
+            rat = lambda n: f"{st.median(v[n]) / st.median(v['sorted']):.3f}" if v[n] else ""
+            print(f"| {sz:g} MB | " + " | ".join(cell(n) for n in names) + f" | {rat('shuffled8')} | {rat('shuffled')} | {rat('natural')} |")
+        print("\nThe 8 MB point in every repetition (ns): "
+              + "; ".join(f"rep {rep}: " + ", ".join(f"{n} {x['rows'][8.0]:.2f}" for n in names for x in sw
+                                                        if x["rep"] == rep and x["layout"] == n and 8.0 in x["rows"])
+                          for rep in sorted({x["rep"] for x in sw})) + ".\n")
+
+
 def main():
     exp_r()
     exp_bg()
@@ -1502,6 +1583,7 @@ def main():
     exp_l2()
     exp_h2()
     exp_h3()
+    exp_h4()
     exp_g1()
     exp_g2()
     exp_h("expG4", "Exp G4: lmbench's own lat_mem_rd in three interconnect states")
