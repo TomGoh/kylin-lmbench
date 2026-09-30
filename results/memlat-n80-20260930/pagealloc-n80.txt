@@ -1,0 +1,251 @@
+# N80 2026-09-30T23:05:01+08:00: page allocator state (read only).  /proc/sys/vm/percpu_pagelist_high_fraction, /proc/buddyinfo, /proc/pagetypeinfo, /proc/zoneinfo
+## percpu_pagelist_high_fraction
+0
+## buddyinfo
+Node 0, zone      DMA    466    410    626    550    383    224     53     27      8     33     65 
+Node 0, zone   Normal   4848   5925   2570   1279    972    754    436    266    182    313    446 
+## pagetypeinfo
+Page block order: 9
+Pages per block:  512
+
+Free pages count per migrate type at order       0      1      2      3      4      5      6      7      8      9     10 
+Node    0, zone      DMA, type    Unmovable     69     52    134    191    118     50     22      7      0      0      0 
+Node    0, zone      DMA, type      Movable    167    224    133     64     60     34     16     20      8     30     65 
+Node    0, zone      DMA, type  Reclaimable    230    134    358    295    205    140     15      0      0      0      0 
+Node    0, zone      DMA, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0 
+Node    0, zone      DMA, type          CMA      0      0      1      0      0      0      0      0      0      3      0 
+Node    0, zone      DMA, type      Isolate      0      0      0      0      0      0      0      0      0      0      0 
+Node    0, zone   Normal, type    Unmovable   2502    820    432    154    111     53     14      7      5      1      0 
+Node    0, zone   Normal, type      Movable   2226   4819   2105   1113    834    666    406    258    177    312    446 
+Node    0, zone   Normal, type  Reclaimable     57    286     18     12     27     35     16      1      0      0      0 
+Node    0, zone   Normal, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0 
+Node    0, zone   Normal, type          CMA      0      0      0      0      0      0      0      0      0      0      0 
+Node    0, zone   Normal, type      Isolate      0      0      0      0      0      0      0      0      0      0      0 
+
+Number of blocks type     Unmovable      Movable  Reclaimable   HighAtomic          CMA      Isolate 
+Node 0, zone      DMA           59          695          174            0           64            0 
+Node 0, zone   Normal          340         6715          113            0            0            0 
+## zoneinfo
+Node 0, zone      DMA
+  per-node stats
+      nr_inactive_anon 922262
+      nr_active_anon 420673
+      nr_inactive_file 623520
+      nr_active_file 173796
+      nr_unevictable 39
+      nr_slab_reclaimable 135178
+      nr_slab_unreclaimable 84432
+      nr_isolated_anon 0
+      nr_isolated_file 0
+      workingset_nodes 10182
+      workingset_refault_anon 0
+      workingset_refault_file 509
+      workingset_activate_anon 0
+      workingset_activate_file 0
+      workingset_restore_anon 0
+      workingset_restore_file 22
+      workingset_nodereclaim 14930
+      nr_anon_pages 1258433
+      nr_mapped    206336
+      nr_file_pages 881598
+      nr_dirty     1092
+      nr_writeback 0
+      nr_writeback_temp 0
+      nr_shmem     84259
+      nr_shmem_hugepages 0
+      nr_shmem_pmdmapped 0
+      nr_file_hugepages 36
+      nr_file_pmdmapped 18
+      nr_anon_transparent_hugepages 1950
+      nr_vmscan_write 4083
+      nr_vmscan_immediate_reclaim 0
+      nr_dirtied   1658311
+      nr_written   1544939
+      nr_throttled_written 0
+      nr_kernel_misc_reclaimable 0
+      nr_foll_pin_acquired 66262
+      nr_foll_pin_released 752
+      nr_kernel_stack 25840
+      nr_page_table_pages 13393
+      nr_sec_page_table_pages 168
+      nr_swapcached 18
+      pgpromote_success 0
+      pgpromote_candidate 0
+      pgdemote_kswapd 0
+      pgdemote_direct 0
+      pgdemote_khugepaged 0
+      nr_hugetlb   0
+  pages free     113838
+        boost    0
+        min      1445
+        low      1874
+        high     2303
+        spanned  524288
+        present  507904
+        managed  429855
+        cma      32768
+        protection: (0, 0, 11407, 11407, 11407)
+      nr_free_pages 113838
+      nr_zone_inactive_anon 163379
+      nr_zone_active_anon 7447
+      nr_zone_inactive_file 41093
+      nr_zone_active_file 295
+      nr_zone_unevictable 0
+      nr_zone_write_pending 2
+      nr_mlock     0
+      nr_bounce    0
+      nr_zspages   0
+      nr_free_cma  1540
+      numa_hit     1120052
+      numa_miss    0
+      numa_foreign 0
+      numa_interleave 0
+      numa_local   1120052
+      numa_other   0
+  pagesets
+    cpu: 0
+              count: 252
+              high:  252
+              batch: 63
+  vm stats threshold: 40
+    cpu: 1
+              count: 33
+              high:  252
+              batch: 63
+  vm stats threshold: 40
+    cpu: 2
+              count: 0
+              high:  252
+              batch: 63
+  vm stats threshold: 40
+    cpu: 3
+              count: 113
+              high:  252
+              batch: 63
+  vm stats threshold: 40
+    cpu: 4
+              count: 99
+              high:  252
+              batch: 63
+  vm stats threshold: 40
+    cpu: 5
+              count: 150
+              high:  252
+              batch: 63
+  vm stats threshold: 40
+    cpu: 6
+              count: 179
+              high:  252
+              batch: 63
+  vm stats threshold: 40
+    cpu: 7
+              count: 252
+              high:  252
+              batch: 63
+  vm stats threshold: 40
+  node_unreclaimable:  0
+  start_pfn:           524288
+Node 0, zone    DMA32
+  pages free     0
+        boost    0
+        min      0
+        low      0
+        high     0
+        spanned  0
+        present  0
+        managed  0
+        cma      0
+        protection: (0, 0, 0, 0, 0)
+Node 0, zone   Normal
+  pages free     802394
+        boost    0
+        min      9818
+        low      12738
+        high     15658
+        spanned  36175872
+        present  3670016
+        managed  2920428
+        cma      0
+        protection: (0, 0, 0, 0, 0)
+      nr_free_pages 802394
+      nr_zone_inactive_anon 758883
+      nr_zone_active_anon 413226
+      nr_zone_inactive_file 582427
+      nr_zone_active_file 173501
+      nr_zone_unevictable 39
+      nr_zone_write_pending 1089
+      nr_mlock     39
+      nr_bounce    0
+      nr_zspages   0
+      nr_free_cma  0
+      numa_hit     174307207
+      numa_miss    0
+      numa_foreign 0
+      numa_interleave 1556
+      numa_local   174263217
+      numa_other   0
+  pagesets
+    cpu: 0
+              count: 966
+              high:  1592
+              batch: 63
+  vm stats threshold: 64
+    cpu: 1
+              count: 1360
+              high:  1907
+              batch: 63
+  vm stats threshold: 64
+    cpu: 2
+              count: 414
+              high:  1592
+              batch: 63
+  vm stats threshold: 64
+    cpu: 3
+              count: 1505
+              high:  1655
+              batch: 63
+  vm stats threshold: 64
+    cpu: 4
+              count: 1185
+              high:  1592
+              batch: 63
+  vm stats threshold: 64
+    cpu: 5
+              count: 1558
+              high:  1592
+              batch: 63
+  vm stats threshold: 64
+    cpu: 6
+              count: 1109
+              high:  1592
+              batch: 63
+  vm stats threshold: 64
+    cpu: 7
+              count: 1450
+              high:  1655
+              batch: 63
+  vm stats threshold: 64
+  node_unreclaimable:  0
+  start_pfn:           1048576
+Node 0, zone  Movable
+  pages free     0
+        boost    0
+        min      32
+        low      32
+        high     32
+        spanned  0
+        present  0
+        managed  0
+        cma      0
+        protection: (0, 0, 0, 0, 0)
+Node 0, zone   Device
+  pages free     0
+        boost    0
+        min      0
+        low      0
+        high     0
+        spanned  0
+        present  0
+        managed  0
+        cma      0
+        protection: (0, 0, 0, 0, 0)
