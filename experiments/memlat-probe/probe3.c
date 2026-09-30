@@ -10,9 +10,12 @@
  * difference matters when a frequency governor reacts to bus traffic.
  *
  * usage: probe3 <seq|rand> <size_mb> <stride> <maxlen_mb> <events,hex,...> <rebuild 0|1> [seed]
+ *   CHASE_UNROLL=1 in the environment: time lmbench's own loop body (100 load
+ *   instructions in a row) instead of one load instruction in a loop.
  *
  * The buffer always uses 4 KiB pages (MADV_NOHUGEPAGE).  Prints one key=value
  * line.  Fields beyond those of probe.c:
+ *   chase=    loop or unrolled (see CHASE_UNROLL)
  *   rebuild=  1: the chain is rewritten before every interval, as lmbench does
  *   reps=     the 11 interval times in the order they were taken (ns per hop)
  *   noc0=     /sys/class/devfreq/nocfreq/cur_freq before the first interval
@@ -117,10 +120,29 @@ static size_t *words_initialize(size_t max, size_t scale)
 	return words;
 }
 
+/* lmbench's benchmark_loads() body: 100 load instructions in a row */
+#define ONE	p = (char **)*p;
+#define FIVE	ONE ONE ONE ONE ONE
+#define TEN	FIVE FIVE
+#define FIFTY	TEN TEN TEN TEN TEN
+#define HUNDRED	FIFTY FIFTY
+
+static int unroll;	/* CHASE_UNROLL=1 in the environment */
+
+/*
+ * Default: one load instruction in a loop.  Unrolled: lmbench's form, where
+ * the same instruction address sees only every 100th element of the chain.
+ */
 static char **chase(char **p, size_t hops)
 {
 	size_t i;
 
+	if (unroll) {
+		for (i = 0; i < hops / 100; i++) {
+			HUNDRED;
+		}
+		return p;
+	}
 	for (i = 0; i < hops; i++)
 		p = (char **)*p;
 	return p;
@@ -204,6 +226,7 @@ int main(int argc, char **argv)
 	seed = argc > 7 ? strtoul(argv[7], NULL, 0) : 0;
 	if (!seed)
 		seed = (unsigned)getpid();
+	unroll = getenv("CHASE_UNROLL") && atoi(getenv("CHASE_UNROLL"));
 	for (tok = strtok(evs, ","); tok && nev < MAXEV; tok = strtok(NULL, ","))
 		evcfg[nev++] = strtoull(tok, NULL, 16);
 
@@ -288,6 +311,8 @@ int main(int argc, char **argv)
 	t1 = now_ns();
 	hops = (size_t)(110e6 / ((t1 - t0) / 1e6));
 	hops = (hops / cycle + 1) * cycle;
+	if (unroll)
+		hops = (hops + 99) / 100 * 100;
 
 	for (i = 0; i < nev; i++) {
 		fd[i] = perf_open(evcfg[i]);
@@ -322,8 +347,8 @@ int main(int argc, char **argv)
 	memcpy(sorted, rep, sizeof(rep));
 	qsort(sorted, REPS, sizeof(double), cmp_d);
 
-	printf("mode=%s rebuild=%d size_mb=%.3f stride=%zu pages=%zu seed=%u hops=%.0f ns_min=%.3f ns_med=%.3f ns_max=%.3f",
-	       rnd ? "rand" : "seq", rebuild, len / 1048576.0, stride, npages, seed, total_hops,
+	printf("mode=%s chase=%s rebuild=%d size_mb=%.3f stride=%zu pages=%zu seed=%u hops=%.0f ns_min=%.3f ns_med=%.3f ns_max=%.3f",
+	       rnd ? "rand" : "seq", unroll ? "unrolled" : "loop", rebuild, len / 1048576.0, stride, npages, seed, total_hops,
 	       sorted[0], sorted[REPS / 2], sorted[REPS - 1]);
 	for (i = 0; i < nev; i++) {
 		if (fd[i] < 0) {

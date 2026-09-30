@@ -32,6 +32,9 @@
  *     Pages given to a protected VM are taken out of the host stage-2 map one
  *     4 KiB page at a time, so the host pages of a shared region are mapped
  *     with 4 KiB stage-2 leaves, the others with 2 MiB or 1 GiB blocks.
+ *   CHASE_UNROLL=1 in the environment: time lmbench's own loop body (100 load
+ *     instructions in a row) instead of one load instruction in a loop; the
+ *     output line then ends with chase=unrolled.
  * Needs CAP_SYS_ADMIN (PFNs from /proc/self/pagemap).  One line per slot, class and pass.
  */
 #define _GNU_SOURCE
@@ -76,10 +79,29 @@ static int perf_open(uint64_t config)
 	return syscall(SYS_perf_event_open, &a, 0, -1, -1, 0);
 }
 
+/* lmbench's benchmark_loads() body: 100 load instructions in a row */
+#define ONE	p = (char **)*p;
+#define FIVE	ONE ONE ONE ONE ONE
+#define TEN	FIVE FIVE
+#define FIFTY	TEN TEN TEN TEN TEN
+#define HUNDRED	FIFTY FIFTY
+
+static int unroll;	/* CHASE_UNROLL=1 in the environment */
+
+/*
+ * Default: one load instruction in a loop.  Unrolled: lmbench's form, where
+ * the same instruction address sees only every 100th element of the chain.
+ */
 static char **chase(char **p, size_t hops)
 {
 	size_t i;
 
+	if (unroll) {
+		for (i = 0; i < hops / 100; i++) {
+			HUNDRED;
+		}
+		return p;
+	}
 	for (i = 0; i < hops; i++)
 		p = (char **)*p;
 	return p;
@@ -240,6 +262,8 @@ timed:
 	t1 = now_ns();
 	if (t1 - t0 < 100e6)
 		hops *= (size_t)(100e6 / (t1 - t0)) + 1;
+	if (unroll)
+		hops = (hops + 99) / 100 * 100;
 	for (i = 0; i < nev; i++)
 		if (fd[i] >= 0) {
 			ioctl(fd[i], PERF_EVENT_IOC_RESET, 0);
@@ -268,7 +292,7 @@ timed:
 		printf(" ev%llx=%.6f", (unsigned long long)evcfg[i],
 		       (double)cnt[i][0] * (cnt[i][2] ? (double)cnt[i][1] / cnt[i][2] : 1.0) / total_hops);
 	}
-	printf(" sink=%p\n", (void *)p);
+	printf(" chase=%s sink=%p\n", unroll ? "unrolled" : "loop", (void *)p);
 	fflush(stdout);
 }
 
@@ -296,6 +320,7 @@ int main(int argc, char **argv)
 	if (argc > 7 && !strncmp(argv[7], "seq", 3))
 		seq_stride = strtoul(argv[7] + 3, NULL, 0);
 	shuffled = argc > 8 && !strcmp(argv[8], "shuffled");
+	unroll = getenv("CHASE_UNROLL") && atoi(getenv("CHASE_UNROLL"));
 	for (tok = strtok(evs, ","); tok && nev < MAXEV; tok = strtok(NULL, ","))
 		evcfg[nev++] = strtoull(tok, NULL, 16);
 	npages = len / PAGE;
