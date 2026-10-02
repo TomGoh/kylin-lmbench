@@ -384,7 +384,22 @@ N90 上两个值之比是 12.4 ÷ 10.2 ≈ 1.22。
    lmbench 测量语义、仓库已有分析六个角度各自核查。
 2. 调查结论和本文的测量结果再交给独立的核查代理逐条反驳；核查者只拿到结论和原始数据、代码的位置。
 
-（本节在核查完成后补充结果。）
+核查一共做了七轮（2026-09-30 下午到 10-02），每一轮在一批调查或实验之后：
+
+| 轮次 | 核查的对象 | 报告 |
+| --- | --- | --- |
+| 1 | 六份调查报告的全部发现（宿主机统计、lmbench 语义、内核机制、体系结构与文献、客户机数据、已有文档） | `verify-host-*`、`verify-lmb-*`、`verify-kernel-*`、`verify-arch-*`、`verify-guest-*`、`verify-prior-*`，`critic-a` |
+| 2 | 下午在 N80 上的测量和综合结论草稿；测量程序本身 | `verify-device-*`、`verify-concl-*`、`audit-probe-code`、`audit-recompute-device`，`critic-b` |
+| 3 | 傍晚的实验（R、BG、H、S、V、V2、W）和背后的内核机制 | `verify-ev-*`、`audit-evening-code`、`audit-s2-design-review`、`audit-fast-state`，`critic-c`、`critic-d` |
+| 4 | 夜里的实验（X、Y、V3、Z、N–N5、T2、L2、H2–H6） | `verify-nx-*`、`verify-nn-*`（其中一部分因用量限制中断，第 5 轮补做） |
+| 5 | 实验 H7、H8 和 N90 数据里 8 MB 高值之后的读数；补做第 4 轮中断的审计 | `verify-nh-*`、`verify-nn-alloc-adversary`、`audit-night-code`、`audit-recompute-night`、`audit-kernel-alloc`、`audit-review-translation`、`audit-review-layout`，`critic-f` |
+| 6 | 互连调频实验 G5（用户执行） | `verify-ng-*`，`critic-g` |
+| 7 | 文档之间的一致性、分析脚本 | `audit-consistency`、`audit-analysis-scripts` |
+
+逐条结果见 [agents/verification-summary.md](agents/verification-summary.md)：252 条结论里 117 条通过、133 条需要修正（修正后的表述写进了结论文档）、
+1 条被推翻、1 条无法核实。被推翻和改过的说法都记在本文开头的更正表里。核查改变过的主要判断有：
+8 MB 两个水平的来源（三次改判，最后由实验 G5 给出直接复现）、"每 CPU 链表容量约 1600 页"、"二级翻译给一次遍历加 12–15 个周期"的措辞、
+宿主机二级映射在保护虚拟机退出后是否合并回块。
 
 ## 11. 在设备上检验假设（2026-09-30 傍晚）
 
