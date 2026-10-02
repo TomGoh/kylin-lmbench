@@ -128,6 +128,15 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 | `run24-thp-layout-noroot.sh` | `expL2-n80`；工作站上 `expL2-d80f3` | `thplayout`：同一批页按物理顺序、逆序、随机顺序排列后的顺序访问延迟。N80（以 root 运行，可核对连续度）和工作站各跑一遍 |
 | `run25-lmbench-layout.sh` | `expH2` | lmbench 原版 `lat_mem_rd`，每次运行之前让另一个进程占住 0–2560 MB 内存；前后各跑一次 `probe3` 看当时拿到的页的连续度 |
 | `run26-lmbench-own-frames.sh` | `expH3` `expH3-frames` | 同上，另用 `lmb-frames.py` 读出 lmbench 每个子进程自己的缓冲区的物理布局 |
+| `run31-lmbench-frame-identity.sh` | `expH7` `expH7-frames` `expH7-pfns` | lmbench 原样运行，记下每个子进程缓冲区的全部物理页号，看相继的子进程拿到的是不是同一批页 |
+| `run32-lmbench-partial-layout.sh` | `expH8` `expH8-shim` | `layoutshim.so` 的 `SHUFFLE_HEAD_MB=8`：只打乱缓冲区前 8 MB，量部分零散的缓冲区读多少 |
+
+**改系统设置的（要 root，由用户执行）：**
+
+| 脚本 | 产生的日志 | 内容 |
+| --- | --- | --- |
+| `run33-noc-lmbench-frames.sh` | `expG5` `expG5-frames` `expG5-noc-samples` | （2026-10-02 由用户在 N80 上执行）lmbench 原程序在 performance、simple_ondemand、powersave 三种互连调频策略下运行，同时记互连频率和缓冲区布局；只改 `nocfreq/governor`，退出时恢复。约 25 分钟 |
+| `run-noc-all.sh` | `expG1`–`expG4` | 依次执行 `run4`（固定各档频率）、`run7`、`run8`；没有执行。约 1.5 小时 |
 
 **不改系统设置、但还没有执行的：**
 

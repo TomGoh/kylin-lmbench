@@ -74,6 +74,8 @@
 | `expH5.log` `expH5-shim.log` | 夜里：同上，步长 16、32、64、128、512、1024，物理顺序和每 8 MB 内打乱各两遍 | `run28-lmbench-layout-strides.sh` |
 | `expH6.log` `expH6-shim.log` | 夜里：lmbench 的随机访问测试（`lat_mem_rd -t`）在物理顺序、整体打乱和原样运行三种情况下各两遍 | `run29-lmbench-layout-random.sh` |
 | `expH7.log` `expH7-frames.log` `expH7-pfns.log` | 夜里：lmbench 原样运行四次（不占内存、占住 2560 MB 各两次），`expH7-pfns.log` 是每个子进程缓冲区的全部物理页号（十六进制，按虚拟地址顺序），`expH7.log` 每次运行开头记有各区各类型的空闲块数和 cpu0 每 CPU 链表的页数、上限 | `run31-lmbench-frame-identity.sh` |
+| `expH8.log` `expH8-shim.log` | 10-01 凌晨：lmbench 原程序在三种缓冲区上（物理顺序；只打乱前 8 MB；每 8 MB 之内打乱），步长 128 和 256，各三遍 | `run32-lmbench-partial-layout.sh`（以 root 运行，库的日志里有实际得到的相邻度） |
+| `expG5.log` `expG5-frames.log` `expG5-noc-samples.log` `expG5-trans_stat.txt` | 10-02 上午由用户执行：lmbench 原程序在三种互连调频策略下（performance、simple_ondemand、powersave），每 100 ms 的互连频率采样，每个子进程缓冲区的物理布局，调频统计；`meta.log` 里有策略切换和恢复的时刻 | `run33-noc-lmbench-frames.sh`（root；临时改调频策略，结束时恢复） |
 | `pagealloc-n80.txt` | 页分配器的状态：各阶、各迁移类型的空闲块数，每 CPU 空闲页链表的上限（只读查看，23:00 前后） | |
 | `thp-contpte-n80.txt` | 内核配置里与大页、连续页表项有关的选项，透明大页各个开关的取值，启动参数（只读查看） | |
 | `binaries-n80.txt` | 设备上各程序源文件和二进制的校验和、编译器版本（22:10 记录；`.pre-*` 是某个实验之前在用的版本） | |
