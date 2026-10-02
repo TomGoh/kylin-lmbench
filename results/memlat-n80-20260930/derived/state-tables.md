@@ -1059,6 +1059,112 @@ stride 256:
 | 48 MB | 8.57 (8.53-8.74) | 9.24 (9.19-9.29) | 11.51 (11.50-11.76) | 1.079 | 1.343 | 1.057 |
 | 64 MB | 8.50 (8.48-8.71) | 9.08 (9.07-9.19) | 11.51 (11.49-11.76) | 1.068 | 1.354 | 1.044 |
 
+## Exp G5: lmbench's own lat_mem_rd under three interconnect governors, with NoC samples and buffer layouts
+
+run33-noc-lmbench-frames.sh, N80, protected, run by the user (the governor change needs the user).  max = performance (1800 MHz), ondemand = simple_ondemand, min = powersave.  For every data point: the NoC samples (every 100 ms) between the previous output line and this one, i.e. while that child ran; adj = ascending + descending adjacency of the child's buffer (lmb-frames.py).
+
+- max: samples 1800 MHz: 2203
+- ondemand: samples 1800 MHz: 552, 1450 MHz: 21, 1300 MHz: 11, 1200 MHz: 69, 1000 MHz: 38, 950 MHz: 39, 900 MHz: 573, 650 MHz: 47, 600 MHz: 7693
+- min: samples 600 MHz: 2274
+
+### Sequential, stride 256: ns per access, median (min-max) [n]
+
+| size | max | ondemand | min | ondemand / max | min / max |
+|---:|---|---|---|---:|---:|
+| 2 MB | 4.47 (4.46-4.52) [4] | 4.47 (4.45-4.74) [13] | 4.47 (4.47-4.65) [4] | 1.000 | 0.999 |
+| 4 MB | 4.85 (4.84-4.90) [4] | 5.62 (5.58-5.65) [13] | 5.61 (5.60-5.63) [4] | 1.159 | 1.157 |
+| 6 MB | 6.99 (6.89-7.60) [4] | 8.75 (8.69-9.20) [13] | 8.82 (8.67-9.37) [4] | 1.253 | 1.262 |
+| 8 MB | 9.92 (9.08-10.09) [4] | 12.00 (10.29-12.64) [13] | 12.70 (12.66-12.74) [4] | 1.210 | 1.280 |
+| 12 MB | 10.68 (9.57-11.07) [4] | 11.05 (10.21-13.42) [13] | 13.43 (13.38-13.55) [4] | 1.035 | 1.258 |
+| 16 MB | 10.62 (9.60-11.27) [4] | 10.80 (10.09-12.05) [13] | 13.65 (13.56-13.74) [4] | 1.017 | 1.286 |
+| 24 MB | 10.34 (9.48-10.90) [4] | 10.52 (10.14-11.33) [13] | 13.22 (12.91-13.37) [4] | 1.018 | 1.279 |
+| 32 MB | 10.17 (9.15-10.61) [4] | 10.38 (9.92-11.51) [13] | 13.06 (12.93-13.18) [4] | 1.021 | 1.284 |
+| 64 MB | 9.88 (9.15-10.20) [4] | 10.03 (9.82-10.24) [13] | 12.33 (12.25-12.68) [4] | 1.015 | 1.248 |
+
+### Random (-t): ns per access, median (min-max) [n]
+
+| size | max | ondemand | min | ondemand / max | min / max |
+|---:|---|---|---|---:|---:|
+| 2 MB | 20.70 (20.70-20.70) [1] | 23.08 (21.64-24.51) [2] | 20.57 (20.57-20.57) [1] | 1.115 | 0.994 |
+| 4 MB | 33.83 (33.83-33.83) [1] | 55.22 (53.62-56.81) [2] | 54.63 (54.63-54.63) [1] | 1.632 | 1.615 |
+| 6 MB | 60.40 (60.40-60.40) [1] | 96.39 (95.35-97.44) [2] | 95.21 (95.21-95.21) [1] | 1.596 | 1.576 |
+| 8 MB | 100.93 (100.93-100.93) [1] | 138.69 (137.81-139.56) [2] | 139.06 (139.06-139.06) [1] | 1.374 | 1.378 |
+| 12 MB | 130.22 (130.22-130.22) [1] | 167.95 (167.70-168.20) [2] | 170.05 (170.05-170.05) [1] | 1.290 | 1.306 |
+| 16 MB | 140.75 (140.75-140.75) [1] | 179.30 (178.61-180.00) [2] | 180.08 (180.08-180.08) [1] | 1.274 | 1.279 |
+| 24 MB | 146.96 (146.96-146.96) [1] | 184.57 (184.00-185.15) [2] | 185.74 (185.74-185.74) [1] | 1.256 | 1.264 |
+| 32 MB | 148.86 (148.86-148.86) [1] | 190.30 (189.73-190.88) [2] | 190.52 (190.52-190.52) [1] | 1.278 | 1.280 |
+| 64 MB | 150.86 (150.86-150.86) [1] | 190.71 (190.56-190.86) [2] | 192.40 (192.40-192.40) [1] | 1.264 | 1.275 |
+
+### Every 8 MB stride-256 point: value, NoC during the child, buffer adjacency
+
+| state | sweep | ns | NoC samples during the child (MHz) | share at 1800 MHz | adjacency |
+|---|---:|---:|---|---:|---:|
+| max | 1 | 10.09 | 1800x12 | 1.00 | 0.3023 |
+| max | 2 | 9.95 | 1800x12 | 1.00 | 0.2959 |
+| max | 3 | 9.08 | 1800x13 | 1.00 | 0.9179999999999999 |
+| max | 4 | 9.90 | 1800x13 | 1.00 | 0.4165 |
+| ondemand | 1 | 10.29 | 1800x3, 600x10 | 0.23 | 0.1543 |
+| ondemand | 2 | 10.54 | 1800x2, 600x11 | 0.15 | 0.19970000000000002 |
+| ondemand | 3 | 10.42 | 1800x3, 600x8 | 0.27 | 0.1289 |
+| ondemand | 4 | 12.64 | 600x12 | 0.00 | 0.1299 |
+| ondemand | 5 | 12.51 | 600x11 | 0.00 | 0.25830000000000003 |
+| ondemand | 6 | 12.00 | 1800x1, 600x11 | 0.08 | 0.3262 |
+| ondemand | 7 | 12.62 | 600x13 | 0.00 | 0.2315 |
+| ondemand | 8 | 12.62 | 600x12 | 0.00 | 0.1597 |
+| ondemand | 9 | 12.63 | 600x11 | 0.00 | 0.1978 |
+| ondemand | 10 | 10.47 | 1800x1, 600x12 | 0.08 | 0.209 |
+| ondemand | 11 | 12.62 | 600x12 | 0.00 | 0.209 |
+| ondemand | 12 | 10.71 | 600x12 | 0.00 | 0.7095 |
+| ondemand | full command | 10.43 | 1800x1, 600x12 | 0.08 | 0.4155 |
+| min | 1 | 12.71 | 600x11 | 0.00 | 0.0801 |
+| min | 2 | 12.74 | 600x11 | 0.00 | 0.0845 |
+| min | 3 | 12.69 | 600x11 | 0.00 | 0.0742 |
+| min | 4 | 12.66 | 600x12 | 0.00 | 0.147 |
+
+### The paper's full command under ondemand (one run): 8 MB point per stride and the NoC samples while that child ran
+
+| stride | 4 MB | 6 MB | 8 MB | 12 MB | 8 MB: NoC samples (H = 1800 MHz, m = 650-1450 MHz, . = 600 MHz) |
+|---:|---:|---:|---:|---:|---|
+| 16 | 2.18 | 2.18 | 2.19 | 2.20 | `.HHmmHH.....` |
+| 32 | 2.38 | 2.57 | 2.55 | 2.59 | `...HHmmHmmmm` |
+| 64 | 2.77 | 4.23 | 3.97 | 4.05 | `.HmmmHHHHmHH` |
+| 128 | 5.22 | 8.42 | 10.37 | 9.78 | `.......H....` |
+| 256 | 5.62 | 8.90 | 10.43 | 11.43 | `....H........` |
+| 512 | 5.33 | 8.24 | 10.06 | 9.52 | `.....H.......` |
+| 1024 | 5.58 | 9.21 | 11.29 | 11.05 | `.........H..` |
+
+### Side by side with the N90 host data of June (medians; N90 quiesced = kvmoff, nvhe, vhe pooled; N90 non-quiesced = the nVHE 'fast state' boot)
+
+| test | size | N80 max | N80 ondemand | N80 min | N90 non-quiesced | N90 quiesced | N80 ondemand / max | N90 quiesced / non-quiesced |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| sequential 256 | 4 MB | 4.85 | 5.62 | 5.61 | 5.07 | 5.48 | 1.159 | 1.081 |
+| sequential 256 | 6 MB | 6.99 | 8.75 | 8.82 | 7.46 | 8.26 | 1.252 | 1.107 |
+| sequential 256 | 8 MB | 9.92 | 12.26 | 12.70 | 10.32 | 11.97 | 1.235 | 1.160 |
+| sequential 256 | 12 MB | 10.68 | 11.02 | 13.43 | 11.34 | 11.09 | 1.032 | 0.978 |
+| sequential 256 | 16 MB | 10.62 | 10.85 | 13.65 | 11.47 | 11.08 | 1.022 | 0.966 |
+| sequential 256 | 64 MB | 9.88 | 10.03 | 12.33 | 11.11 | 10.46 | 1.015 | 0.941 |
+| random | 4 MB | 33.83 | 55.22 | 54.63 | 30.80 | 47.63 | 1.632 | 1.546 |
+| random | 6 MB | 60.40 | 96.39 | 95.21 | 48.61 | 67.32 | 1.596 | 1.385 |
+| random | 8 MB | 100.93 | 138.69 | 139.06 | 83.90 | 112.52 | 1.374 | 1.341 |
+| random | 12 MB | 130.22 | 167.95 | 170.05 | 121.82 | 154.66 | 1.290 | 1.270 |
+| random | 16 MB | 140.75 | 179.30 | 180.08 | 134.23 | 168.63 | 1.274 | 1.256 |
+| random | 64 MB | 150.86 | 190.71 | 192.40 | 150.12 | 185.30 | 1.264 | 1.234 |
+
+For the sequential 8 MB point the quiesced N90 median mixes its two levels (about 10.3 and 12.4 ns); the N80 ondemand values are listed above.
+
+### ondemand, stride 256: value relative to the max-state median of the same size, against the share of NoC samples at 1800 MHz
+
+| size | points | Spearman (value, share at 1800) | median ratio when share >= 0.9 | when share < 0.5 |
+|---:|---:|---:|---:|---:|
+| 4 MB | 13 | nan |  | 1.159 (13) |
+| 6 MB | 13 | nan |  | 1.253 (13) |
+| 8 MB | 13 | -0.83 |  | 1.210 (13) |
+| 12 MB | 13 | -0.51 |  | 1.035 (13) |
+| 16 MB | 13 | -0.56 |  | 1.017 (12) |
+| 24 MB | 13 | -0.18 |  | 1.017 (12) |
+| 32 MB | 13 | -0.47 |  | 1.022 (12) |
+| 64 MB | 13 | -0.25 |  | 1.015 (9) |
+
 ## Two-factor check: is the N90 non-quiesced run 'scattered pages on a faster platform'?
 
 Per stride and size: low = median of the low level of the four quiesced N90 host boots (40 values, values more than 12% above the median of the lower half left out); fast-state = median of the ten iterations of the non-quiesced nVHE boot; layout ratio = shuffled / sorted with lmbench's own program on the N80 (H4, H5).  If the buffers of the non-quiesced run were physically scattered and those of the low level physically contiguous, then (fast-state / low) / (layout ratio) is what the platform state alone does.

@@ -50,3 +50,9 @@
 # run29 done 2026-09-30T23:48:59+08:00 noc_gov=performance noc_freq=1800000
 # run31 start 2026-10-01T00:08:57+08:00 uid=0 gov=performance noc=1800000
 # run31 done 2026-10-01T00:11:41+08:00 gov=performance noc=1800000
+# run33 start 2026-10-02T08:49:22+08:00 orig_governor=performance cur_freq=1800000 available=1800000,1450000,1300000,1200000,1000000,950000,900000,650000,600000 min=600000 max=1800000 loadavg=0.14 0.18 0.18 memfree_kb=3027680
+# run33 governor=performance begin 2026-10-02T08:49:26+08:00 cur_freq=1800000 transitions=54
+# run33 governor=simple_ondemand begin 2026-10-02T08:53:10+08:00 cur_freq=600000 transitions=55
+# run33 governor=powersave begin 2026-10-02T09:08:21+08:00 cur_freq=600000 transitions=607
+# run33 done 2026-10-02T09:12:09+08:00 loadavg=1.41 1.42 1.17
+# run33 restored governor=performance cur_freq=1800000 2026-10-02T09:12:09+08:00

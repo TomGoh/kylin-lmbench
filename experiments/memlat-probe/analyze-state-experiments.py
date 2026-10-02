@@ -1815,6 +1815,135 @@ def two_factor():
           f"(median {st.median(q):.3f}, coefficient of variation {100 * st.pstdev(q) / st.mean(q):.1f}%).\n")
 
 
+def g5_points():
+    """run33: every lmbench data point with its state, stride, size, ns, the NoC samples during it and the child's frames."""
+    path = os.path.join(DEV, "expG5.log")
+    if not os.path.exists(path):
+        return []
+    samples = noc_samples("expG5-noc-samples.log")
+    frames = []
+    fpath = os.path.join(DEV, "expG5-frames.log")
+    if os.path.exists(fpath):
+        frames = [kv(l) for l in open(fpath) if l.startswith("t=")]
+    pts = []
+    state = sweep = stride = None
+    prev_t = None
+    for line in open(path):
+        line = line.rstrip("\n")
+        if line.startswith("## state="):
+            d = kv(line)
+            state, sweep, prev_t, stride = d["state"], int(d["sweep"]), float(d["start"]), None
+            rand = "-t" in line
+            full = "1024" in line.split("args=")[1]
+            continue
+        if line.startswith("##") or state is None:
+            continue
+        q = line.split()
+        if len(q) >= 2 and q[1].startswith('"stride='):
+            stride = int(q[1].split("=")[1])
+            prev_t = float(q[0])
+            continue
+        if len(q) != 3 or stride is None:
+            continue
+        try:
+            t, size, ns = float(q[0]), float(q[1]), float(q[2])
+        except ValueError:
+            continue
+        win = [f for (ts, f) in samples if prev_t < ts <= t]
+        fr = [f for f in frames if prev_t < f["t"] <= t and abs(f["size_mb"] - size) < 0.01]
+        pts.append({"state": state, "sweep": sweep, "rand": rand, "full": full, "stride": stride, "size": size, "ns": ns,
+                    "t0": prev_t, "t1": t, "noc": win,
+                    "adj": (fr[0]["contig_frac"] + fr[0]["rcontig_frac"]) if fr else None})
+        prev_t = t
+    return pts
+
+
+def exp_g5():
+    pts = g5_points()
+    if not pts:
+        return
+    print("## Exp G5: lmbench's own lat_mem_rd under three interconnect governors, with NoC samples and buffer layouts\n")
+    print("run33-noc-lmbench-frames.sh, N80, protected, run by the user (the governor change needs the user).  max = "
+          "performance (1800 MHz), ondemand = simple_ondemand, min = powersave.  For every data point: the NoC samples "
+          "(every 100 ms) between the previous output line and this one, i.e. while that child ran; adj = ascending + "
+          "descending adjacency of the child's buffer (lmb-frames.py).\n")
+    c = collections.Counter((p["state"], f) for p in pts for f in p["noc"])
+    for stt in ("max", "ondemand", "min"):
+        cc = {f: n for (s2, f), n in c.items() if s2 == stt}
+        if cc:
+            print(f"- {stt}: samples {', '.join(f'{f // 1000} MHz: {n}' for f, n in sorted(cc.items(), reverse=True))}")
+    print()
+    for rand, stv, title in ((False, 256, "Sequential, stride 256"), (True, 16, "Random (-t)")):
+        print(f"### {title}: ns per access, median (min-max) [n]\n")
+        print("| size | max | ondemand | min | ondemand / max | min / max |")
+        print("|---:|---|---|---|---:|---:|")
+        for sz in (2.0, 4.0, 6.0, 8.0, 12.0, 16.0, 24.0, 32.0, 64.0):
+            v = {stt: [p["ns"] for p in pts if p["rand"] == rand and p["stride"] == stv and p["size"] == sz and p["state"] == stt]
+                 for stt in ("max", "ondemand", "min")}
+            if not v["max"]:
+                continue
+            cell = lambda x: f"{st.median(x):.2f} ({min(x):.2f}-{max(x):.2f}) [{len(x)}]" if x else ""
+            r = lambda x: f"{st.median(x) / st.median(v['max']):.3f}" if x else ""
+            print(f"| {sz:g} MB | {cell(v['max'])} | {cell(v['ondemand'])} | {cell(v['min'])} | {r(v['ondemand'])} | {r(v['min'])} |")
+        print()
+    print("### Every 8 MB stride-256 point: value, NoC during the child, buffer adjacency\n")
+    print("| state | sweep | ns | NoC samples during the child (MHz) | share at 1800 MHz | adjacency |")
+    print("|---|---:|---:|---|---:|---:|")
+    for p in pts:
+        if not p["rand"] and p["stride"] == 256 and p["size"] == 8.0:
+            n = p["noc"]
+            sh = f"{sum(1 for f in n if f == 1800000) / len(n):.2f}" if n else ""
+            freqs = ", ".join(f"{f // 1000}x{k}" for f, k in sorted(collections.Counter(n).items(), reverse=True))
+            print(f"| {p['state']} | {'full command' if p['full'] else p['sweep']} | {p['ns']:.2f} | {freqs} | {sh} | {p['adj'] if p['adj'] is not None else 'n/a'} |")
+    print()
+    full = [p for p in pts if p["full"]]
+    if full:
+        print("### The paper's full command under ondemand (one run): 8 MB point per stride and the NoC samples while that child ran\n")
+        print("| stride | 4 MB | 6 MB | 8 MB | 12 MB | 8 MB: NoC samples (H = 1800 MHz, m = 650-1450 MHz, . = 600 MHz) |")
+        print("|---:|---:|---:|---:|---:|---|")
+        for stv in (16, 32, 64, 128, 256, 512, 1024):
+            row = {p["size"]: p for p in full if p["stride"] == stv}
+            if 8.0 not in row:
+                continue
+            sym = "".join("H" if f == 1800000 else ("m" if f > 600000 else ".") for f in row[8.0]["noc"])
+            print(f"| {stv} | " + " | ".join(f"{row[z]['ns']:.2f}" if z in row else "" for z in (4.0, 6.0, 8.0, 12.0)) + f" | `{sym}` |")
+        print()
+    host = n90("lat_mem_rd_rand")
+    hseq = n90("lat_mem_rd_load")
+    print("### Side by side with the N90 host data of June (medians; N90 quiesced = kvmoff, nvhe, vhe pooled; N90 non-quiesced = the nVHE 'fast state' boot)\n")
+    print("| test | size | N80 max | N80 ondemand | N80 min | N90 non-quiesced | N90 quiesced | N80 ondemand / max | N90 quiesced / non-quiesced |")
+    print("|---|---:|---:|---:|---:|---:|---:|---:|---:|")
+    for rand, stv, name, src in ((False, 256, "sequential 256", hseq), (True, 16, "random", host)):
+        for sz in (4.0, 6.0, 8.0, 12.0, 16.0, 64.0):
+            v = {stt: [p["ns"] for p in pts if p["rand"] == rand and p["stride"] == stv and p["size"] == sz and p["state"] == stt and not p["full"]]
+                 for stt in ("max", "ondemand", "min")}
+            if not all(v.values()):
+                continue
+            q = st.median(sum((src[c][(stv, sz)] for c in ("kvmoff", "nvhe", "vhe")), []))
+            nq = st.median(src["nvhe-noisy"][(stv, sz)])
+            m = {k: st.median(x) for k, x in v.items()}
+            print(f"| {name} | {sz:g} MB | {m['max']:.2f} | {m['ondemand']:.2f} | {m['min']:.2f} | {nq:.2f} | {q:.2f} | {m['ondemand'] / m['max']:.3f} | {q / nq:.3f} |")
+    print("\nFor the sequential 8 MB point the quiesced N90 median mixes its two levels (about 10.3 and 12.4 ns); the N80 ondemand values are listed above.\n")
+    od = [p for p in pts if p["state"] == "ondemand" and not p["rand"] and p["stride"] == 256 and p["noc"]]
+    if od:
+        print("### ondemand, stride 256: value relative to the max-state median of the same size, against the share of NoC samples at 1800 MHz\n")
+        print("| size | points | Spearman (value, share at 1800) | median ratio when share >= 0.9 | when share < 0.5 |")
+        print("|---:|---:|---:|---:|---:|")
+        for sz in (4.0, 6.0, 8.0, 12.0, 16.0, 24.0, 32.0, 64.0):
+            base = [p["ns"] for p in pts if p["state"] == "max" and not p["rand"] and p["stride"] == 256 and p["size"] == sz]
+            sel = [p for p in od if p["size"] == sz]
+            if not base or len(sel) < 3:
+                continue
+            b = st.median(base)
+            xs = [sum(1 for f in p["noc"] if f == 1800000) / len(p["noc"]) for p in sel]
+            ys = [p["ns"] / b for p in sel]
+            hi = [y for x, y in zip(xs, ys) if x >= 0.9]
+            lo = [y for x, y in zip(xs, ys) if x < 0.5]
+            print(f"| {sz:g} MB | {len(sel)} | {spearman(xs, ys) if len(set(xs)) > 1 else float('nan'):.2f} | "
+                  f"{(f'{st.median(hi):.3f} ({len(hi)})' if hi else '')} | {(f'{st.median(lo):.3f} ({len(lo)})' if lo else '')} |")
+        print()
+
+
 def main():
     exp_r()
     exp_bg()
@@ -1842,6 +1971,7 @@ def main():
     exp_h6()
     exp_h7()
     exp_h8()
+    exp_g5()
     two_factor()
     exp_g1()
     exp_g2()
