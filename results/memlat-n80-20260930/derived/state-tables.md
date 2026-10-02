@@ -1023,6 +1023,42 @@ lmb-frames.py stored the frame numbers of every child's buffer.  Per sweep and c
 | 12289 | 6422 | 809 | 0.67 | 0.67 | 3330 | 939 | 10.91 |
 | 16385 | 6515 | 820 | 0.75 | 0.75 | 4096 | 73 | 10.71 |
 
+## Exp H8: lmbench's own lat_mem_rd on a buffer of which only the first 8 MB are scattered
+
+layoutshim.so; sorted = physical order; head8 = the pages of the first 8 MB in random order, the rest in physical order (SHUFFLE_HEAD_MB=8); shuffled8 = random order within every 8 MB.  Command lat_mem_rd -P 1 64 128 256, three repetitions per layout.  ns = lmbench's own figure, median (min-max).  'linear' = 1 + (scattered share) x (shuffled8 / sorted - 1), the scattered share being min(1, 8 MB / size).
+
+- sorted: 198 buffers, 198 fully backed by huge pages; ascending adjacency over the first 2048 / 4096 / all pages 0.999-0.999 / 0.998-0.998 / 0.998-0.998
+- head8: 198 buffers, 198 fully backed by huge pages; ascending adjacency over the first 2048 / 4096 / all pages 0.000-0.001 / 0.499-0.500 / 0.877-0.877
+- shuffled8: 198 buffers, 198 fully backed by huge pages; ascending adjacency over the first 2048 / 4096 / all pages 0.000-0.001 / 0.001-0.001 / 0.000-0.001
+
+stride 128:
+
+| size | sorted | head8 | shuffled8 | head8 / sorted | shuffled8 / sorted | linear |
+|---:|---|---|---|---:|---:|---:|
+| 4 MB | 4.46 (4.46-4.46) | 4.49 (4.49-4.52) | 4.50 (4.48-4.54) | 1.007 | 1.009 | 1.009 |
+| 6 MB | 6.45 (6.41-6.48) | 7.08 (7.01-7.09) | 7.02 (6.96-7.08) | 1.096 | 1.088 | 1.088 |
+| 8 MB | 8.01 (8.00-8.02) | 9.69 (9.67-9.72) | 9.70 (9.68-9.70) | 1.210 | 1.210 | 1.210 |
+| 12 MB | 8.14 (8.11-8.16) | 9.42 (9.42-9.46) | 10.06 (10.06-10.08) | 1.157 | 1.235 | 1.157 |
+| 16 MB | 8.12 (8.07-8.15) | 9.07 (9.06-9.12) | 10.08 (10.05-10.15) | 1.117 | 1.242 | 1.121 |
+| 24 MB | 8.10 (8.06-8.15) | 8.74 (8.68-8.81) | 10.05 (10.04-10.13) | 1.080 | 1.242 | 1.081 |
+| 32 MB | 8.05 (7.92-8.09) | 8.53 (8.48-8.63) | 10.05 (10.03-10.12) | 1.059 | 1.247 | 1.062 |
+| 48 MB | 8.05 (7.92-8.11) | 8.45 (8.34-8.47) | 10.02 (9.98-10.13) | 1.049 | 1.244 | 1.041 |
+| 64 MB | 8.05 (7.91-8.11) | 8.36 (8.27-8.37) | 10.01 (9.96-10.08) | 1.037 | 1.242 | 1.030 |
+
+stride 256:
+
+| size | sorted | head8 | shuffled8 | head8 / sorted | shuffled8 / sorted | linear |
+|---:|---|---|---|---:|---:|---:|
+| 4 MB | 4.83 (4.83-4.83) | 4.86 (4.85-4.87) | 4.84 (4.84-4.90) | 1.006 | 1.003 | 1.003 |
+| 6 MB | 6.80 (6.79-6.81) | 7.27 (7.26-7.33) | 7.26 (7.25-7.36) | 1.069 | 1.068 | 1.068 |
+| 8 MB | 8.84 (8.83-8.87) | 10.63 (10.62-10.64) | 10.59 (10.58-10.67) | 1.203 | 1.198 | 1.198 |
+| 12 MB | 8.95 (8.94-9.04) | 10.63 (10.63-10.66) | 11.48 (11.41-11.53) | 1.188 | 1.282 | 1.188 |
+| 16 MB | 8.81 (8.79-8.93) | 10.21 (10.18-10.27) | 11.58 (11.50-11.65) | 1.159 | 1.314 | 1.157 |
+| 24 MB | 8.68 (8.64-8.81) | 9.73 (9.71-9.78) | 11.61 (11.46-11.69) | 1.122 | 1.338 | 1.113 |
+| 32 MB | 8.61 (8.58-8.76) | 9.47 (9.44-9.54) | 11.50 (11.49-11.69) | 1.100 | 1.336 | 1.084 |
+| 48 MB | 8.57 (8.53-8.74) | 9.24 (9.19-9.29) | 11.51 (11.50-11.76) | 1.079 | 1.343 | 1.057 |
+| 64 MB | 8.50 (8.48-8.71) | 9.08 (9.07-9.19) | 11.51 (11.49-11.76) | 1.068 | 1.354 | 1.044 |
+
 ## Two-factor check: is the N90 non-quiesced run 'scattered pages on a faster platform'?
 
 Per stride and size: low = median of the low level of the four quiesced N90 host boots (40 values, values more than 12% above the median of the lower half left out); fast-state = median of the ten iterations of the non-quiesced nVHE boot; layout ratio = shuffled / sorted with lmbench's own program on the N80 (H4, H5).  If the buffers of the non-quiesced run were physically scattered and those of the low level physically contiguous, then (fast-state / low) / (layout ratio) is what the platform state alone does.

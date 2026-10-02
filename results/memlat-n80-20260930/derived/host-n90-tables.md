@@ -208,3 +208,40 @@ lmbench measures the sizes of one stride in ascending order, each in a fresh chi
 | 16 MB, strides 64-1024 | 24 MB, same stride and iteration | 12 | 13 | 8 | 3.2 | 0.0001 |
 | 8 MB, strides 128, 256, 512 | 8 MB at the next stride (about a minute later), same iteration | 67 | 61 | 35 | 33.8 | 0.3911 |
 | 8 MB, strides 128-1024 | 8 MB, same stride, next iteration (about ten minutes later) | 83 | 84 | 49 | 52.0 | 0.8980 |
+
+## 9. What the next sizes read right after a high 8 MB point
+
+Same sweeps as section 8 (strides 64-1024, four quiesced boots, ten iterations each: 200 sweeps).  Every value is divided by the median of the lower half of the 40 values of its stride and size.  The sweeps are split by whether their 8 MB point was high (more than 1.12).  If a high 8 MB point came from the frames of that child's buffer and the next child took the same frames back (as every 12 MB child did on the N80, Exp H7), two thirds of the 12 MB buffer and half of the 16 MB buffer would be those frames.
+
+| size | 8 MB point of the sweep | sweeps | quartiles of value / low level | within 0.97-1.04 | 1.04-1.12 | above 1.12 | above 1.20 |
+|---:|---|---:|---|---:|---:|---:|---:|
+| 12 MB | high | 93 | 1.004 / 1.028 / 1.068 | 57 | 16 | 19 | 16 |
+| 12 MB | low | 107 | 0.999 / 1.016 / 1.036 | 83 | 21 | 3 | 3 |
+| 16 MB | high | 93 | 1.001 / 1.033 / 1.062 | 54 | 26 | 12 | 6 |
+| 16 MB | low | 107 | 0.999 / 1.022 / 1.045 | 76 | 30 | 0 | 0 |
+| 24 MB | high | 93 | 1.000 / 1.020 / 1.061 | 56 | 23 | 9 | 5 |
+| 24 MB | low | 107 | 1.000 / 1.022 / 1.050 | 70 | 31 | 4 | 0 |
+| 32 MB | high | 93 | 1.004 / 1.025 / 1.064 | 59 | 26 | 7 | 3 |
+| 32 MB | low | 107 | 0.998 / 1.016 / 1.035 | 83 | 23 | 0 | 0 |
+
+12 MB value / low level in the sweeps whose 8 MB point was high, by stride (count: median, number above 1.12):
+
+- stride 64: 4: 1.248, 3
+- stride 128: 28: 1.018, 6
+- stride 256: 22: 1.028, 4
+- stride 512: 17: 1.028, 1
+- stride 1024: 22: 1.051, 5
+
+Histogram of the 12 MB value / low level after a high 8 MB point (bins of 0.04):
+
+```
+0.94-0.98 ##### 5
+0.98-1.02 ################################# 33
+1.02-1.06 ############################## 30
+1.06-1.10 ### 3
+1.10-1.14 ### 3
+1.14-1.18 ## 2
+1.18-1.22 ## 2
+1.22-1.26 ######### 9
+1.26-1.30 ###### 6
+```

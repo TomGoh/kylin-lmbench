@@ -1645,6 +1645,45 @@ def exp_h5():
             print()
 
 
+def exp_h8():
+    sw = layout_stride_sweeps(os.path.join(DEV, "expH8.log"))
+    if not sw:
+        return
+    print("## Exp H8: lmbench's own lat_mem_rd on a buffer of which only the first 8 MB are scattered\n")
+    print("layoutshim.so; sorted = physical order; head8 = the pages of the first 8 MB in random order, the rest in physical "
+          "order (SHUFFLE_HEAD_MB=8); shuffled8 = random order within every 8 MB.  Command lat_mem_rd -P 1 64 128 256, three "
+          "repetitions per layout.  ns = lmbench's own figure, median (min-max).  'linear' = 1 + (scattered share) x "
+          "(shuffled8 / sorted - 1), the scattered share being min(1, 8 MB / size).\n")
+    shim = os.path.join(DEV, "expH8-shim.log")
+    if os.path.exists(shim):
+        rows = [dict(re.findall(r"(\w+)=([^\s]+)", l)) for l in open(shim) if l.startswith("pid=")]
+        for lay, head in (("sorted", None), ("shuffled", "2048"), ("shuffled", "16896")):
+            sel = [r for r in rows if r["layout"] == lay and (head is None or r.get("head_pages") == head)]
+            if not sel:
+                continue
+            full = sum(1 for r in sel if int(r["thp_kb"]) == int(r["pages"]) * 4)
+            a = lambda k: [float(r[k].split("/")[0]) for r in sel if r.get(k, "na") != "na"]
+            name = "sorted" if head is None else ("head8" if head == "2048" else "shuffled8")
+            print(f"- {name}: {len(sel)} buffers, {full} fully backed by huge pages; ascending adjacency over the first 2048 / 4096 / "
+                  f"all pages {min(a('adj2048')):.3f}-{max(a('adj2048')):.3f} / {min(a('adj4096')):.3f}-{max(a('adj4096')):.3f} / "
+                  f"{min(a('adj16896')):.3f}-{max(a('adj16896')):.3f}")
+        print()
+    for stv in (128, 256):
+        print(f"stride {stv}:\n")
+        print("| size | sorted | head8 | shuffled8 | head8 / sorted | shuffled8 / sorted | linear |")
+        print("|---:|---|---|---|---:|---:|---:|")
+        for sz in (4.0, 6.0, 8.0, 12.0, 16.0, 24.0, 32.0, 48.0, 64.0):
+            v = {n: [x["rows"][(stv, sz)] for x in sw if x["layout"] == n and (stv, sz) in x["rows"]] for n in ("sorted", "head8", "shuffled8")}
+            if not all(v.values()):
+                continue
+            m = {n: st.median(v[n]) for n in v}
+            cell = lambda n: f"{m[n]:.2f} ({min(v[n]):.2f}-{max(v[n]):.2f})"
+            lin = 1 + min(1.0, 8.0 / sz) * (m["shuffled8"] / m["sorted"] - 1)
+            print(f"| {sz:g} MB | {cell('sorted')} | {cell('head8')} | {cell('shuffled8')} | {m['head8'] / m['sorted']:.3f} | "
+                  f"{m['shuffled8'] / m['sorted']:.3f} | {lin:.3f} |")
+        print()
+
+
 def exp_h6():
     sw = layout_stride_sweeps(os.path.join(DEV, "expH6.log"))
     if not sw:
@@ -1802,6 +1841,7 @@ def main():
     exp_h5()
     exp_h6()
     exp_h7()
+    exp_h8()
     two_factor()
     exp_g1()
     exp_g2()
