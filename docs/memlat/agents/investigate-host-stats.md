@@ -19,7 +19,7 @@ Evidence: q1_reproduce.py on results/n90-day3-host/n90-{kvmoff,nvhe,vhe}-noLSM-f
 
 The metric definitions and the estimator used by the paper are the ones above: the figure pipeline names these three variants, and the paper states that it reports the average of 10 repetitions.
 
-Evidence: ~/Dev/kylin-lmbench/scripts/build-xlsx-mean.py:219-221 (variant names), :21 (STAT_MODE = 'mean'), :32 (pkvm column = try2 CSV); paper.txt:214-215 ("10次重复实验测试的平均值", "图中选择使用平均值"); scripts/lmbench:473 and :477 (sequential run with strides 16..1024, random run 'lat_mem_rd -t ... 16').
+Evidence: kylin-lmbench/scripts/build-xlsx-mean.py:219-221 (variant names), :21 (STAT_MODE = 'mean'), :32 (pkvm column = try2 CSV); paper.txt:214-215 ("10次重复实验测试的平均值", "图中选择使用平均值"); scripts/lmbench:473 and :477 (sequential run with strides 16..1024, random run 'lat_mem_rd -t ... 16').
 
 ### host-stats#3 (MEASURED, confidence high)
 
@@ -73,7 +73,7 @@ Evidence: q8_adjacency.py (out_q8.txt); runs tests in out_tables.txt T3. Each re
 
 The host data alone do not identify the physical cause of the two values. It is an arithmetic fact that 8 MiB at stride 256 touches 32768 lines, which equals the capacity of the L3 sets those lines can use (2048 sets x 16 ways, with the L3 geometry given in the task), and the same equality holds at 8 MiB for strides 128, 512 and 1024, which are two-valued too; but this does not establish causation, and a worklog that appeared in the benchmark repository during this run reports on-device measurements on the N80 that contradict a page-colour explanation and point to physical page contiguity and possibly an interconnect frequency state.
 
-Evidence: Arithmetic: 8388608 / 256 = 32768 = (8192 / 4) x 16. Counter-evidence is DOCUMENTED, not verified by me: ~/Dev/kylin-lmbench/docs/memlat/memlat-investigation-worklog.zh-CN.md sections 6.4-6.5 (L3 refill counts unchanged, latency follows physical contiguity) and section 9 (unverified NoC devfreq hypothesis).
+Evidence: Arithmetic: 8388608 / 256 = 32768 = (8192 / 4) x 16. Counter-evidence is DOCUMENTED, not verified by me: kylin-lmbench/docs/memlat/memlat-investigation-worklog.zh-CN.md sections 6.4-6.5 (L3 refill counts unchanged, latency follows physical contiguity) and section 9 (unverified NoC devfreq hypothesis).
 
 ### host-stats#12 (MEASURED, confidence high)
 
@@ -175,7 +175,7 @@ Evidence: q1_reproduce.py part C (out_q1.txt) and q5_standalone.py part B, metri
 
 Two statements in an older internal document are not supported by the raw data: it lists 'LLC 8MB seq' as +12.1 % for pkvm and summarises sequential access as '0 to +14 %, confirmed'; the +12.1 % is the difference of medians of the two-valued metric (10.815 vs 12.123 ns) and is not significant (permutation p = 0.49). The same document lists the try2 64 MB random value of iteration 10 as 191 ns, whereas the CSV and the raw report have 178.793 ns.
 
-Evidence: ~/Dev/kylin-lmbench/docs/n90-kvm-host/standalone-memory-bench-validation.md:383 and :409, and :366; compared with table D and with results/n90-day3-host/n90-pkvm-noLSM-try2-cpu0.csv (lat_mem_rd_rand stride16_sz64.00000MB, iteration 10).
+Evidence: kylin-lmbench/docs/n90-kvm-host/standalone-memory-bench-validation.md:383 and :409, and :366; compared with table D and with results/n90-day3-host/n90-pkvm-noLSM-try2-cpu0.csv (lat_mem_rd_rand stride16_sz64.00000MB, iteration 10).
 
 ## Caveats
 

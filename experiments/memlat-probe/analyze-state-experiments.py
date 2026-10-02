@@ -46,6 +46,10 @@
           (expH6.log)
   Exp H7  which frames the successive children of lat_mem_rd share
           (expH7.log, expH7-pfns.log)
+  Exp H8  lmbench on buffers of which only the first 8 MB are scattered
+          (expH8.log, expH8-shim.log)
+  Exp G5  lmbench under three NoC governors, run by the user
+          (expG5.log, expG5-frames.log, expG5-noc-samples.log)
   Two-factor check  the N90 non-quiesced ("fast state") run against the low
           level of the quiesced runs, next to the N80 layout ratios of H4/H5
   Exp G1-G4  the interconnect-frequency experiments, if their logs exist

@@ -127,7 +127,11 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 | `run23-touch-order-noroot.sh` | 工作站上 `expT2` | 不用 root：首次触页顺序（升序、随机、降序）对顺序访问的影响。读不到物理页号，没有结论 |
 | `run24-thp-layout-noroot.sh` | `expL2-n80`；工作站上 `expL2-d80f3` | `thplayout`：同一批页按物理顺序、逆序、随机顺序排列后的顺序访问延迟。N80（以 root 运行，可核对连续度）和工作站各跑一遍 |
 | `run25-lmbench-layout.sh` | `expH2` | lmbench 原版 `lat_mem_rd`，每次运行之前让另一个进程占住 0–2560 MB 内存；前后各跑一次 `probe3` 看当时拿到的页的连续度 |
+| `run27-lmbench-layout-shim.sh` | `expH4` | （N80 和工作站）未改动的 `lat_mem_rd` 加载 `layoutshim.so`，缓冲区按物理顺序或打乱排列 |
+| `run28-lmbench-layout-strides.sh` | `expH5` | （N80 和工作站）`run27` 换成论文命令的其余六个步长 |
+| `run29-lmbench-layout-random.sh` | `expH6` | lmbench 的随机访问测试在两种布局下的对比 |
 | `run26-lmbench-own-frames.sh` | `expH3` `expH3-frames` | 同上，另用 `lmb-frames.py` 读出 lmbench 每个子进程自己的缓冲区的物理布局 |
+| `holdcheck.sh` | （输出没有存档） | 让一个停住的进程占住 0、2560、3000、3300 MB，看 Normal 区各迁移类型的空闲块还剩多少（只读查看 `/proc/pagetypeinfo`） |
 | `run31-lmbench-frame-identity.sh` | `expH7` `expH7-frames` `expH7-pfns` | lmbench 原样运行，记下每个子进程缓冲区的全部物理页号，看相继的子进程拿到的是不是同一批页 |
 | `run32-lmbench-partial-layout.sh` | `expH8` `expH8-shim` | `layoutshim.so` 的 `SHUFFLE_HEAD_MB=8`：只打乱缓冲区前 8 MB，量部分零散的缓冲区读多少 |
 
@@ -144,9 +148,6 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 | --- | --- | --- |
 | `run5-mode-compare.sh` | `modecmp-<模式>-<时间>/` | 同一台机器换启动模式各跑一遍的对照测量，见下文。需要改启动参数并重启 |
 | `run30-n90-two-levels.sh` | `twolevels-<模式>-<时间>/` | 为 N90 准备：论文的原命令跑若干遍，同时记下每个数据点的缓冲区物理布局（`lmb-frames.py`）和互连频率（`nocsample`），以及前后的机器状态。用来判断 8 MB 的两个水平跟着哪一个走。每遍约 5.5 分钟 |
-| `run29-lmbench-layout-random.sh` | `expH6` | （已在 N80 上执行）lmbench 的随机访问测试在两种布局下的对比 |
-| `run28-lmbench-layout-strides.sh` | `expH5` | （已在 N80 和工作站上执行）`run27` 换成论文命令的其余六个步长 |
-| `run27-lmbench-layout-shim.sh` | `expH4` | （已在 N80 和工作站上执行）未改动的 `lat_mem_rd` 加载 `layoutshim.so`，缓冲区按物理顺序或打乱排列 |
 
 **运行期间临时修改片上互连调频策略的（没有执行）：**
 
@@ -155,7 +156,6 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 | `run4-noc-fixed.sh` | `expG1` | 把互连固定在 1800、1450、1200、900、600 MHz，各测随机访问、顺序访问和流式读写速率 |
 | `run7-noc-governors.sh` | `expG2` `expG3` | 在 `performance`、`simple_ondemand`、`stable_ondemand` 三种策略下重复测 8 MB 附近的顺序访问和随机访问，记录每个计时区间后的互连频率；再加上别的核的内存流量 |
 | `run8-noc-lmbench.sh` | `expG4-*` | 互连固定在最高频、按流量调频、固定在最低频三种状态下跑 lmbench 原版 `lat_mem_rd` 和 `bw_mem` |
-| `run-noc-all.sh` | | 依次执行上面三个，约 1.5 小时 |
 
 这四个脚本会改写 `/sys/class/devfreq/nocfreq/governor`，每个脚本退出时（无论什么原因）把原来的策略写回去，
 并在 `meta.log` 最后一行记下恢复后的状态。2026-09-30 它们已放到 N80 上，但本次会话的权限策略不允许执行，
@@ -167,7 +167,7 @@ sh build-lmbench-tools.sh    # lat_mem_rd bw_mem（lmbench 原版）
 python3 analyze-host-memlat.py        # N90 宿主机四模式数据：论文三个数字、逐轮值、检验、增量曲线、以一次开机为单位的比较
 python3 analyze-guest-memlat.py       # N90 上 x-kernel 客户机内的数据（图 8），与宿主机数据分开
 python3 analyze-device-logs.py        # N80 下午的实验 A、B、C、D、L、T、F
-python3 analyze-state-experiments.py  # N80 傍晚和夜里的实验 R、BG、H、S、V、V2、V3、W、X、Y、Z、N–N5、L2、H2、H3（含工作站的 N、N4、T2、L2），以及 G1–G4（日志存在时）
+python3 analyze-state-experiments.py  # N80 傍晚和夜里的实验 R、BG、H、S、V、V2、V3、W、X、Y、Z、N–N5、L2、H2–H8、G5、两因素对照（含工作站的 N、N4、T2、L2、H4、H5），以及 G1–G4（日志存在时）
 python3 analyze-mode-compare.py modecmp-none-* modecmp-protected-*   # run5 的输出目录，第一个是对照基准
 ```
 

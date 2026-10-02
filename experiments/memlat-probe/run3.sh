@@ -1,6 +1,6 @@
 #!/bin/sh
 # Does the physical location / spread of the frames change RANDOM-access latency? Root, cpu0.
-cd /tmp/kx-memprobe || exit 1
+cd "$(dirname "$0")" || exit 1
 E=11,2d,2a,17,5,13
 echo "# run3 start $(date -Is) loadavg=$(cut -d' ' -f1-3 /proc/loadavg) memfree_kb=$(awk '/MemFree/{print $2}' /proc/meminfo)" >> meta.log
 : > expF.log

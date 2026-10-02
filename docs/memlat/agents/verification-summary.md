@@ -254,7 +254,7 @@
 | concl#7 |  | 需修正 | 找反例：部分成立；重新推导：部分成立 | [N90 host data] The non-quiesced nVHE data set (n90-nvhe-noisy-full) versus the quiesced nVHE data set, medians: random access is within 2.5% up to 2 … |
 | concl#8 |  | 需修正 | 找反例：部分成立；重新推导：部分成立 | [N90 host data] In the four quiesced data sets single random-access runs are occasionally more than 4% faster than their configuration's median: 0 of … |
 | concl#9 |  | 需修正 | 找反例：部分成立；重新推导：部分成立 | [guest data] In the x-kernel guest data the protected VM's random-access medians are 20 to 32% below those of the other three guests from 3 MB to 64 M… |
-| concl#10 |  | 通过 | 找反例：通过；重新推导：通过 | [x-kernel source, commit 9bab5da3 of ~/Dev/x-kernel, inspect with git show only] sys_mmap maps private anonymous memory with 4 KiB pages unle… |
+| concl#10 |  | 通过 | 找反例：通过；重新推导：通过 | [x-kernel source, commit 9bab5da3 of x-kernel, inspect with git show only] sys_mmap maps private anonymous memory with 4 KiB pages unle… |
 | concl#11 |  | 通过 | 找反例：通过；重新推导：通过 | [kernel source and device] The platform has a NoC devfreq device (drivers/devfreq/phytium_noc.c, ACPI id PHYT0047, 600 to 1800 MHz); the driver regist… |
 | concl#12 |  | 无法核实 | 找反例：无法核实；重新推导：无法核实 | [hypothesis, to be judged as a hypothesis] The fast/slow memory-latency states and the 8 MB bimodality on the N90 are caused by the NoC frequency-scal… |
 | concl#13 |  | 通过 | 找反例：通过；重新推导：通过 | [earlier document docs/n90-kvm-host/llc-boundary-8mb-analysis.md] Its statistical conclusion (the +3.55% is bimodal mixture noise, p about 0.40) is co… |
@@ -342,5 +342,5 @@
 | ng#1 | measured | 需修正 | 找反例：通过；重新推导：部分成立 | Exp G5 (run33-noc-lmbench-frames.sh, N80, protected, run as root by the user on 2026-10-02 08:49-09:12; logs results/memlat-n80-20260930/expG5.log, ex… |
 | ng#2 | measured | 通过 | 找反例：通过；重新推导：通过 | Under simple_ondemand the 13 8 MB stride-256 points (12 single-stride sweeps and the stride-256 part of the full command) fall into 10.29-10.71 ns (6)… |
 | ng#3 | inference | 需修正 | 找反例：部分成立；重新推导：部分成立 | Random access: N80 simple_ondemand / performance at 4, 6, 8, 12, 16, 64 MB is 1.63, 1.60, 1.37, 1.29, 1.27, 1.26; the N90 quiesced (kvmoff, nvhe, vhe … |
-| ng#4 | judgement | 需修正 | 找反例：部分成立；重新推导：部分成立 | The interconnect devfreq driver (drivers/devfreq/phytium_noc.c in ~/Dev/klinux) registers simple_ondemand as its governor with polling 100 ms… |
+| ng#4 | judgement | 需修正 | 找反例：部分成立；重新推导：部分成立 | The interconnect devfreq driver (drivers/devfreq/phytium_noc.c in klinux) registers simple_ondemand as its governor with polling 100 ms… |
 

@@ -103,7 +103,7 @@ Evidence: Guest L1 load latency is 2.225-2.226 ns in all four sets, equal to the
 
 The only launch script for an x-kernel protected VM that exists locally starts it through pvm-manage without any CPU pinning: pvm-manage run --protected-vm-with-pvmfw -- --cpus 2 --mem size=2048 --block disk.img --vsock 3 kernel.bin, which pvm-manage turns into crosvm --log-level debug run --disable-sandbox --protected-vm-with-firmware ./custom_pvmfw plus an extra instance block device and a device-tree overlay. No script for the NP, nVHE or VHE x-kernel runs exists in any local repo; the old launch script for Linux guests (deleted) used taskset -c 0,1 on the whole crosvm process, --no-balloon and no hugepage option.
 
-Evidence: ~/Dev/kylin100-xkernel-boots/scripts/start_xkernel_pvm.sh (last line); ~/Dev/kylin100-xkernel-boots/pvm-manage/src/main.rs:200-230; kylin-lmbench git show 9e3f55de^:guest/launch-guest.sh; docs/vm-lmbench-methodology.zh-CN.md:116-118 and 322 (run-crosvm-n80.sh not found). Whether the June pVM run used this path is not recorded.
+Evidence: kylin100-xkernel-boots/scripts/start_xkernel_pvm.sh (last line); kylin100-xkernel-boots/pvm-manage/src/main.rs:200-230; kylin-lmbench git show 9e3f55de^:guest/launch-guest.sh; docs/vm-lmbench-methodology.zh-CN.md:116-118 and 322 (run-crosvm-n80.sh not found). Whether the June pVM run used this path is not recorded.
 
 ### guest-fig8#17 (DOCUMENTED, confidence high)
 

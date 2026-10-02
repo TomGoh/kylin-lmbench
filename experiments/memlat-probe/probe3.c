@@ -274,7 +274,7 @@ int main(int argc, char **argv)
 	unsigned seed;
 
 	if (argc < 7) {
-		fprintf(stderr, "usage: %s <seq|rand> <size_mb> <stride> <maxlen_mb> <events> <rebuild 0|1> [seed]\n", argv[0]);
+		fprintf(stderr, "usage: %s <seq|rand|tlb> <size_mb> <stride> <maxlen_mb> <events> <rebuild 0|1> [seed]\n", argv[0]);
 		return 2;
 	}
 	rnd = !strcmp(argv[1], "rand");

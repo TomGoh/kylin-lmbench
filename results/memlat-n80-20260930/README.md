@@ -82,11 +82,11 @@
 | `iomem-n80.txt` | root 视角的物理内存布局（内核、保留区、监视器内存池的位置） | |
 | `vm-process-n80.txt` | 后台那个虚拟机的进程和完整命令行（带 `--protected-vm`），以及 `shmem_enabled` 的取值 | |
 | `expL-smoke.log` `expF-smoke.log` | 上面两个实验在写成脚本之前的第一次手工试跑；`expL-smoke.log` 里物理连续度达到 0.99 | 命令记在文件开头 |
-| `meta.log` | 各批次的起止时间和系统负载 | |
+| `meta.log` | 各批次的起止时间和系统负载（run18、run21、run32 没有写进来，时刻见各自日志的第一行：expN-n80 21:40:06–21:41:07，expN4-n80 22:07:54–22:09:56，expH8 10-01 00:58:18–01:11:49） | |
 | `hw-survey-n80.txt` | 硬件、内核配置、PMU 事件、KVM 启动日志 | |
 | `devfreq-survey-n80.txt` | 互连和 GPU 调频设备的状态、可选策略，以及桌面电源管理服务的策略表（只读查看） | |
 | `derived/device-tables.md` | 下午各实验（A、B、C、D、L、T、F）的汇总表 | `experiments/memlat-probe/analyze-device-logs.py` |
-| `derived/state-tables.md` | 傍晚到夜里各实验（R、BG、H、S、V、V2、V3、W、X、Y、Z、N–N5、T2、L2、H2–H5）的汇总表，包括工作站上的对应测量 | `experiments/memlat-probe/analyze-state-experiments.py` |
+| `derived/state-tables.md` | 傍晚到夜里各实验（R、BG、H、S、V、V2、V3、W、X、Y、Z、N–N5、T2、L2、H2–H8、G5，以及两因素对照）的汇总表，包括工作站上的对应测量 | `experiments/memlat-probe/analyze-state-experiments.py` |
 | `derived/host-n90-tables.md` | N90 宿主机四模式数据的对应分析 | `experiments/memlat-probe/analyze-host-memlat.py` |
 | `derived/guest-n90-tables.md` | N90 上 x-kernel **客户机内**数据的对应分析（图 8 的数据，不是宿主机数据） | `experiments/memlat-probe/analyze-guest-memlat.py` |
 

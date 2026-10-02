@@ -1,6 +1,6 @@
 #!/bin/sh
 # Runs as root (pagemap PFNs need CAP_SYS_ADMIN). Pinned to cpu0 (1.9 GHz, FTC862). Output: /tmp/kx-memprobe/*.log
-cd /tmp/kx-memprobe || exit 1
+cd "$(dirname "$0")" || exit 1
 P="taskset -c 0 ./probe"
 E1=11,2d,5,2a,17,13
 E2=11,2d,19,2b,2f,24

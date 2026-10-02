@@ -14,7 +14,7 @@ VERSION="银河麒麟桌面操作系统V11 SP1"
 Linux kylin-pc 6.6.0-79-generic #93-KYLINOS SMP Wed Sep  2 10:32:34 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux
 
 ## Kernel command line
-BOOT_IMAGE=/ostree/kylin-c249244cc6dc9f9e567ac1b243a682759cf00cfd49ec1412d3cce63ce632701b/vmlinuz-6.6.0-79-generic root=UUID=061ec519-7fc8-48a7-b8df-6ed1512a8ac7 rw ostree=/ostree/boot.0/kylin/c249244cc6dc9f9e567ac1b243a682759cf00cfd49ec1412d3cce63ce632701b/0 quiet splash loglevel=0 systemd.unified_cgroup_hierarchy=1 psi=1 kvm-arm.mode=protected crash_kexec_post_notifiers=1 panic_print=0x382 resume=UUID=e83c2aec-3997-479d-b917-738fdc310796 security=box lsm=ksaf,bpf audit=1
+BOOT_IMAGE=/ostree/kylin-<deployment>/vmlinuz-6.6.0-79-generic root=UUID=<masked> rw ostree=/ostree/boot.0/kylin/<deployment>/0 quiet splash loglevel=0 systemd.unified_cgroup_hierarchy=1 psi=1 kvm-arm.mode=protected crash_kexec_post_notifiers=1 panic_print=0x382 resume=UUID=<masked> security=box lsm=ksaf,bpf audit=1
 
 ## lscpu
 Architecture:                            aarch64

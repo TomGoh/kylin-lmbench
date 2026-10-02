@@ -34,10 +34,12 @@ the medians of this estimate agree with the counted cycles within 0.4 per config
 | `expN-d80f3.log` | N: translation-only chase (`probe3 tlb`), CPUs 0, 4, 5, 7, 5 seeds each | `run18-translation-noroot.sh` | 21:40-21:44 |
 | `expN4-d80f3.log` | N4: the same with the pages first touched in chain order or in ascending virtual order, CPUs 0 and 4, 8 repetitions each | `run21-prefault.sh` | 22:05-22:09 |
 | `expT2.log` | T2: sequential chase after ascending, random or descending first touch, with 0, 1024 or 2048 MB held back by a stopped process | `run23-touch-order-noroot.sh` | 22:19-22:21 |
+| `expH4-d80f3.log` `expH4-d80f3-shim.log` | H4: lmbench's own `lat_mem_rd -P 1 64 256` on buffers from `layoutshim.so` (sorted, shuffled within 8 MB, shuffled) and natural under `nothp`; the shim log has `adj=na` (no root) | `run27-lmbench-layout-shim.sh` | 23:06-23:18 |
+| `expH5-d80f3.log` `expH5-d80f3-shim.log` | H5: the same for the other strides of the paper's command | `run28-lmbench-layout-strides.sh` | 23:21-23:40 |
 | `expL2-d80f3.log` | L2: the same frames in sorted, reversed and shuffled virtual order, pages taken from transparent huge pages (`thplayout`) | `run24-thp-layout-noroot.sh` | 22:25-22:28 |
 
 Tables: `results/memlat-n80-20260930/derived/state-tables.md`, sections
-"Exp N", "Exp N4", "Exp T2" and "Exp L2" (written by
+"Exp N", "Exp N4", "Exp T2", "Exp L2", "Exp H4" and "Exp H5" (written by
 `experiments/memlat-probe/analyze-state-experiments.py`).
 
 ## What these data can and cannot show

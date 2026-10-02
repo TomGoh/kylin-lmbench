@@ -9,6 +9,6 @@ all: $(PROGS)
 	$(CC) $(CFLAGS) -o $@ $<
 
 clean:
-	rm -f $(PROGS) lat_mem_rd bw_mem
+	rm -f $(PROGS) lat_mem_rd bw_mem layoutshim.so
 
 .PHONY: all clean
